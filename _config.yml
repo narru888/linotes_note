@@ -165,15 +165,6 @@ author:
 
 
 
-# comments
-comments:
-  provider               : "disqus"
-  disqus:
-    shortname            : liloli
-
-
-
-
 
 
 
