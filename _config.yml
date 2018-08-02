@@ -115,9 +115,9 @@ defaults:
     values:
       layout: single
       author_profile: true
-      read_time: false
+      read_time: true
       comments: true
-      share: true
+      share: false
       related: true
       sidebar:
         nav: "linux"
@@ -151,7 +151,7 @@ author:
   flickr           :
   facebook         :
   foursquare       :
-  github           : "liloli"
+  github           : ""
   gitlab           :
   google_plus      :
   keybase          :
@@ -163,7 +163,7 @@ author:
   stackoverflow    : # "123456/username" (the last part of your profile url, e.g. https://stackoverflow.com/users/123456/username)
   steam            : # "steamId" (the last part of your profile url, e.g. https://steamcommunity.com/id/steamId/)
   tumblr           :
-  twitter          : "liloli"
+  twitter          : ""
   vine             :
   weibo            :
   xing             :
@@ -172,14 +172,39 @@ author:
 
 
 
+# comments
+staticman:
+  allowedFields          : ['name', 'email', 'message']
+  branch                 : "master"
+  commitMessage          : "New comment."
+  filename               : # comment-{@timestamp}
+  format                 : # "yml"
+  moderation             : true
+  path                   : # "/_data/comments/{options.slug}" (default)
+  requiredFields         : ['name', 'email', 'message']
+  transforms:
+    email                : # "md5"
+  generatedFields:
+    date:
+      type               : # "date"
+      options:
+        format           : # "iso8601" (default), "timestamp-seconds", "timestamp-milliseconds"
+
+
+
+
+
+
+
+
 
 
 
 # Social Sharing
-twitter:
-  username               : "liloli"
-facebook:
-  username               : "lilolibj"
+#twitter:
+#  username               : "liloli"
+#facebook:
+#  username               : "lilolibj"
 
 
 
@@ -223,64 +248,3 @@ keep_files:
   - .svn
 encoding: "utf-8"
 markdown_ext: "markdown,mkdown,mkdn,mkd,md"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Exclude from processing.
-# The following items will not be processed, by default. Create a custom list
-# to override the default setting.
-# exclude:
-#   - Gemfile
-#   - Gemfile.lock
-#   - node_modules
-#   - vendor/bundle/
-#   - vendor/cache/
-#   - vendor/gems/
-#   - vendor/ruby/
-
-#theme: minimal-mistakes-jekyll
