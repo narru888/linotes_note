@@ -6,6 +6,9 @@ url                      : "https://linotes.netlify.com"
 email: imhawkz@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   用简洁清晰的语言讨论技术
+
+
+
 baseurl: "" # the subpath of your site, e.g. /blog
 twitter_username: liloli
 github_username:  linotes
@@ -178,24 +181,9 @@ author:
 
 # comments
 comments:
-  provider               : "staticman"
-staticman:
-  allowedFields          : ['name', 'email', 'message']
-  branch                 : "master"
-  commitMessage          : "New comment."
-  filename               : comment-{@timestamp}
-  format                 : "yml"
-  moderation             : true
-  path                   : "/_data/comments/{options.slug}"
-  requiredFields         : ['name', 'email', 'message']
-  transforms:
-    email                : "md5"
-  generatedFields:
-    date: 
-      type               : date
-      options:
-        format           : "timestamp-seconds"
-
+  provider               : "disqus"
+  disqus:
+    shortname            : hawk_zhang
 
 
 
