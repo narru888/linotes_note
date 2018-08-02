@@ -21,7 +21,6 @@ github_username:  linotes
 
 
 # comments
-JEKYLL_ENV : production
 comments:
   provider               : "disqus"
   disqus:
