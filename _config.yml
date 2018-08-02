@@ -70,7 +70,9 @@ plugins:
 
 
 whitelist:
+  - jekyll-feed
   - jekyll-paginate
+  - jekyll/tagging
 
 
 
