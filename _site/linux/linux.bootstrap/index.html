@@ -18,25 +18,25 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:site_name" content="LINOTES">
 <meta property="og:title" content="Linux 基础 - 8. Linux 启动流程">
-<meta property="og:url" content="http://localhost:4000/linux/linux.bootstrap/">
+<meta property="og:url" content="https://liloli.github.io/linux/linux.bootstrap/">
 
 
   <meta property="og:description" content="用简洁清晰的语言讨论技术">
 
 
 
-  <meta property="og:image" content="http://localhost:4000/assets/images/header/linux.jpg">
+  <meta property="og:image" content="https://liloli.github.io/assets/images/header/linux.jpg">
 
 
 
   <meta name="twitter:site" content="@liloli">
   <meta name="twitter:title" content="Linux 基础 - 8. Linux 启动流程">
   <meta name="twitter:description" content="用简洁清晰的语言讨论技术">
-  <meta name="twitter:url" content="http://localhost:4000/linux/linux.bootstrap/">
+  <meta name="twitter:url" content="https://liloli.github.io/linux/linux.bootstrap/">
 
   
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="http://localhost:4000/assets/images/header/linux.jpg">
+    <meta name="twitter:image" content="https://liloli.github.io/assets/images/header/linux.jpg">
   
 
   
@@ -54,7 +54,7 @@
   
 
 
-<link rel="canonical" href="http://localhost:4000/linux/linux.bootstrap/">
+<link rel="canonical" href="https://liloli.github.io/linux/linux.bootstrap/">
 
 
 
@@ -67,7 +67,7 @@
       "@context": "http://schema.org",
       "@type": "Person",
       "name": "Hawk Zhang",
-      "url": "http://localhost:4000",
+      "url": "https://liloli.github.io",
       "sameAs": null
     }
   </script>
@@ -81,7 +81,7 @@
 <!-- end _includes/seo.html -->
 
 
-<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+<link href="https://liloli.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
 
 <!-- http://t.co/dKP3o1e -->
 <meta name="HandheldFriendly" content="True">
@@ -93,7 +93,7 @@
 </script>
 
 <!-- For all browsers -->
-<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+<link rel="stylesheet" href="https://liloli.github.io/assets/css/main.css">
 
 <!--[if lte IE 9]>
   <style>
@@ -144,27 +144,27 @@
   <div class="masthead__inner-wrap">
     <div class="masthead__menu">
       <nav id="site-nav" class="greedy-nav">
-        <a class="site-title" href="http://localhost:4000/">LINOTES</a>
+        <a class="site-title" href="https://liloli.github.io/">LINOTES</a>
         <ul class="visible-links">
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/app/rsync/" >Rsync 的用法</a>
+              <a href="https://liloli.github.io/app/rsync/" >Rsync 的用法</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/server/vsftpd/" >Vsftpd 的用法</a>
+              <a href="https://liloli.github.io/server/vsftpd/" >Vsftpd 的用法</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/kernel/filedescriptor/" >文件描述符简介</a>
+              <a href="https://liloli.github.io/kernel/filedescriptor/" >文件描述符简介</a>
             </li>
           
             
             <li class="masthead__menu-item">
-              <a href="http://localhost:4000/tools/tools.datastream/" >数据流处理</a>
+              <a href="https://liloli.github.io/tools/tools.datastream/" >数据流处理</a>
             </li>
           
         </ul>
@@ -200,7 +200,7 @@
 
 
 <div class="page__hero--overlay"
-  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('http://localhost:4000/assets/images/header/linux.jpg');"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://liloli.github.io/assets/images/header/linux.jpg');"
 >
   
     <div class="wrapper">
@@ -238,7 +238,7 @@
       
 
       
-        <img src="http://localhost:4000/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+        <img src="https://liloli.github.io/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
       
     </div>
   
@@ -537,7 +537,7 @@
 <h4 id="多系统引导">多系统引导</h4>
 
 <figure class="">
-  <img src="http://localhost:4000/assets/images/boot.loader.png" alt="多系统引导流程示意" />
+  <img src="https://liloli.github.io/assets/images/boot.loader.png" alt="多系统引导流程示意" />
   
 </figure>
 
@@ -631,7 +631,7 @@
 <p>initrd 是与内核捆绑在一起的，会做为内核启动流程的一部分被加载。加载后，内核才能读取其中的驱动模块，从而最终加载真正的根文件系统。</p>
 
 <figure class="">
-  <img src="http://localhost:4000/assets/images/initramfs.jpg" alt="" />
+  <img src="https://liloli.github.io/assets/images/initramfs.jpg" alt="" />
   
 </figure>
 
@@ -1483,7 +1483,7 @@ sig_hashalgo:   sha256
 <p>🍎 GRUB1 目前已经停止开发和维护。而新版的 GRUB2 是完全重新编写的。当前的发行版大多使用 GRUB2 ，且通常简称其为 GRUB，称从前的 GRUB1 为 GRUB Legacy。</p>
 
 <figure class="">
-  <img src="http://localhost:4000/assets/images/GRUB_components.png" alt="GRUB 要素" />
+  <img src="https://liloli.github.io/assets/images/GRUB_components.png" alt="GRUB 要素" />
   
 </figure>
 
@@ -2309,7 +2309,7 @@ SELINUX=enforcing
     
       
       
-      <a href="http://localhost:4000/categories/#linux" class="page__taxonomy-item" rel="tag">linux</a>
+      <a href="https://liloli.github.io/categories/#linux" class="page__taxonomy-item" rel="tag">linux</a>
     
     </span>
   </p>
@@ -2327,24 +2327,24 @@ SELINUX=enforcing
     <h4 class="page__share-title">分享</h4>
   
 
-  <a href="https://twitter.com/intent/tweet?via=liloli&text=Linux+%E5%9F%BA%E7%A1%80+-+8.+Linux+%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%20http%3A%2F%2Flocalhost%3A4000%2Flinux%2Flinux.bootstrap%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?via=liloli&text=Linux+%E5%9F%BA%E7%A1%80+-+8.+Linux+%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%20https%3A%2F%2Fliloli.github.io%2Flinux%2Flinux.bootstrap%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Flinux%2Flinux.bootstrap%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fliloli.github.io%2Flinux%2Flinux.bootstrap%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Flinux%2Flinux.bootstrap%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+  <a href="https://plus.google.com/share?url=https%3A%2F%2Fliloli.github.io%2Flinux%2Flinux.bootstrap%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Flinux%2Flinux.bootstrap%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fliloli.github.io%2Flinux%2Flinux.bootstrap%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
       
   <nav class="pagination">
     
-      <a href="http://localhost:4000/linux/linux.accontrol/" class="pagination--pager" title="Linux 基础 - 7. 访问控制
+      <a href="https://liloli.github.io/linux/linux.accontrol/" class="pagination--pager" title="Linux 基础 - 7. 访问控制
 ">向前</a>
     
     
-      <a href="http://localhost:4000/linux/linux.kernel/" class="pagination--pager" title="Linux 基础 - 9. 内核简介
+      <a href="https://liloli.github.io/linux/linux.kernel/" class="pagination--pager" title="Linux 基础 - 9. 内核简介
 ">向后</a>
     
   </nav>
@@ -2369,7 +2369,7 @@ SELINUX=enforcing
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/bash/time/" rel="permalink">Bash 脚本 - 时间
+        <a href="https://liloli.github.io/bash/time/" rel="permalink">Bash 脚本 - 时间
 </a>
       
     </h2>
@@ -2388,7 +2388,7 @@ SELINUX=enforcing
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/bash/storage/" rel="permalink">Bash 脚本 - 存储空间
+        <a href="https://liloli.github.io/bash/storage/" rel="permalink">Bash 脚本 - 存储空间
 </a>
       
     </h2>
@@ -2407,7 +2407,7 @@ SELINUX=enforcing
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/bash/numbers/" rel="permalink">Bash 脚本 - 数字
+        <a href="https://liloli.github.io/bash/numbers/" rel="permalink">Bash 脚本 - 数字
 </a>
       
     </h2>
@@ -2426,7 +2426,7 @@ SELINUX=enforcing
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/bash/input/" rel="permalink">Bash 脚本 - 输入
+        <a href="https://liloli.github.io/bash/input/" rel="permalink">Bash 脚本 - 输入
 </a>
       
     </h2>
@@ -2476,7 +2476,7 @@ SELINUX=enforcing
     
     
     
-    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="https://liloli.github.io/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
   </ul>
 </div>
 
@@ -2486,16 +2486,16 @@ SELINUX=enforcing
     </div>
 
     
-  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="https://liloli.github.io/assets/js/main.min.js"></script>
   <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 
 
 
   
   
-  <script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
-  <script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
-  <script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+  <script src="https://liloli.github.io/assets/js/lunr/lunr.min.js"></script>
+  <script src="https://liloli.github.io/assets/js/lunr/lunr-store.js"></script>
+  <script src="https://liloli.github.io/assets/js/lunr/lunr-en.js"></script>
 
 
 
@@ -2504,7 +2504,7 @@ SELINUX=enforcing
     
   <script>
     var disqus_config = function () {
-      this.page.url = "http://localhost:4000/linux/linux.bootstrap/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.url = "https://liloli.github.io/linux/linux.bootstrap/";  // Replace PAGE_URL with your page's canonical URL variable
       this.page.identifier = "/linux/linux.bootstrap"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
     (function() { // DON'T EDIT BELOW THIS LINE
