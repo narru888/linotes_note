@@ -1,0 +1,944 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>LAMP 架构工作原理 - LINOTES</title>
+<meta name="description" content="用简洁清晰的语言讨论技术">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="LAMP 架构工作原理">
+<meta property="og:url" content="http://localhost:4000/framework/lamp_intro/">
+
+
+  <meta property="og:description" content="用简洁清晰的语言讨论技术">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/header/nginx.jpeg">
+
+
+
+  <meta name="twitter:site" content="@liloli">
+  <meta name="twitter:title" content="LAMP 架构工作原理">
+  <meta name="twitter:description" content="用简洁清晰的语言讨论技术">
+  <meta name="twitter:url" content="http://localhost:4000/framework/lamp_intro/">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="http://localhost:4000/assets/images/header/nginx.jpeg">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2016-02-04T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/framework/lamp_intro/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "Hawk Zhang",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- <link rel="stylesheet" href="/assets/css/vim.css"> -->
+
+
+
+  
+
+
+
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('http://localhost:4000/assets/images/header/nginx.jpeg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          LAMP 架构工作原理
+
+        
+      </h1>
+      
+        <p class="page__lead">
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:liloli@gmail.com">
+            <meta itemprop="email" content="liloli@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="LAMP 架构工作原理">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="February 04, 2016">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-copy"></i> LAMP 架构工作原理</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#lamp-架构简介">LAMP 架构简介</a></li>
+  <li><a href="#php">PHP</a>
+    <ul>
+      <li><a href="#php-简介">PHP 简介</a></li>
+      <li><a href="#php-的运行模式">PHP 的运行模式</a></li>
+      <li><a href="#php-与数据库的通信">PHP 与数据库的通信</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="lamp-架构简介">LAMP 架构简介</h2>
+
+<p>LAMP 是指一组通常一起使用来运行动态网站或者服务器的自由软件。</p>
+
+<p>名称首字母缩写：</p>
+
+<ul>
+  <li><strong>L</strong> ：Linux，操作系统</li>
+  <li><strong>A</strong> ：Apache，网页服务器</li>
+  <li><strong>M</strong> ：MariaDB 或 MySQL，数据库管理系统（或者数据库服务器）</li>
+  <li><strong>P</strong> ：PHP、Perl 或 Python，脚本语言</li>
+</ul>
+
+<p>虽然这些开放源代码程序本身并不是专门设计成同另几个程序一起工作的，但由于它们的廉价和普遍，这个组合变得流行。一起使用的时候，它们表现的像一个具有活力的 “解决方案包”。</p>
+
+<p>安装的简便性使人误以为这些软件会自行顺利地运行，但是实际情况并非如此。最终，应用程序的负载会超出后端服务器自带设置的处理能力，应用程序的性能会降低。LAMP 安装需要不断监控、调优和评估。</p>
+
+<p><img src="/assets/images/LAMP.png" alt="image-center" class="align-center" /></p>
+
+<h2 id="php">PHP</h2>
+
+<h3 id="php-简介">PHP 简介</h3>
+
+<p>PHP，最初代表 Personal Home Page，后来代表 PHP: Hypertext Preprocessor。</p>
+
+<p>PHP 代码可以嵌入 HTML 代码，还可以与各种网页模板系统、网页内容管理系统、网页框架等一起工作。PHP 代码通常由 PHP 解释器来处理，解释器可以是网页服务器的一个 <strong>模块</strong>，也可以是一个 CGI <strong>可执行文件</strong>。网页服务器再把解释的结果与网页合并在一起，解释的结果有可能是各类型的数据，包括图片。PHP 代码也可以用命令行来执行，也可以用来开发用户端的 GUI 应用程序。</p>
+
+<p>标准的 PHP 解释器，由 Zend Engine 开发，根据 PHP 许可发布的自由软件。PHP 被广泛传播，可以在大多数网页服务器中部署。</p>
+
+<h4 id="语法">语法</h4>
+
+<p>嵌入 HTML 时：</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+ <span class="nt">&lt;head&gt;</span>
+ <span class="nt">&lt;title&gt;</span>PHP Test<span class="nt">&lt;/title&gt;</span>
+ <span class="nt">&lt;/head&gt;</span>
+ <span class="nt">&lt;body&gt;</span>
+ <span class="cp">&lt;?php echo '&lt;p&gt;Hello World&lt;/p&gt;'; ?&gt;</span>
+ <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<p>不嵌入时：</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="cp">&lt;?=</span><span class="s1">'Hello world'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>不嵌入 HTML 时，即文件中包含纯 PHP 代码时，可以省略结尾的括号。</p>
+
+<p>PHP 解释器只解释其分隔符之中的代码。分隔符之外的不会处理，不过非 PHP 的文本仍受 php 代码中描述的控制结构的制约。通常的分隔符为 <code class="highlighter-rouge"><span class="cp">&lt;?php</span></code> 和 <code class="highlighter-rouge">?&gt;</code>，还有一种简写的方法 <code class="highlighter-rouge">&lt;?</code>。不建议使用简写，因为在本地 PHP 配置中有可能被禁用对这种简写的支持。这些分隔符的目的在于将 PHP 代码与非 PHP 分隔开，如 JS 代码或 HTML 代码。</p>
+
+<p><code class="highlighter-rouge"><span class="cp">&lt;?php</span> <span class="cp">?&gt;</span></code> 这种形式的分隔符如果使用在 XHTML 和其它 XML 文档中，会生成 XML 处理指令，这意味着在服务器端文件中生成的 PHP 代码和其他标记的混合本身就是格式良好的 XML。</p>
+
+<p>变量名前缀为美元符号 <code class="highlighter-rouge">$</code>，无需预先声明变量类型。PHP 5 引入了类型提示，允许函数将其参数强制为特定类、数组、接口或回调函数的对象。但是, 在 PHP 7.0 之前，类型提示不能与标量类型（如整数或字符串）一起使用。</p>
+
+<p>与函数名及类名不同，变量名是大小写敏感的。</p>
+
+<p>使用双引号 (“ “) 和定界符字符串都可以将变量值插到字符串中。</p>
+
+<p>PHP 把换行当空格看待，语句之间用分号分隔。</p>
+
+<p>PHP 有三种注释符号：<code class="highlighter-rouge">/* */</code> 用于成块的或内联注释，<code class="highlighter-rouge">/ /</code> 或 <code class="highlighter-rouge">#</code> 用于单行注释。</p>
+
+<p><code class="highlighter-rouge">echo</code> 语句是 PHP 常用的输出语句，可以输出文本，如输出到浏览器。</p>
+
+<p>在关键字和语法上，PHP 与 C 风格的语法类似。<code class="highlighter-rouge">if</code>、<code class="highlighter-rouge">for</code>、<code class="highlighter-rouge">while</code> 等函数返回与 C、C++、C#、Java、Perl 的语法类似。</p>
+
+<h4 id="php-大致工作原理">PHP 大致工作原理</h4>
+
+<p>PHP 软件是与网页服务器一起工作的，网页服务器负责发送网页。</p>
+
+<p>当用户在浏览器地址栏中输入一个 URL 时，实际上是在向该 URL 中的服务器发送一个消息，要求它发个 HTML 文件过来。网页服务器的响应就是发送请求的文件，浏览器读取 HTML 文件，显示网页。</p>
+
+<p>用户在网页中点击链接时，其实也是在向网页服务器请求文件，点击网页中按钮来提交表单时，网页服务器也会来处理一个文件。</p>
+
+<p>如果服务器中安装了 PHP，处理过程也大致相同。可以配置网页服务器，使其可以处理特定的文件，这些文件中可以包含 PHP 语句。后缀可以是 <code class="highlighter-rouge">.php</code> 或 <code class="highlighter-rouge">.phtml</code> 等，实际上可以是任何后缀，由管理员决定。网页服务器收到针对 PHP 文件的请求时，文件中的 HTML 语句会按原样发送，而 PHP 语句则要由 PHP 解释器来处理，然后把结果与 HTML 一起发送给用户。</p>
+
+<p>在对 PHP 语句处理之后，只有产生的输出才会由网页服务器发送给浏览器，那些不产生输出的语句就不会发送，因此用户通常是看不到原始的 PHP 代码的。</p>
+
+<ul>
+  <li>用户发送 HTTP 请求，到达网页服务器</li>
+  <li>网页服务器解析 URL，获取需要的资源路径，通过内核空间读取文件系统资源。
+    <ul>
+      <li>如果是静态资源，则构建响应报文，发给用户</li>
+      <li>如果是动态资源，则把资源地址发给 PHP 解释器，解释 PHP 程序文件，解释完毕，把内容返回网页服务器，由其构建响应报文，发给用户</li>
+      <li>如果涉及到数据库操作，则利用 php-mysql 驱动，获取数据库数据，返回 PHP 解释器</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="php-的运行模式">PHP 的运行模式</h3>
+
+<h4 id="sapi">SAPI</h4>
+
+<p>Server Application Programming Interface</p>
+
+<p>SAPI 是对服务端 API 的统称，它是 PHP 与其它应用交互的接口，PHP 脚本可以有多种执行方式，通过网页服务器，或者直接在命令行下，也可以嵌入在其他程序中。SAPI 提供了一个和外部通信的接口。</p>
+
+<p>PHP 包含多个 SAPI 模块，以实现与网页服务器的多种通信方式。</p>
+
+<p>常见的 PHP SAPI 有：CGI，Fast-CGI，CLI，ISAPI，模块化动态链接库</p>
+
+<p><img src="/assets/images/apache_sapi_php.png" alt="image-center" class="align-center" /></p>
+
+<p>以下就几种常用的 SAPI 来探讨 PHP 的运行模式。</p>
+
+<h4 id="模块运行模式">模块运行模式</h4>
+
+<p>该模式中，SAPI 为嵌入 apache 的一个模块，通常名为 <strong><code class="highlighter-rouge">mod_php</code></strong>，根据 PHP 版本，名称略有区别。</p>
+
+<p>编译 apache 时，把 PHP 做为 apache 的一个 <strong>模块</strong> 来运行，这种运行方式通常还算比较有效率，但所有的脚本都会以同样的用户来运行，这对于 <strong>共享</strong> 的环境来说有一些 <strong>安全隐患</strong>。</p>
+
+<h5 id="mod_php-模块的加载方式"><code class="highlighter-rouge">mod_php</code> 模块的加载方式</h5>
+
+<p>该模式下，会使用 apache 的 <code class="highlighter-rouge">mod_php</code> 模块来执行网页服务器中的 PHP 脚本。</p>
+
+<p><code class="highlighter-rouge">mod_php</code> 模块的作用，是接收并处理 apache 传递过来的 PHP 文件请求，然后将处理后的结果返回给 apache。</p>
+
+<h6 id="与-apache-同时启动">与 apache 同时启动</h6>
+
+<p>apache 启动前，如果我们在其配置文件中配置好了 PHP 模块（如 mod_php5），PHP 模块通过注册 apache2 的 <code class="highlighter-rouge">ap_hook_post_config</code> 钩子，在 apache 启动的时候启动此模块以接受 PHP 文件的请求。</p>
+
+<p>以 <code class="highlighter-rouge">mod_php5</code> 为例，可以在 apache 配置文件 httpd.conf 中添加一行：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">LoadModule</span> <span class="n">php5_module</span> <span class="n">modules</span>/<span class="n">mod_php5</span>.<span class="n">so</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="highlighter-rouge">LoadModule</code> 命令的第一个参数为模块的名称，可以在模块实现的源码中找到。第二个参数为该模块的路径。</p>
+</blockquote>
+
+<h6 id="动态加载">动态加载</h6>
+
+<p>另外，还可以在运行时动态加载 <code class="highlighter-rouge">mod_php</code> 模块，但需要提前把模块编译为动态链接库。需要加载时，可以向服务器发送信号 <code class="highlighter-rouge">HUP</code> 或 <code class="highlighter-rouge">AP_SIG_GRACEFUL</code>，apache 收到信号就会重新加载模块，无需重启服务器。</p>
+
+<h5 id="工作原理">工作原理</h5>
+
+<p>apache 会为每个 HTTP 请求派生一个专门的子进程。在每个子进程中，<code class="highlighter-rouge">mod_php</code> 模块会嵌入专门的 PHP 解释器，哪怕进程只用来处理静态的资源也是如此。例如 JavaScript、图片或样式表，也会嵌入 PHP 解析器。以这种方式运行时，apache 的子进程可以直接处理并执行 PHP 脚本，而无需再与外部进程的通讯。对于重度 PHP 的网站，如 WordPress、Drupal、Joomla 等这样多数请求都包含 PHP 代码的网站来说尤其有用，因为所有的请求都能由 apache 来直接处理。</p>
+
+<p>在 apache 启动的时候会读取 <code class="highlighter-rouge">php.ini</code> 配置文件，并加载扩展模块，在 apache 运行期间是不会再去读取和加载扩展模块的。apache 出于稳定性和安全性考虑，通常使用默认的 prefork 模式运行 php 程序。在 prefork 模式下，一个单独的控制进程负责产生子进程，这些子进程用于监听请求并作出应答。</p>
+
+<p>apache 总是试图保有一些备用或空闲的子进程，用于迎接即将到来的请求，如此一来，客户端无需在得到服务前等候子进程的产生。</p>
+
+<p>但是，一旦连接数多了，apache 必须要生成更多的进程来响应请求，CPU 对于进程的切换就很频繁，很耗时间和资源，导致 apache 性能下降；同时，apache 在同步阻塞 I/O 模型下，select 遍历多个连接句柄才能知道句柄是否有事件通知，因此效率非常低。</p>
+
+<h6 id="优点">优点</h6>
+
+<ul>
+  <li>PHP 代码由 apache 来执行</li>
+  <li>无需外部进程</li>
+  <li>对重度 PHP 网站有很好的性能</li>
+  <li>PHP 的配置可以用 <code class="highlighter-rouge">.htaccess</code> 指令来自定义</li>
+</ul>
+
+<h6 id="缺点">缺点</h6>
+
+<ul>
+  <li>每个 apache 进程会占用更多的内存资源</li>
+  <li>即使为静态内容也会加载 PHP 解释器</li>
+  <li>由 PHP 脚本生成的文件通常所有者为网页服务器，因此无法直接编辑</li>
+</ul>
+
+<h4 id="cgi-模式">CGI 模式</h4>
+
+<p>该模式中，SAPI 为 CGI，即 Common Gateway Interface，通用网关接口。</p>
+
+<p>CGI 是比较老的模式，近年很少有人使用。</p>
+
+<p><strong><code class="highlighter-rouge">php-cgi</code></strong> 是 PHP 对网页服务器提供的 CGI 接口的程序，同时它也是 PHP 的解释器。</p>
+
+<p>CGI 是一个 <strong>接口</strong>，它会告知网页服务器如何与 PHP 应用程序交换数据。它为网页服务器与应用程序之间规定了一个标准的通讯 <strong>协议</strong>。它描述了请求的信息是如何通过环境变量传递的，请求的报文是如何通过标准输入传递的，以及响应是如何通过标准输出传递的。即，CGI 规定了要在网页服务器与应用程序服务器之间传递哪些数据，以什么样的格式传递。</p>
+
+<p>网页服务器传给 PHP 解释器的数据通常有：URL、查询字符串、POST 数据、HTTP 标头等。</p>
+
+<p>网页服务器收到 <code class="highlighter-rouge">/index.php</code> 请求时，会启动对应的 CGI 程序，这里就是 PHP 解释器。之后，PHP 解释器会分析配置文件，初始化执行环境，然后处理请求，再以规定的格式返回处理的结果，退出进程，网页服务器把结果返回浏览器。</p>
+
+<p>问题在于，标准的 CGI 对于每个请求都会执行一遍这些步骤，所以用 CGI 方式的服务器，收到多少连接请求就会派生多少 CGI 子进程，子进程反复加载是 CGI 性能低下的主要原因。当用户请求数量非常多时，会大量占用系统的资源，导致性能低下。</p>
+
+<h4 id="fastcgi-模式">FastCGI 模式</h4>
+
+<p>FastCGI 是 CGI 的升级版本，FastCGI 像是一个常驻型的 CGI，它可以一直执行着，激活后，不会每次都花时间去 Fork（CGI 最为人诟病的 fork-and-execute 模式）。</p>
+
+<p>FastCGI 是一个可伸缩地、高速地在网页服务器和动态脚本语言间通信的接口。多数流行的网页服务器都支持 FastCGI，包括 apache、nginx 和 lighttpd 等，同时，FastCGI 也被许多脚本语言所支持，其中就有 PHP。</p>
+
+<p>FastCGI 是从 CGI 发展改进而来的。传统 CGI 接口方式的主要缺点是性能很差，因为每次网页服务器遇到动态程序时，都需要重新启动脚本解释器来执行解析，然后结果被返回给网页服务器。这在处理高并发访问时，几乎是不可用的。另外，传统的 CGI 接口方式安全性也很差，现在已经很少被使用了。</p>
+
+<p>FastCGI 接口方式采用 C/S 结构，可以将网页服务器和脚本解析服务器分开，同时在脚本解析服务器上启动一个或者多个脚本解析守护进程。当网页服务器每次遇到动态程序时，可以将其直接交付给 FastCGI 进程来执行，然后将得到的结果返回给浏览器。这种方式可以让网页服务器专一地处理静态请求，或者将动态脚本服务器的结果返回给客户端，这在很大程度上提高了整个应用系统的性能。</p>
+
+<h5 id="原理">原理</h5>
+
+<ul>
+  <li>网页服务器启动时，加载 FastCGI 进程管理器</li>
+  <li>FastCGI 进程管理器自身初始化，启动多个 CGI 解释器进程（可见多个 <code class="highlighter-rouge">php-cgi</code>）并等待来自网页服务器的连接</li>
+  <li>当客户端请求到达网页服务器时，FastCGI 进程管理器选择并连接到一个 CGI 解释器。网页服务器将 CGI 环境变量和标准输入发送到 FastCGI 子进程 <code class="highlighter-rouge">php-cgi</code></li>
+  <li>FastCGI 子进程完成处理后，将标准输出和错误信息从同一连接返回网页服务器。当 FastCGI 子进程关闭连接时，请求便处理完成。</li>
+  <li>FastCGI 子进程接着等待并处理来自 FastCGI 进程管理器的下一个连接。 在 CGI 模式中，<code class="highlighter-rouge">php-cgi</code> 在此时便退出了。</li>
+</ul>
+
+<p>在 CGI 模式中，针对每个请求，PHP 都要重新解析配置、重新加载全部动态链接库扩展，并重新初始化全部数据结构。而使用 FastCGI，所有这些都只在进程启动时发生一次。还有一个额外的好处：持续数据库连接（Persistent database connection）可以工作。</p>
+
+<p>工作在 FastCGI 模式下的 PHP 会自行启动服务进程，监听于某个 <strong>套接字</strong> 上，随时接受来自客户端的请求。它是一个主进程，为了能同时响应多个用户的请求，它会启用多个 <strong>工人进程</strong> 。一旦有请求进来，它马上使用空闲的工人进程响应，将结果返回给前端的调用者。</p>
+
+<p>在 PHP 5.3 版本之前，只能工作于模块和 CGI 方式，在 PHP 5.3 之后，FastCGI 直接被收进 PHP 模块中，该模块就是 <code class="highlighter-rouge">php-fpm</code>。</p>
+
+<p>FastCGI 是通过套接字跟前端的调用者通信的，因此，前端的网页服务器和后端的 PHP 服务器完全可以工作在不同的主机上，实现了所谓的 <strong>分层</strong> 机制。</p>
+
+<h5 id="php-cgi"><code class="highlighter-rouge">php-cgi</code></h5>
+
+<p><code class="highlighter-rouge">php-cgi</code> 是 PHP 自带的 Fast-CGI 管理器。</p>
+
+<p><code class="highlighter-rouge">php-cgi</code> 的不足：</p>
+
+<p>变更配置后，需重启 <code class="highlighter-rouge">php-cgi</code> 才能让新的配置生效，无法平滑重启。</p>
+
+<p>如果直接杀死 <code class="highlighter-rouge">php-cgi</code> 进程，PHP 就无法运行了。(PHP-FPM 和 Spawn-FCGI 就没有这个问题，守护进程会平滑重新生成新的子进程。）</p>
+
+<h5 id="php-fpm"><code class="highlighter-rouge">php-fpm</code></h5>
+
+<p><code class="highlighter-rouge">php-fpm</code> 是一个 PHP FastCGI 的管理器，他是能够 <strong>调度 <code class="highlighter-rouge">php-cgi</code> 进程</strong> 的程序。</p>
+
+<p>修改 PHP 配置之后，<code class="highlighter-rouge">php-cgi</code> 进程的确没办法平滑重启，但 <code class="highlighter-rouge">php-fpm</code> 对此的应对方法是：现有进程仍按原配置执行到结束，新的进程用新的配置。用这种方式进行平滑过渡。</p>
+
+<p><code class="highlighter-rouge">php-fpm</code> 就是针对于 PHP 的 FastCGI 的一种实现，他负责管理一个 <strong>进程池</strong>，处理来自网页服务器的请求。目前，<code class="highlighter-rouge">php-fpm</code> 是内置于 PHP 中的。</p>
+
+<h5 id="优点-1">优点</h5>
+
+<p>从稳定性上看：</p>
+
+<p>FastCGI 是以独立的进程池来运行 CGI，单独一个进程死掉，系统可以很轻易的丢弃，然后重新分配新的进程来运行逻辑；</p>
+
+<p>从安全性上看：</p>
+
+<p>FastCGI 支持分布式运算。FastCGI 和宿主的服务器完全独立，FastCGI 的沦陷不会影响宿主服务器。</p>
+
+<p>从性能上看：</p>
+
+<p>FastCGI 把动态逻辑的处理从服务器中分离出来，大负荷的 I/O 处理还是留给宿主服务器，这样，宿主服务器可以一心一意作 I/O，对于一个普通的动态网页来说，逻辑处理可能只有一小部分，大量的是图片等静态文件。</p>
+
+<p>#####　缺点</p>
+
+<p>目前的 FastCGI 和网页服务器沟通还不够智能，一个 FastCGI 进程如果执行时间过长，会被当成是死进程杀掉重启。这样，在处理长时间任务的时候很麻烦，也使得 FastCGI 无法允许联机调试。因为是多进程，所以比 CGI 多线程消耗更多的服务器内存，PHP-CGI 解释器每进程消耗 7 ~ 25 MB 内存，将这个数字乘以 50 或 100 就是不小的内存了。</p>
+
+<h4 id="cli-模式">CLI 模式</h4>
+
+<p>PHP-CLI 是 PHP Command Line Interface 的简称，是 PHP 在命令行运行的接口，区别于在网页服务器上运行的 PHP 环境（PHP-CGI，ISAPI 等）。也就是说，PHP 不单可以写前台网页，它还可以用来写后台的程序。 PHP 的 CLI Shell 脚本适用于所有的 PHP 优势，使创建要么支持脚本或系统甚至与 GUI 应用程序的服务端，在 Windows 和 Linux 下都是支持 PHP-CLI 模式的。</p>
+
+<h5 id="优点-2">优点</h5>
+
+<p>使用多进程，子进程结束以后，内核会负责回收资源；</p>
+
+<p>使用多进程，子进程异常退出不会导致整个进程退出，父进程还有机会重建流程；</p>
+
+<p>一个常驻主进程，只负责任务分发，逻辑更清楚。</p>
+
+<p>…</p>
+
+<p>我们在 Linux 下经常使用 <code class="highlighter-rouge">php –m</code> 查看 PHP 安装了那些扩展，这就是 PHP 命令行运行模式。</p>
+
+<h4 id="isapi-模式">ISAPI 模式</h4>
+
+<p>Internet Server Application Program Interface，是微软提供的一套面向 Internet 服务的 API 接口，一个 ISAPI 的动态链接库，可以在被用户请求激活后长驻内存，等待用户的另一个请求，还可以在一个动态链接库里设置多个用户请求处理函数，此外，ISAPI 的动态链接库应用程序和网页服务器处于同一个进程中，效率要显著高于 CGI。（由于微软的排他性，只能运行于 windows 环境）</p>
+
+<p>PHP 作为 apache 模块时，apache 服务器在系统启动后，预先生成多个进程副本驻留在内存中，一旦有请求出现，就立即使用这些空余的子进程进行处理，这样就不存在生成子进程造成的延迟了。这些服务器副本在处理完一次 HTTP 请求之后并不立即退出，而是停留在计算机中等待下次请求。对于客户浏览器的请求反应更快，性能较高。</p>
+
+<h4 id="进化过程">进化过程</h4>
+
+<p><img src="/assets/images/sapi.update.png" alt="image-center" class="align-center" /></p>
+
+<p>普遍来说，如果要搭建一个高性能的 PHP 网页服务器，目前最佳的方式是 Apache/Nginx + FastCGI + PHP-FPM(+PHP-CGI)，不再使用模块加载或者 CGI 方式。</p>
+
+<h3 id="php-与数据库的通信">PHP 与数据库的通信</h3>
+
+<p>apache 不会跟数据库打交道，它是个静态网页服务器，跟数据库打交道的是应用程序，应用程序的 <strong>源驱动</strong> 能够通过 API 与数据库服务器建立会话，然后把 mysql 语句发送给数据库，数据库将结果返回给应用程序。</p>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/lamp" class="page__taxonomy-item" rel="tag">lamp</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/原理" class="page__taxonomy-item" rel="tag">原理</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#framework" class="page__taxonomy-item" rel="tag">framework</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2016-02-04T00:00:00+08:00">February 04, 2016</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">分享</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=liloli&text=LAMP+%E6%9E%B6%E6%9E%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%20http%3A%2F%2Flocalhost%3A4000%2Fframework%2Flamp_intro%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fframework%2Flamp_intro%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fframework%2Flamp_intro%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fframework%2Flamp_intro%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/server/vsftpd/" class="pagination--pager" title="vsftpd 的配置
+">向前</a>
+    
+    
+      <a href="http://localhost:4000/database/mysql_account_managemt/" class="pagination--pager" title="MySQL 的帐户管理
+">向后</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">猜您还喜欢</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/time/" rel="permalink">Bash 脚本 - 时间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/storage/" rel="permalink">Bash 脚本 - 存储空间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/numbers/" rel="permalink">Bash 脚本 - 数字
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/input/" rel="permalink">Bash 脚本 - 输入
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+      <li><a href="https://twitter.com/liloli"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+      <li><a href="https://www.facebook.com/lilolibj"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+    
+    
+      <li><a href="https://github.com/liloli"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+  
+  
+  <script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/framework/lamp_intro/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/framework/lamp_intro"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://liloli.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+  </body>
+</html>

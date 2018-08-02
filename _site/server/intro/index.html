@@ -1,0 +1,948 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Apache HTTP Server 简介 - LINOTES</title>
+<meta name="description" content="本节内容来自 Apache HTTP Server 2.4 官方文档。">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Apache HTTP Server 简介">
+<meta property="og:url" content="http://localhost:4000/server/intro/">
+
+
+  <meta property="og:description" content="本节内容来自 Apache HTTP Server 2.4 官方文档。">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/header/datacenter-3.jpg">
+
+
+
+  <meta name="twitter:site" content="@liloli">
+  <meta name="twitter:title" content="Apache HTTP Server 简介">
+  <meta name="twitter:description" content="本节内容来自 Apache HTTP Server 2.4 官方文档。">
+  <meta name="twitter:url" content="http://localhost:4000/server/intro/">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="http://localhost:4000/assets/images/header/datacenter-3.jpg">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2016-01-02T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/server/intro/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "Hawk Zhang",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- <link rel="stylesheet" href="/assets/css/vim.css"> -->
+
+
+
+  
+
+
+
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('http://localhost:4000/assets/images/header/datacenter-3.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Apache HTTP Server 简介
+
+        
+      </h1>
+      
+        <p class="page__lead">本节内容来自 Apache HTTP Server 2.4 <a href="https://httpd.apache.org/docs/2.4/zh-cn/">官方文档</a>。
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:liloli@gmail.com">
+            <meta itemprop="email" content="liloli@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Apache HTTP Server 简介">
+    <meta itemprop="description" content="本节内容来自 Apache HTTP Server 2.4 官方文档。">
+    <meta itemprop="datePublished" content="January 02, 2016">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-copy"></i> Apache HTTP Server 简介</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#apache-入门">Apache 入门</a>
+    <ul>
+      <li><a href="#客户端服务端url">客户端、服务端、URL</a></li>
+      <li><a href="#主机名与-dns">主机名与 DNS</a></li>
+      <li><a href="#配置文件与其指令">配置文件与其指令</a></li>
+      <li><a href="#网站内容">网站内容</a></li>
+      <li><a href="#日志文件">日志文件</a></li>
+      <li><a href="#多处理模块">多处理模块</a></li>
+    </ul>
+  </li>
+  <li><a href="#apache-的启动">Apache 的启动</a>
+    <ul>
+      <li><a href="#apache-是如何启动的">Apache 是如何启动的</a></li>
+      <li><a href="#启动期间的错误">启动期间的错误</a></li>
+      <li><a href="#随系统自动启动">随系统自动启动</a></li>
+      <li><a href="#关于停止-apache">关于停止 Apache</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <p>Apache HTTP Server 是一个免费的开源 WEB 服务端软件。最早基于 NCSA HTTPd server，Apache 在 WWW 的最初成长过程中扮演了十分重要的角色，很快就接替 NCSA HTTPd 成为占统治地位的 HTTP server，一直到 1996 年它都是最流行的软件。</p>
+
+<h2 id="apache-入门">Apache 入门</h2>
+
+<p>Apache 支持大量的功能，许多都以预编译模块的形式部署，扩展了内核的功能。支持的范围从服务端编程语言的支持直到验证方案的实现。一些通常的语言接口支持 Perl、Python、Tcl、PHP。流行的验证模块包括 <code class="highlighter-rouge">mod_access</code>、<code class="highlighter-rouge">mod_auth</code>、<code class="highlighter-rouge">mod_digest</code>、<code class="highlighter-rouge">mod_auth_digest</code> 等。其它功能如 SSL 和 TLS、代理模块、URL 重写模块、自定义日志文件等。</p>
+
+<h3 id="客户端服务端url">客户端、服务端、URL</h3>
+
+<p>网址用 URL 来表示，Uniform Resource Locator。由协议、服务器名称、URL 路径组成，有时在最后还会跟有查询字符串，用来给服务器传递更多的参数。</p>
+
+<p>网络客户端会使用特定的协议连接到服务器，用 URL 发出一个使用资源的 <strong>请求</strong>。</p>
+
+<p>URL 路径可以是服务器上的文件、处理器、程序文件等。</p>
+
+<p>服务器会发送一个 <strong>回复</strong>，由状态码和回复内容组成，其中回复内容为可选的。状态码用来表示客户端的请求是否成功，如果失败，则代表具体是什么错误。</p>
+
+<p>期间的细节以及错误都会写进日志文件。</p>
+
+<h3 id="主机名与-dns">主机名与 DNS</h3>
+
+<p>为了连接到服务器，客户端首先会把服务器的主机名解析成 IP 地址，因此，若希望服务器可被访问，其主机名必须存在于 DNS 中。</p>
+
+<p>多个主机名可以指向同一个 IP  地址，多个 IP 地址可以指向同一个物理服务器。因此通过使用虚拟主机，可以在同一个物理服务器上同时运行多个网站。</p>
+
+<p>如果服务器仅用于测试，不需要互联网访问，可以把主机名放到 hosts 文件中，以实现本地解析。如：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1  www.example.com
+</code></pre></div></div>
+
+<p>hosts 文件通常位于 <code class="highlighter-rouge">/etc/hosts</code>。</p>
+
+<h3 id="配置文件与其指令">配置文件与其指令</h3>
+
+<p>Apache HTTP Server 是使用文本文件来配置的，配置文件通常为 <code class="highlighter-rouge">/etc/httpd/conf/httpd.conf</code>。</p>
+
+<p>该配置文件经常会分割成几个小配置文件，为的是更易于管理。在 <code class="highlighter-rouge">httpd.conf</code> 中，可以使用 <code class="highlighter-rouge">Include</code> 指令来加载这些小文件。管理员可以根据自己的需要自行切割、使用这些小文件。</p>
+
+<p>通过在这些配置文件中放置配置专用指令来配置服务器。一个指令由一个关键字及随后的一个或多个参数组成。</p>
+
+<p>如何放置这些指令：</p>
+
+<ul>
+  <li>如果是全局的设置，应该放在主配置文件 <code class="highlighter-rouge">httpd.conf</code> 中，而且要独立于任何段落之外。</li>
+  <li>如果只应用于特定的目录，应该放在特定的 <code class="highlighter-rouge">&lt;Directory&gt;</code> 段落中。</li>
+</ul>
+
+<p>除了主配置文件之外，在网站内容目录中还有一个 <code class="highlighter-rouge">.htaccess</code> 文件，其中也包含了一些指令。该文件是为那些无法直接访问主配置文件的人准备的。</p>
+
+<h3 id="网站内容">网站内容</h3>
+
+<p>网站内容可以有多种形式，大致可分为静态内容和动态内容。</p>
+
+<h4 id="静态内容">静态内容</h4>
+
+<p>静态内容如 HTML 文件，图片文件，CSS 文件，及其文件系统中其它文件。</p>
+
+<p><code class="highlighter-rouge">DocumentRoot</code> 指令用于指定文件系统中哪个目录做为网站根目录。该指令可以全局指定，也可以针对每个虚拟主机指定。</p>
+
+<p>如果没有指定其它文件名，请求访问目录时，服务器会把当前目录的 <code class="highlighter-rouge">index.html</code> 文件做为回复。</p>
+
+<h4 id="动态内容">动态内容</h4>
+
+<p>动态内容是在请求时动态生成的，而且每个请求所产生的内容可能有所不同。生成动态内容有多种方法，有多种处理器可以使用。</p>
+
+<p>有许多第三方的应用程序可以在 Apache HTTP Server 中使用，像 mod_php 这样的第三方模块可以用来编写代码。</p>
+
+<h3 id="日志文件">日志文件</h3>
+
+<p>对于 Apache HTTP Server 的管理员，最有价值的资产就是日志文件，尤其是错误日志。只要排错就必须要使用错误日志。</p>
+
+<p><code class="highlighter-rouge">ErrorLog</code> 指令用于指定错误日志文件。</p>
+
+<p>错误日志的条目会告诉你发生了什么错误，什么时间发生的。经常还会告诉你如何修复。每个错误日志消息都会包含一个错误代码，需要时可以用来在网上搜索更详尽的解决办法。</p>
+
+<p>可以通过设置，让错误日志包含用户的日志 ID，这样在排错时就便于将错误日志的条目与访问日志的条目关联在一起，可以了解是哪个请求引起的错误。</p>
+
+<h3 id="多处理模块">多处理模块</h3>
+
+<p>Multi-Processing Module，MPM</p>
+
+<blockquote>
+  <p>本节内容非本人翻译，原文引用官方文档。做了微调。</p>
+</blockquote>
+
+<h4 id="介绍">介绍</h4>
+
+<p>Apache HTTP Server 被设计为一个功能强大，并且灵活的 web 服务器， 可以在很多平台与环境中工作。不同平台和不同的环境往往需要不同的特性，或可能以不同的方式实现相同的特性最有效率。Apache httpd 通过模块化的设计来适应各种环境。这种设计允许网站管理员通过在编译时或运行时，选择哪些模块将会加载在服务器中，从而确定服务器的具体功能。</p>
+
+<p>Apache HTTP Server 2.0 将此模块化设计扩展到 web 服务器最基本的功能上。它提供了可以选择的多处理模块，负责绑定到网络端口上、接受请求、调度子进程处理请求。</p>
+
+<p>将模块化设计扩展到服务器的这个级别，为我们带来两大好处：</p>
+
+<ul>
+  <li>Apache httpd 能更优雅，更高效率的支持不同的平台。尤其是 Apache httpd 的 Windows 版本现在更有效率了，因为 mpm_winnt 能使用原生网络功能来取代 Apache httpd 1.3 中使用的 POSIX 层。它也可以扩展到其它平台来使用专用的 MPM。</li>
+  <li>Apache httpd 能更好的为有特殊要求的站点定制。例如，要求更高伸缩性的站点可以选择使用线程的 MPM，即 worker 或 event； 需要可靠性或者与旧软件兼容的站点可以使用 prefork。</li>
+</ul>
+
+<p>在用户看来，MPM 很像其它 Apache httpd 模块。主要区别在于，任何时候，必须有一个，而且 <strong>只能有一个</strong> MPM 加载到服务器中。可用的 MPM 列表位于模块索引页面。</p>
+
+<h4 id="默认-mpm">默认 MPM</h4>
+
+<p>下表列出了不同系统的默认 MPM。如果你不在编译时手动选择，那么它就是你将要使用的 MPM。</p>
+
+<p>Linux ： <code class="highlighter-rouge">prefork</code>，<code class="highlighter-rouge">worker</code>，<code class="highlighter-rouge">event</code> 之一</p>
+
+<p>Windows ：<code class="highlighter-rouge">mpm_winnt</code></p>
+
+<p>在 Linux 中，最终决定安装哪个 MPM 是基于两个问题：</p>
+
+<ol>
+  <li>系统是否支持线程？</li>
+  <li>系统是否支持线程安全轮询（thread-safe polling），具体地说是 <code class="highlighter-rouge">kqueue</code> 和 <code class="highlighter-rouge">epoll</code> 函数？</li>
+</ol>
+
+<p>如果两个问题的答案均为 “是”，则默认 MPM 为 <code class="highlighter-rouge">event</code>；</p>
+
+<p>如果问题一的答案为 “是”，问题二的答案为 “否”，则默认 MPM 为 <code class="highlighter-rouge">worker</code>；</p>
+
+<p>如果两个问题的答案均为 “否”，则默认 MPM 为 <code class="highlighter-rouge">prefork</code>。</p>
+
+<p class="notice--info">在实际运行中，意味着几乎默认值总会是 <code class="highlighter-rouge">event</code>，因为当前所有操作系统均支持这两个功能。</p>
+
+<h4 id="构建-mpm-为静态模块">构建 MPM 为静态模块</h4>
+
+<p>在全部平台中，MPM 都可以构建为静态模块。在构建时选择一种 MPM，链接到服务器中。如果要改变 MPM，必须重新构建。</p>
+
+<p>为了使用指定的 MPM，请在执行 configure 脚本 时，使用参数 <code class="highlighter-rouge">--with-mpm=NAME</code>。NAME 为指定的 MPM 名称。</p>
+
+<p>编译完成后，可以使用 <code class="highlighter-rouge">./httpd -l</code> 来确定选择的 MPM。 此命令会列出编译到服务器程序中的所有模块，包括 MPM。</p>
+
+<h4 id="构建-mpm-为动态模块">构建 MPM 为动态模块</h4>
+
+<p>在 Unix 或类似平台中，MPM 可以构建为动态模块，与其它动态模块一样在运行时加载。构建 MPM 为动态模块，就可以通过修改 <code class="highlighter-rouge">LoadModule</code> 指令内容来改变 MPM，而无需重新构建服务器程序。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>LoadModule mpm_prefork_module modules/mod_mpm_prefork.so
+</code></pre></div></div>
+
+<p>在执行 configure 脚本时，使用 <code class="highlighter-rouge">--enable-mpms-shared</code> 选项可以启用此特性。当给出的参数为 <code class="highlighter-rouge">all</code> 时，所有此平台支持的 MPM 模块都会被安装。还可以在参数中给出模块列表。</p>
+
+<p>默认 MPM，可以自动选择或者在执行 configure 脚本时通过 <code class="highlighter-rouge">--with-mpm</code> 选项来指定，然后出现在生成的服务器配置文件中。 编辑 <code class="highlighter-rouge">LoadModule</code> 指令内容可以选择不同的 MPM。</p>
+
+<h2 id="apache-的启动">Apache 的启动</h2>
+
+<p>在 Linux 中，<code class="highlighter-rouge">httpd</code> 程序做为服务（daemon）运行，在后台负责处理请求。</p>
+
+<h3 id="apache-是如何启动的">Apache 是如何启动的</h3>
+
+<p>如果配置文件中 <code class="highlighter-rouge">Listen</code> 指定的端口默认为 80，或是其它低于 1024 的端口，则必须有 root 权限才能启动 Apache，才能绑定到该端口。一旦服务端启动，并进行了一些准备活动，如打开日志文件等，服务端会生成几个子进程，这些子进程用来负责侦听来自客户端的请求，而 <code class="highlighter-rouge">httpd</code> 这个主进程继续以 root 身份运行，但子进程是以较低权限的用户运行的，这些均由所选择的多处理模块控制。</p>
+
+<p>建议使用 <code class="highlighter-rouge">apachectl</code> 脚本来间接调用 <code class="highlighter-rouge">httpd</code> 可执行文件。该脚本会为 httpd 设定必要的环境变量，以保存在特定的操作系统中正常运行，然后再调用 httpd 二进制文件。<code class="highlighter-rouge">apachectl</code> 会把所有命令行的参数传递给 httpd，因此 httpd 所有的选项都可以配合 <code class="highlighter-rouge">apachectl</code> 使用。还可以直接编辑 <code class="highlighter-rouge">apachectl</code> 脚本中顶部的 <code class="highlighter-rouge">HTTPD</code> 变量，以指定 httpd 二进制文件的正确位置，同时还可以设定希望持续生效的任何命令行参数。</p>
+
+<blockquote>
+  <p><code class="highlighter-rouge">apachectl</code> 是 Apache 的前端工具，用于帮助管理员控制服务的运行。apachectl 脚本可以两种模式运行。其一，单纯做为 httpd 的前端，来设置一些必要的环境变量，然后调用 httpd，把命令行参数传递给它。其二，可以做为 SysV 启动脚本，接受单一参数如 <code class="highlighter-rouge">start</code>、<code class="highlighter-rouge">restart</code>、<code class="highlighter-rouge">stop</code>，将之翻译为对应的信号给 httpd。</p>
+</blockquote>
+
+<p>httpd 被调用时所做的第一件事，是找到并读取配置文件。配置文件的位置是在编译时确定的，但运行时也可以通过 <code class="highlighter-rouge">-f</code> 选项来单独指定：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/usr/local/apache2/bin/apachectl <span class="nt">-f</span> /usr/local/apache2/conf/httpd.conf
+</code></pre></div></div>
+
+<p>如果启动时一切正常，服务端会从终端分离开来，命令提示符几乎立即就会返回，这表示服务端已经启动并运行，此时可以用浏览器来连接服务端，查看网页根目录的测试页面了。</p>
+
+<h3 id="启动期间的错误">启动期间的错误</h3>
+
+<p>如果 Apache 启动期间遇到严重问题，在退出之前，它会把问题的具体信息输出到终端或错误日志。最常见的错误消息是 <code class="highlighter-rouge">Unable to bind to Port ...</code>，原因通常为：</p>
+
+<ul>
+  <li>没有用 root 登陆，导致启动服务端时无权打开端口</li>
+  <li>在启动服务端之前，已经有 Apache 的其它实例，或其它服务端占用了该端口</li>
+</ul>
+
+<h3 id="随系统自动启动">随系统自动启动</h3>
+
+<p>若想在系统启动时能够自动启动该服务，可以在 <code class="highlighter-rouge">rc.local</code> 文件中调用 <code class="highlighter-rouge">apachectl start</code>，这将会以 root 身份启动 Apache，前提是一定要确认服务器的安全和访问限制都被正确配置。</p>
+
+<p><code class="highlighter-rouge">apachectl</code> 脚本是按照标准 SysV 初始脚本来设计的，可以接受 <code class="highlighter-rouge">start</code>、<code class="highlighter-rouge">restart</code>、<code class="highlighter-rouge">stop</code> 这些参数，然后将其翻译为对应的信号给 httpd。因此，虽然可以简单地把 <code class="highlighter-rouge">apachctl</code> 链接到初始目录，但一定要检查当前系统在启动方面的需求。</p>
+
+<h3 id="关于停止-apache">关于停止 Apache</h3>
+
+<p>要想停止或重启 Apache，必须给运行中的 httpd 进程发送一个信号，有两种方法：</p>
+
+<h4 id="方法一">方法一</h4>
+
+<p>可以使用 <code class="highlighter-rouge">kill</code> 命令来直接给进程发信号，你会发现系统中同时有多个 <code class="highlighter-rouge">httpd</code> 进程，但应该只给 <strong>父进程</strong> 发信号，其进程 ID 保存在 <code class="highlighter-rouge">PidFile</code> 指令所设定的文件中，也就是说只需要给父进程发信号就足够了。</p>
+
+<p>有四种信号可以给父进程发送：<code class="highlighter-rouge">TERM</code>、<code class="highlighter-rouge">USER1</code>、<code class="highlighter-rouge">HUP</code>、<code class="highlighter-rouge">WINCH</code>。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">kill</span> <span class="nt">-TERM</span> <span class="sb">`</span><span class="nb">cat</span> /usr/local/apache2/logs/httpd.pid<span class="sb">`</span>
+</code></pre></div></div>
+
+<h4 id="方法二">方法二</h4>
+
+<p>第二种方法是使用 <code class="highlighter-rouge">apchectl -k</code>，后面可以接 <code class="highlighter-rouge">stop</code>、<code class="highlighter-rouge">restart</code>、<code class="highlighter-rouge">graceful</code>、<code class="highlighter-rouge">graceful-stop</code>。</p>
+
+<p>在发送信号之后，可以通过错误日志来查看进度：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">tail</span> <span class="nt">-f</span> /usr/local/apache2/logs/error_log
+</code></pre></div></div>
+
+<h5 id="立即停止">立即停止</h5>
+
+<p>Stop Now.</p>
+
+<p>发送的信号：<code class="highlighter-rouge">TERM</code></p>
+
+<p><code class="highlighter-rouge">apachectl -k stop</code></p>
+
+<p>给父进程发送 <code class="highlighter-rouge">GERM</code> 或 <code class="highlighter-rouge">stop</code> 信号会使其立即去尝试杀掉所有子进程，有可能会需要几秒钟来完成。然后父进程自己也会退出。这期间产生的任何请求都会被终止，不再接受任何请求。</p>
+
+<h5 id="优雅重启">优雅重启</h5>
+
+<p>Greaceful Restart.</p>
+
+<p>发送的信号：<code class="highlighter-rouge">USR1</code></p>
+
+<p><code class="highlighter-rouge">apachectl -k graceful</code></p>
+
+<p>收到 <code class="highlighter-rouge">USR1</code> 或 <code class="highlighter-rouge">graceful</code> 信号的父进程会劝告子进程尽快退出：把当前请求处理完就马上退出，如果当前没有任何工作要处理则立即退出。</p>
+
+<p>父进程会重新读取配置文件，并重新打开日志文件。每死一个子进程，父进程都会用新一代配置文件生成新的子进程来替换，该子进程立即进入接受新请求的状态。</p>
+
+<p>整个重启的过程始终会遵守 MPM 的进程控制指令的要求，用于服务于客户端请求的进程、线程的数量会 <strong>始终保持</strong> 在一个合适的值。进一步说，整个过程是严格遵守 <code class="highlighter-rouge">StartServers</code> 的限制：</p>
+
+<p>如果一秒钟之后，至少有一个新的 <code class="highlighter-rouge">StartServers</code> 新的子进程没有被创建，则新建足够的子进程来填补空缺。因为该机制不仅会针对服务器的负载而尝试维护子进程的正确数量，同时还会尊重 <code class="highlighter-rouge">StartServers</code> 参数所设定的限制。</p>
+
+<blockquote>
+  <p><code class="highlighter-rouge">StartServers</code> 指令用于指定启动服务端时需创建多少个子进程。</p>
+</blockquote>
+
+<p>如果使用了 <code class="highlighter-rouge">mod_status</code> 模块就会注意到，发送 <code class="highlighter-rouge">USR1</code> 信号以后，服务端的数量并没有归零，该机制不仅是为了减少服务端无法处理请求的时间，同时也是为了尊重你的参数设置。（重启期间发生的请求会被操作系统排进队列，以保证不会丢失。）为了实现这个目的，系统必须一代一代地持续追踪所有子进程。</p>
+
+<p>状态模块会使用 <code class="highlighter-rouge">G</code> 来表示那些优雅重启之前已经开始处理请求的子进程。</p>
+
+<p>当前，对于使用 <code class="highlighter-rouge">USR1</code> 的日志滚动脚本来说，它无法知晓是否所有记录预重启的子进程都已经结束了。建议在发送 <code class="highlighter-rouge">USR1</code> 信号之后，使用一种适合的延时机制，然后再对旧日志进行处理。</p>
+
+<p>执行重启时，系统会首先检查配置文件的语法，如果发现错误会报错，服务端会拒绝重启。要想检查配置文件是否有语法错误，可以先尝试用非 root 用户来启动 httpd，如果没有语法错误，它就会尝试打开其套接字及日志，然后就会失败，因为不是 root，或因为当前运行的 httpd 已经占用了端口。如果因为其它原因而失败，就可能是配置文件的语法问题。</p>
+
+<h5 id="立即重启">立即重启</h5>
+
+<p>Restart Now.</p>
+
+<p>发送的信号：<code class="highlighter-rouge">HUP</code></p>
+
+<p><code class="highlighter-rouge">apachectl -k restart</code></p>
+
+<p>给父进程发送 <code class="highlighter-rouge">HUP</code> 或 <code class="highlighter-rouge">restart</code> 信号会像 <code class="highlighter-rouge">TERM</code> 一样杀掉子进程，但父进程不会退出。</p>
+
+<p>父进程会重新读取配置文件，重新打开所有日志文件，然后再生成一组新的子进程，继续运行服务。</p>
+
+<p>如果使用了 <code class="highlighter-rouge">mod_status</code> 模块就会注意到，发送 <code class="highlighter-rouge">HUP</code> 信号以后，服务端的数量被归零。</p>
+
+<h5 id="优雅停止">优雅停止</h5>
+
+<p>Graceful Stop.</p>
+
+<p>发送的信号：<code class="highlighter-rouge">WINCH</code></p>
+
+<p><code class="highlighter-rouge">apachectl -k graceful-stop</code></p>
+
+<p>收到 <code class="highlighter-rouge">WINCH</code> 或 <code class="highlighter-rouge">graceful-stop</code> 信号的父进程会劝告子进程尽快退出：把当前请求处理完就马上退出，如果当前没有任何工作要处理则立即退出。</p>
+
+<p>之后，父进程会删除其 <code class="highlighter-rouge">PidFile</code> 文件，停止对所有端口的侦听。</p>
+
+<p>父进程会继续运行，并监督子进程对请求的处理进度。一旦所有子进程都终结并退出，或超时（<code class="highlighter-rouge">GracefulShutdownTimeout</code> 指令所限定的时间）了，父进程也会退出。如果超时，所有剩余的子进程都会收到 <code class="highlighter-rouge">TERM</code> 信号，被强制退出。</p>
+
+<p>处于这种优雅（graceful）状态时，如果收到 <code class="highlighter-rouge">TERM</code> 信号，会立即终止父进程及其所有子进程。然而，此时 <code class="highlighter-rouge">PidFile</code> 应该已经被删除了，无法使用 <code class="highlighter-rouge">apachectl</code> 或 <code class="highlighter-rouge">httpd</code> 来发送 <code class="highlighter-rouge">TERM</code> 信号。</p>
+
+<blockquote>
+  <p>信号 <code class="highlighter-rouge">graceful-stop</code> 允许我们同时运行多个相同配置的 httpd 实例，在进行 httpd 优雅升级时这是一个强大的功能，但是，使用有些配置时，它也会造成死锁及竞争。
+无论是锁文件（<code class="highlighter-rouge">Mutex</code>）还是套接字文件（<code class="highlighter-rouge">ScriptSock</code>）都包含了服务端的 PID，按理说应该和平共处。但是，如果一个配置指令、第三方模块或持续的 CGI 使用了磁盘中的任何其它的锁文件或状态文件，就需要一些工作以确保 httpd 的多个运行实例不会损坏彼此的文件。
+同时，还要注意其它的潜在竞争危险，如使用 <code class="highlighter-rouge">rotatelogs</code> 风格的管道日志。<code class="highlighter-rouge">rotatelogs</code> 的多个运行实例会尝试同时滚动相同的日志文件，这会损坏各自的日志文件。</p>
+</blockquote>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/apache" class="page__taxonomy-item" rel="tag">apache</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#server" class="page__taxonomy-item" rel="tag">server</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2016-01-02T00:00:00+08:00">January 02, 2016</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">分享</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=liloli&text=Apache+HTTP+Server+%E7%AE%80%E4%BB%8B%20http%3A%2F%2Flocalhost%3A4000%2Fserver%2Fintro%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fserver%2Fintro%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fserver%2Fintro%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fserver%2Fintro%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/server/filter/" class="pagination--pager" title="Apache 过滤器
+">向前</a>
+    
+    
+      <a href="http://localhost:4000/server/logging/" class="pagination--pager" title="Apache 日志
+">向后</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">猜您还喜欢</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/time/" rel="permalink">Bash 脚本 - 时间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/storage/" rel="permalink">Bash 脚本 - 存储空间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/numbers/" rel="permalink">Bash 脚本 - 数字
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/input/" rel="permalink">Bash 脚本 - 输入
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+      <li><a href="https://twitter.com/liloli"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+      <li><a href="https://www.facebook.com/lilolibj"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+    
+    
+      <li><a href="https://github.com/liloli"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+  
+  
+  <script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/server/intro/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/server/intro"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://liloli.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+  </body>
+</html>

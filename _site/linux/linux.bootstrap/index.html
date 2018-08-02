@@ -1,0 +1,2525 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Linux 基础 - 8. Linux 启动流程 - LINOTES</title>
+<meta name="description" content="用简洁清晰的语言讨论技术">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Linux 基础 - 8. Linux 启动流程">
+<meta property="og:url" content="http://localhost:4000/linux/linux.bootstrap/">
+
+
+  <meta property="og:description" content="用简洁清晰的语言讨论技术">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/header/linux.jpg">
+
+
+
+  <meta name="twitter:site" content="@liloli">
+  <meta name="twitter:title" content="Linux 基础 - 8. Linux 启动流程">
+  <meta name="twitter:description" content="用简洁清晰的语言讨论技术">
+  <meta name="twitter:url" content="http://localhost:4000/linux/linux.bootstrap/">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="http://localhost:4000/assets/images/header/linux.jpg">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2015-01-08T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/linux/linux.bootstrap/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "Hawk Zhang",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- <link rel="stylesheet" href="/assets/css/vim.css"> -->
+
+
+
+  
+
+
+
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('http://localhost:4000/assets/images/header/linux.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Linux 基础 - 8. Linux 启动流程
+
+        
+      </h1>
+      
+        <p class="page__lead">
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:liloli@gmail.com">
+            <meta itemprop="email" content="liloli@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Linux 基础 - 8. Linux 启动流程">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="January 08, 2015">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-code-branch"></i> 8. Linux 启动流程</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#81-基础概念">8.1 基础概念</a>
+    <ul>
+      <li><a href="#811-bios">8.1.1 BIOS</a></li>
+      <li><a href="#812-uefi">8.1.2 UEFI</a></li>
+      <li><a href="#813-bios-vs-uefi">8.1.3 BIOS vs UEFI</a></li>
+      <li><a href="#814-引导程序">8.1.4 引导程序</a></li>
+      <li><a href="#815-根文件系统">8.1.5 根文件系统</a></li>
+      <li><a href="#816-初始化程序">8.1.6 初始化程序</a></li>
+    </ul>
+  </li>
+  <li><a href="#82-initial-ram-disk">8.2 Initial Ram Disk</a></li>
+  <li><a href="#83-典型的计算机启动流程">8.3 典型的计算机启动流程</a>
+    <ul>
+      <li><a href="#831-bios--mbrgpt">8.3.1 BIOS + MBR/GPT</a></li>
+      <li><a href="#832-uefi--gpt">8.3.2 UEFI + GPT</a></li>
+      <li><a href="#833-linux-系统启动流程">8.3.3 Linux 系统启动流程</a></li>
+    </ul>
+  </li>
+  <li><a href="#84-linux-启动流程">8.4 Linux 启动流程</a>
+    <ul>
+      <li><a href="#841-引导阶段">8.4.1 引导阶段</a></li>
+      <li><a href="#842-启动阶段">8.4.2 启动阶段</a></li>
+    </ul>
+  </li>
+  <li><a href="#85-内核与内核模块">8.5 内核与内核模块</a>
+    <ul>
+      <li><a href="#851-内核相关文件">8.5.1 内核相关文件</a></li>
+      <li><a href="#852-内核模块">8.5.2 内核模块</a></li>
+      <li><a href="#853-查看内核模块">8.5.3 查看内核模块</a></li>
+      <li><a href="#854-模块的加载与移除">8.5.4 模块的加载与移除</a></li>
+    </ul>
+  </li>
+  <li><a href="#86-grub">8.6 GRUB</a>
+    <ul>
+      <li><a href="#861-grub-的安装">8.6.1 GRUB 的安装</a></li>
+      <li><a href="#862-grub-文件构成">8.6.2 GRUB 文件构成</a></li>
+      <li><a href="#863-grub-工作方式">8.6.3 GRUB 工作方式</a></li>
+      <li><a href="#864-grub-文件系统语法">8.6.4 GRUB 文件系统语法</a></li>
+      <li><a href="#865-多操作系统引导">8.6.5 多操作系统引导</a></li>
+      <li><a href="#866-以图形方式显示菜单">8.6.6 以图形方式显示菜单</a></li>
+      <li><a href="#867-给菜单加密码">8.6.7 给菜单加密码</a></li>
+    </ul>
+  </li>
+  <li><a href="#87-系统启动常见问题">8.7 系统启动常见问题</a>
+    <ul>
+      <li><a href="#871-忘记-root-密码">8.7.1 忘记 root 密码</a></li>
+      <li><a href="#872-因文件系统错误而无法启动">8.7.2 因文件系统错误而无法启动</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="81-基础概念">8.1 基础概念</h2>
+
+<h3 id="811-bios">8.1.1 BIOS</h3>
+
+<p>Basic Input/Output System。</p>
+
+<p>BIOS 是一种固件接口，它在控制系统启动的第一步的同时，还对各种外设提供最低层的接口。 在装有 BIOS 的 x86 系统上，BIOS 程序代码是刷写在只读存储器 ROM 中的，因此始终可用。系统启动时，CPU 会从系统内存最末端查找 BIOS 程序代码，并执行。</p>
+
+<h3 id="812-uefi">8.1.2 UEFI</h3>
+
+<p>UEFI，Unified Extensible Firmware Interface</p>
+
+<p>对于基于 UEFI 的 x86 系统，和 BIOS 一样，UEFI 也是用于控制启动过程的，并在系统固件与操作系统之间提供一个接口。</p>
+
+<p>与 BIOS 不同的是，它有自己的独立于 CPU 的架构，以及其自己的设备驱动程序。UEFI 可以 <strong>加载分区，读取特定文件系统</strong>。</p>
+
+<h3 id="813-bios-vs-uefi">8.1.3 BIOS vs UEFI</h3>
+
+<p>BIOS 与 UEFI 区别</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">比较项目</th>
+      <th style="text-align: left">传统BIOS</th>
+      <th style="text-align: left">UEFI</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">使用程序语言</td>
+      <td style="text-align: left">组合语言</td>
+      <td style="text-align: left">C 语言</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">硬件资源控制</td>
+      <td style="text-align: left">使用中断管理，不可变的内存存取，不可变的I/O存取</td>
+      <td style="text-align: left">使用驱动程序与协议</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">处理器运行环境</td>
+      <td style="text-align: left">16 位</td>
+      <td style="text-align: left">CPU 保护模式</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">扩充方式</td>
+      <td style="text-align: left">通过IRQ 链接</td>
+      <td style="text-align: left">直接加载驱动程序</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">第三方厂商支持</td>
+      <td style="text-align: left">较差</td>
+      <td style="text-align: left">较佳且可支持多平台</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">图形化能力</td>
+      <td style="text-align: left">较差</td>
+      <td style="text-align: left">较佳</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">内置简化操作系统前环境</td>
+      <td style="text-align: left">不支持</td>
+      <td style="text-align: left">支持</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>UEFI 在概念上非常类似于一个低级的操作系统，具有 <strong>操控所有硬件资源</strong> 的能力。但 <strong>性能不佳</strong>，多用来作为启动操作系统之前的硬件检测、启动管理、软件设置等。</p>
+
+<h5 id="加载操作系统后">加载操作系统后</h5>
+
+<p>一般来说，UEFI 会停止工作，并把系统交给操作系统。但 <strong>特定环境</strong> 下，这些 UEFI 程序可以 <strong>部份继续运行</strong>，以协助某些操作系统管理特定设备。</p>
+
+<h5 id="安全引导">安全引导</h5>
+
+<p>过去，为了防止黑客对 BIOS 的破坏，UEFI 加入了一个 <strong>安全引导</strong> 机制。操作系统须被 UEFI 验证，否则无法启动。要把该功能 <strong>关闭</strong>，才能顺利进入 Linux 。</p>
+
+<h5 id="额外分区">额外分区</h5>
+
+<p>建议保留 <strong>grub</strong> 的 <strong>BIOS boot</strong> 分区，<strong>2M</strong> 空间；</p>
+
+<p>另外，一些第三方厂商的 UEFI <strong>应用程序</strong> 需占用一定空间，因此需要一个单独的 <strong>512MB ~ 1G</strong> 分区，<strong>vfat</strong> 文件系统。</p>
+
+<h5 id="设备文件号码">设备文件号码</h5>
+
+<p>UEFI 突破了 BIOS 的 1024 柱面限制，因此 <strong>引导程序与内核</strong> 只需放置在磁盘开始的 <strong>前 2TB</strong> 即可，加上上面保留的 2 个分区，<code class="highlighter-rouge">/boot</code> 目录至少是 <strong>/dev/sda3 之后</strong> 的号码了。（BIOS 时代基本都是 <code class="highlighter-rouge">/dev/sda1</code>）</p>
+
+<h3 id="814-引导程序">8.1.4 引导程序</h3>
+
+<p>Boot Loader / OS Loader。</p>
+
+<p>引导程序通常安装在 MBR 和 VBR 中，其主要工作是在某个设备上 <strong>找到内核，加载，运行</strong>。</p>
+
+<p>常用的引导程序为 GRUB，GRUB2 和 LILO。<strong>GRUB2</strong> 为较新的一个，比其它两种用的更为广泛。</p>
+
+<p>大多数的引导程序允许以交互方式使用，以便用户可以 <strong>选择启动哪个内核</strong>，同时还可以 <strong>把特定的参数传递给内核</strong>。</p>
+
+<p>鉴于 MBR 区区 512 字节的空间，其中的引导程序只能完成有限的工作，多数系统会将引导程序切分为两步。在 MBR 中的这部分自然称为一级引导程序，二级引导程序则会保存在持续储存设备中，如某个磁盘分区中。</p>
+
+<h4 id="多系统引导">多系统引导</h4>
+
+<figure class="">
+  <img src="http://localhost:4000/assets/images/boot.loader.png" alt="多系统引导流程示意" />
+  
+</figure>
+
+<ul>
+  <li>不同的操作系统其 <strong>文件系统的格式不同</strong>，需要不同的引导程序来识别</li>
+  <li><strong>每个文件系统都会保留一块引导扇区</strong> VBR，操作系统通常把引导程序安装到其根目录所在文件系统的 VBR 中</li>
+  <li>可引导的内核文件是保存在各分区里的</li>
+  <li>引导程序只认识自己的系统盘内的可引导内核文件，以及其他引导程序而已</li>
+  <li>借助 <strong>菜单</strong> 功能，选择不同的内核或操作系统来引导</li>
+  <li>引导程序可直接指向或者是间接把管理权转交给另一个管理程序</li>
+  <li>通过 <strong>移交控制权</strong>，可以加载其他引导扇区内的引导程序，实现 <strong>链式引导</strong></li>
+</ul>
+
+<h5 id="windows--linux-双系统">Windows / Linux 双系统</h5>
+
+<h6 id="linux">Linux</h6>
+
+<p>Linux 引导程序多为 <code class="highlighter-rouge">GRUB</code></p>
+
+<p>安装 Linux 系统时，<strong>允许用户选择</strong> 把引导程序安装在 MBR 或各别分区的引导扇区，且引导程序可以手动设置菜单，加入 Windows 启动选项。</p>
+
+<p>如果安装到 MBR，则在 MBR 与 VBR 都会同时存在引导程序。</p>
+
+<h6 id="windows">Windows</h6>
+
+<p>Windows 使用的引导程序为 <code class="highlighter-rouge">NTLDR</code>（New Technology Loader），默认无法转出控制权，只接受其它程序的转交。废物！！！</p>
+
+<p>安装 Windows 时，会 <strong>强制</strong> 在 MBR 与 VBR <strong>同时安装引导程序</strong>。用户没有选择的机会，不支持设置启动菜单。流氓！！！</p>
+
+<p>基于以上原因，普遍的做法是先安装 Windows，后安装 Linux，以保留启动菜单。</p>
+
+<h4 id="引导程序如何加载-linux-内核">引导程序如何加载 Linux 内核</h4>
+
+<p>引导程序的任务是访问 <strong>操作系统的内核镜像</strong> 文件，以便将其 <strong>加载到内存并执行</strong>，但 BIOS 不了解文件系统的概念。</p>
+
+<p>普遍来说有两种方法加载内核：</p>
+
+<h5 id="引导程序不了解底层的文件系统直接读取硬盘扇区原始数据">引导程序不了解底层的文件系统，直接读取硬盘扇区原始数据</h5>
+
+<p>通常间接引用映射文件，映射文件中包含内核镜像所在的物理扇区列表。每次安装新的内核镜像，其在磁盘中的物理位置发生改变时，在 MBR 中的这些映射都需要更新，这样扇区的间接引用才能继续工作。这种机制不仅很难处理，而且总是需要人工的干预，以防止在系统更新中发生错误。总的来说，是比较笨的方法。</p>
+
+<p><code class="highlighter-rouge">LILO（Linux Loader）</code> 使用这种方法。</p>
+
+<h5 id="引导程序了解底层文件系统">引导程序了解底层文件系统</h5>
+
+<p>引导程序能够了解底层文件系统，这样就可以使用真实路径来配置和访问内核镜像。但这样一来就需要在引导程序中包含每种文件系统的驱动程序。这种机制不再需要映射文件，即使内核镜像被移动也无需更新 MBR 。引导程序的配置保存在普通文件中，在任何内核镜像真正启动之前，通过该文件获取启动配置信息。这样一来，由于系统更新导致的错误可能性大大降低。缺点是：这种引导程序增加了内部的复杂性，体积更庞大。<code class="highlighter-rouge">GRUB2</code> 就是使用有这种方法，引导程序被分割成多个阶段，以便使其能容纳进 MBR 。</p>
+
+<h3 id="815-根文件系统">8.1.5 根文件系统</h3>
+
+<p>根文件系统是指根目录所在分区的文件系统。</p>
+
+<p>系统启动后，所有的其它文件系统都会挂载在它上面。根文件系统中包含系统启动所需要的文件，以及修复系统的工具等。除根目录以外，还有一些常见的子目录，包括 <code class="highlighter-rouge">/boot</code>、<code class="highlighter-rouge">/dev</code>、<code class="highlighter-rouge">/etc</code>、<code class="highlighter-rouge">/bin</code>、<code class="highlighter-rouge">/sbin</code>，有时也包含 <code class="highlighter-rouge">/tmp</code>。根文件系统通常很小，因为只包含关键文件及很小的、不常修改的文件系统，这样运行起来比较稳定，不容易崩溃。</p>
+
+<h3 id="816-初始化程序">8.1.6 初始化程序</h3>
+
+<p>磁盘上的初始化程序至少负责以下工作：</p>
+
+<ul>
+  <li>整个 Linux 生命进程中始终做为 1 号进程存在</li>
+  <li>保持存活，以捕捉那些未被捕捉到的信号和中断</li>
+  <li>启动或管理至少一个程序，由其再接力启动、管理其它程序</li>
+  <li>做为 1 号进程，它是系统中所有程序的祖先。有些初始系统会自己管理所有进程，有些会把管理责任下发给别人，但它们始终是超级祖先。</li>
+  <li>知道以什么顺序来关机</li>
+</ul>
+
+<p>尽管有上面列出的共同点，初始程序有各种形式和大小，以至于有些与其他程序几乎没有任何相似之处。以下是 Linux 中可用的初始化系统的部分列表：</p>
+
+<ol>
+  <li>Epoch</li>
+  <li>runit</li>
+  <li>S6</li>
+  <li>nosh</li>
+  <li>Suckless Init (sinit)</li>
+  <li>busybox-init</li>
+  <li>OpenRC (not PID 1)</li>
+  <li>sysvinit</li>
+  <li>Upstart</li>
+  <li>systemd</li>
+</ol>
+
+<p>每一种都各具优势，其中 systemd 是并行启动的、事件驱动的初始化系统，同时它还捆绑了与初始化无关的功能，使 DIY 变得更困难。在多数发行版中，没有 systemd 就无法使用 Gnome，而且 <code class="highlighter-rouge">udev</code> 现在也和 systemd 捆绑到一起了，导致 Devuan 项目开发了 <code class="highlighter-rouge">vdev</code>，以摆脱 systemd。</p>
+
+<h2 id="82-initial-ram-disk">8.2 Initial Ram Disk</h2>
+
+<p>Initial Ram Disk，简称 initrd，是在挂载真正的根文件系统之前，被挂载的 <strong>临时根文件系统</strong>。</p>
+
+<p>initrd 的任务是 <strong>为加载真正的文件系统做好准备</strong>，它是一个过渡的文件系统，生命周期很短。</p>
+
+<p><code class="highlighter-rouge">initrd</code> 和 <code class="highlighter-rouge">INITRAMFS</code> 是实现该机制的 <strong>两种不同的方法</strong>。为了方便，以下将这两个软件 <strong>统称</strong> 为 initrd。</p>
+
+<p>initrd 是与内核捆绑在一起的，会做为内核启动流程的一部分被加载。加载后，内核才能读取其中的驱动模块，从而最终加载真正的根文件系统。</p>
+
+<figure class="">
+  <img src="http://localhost:4000/assets/images/initramfs.jpg" alt="" />
+  
+</figure>
+
+<p>initrd 系统模拟出来的精简根目录系统，其中含有 Linux 最常用的目录和文件，及所有与外设连接所需要的驱动模块，支持大量的硬件。正因如此，内核无需挂载任何物理磁盘，就能够完全引导。</p>
+
+<p><code class="highlighter-rouge">initrd</code> 函数可以 <strong>把驱动程序编译成可加载的模块</strong>，帮助生成一个 <strong>很小的 Linux 内核</strong>。借助这些可动态加载的模块，内核就可以访问磁盘、文件系统以及其它硬件的驱动程序了。因为根文件系统在磁盘上，<code class="highlighter-rouge">initrd</code> 函数提供了一种自举的方法来访问磁盘，从而挂载真正的根文件系统。在无盘嵌入式系统中，<code class="highlighter-rouge">initrd</code> 可以做为最终的根文件系统，也可以通过 NFS 来挂载最终根文件系统。</p>
+
+<h4 id="为什么需要-initrd">为什么需要 initrd</h4>
+
+<h5 id="模块化的驱动程序">模块化的驱动程序</h5>
+
+<p>许多 Linux 发行版都会携带一个单一的、<strong>通用的内核镜像</strong>。该镜像是专门用于在各种硬件中启动的，与该通用内核配套的 <strong>设备驱动程序被做成可加载的模块</strong>，与内核一同提供。</p>
+
+<p>之所以把驱动模块化，是因为如果把许多驱动程序静态编译到一个内核中，会导致内核镜像变得特别巨大，在小内存电脑上有可能会无法启动。因此，将其分离出来会 <strong>精简内核</strong>，便于在各种平台上顺利运行。</p>
+
+<h5 id="临时根文件系统">临时根文件系统</h5>
+
+<p>虽然模块化的驱动程序为精简内核带来了便利，同时却又产生了一个 <strong>新问题</strong>：在系统引导期间，如何首先 <strong>检测并识别到根文件系统</strong>，然后才能加载其中的驱动模块。</p>
+
+<p>【 困境 】</p>
+
+<ul>
+  <li>根文件系统很可能存在于 “软 RAID 驱动器、LVM、NFS、加密的分区” 中，所有这些情况，都需要提前进行 <strong>特殊的准备工作</strong>，才能顺利挂载根文件系统。</li>
+  <li>计算机 <strong>休眠</strong> 时，会把内存中所有内容的 <strong>镜像</strong> 保存到交换分区，或在磁盘中存为一个普通文件，然后再关机。下次 <strong>启动时</strong>，必须想办法 <strong>先让该镜像可以访问</strong>，然后才能将其加载回内存。</li>
+</ul>
+
+<p>对于这些特殊的情况，为了避免使用 “硬编码到内核” 的办法，可以借助 initrd 的临时根文件系统来解决这个问题。引入一个初始的启动阶段（Initial Boot Stage），也称初期用户空间（Early User Space）。</p>
+
+<p class="notice--info">因此，initrd 在内存中生成的根文件系统，根据上下文需要，平时可以被称为 “初始根文件系统”、“临时根文件系统”。</p>
+
+<p class="notice--success">通过把 <strong>initrd 镜像</strong> 文件加载到内存中，<strong>模拟</strong> 出一个 <strong>根文件系统</strong>，该根文件系统可以被内核直接访问。这个根文件系统事先加入了常用的设备和文件系统的 <strong>驱动程序模块</strong>，也包含了用户空间常用的工具，来完成检测硬件、加载模块、发现设备等工作，之后就可以 <strong>挂载真正的根文件系统</strong> 了。</p>
+
+<p>在内核启动期间，initrd 被复制到内存并挂载，其使命是做为内存中的一个 <strong>临时根文件系统</strong>，在无需挂载任何物理磁盘的情况下，帮助内核完成启动。因为与外设通讯的必要模块可以集成到 initrd，内核就可以做的很小，却仍能支持大量的硬件。</p>
+
+<p>内核启动以后，临时根文件系统 <strong>通过 <code class="highlighter-rouge">pivot_root</code> 被卸载</strong>，然后挂载真实的根文件系统。</p>
+
+<h4 id="实现">实现</h4>
+
+<p>initrd 镜像与内核镜像必须能被引导程序访问到，可以保存在根文件系统中，也可以保存在光盘中、本地磁盘的一个小分区中、FTP 服务器中。</p>
+
+<p>引导程序会把内核与 initrd 镜像加载到内存，然后启动内核，把 initrd 的内存地址传递给内核。在引导程序的工作流程即将结束时，内核根据镜像的头几个块的数据来判断其格式，然后引向 initrd 或 initramfs 的流程：</p>
+
+<h5 id="initrd">initrd</h5>
+
+<p>在 initrd 方案中，镜像可以是一个文件系统的镜像（可以是压缩的），会使一个特殊的块设备 <code class="highlighter-rouge">/dev/ram</code> 变得可用，它随后就被挂载为初始根文件系统。该文件系统的驱动程序必须静态地编译到内核。</p>
+
+<p>许多发行版早期都使用压缩的 ext2 文件系统镜像，另外一些使用 cramfs，以实现小内存系统的引导。因为 cramfs 镜像可以被就地挂载，而无需额外的空间用来解压缩。</p>
+
+<p>一旦初始根文件系统挂载，内核执行第一个进程 <code class="highlighter-rouge">linuxrc</code>。进程结束后，内核就认为真正的根文件系统已经挂载了，会执行 <code class="highlighter-rouge">/sbin/init</code>，开始用户空间的启动流程。</p>
+
+<h5 id="initramfs">initramfs</h5>
+
+<p>在 initramfs 方案中，initrd 镜像可以是一个 cpio 文件（可以是压缩的）。内核将该文件解包，变成 tmpfs 的一个特殊实例，即成为初始根文件系统。</p>
+
+<p>该方法的好处是，无需把磁盘驱动和文件系统驱动编译到内核。有些系统使用 <code class="highlighter-rouge">dracut</code> 工具包来创建 initramfs 镜像。</p>
+
+<p>内核执行初始化进程。</p>
+
+<h4 id="挂载准备">挂载准备</h4>
+
+<p>一些发行版（如 Debian）会生成一个自定义的 initrd 镜像，只包含启动特定主机的模块，如 ATA、SCSI 及文件系统 驱动，通常也会在镜像中嵌入根文件系统的位置和类型。</p>
+
+<p>其他的发行版（如 Fedora 及 Ubuntu）会生成一个更普通的镜像，通常只有根文件系统的设备名，其它的信息必须在引导期间去寻找。这种情况下，该软件必须执行复杂的级联任务才能挂载根文件系统：</p>
+
+<ul>
+  <li>必须加载引导进程所依赖的所有硬件驱动程序。常见的安排是将常用存储设备的内核模块打包到 initrd，然后调用 <code class="highlighter-rouge">hotplug</code> 代理来引入与计算机检测到的硬件相匹配的模块。</li>
+  <li>在显示启动画面的系统上，必须初始化视频硬件，并且用户空间帮助程序开始将动画与启动过程同步绘制到显示器上。</li>
+  <li>如果根文件系统位于 NFS 上，则必须启动主网络接口，调用 DHCP 客户端，通过它可以获得 DHCP 租约，从租约中提取 NFS 的共享名称及 NFS 服务器地址，然后挂载 NFS 共享。</li>
+  <li>如果根文件系统似乎位于软件 RAID 设备上，则无法知道 RAID 卷跨越了哪些设备；必须调用标准 MD 实用程序来扫描所有可用的块设备，并将所需的块设备联机。</li>
+  <li>如果根文件系统似乎位于逻辑卷上，则必须调用 LVM 实用程序来扫描并激活包含它的卷组。</li>
+  <li>如果根文件系统位于加密块设备上，则软件需要调用助手脚本来提示用户输入密码和/或插入硬件令牌（例如智能卡或 USB 安全加密狗），然后用设备映射器创建一个解密目标。</li>
+</ul>
+
+<p>某些发行版使用诸如 <code class="highlighter-rouge">udev</code> 这类的事件驱动的热插拔代理程序，当符合一定规则的硬件设备、磁盘分区、存储卷连机时，代理程序会调用助手程序。此举实现了并行发现，并逐步级联成 LVM，RAID 或加密的任意嵌套，以获取根文件系统。</p>
+
+<p>当根文件系统最终变为可见时，那些无法在挂载的根文件系统上运行的维护任务全部结束，根文件系统以只读方式被挂载，所有必须继续运行的进程（例如启动画面助手及其命令 FIFO）被挂载到新安装的根文件系统中。</p>
+
+<p>最终的根文件系统不能仅仅挂载到 <code class="highlighter-rouge">/</code> 根目录，因为这样做会导致初始根文件系统中的脚本和工具无法访问，无法完成最终的清理任务：</p>
+
+<ul>
+  <li>在 initrd 中，新根文件系统挂载于一个临时挂载点，然后再使用 <code class="highlighter-rouge">pivot_root(8)</code> 滚动到位，在这之后，初始的根文件系统被挂载于普通的挂载点上，如 <code class="highlighter-rouge">/initrd</code>，启动脚本将得以将其卸载，并释放之前 intrd 占用的内存。</li>
+  <li>在 initramfs 中，初始根文件系统无法被滚动，它先是被清空，然后最终的根文件系统直接原位覆盖。</li>
+</ul>
+
+<p>多数的初始根文件系统会把 <code class="highlighter-rouge">/linuxrc</code> 或 <code class="highlighter-rouge">/init</code> 做为 shell 脚本执行，因此会包含一个精简的 shell，通常是 <code class="highlighter-rouge">/bin/ash</code>，同时还会有一些基本的用户空间程序。</p>
+
+<h2 id="83-典型的计算机启动流程">8.3 典型的计算机启动流程</h2>
+
+<p>现今的 PC 配置，基本上以 UEFI 为主流了，蓝色的经典的 BIOS 配置界面即将成为历史。</p>
+
+<h3 id="831-bios--mbrgpt">8.3.1 <code class="highlighter-rouge">BIOS + MBR/GPT</code></h3>
+
+<ol>
+  <li>
+    <p>BIOS：找到 <strong>第一个可引导设备</strong>。</p>
+  </li>
+  <li>
+    <p>MBR：在引导设备上，从 MBR 或 LBA0 读取 <strong>引导程序</strong>。</p>
+
+    <p>由于 LBA0 仅提供 <strong>第一阶段</strong> 的引导程序，如果使用如 grub 的引导程序代码，需额外分出一个 <strong>BIOS boot</strong> 分区，用于放置启动过程所需的其他代码。在 CentOS 当中，该分区通常为 <strong>2MB</strong> 。</p>
+  </li>
+  <li>
+    <p>引导程序：是操作系统安装在 MBR 上面的一个软件，主要目的为 <strong>加载内核文件</strong>。</p>
+  </li>
+  <li>
+    <p>内核文件：<strong>启动操作系统</strong></p>
+  </li>
+</ol>
+
+<h3 id="832-uefi--gpt">8.3.2 <code class="highlighter-rouge">UEFI + GPT</code></h3>
+
+<p>当装有 UEFI 的 x86 电脑启动时，接口在系统存储设备中搜索含有特定标签（GUID，Globally Unique Identifier）的分区，含有这个标签的分区称为 <strong>EFI 系统分区</strong> (ESP,EFI System Partition）。这个分区含有专为 EFI 架构编译的应用程序，其中包含可引导操作系统的 EFI 引导程序，以及工具软件。</p>
+
+<p>UEFI 系统中的引导程序可以以一个默认配置启动系统，或提醒用户选择操作系统启动。手动或自动选择一个引导程序以后，UEFI 会把它读取到内存，并把控制权转交给引导程序。</p>
+
+<h3 id="833-linux-系统启动流程">8.3.3 Linux 系统启动流程</h3>
+
+<p>要启动 Linux 并进入可用状态，共需两步：<strong>引导</strong> 和 <strong>启动</strong>。</p>
+
+<h4 id="引导阶段">引导阶段</h4>
+
+<p>引导阶段从打开计算机电源开始，到内核完成初始化，并执行了 systemd 结束。</p>
+
+<ul>
+  <li>BIOS</li>
+  <li>GRUB</li>
+  <li>Linux 内核</li>
+  <li>启动 systemd</li>
+</ul>
+
+<h4 id="启动阶段">启动阶段</h4>
+
+<p>启动阶段接手，完成后续任务，直至 Linux 进入可操作状态。</p>
+
+<ul>
+  <li>读取配置文件</li>
+  <li>sysinit.target</li>
+  <li>basic.target</li>
+  <li>multi-user.target</li>
+  <li>graphical.target</li>
+</ul>
+
+<h2 id="84-linux-启动流程">8.4 Linux 启动流程</h2>
+
+<p>本节讨论的启动过程均基于 x86 系统架构。</p>
+
+<h3 id="841-引导阶段">8.4.1 引导阶段</h3>
+
+<p>引导过程的开始可以是：</p>
+
+<ul>
+  <li>从关机状态 <strong>打下电源按钮</strong>，会开始引导过程</li>
+  <li>本地用户已经登陆，用户可以通过下达 <strong>重启命令</strong>，开始引导过程</li>
+</ul>
+
+<h4 id="硬件">硬件</h4>
+
+<p>引导过程的第一步与 Linux 没什么关系，对于任何操作系统来说都是一样的，只是引导过程中硬件的部分。</p>
+
+<h5 id="运行-bios">运行 BIOS</h5>
+
+<p>接通电源或硬重启之后，控制权交给 ROM 中的一个程序，基于历史原因，该程序称为 BIOS。</p>
+
+<h5 id="自检">自检</h5>
+
+<p>BIOS 通常会进行一个基本的设备 <strong>自检</strong>，并 <strong>访问 NVRAM 来获取一些参数</strong>，该 NVRAM 是靠电池供电的 CMOS 内存，因此通常称为 CMOS。</p>
+
+<p>POST 会检查硬件的基本可用性，如果 POST 失败，计算机停止引导。</p>
+
+<h5 id="查找可引导的设备">查找可引导的设备</h5>
+
+<p>读取 CMOS 中保存的参数，有一项用来指定引导设备，该设备可以提供引导程序，该设备即称为 <strong>引导设备</strong>。</p>
+
+<p>在可引导设备的 MBR 中 <strong>检查 MBR 签名</strong>，以确定设备是否可以用于引导。如果设备 MBR 的最后两个字节是 0xAA55，表明这个 <strong>设备可以用于启动</strong>；如果不是，表明设备不能用于启动，BIOS 会尝试下一个引导设备。</p>
+
+<p>发起一个 <strong>BIOS 中断</strong>，<code class="highlighter-rouge">INT 13H</code>，通过这个中断来 <strong>查找可引导的设备的 MBR</strong></p>
+
+<blockquote>
+  <p>BIOS 是通过硬件的 <code class="highlighter-rouge">INT 13H</code> 中断来读取 MBR 的，因为使用 CHS 寻址，所以只要 BIOS 能够检测到的磁盘，无论 SATA 还是 SAS 接口，都能顺利读取其 MBR，从而加载其中的引导程序。</p>
+</blockquote>
+
+<h5 id="加载引导设备-mbr">加载引导设备 MBR</h5>
+
+<p>把 MBR 整个加载到内存中，其中包含引导程序。</p>
+
+<p>MBR 中的引导程序算是 1 级引导程序。BIOS 不认识分区表或文件系统，它只会初始化硬件、读取 MBR，之后要完全依靠 GRUB 1 级引导程序才能进行后续的启动流程。</p>
+
+<h5 id="bios-把控制权移交给引导程序">BIOS 把控制权移交给引导程序</h5>
+
+<p class="notice--info">引导程序要读取的设备也是可以通过 <strong>网络</strong> 连接的，在此情况下，引导的细节由 DHCP、TFTP、PXE、Etherbot 等协议决定。</p>
+
+<h4 id="引导程序">引导程序</h4>
+
+<blockquote>
+  <p>GRUB 之前的引导程序 LILO，即 Linux Loader 只用 1、2 两级引导，它无法识别根文件系统。而 GRUB 多了一个第 1.5 级引导，专门为了识别根文件系统使用的。本节仅讨论使用 GRUB2 的系统。</p>
+</blockquote>
+
+<p>总的来说，GRUB 的任务是 <strong>加载并执行 Linux 内核及 initrd 镜像</strong>。GRUB 的引导流程需要三级（1 &gt; 1.5 &gt; 2）才能完成。</p>
+
+<ul>
+  <li>1 级引导：找到并加载 1.5 级引导程序</li>
+  <li>1.5 级引导：加载根文件系统驱动程序，从根文件系统中找到 2 级引导程序并加载</li>
+  <li>2 级引导：找到 Linux 内核，并将其加载到内存，把控制权移交给内核</li>
+</ul>
+
+<h5 id="grub-1-级引导">GRUB 1 级引导</h5>
+
+<ul>
+  <li>BIOS 把 MBR 整体加载到内存后，开始执行其中的 GRUB 1 级引导程序</li>
+  <li>1 级引导程序根据地址加载 1.5 级引导程序 <code class="highlighter-rouge">core.img</code></li>
+  <li>1 级引导程序把控制权移交给 1.5 级引导程序</li>
+</ul>
+
+<p>1 级引导程序通常为 <strong>446</strong> 字节，文件名为 <strong>boot.img</strong>。由于其代码所占的空间很小，它并不智能，<strong>无法理解文件系统的架构</strong>，因此需要继续加载 1.5 级引导程序。</p>
+
+<p>在 GRUB 安装时，会把 1.5 级引导程序所在的地址 <strong>硬编码</strong> 到 boot.img，以方便其加载。</p>
+
+<h5 id="grub-15-级引导">GRUB 1.5 级引导</h5>
+
+<ul>
+  <li>加载 <code class="highlighter-rouge">core.img</code>：<code class="highlighter-rouge">core.img</code> 的第一扇区 <code class="highlighter-rouge">diskboot.img</code> 被加载后，由它依次加载并执行 <code class="highlighter-rouge">core.img</code> 的其余部分。</li>
+  <li>加载根文件系统的 <strong>驱动程序</strong>。因为 <code class="highlighter-rouge">diskboot.img</code> 中含有各种文件系统驱动，可以识别根文件系统，因此它 <strong>开启了 GRUB 对该分区的访问</strong>。</li>
+  <li>从 <code class="highlighter-rouge">/boot/grub2</code> 目录中加载 2 级引导程序</li>
+</ul>
+
+<h5 id="grub-2-级引导">GRUB 2 级引导</h5>
+
+<p>由于 1.5 级引导程序的执行，GRUB 2 级引导程序现在可以 <strong>直接访问</strong> 根文件系统了。</p>
+
+<ul>
+  <li>加载 <strong>GRUB 内核模块</strong></li>
+  <li>加载 <strong>GRUB 配置文件</strong> <code class="highlighter-rouge">/boot/grub2/grub.cfg</code></li>
+  <li>显示 <strong>GRUB 引导菜单</strong>：2 级引导程序加载完成后，GRUB 会显示出命令行界面的菜单，请用户选择要启动的操作系统或内核</li>
+  <li>2 级引导程序 <strong>加载</strong> 用户选择的 <strong>Linux 内核</strong> 到内存。或者，把控制权 <strong>移交给其他引导程序</strong>。</li>
+  <li>2 级引导程序把一个或多个对应的 <strong>initrd 镜像加载到内存</strong>，并把镜像 <strong>解压</strong> 到一个临时的、基于内存的 <strong><code class="highlighter-rouge">tmpfs</code></strong> 文件系统中</li>
+  <li><strong>内核和 initrd 镜像全部加载到内存</strong> 以后，2 级引导程序 <strong>调用内核镜像</strong>。</li>
+</ul>
+
+<p class="notice--info">内核版本 2.6.13 之前，引导程序需要单独加载 initrd 镜像，内核版本 2.6.13 之后，内核内置了 initramfs 镜像。</p>
+
+<h4 id="内核">内核</h4>
+
+<p>内核镜像加载到内存，并从 2 级引导程序手中接过控制权，开始了内核阶段。简单描述：</p>
+
+<ul>
+  <li>内核初始化，<strong>配置内存及各种硬件</strong>，包括 CPU、I/O 子系统、存储设备</li>
+  <li>内核在内存中 <strong>寻找 initrd 镜像</strong>，将其 <strong>解压并挂载</strong>，从初始根文件系统中 <strong>加载所需驱动模块</strong></li>
+  <li><strong>初始化</strong> 文件系统相关的 <strong>虚拟设备</strong>，如 LVM、软 RAID 等</li>
+  <li><strong>卸载 initrd 镜像</strong>，释放占用的内存</li>
+  <li>内核 <strong>创建根设备，以只读模式挂载根分区</strong>，释放无用内存</li>
+</ul>
+
+<p>具体可分为两个阶段：</p>
+
+<h5 id="内核加载">内核加载</h5>
+
+<p>内核镜像头部中的例程（routine）先是 <strong>配置少量的硬件</strong>，把镜像完全 <strong>解压</strong> 到高内存（high memory）中，如果此时它发现内存中有 <strong>initrd 镜像</strong>，内核会先 <strong>记录其位置</strong>。然后通过 <code class="highlighter-rouge">./arch/i386/boot/head</code> 和 <code class="highlighter-rouge">startup_32 ()</code> 执行内核的启动。</p>
+
+<h5 id="内核启动">内核启动</h5>
+
+<p>内核的 <strong>启动函数</strong>，也称 <strong><code class="highlighter-rouge">swapper</code></strong> 或 <strong>0 号进程</strong>，会 <strong>启动内存管理</strong>（页表和内存页），检测 CPU 的类型，浮点计算能力等附加功能，然后通过 <code class="highlighter-rouge">start_kernel()</code> 切换到非特定体系的内核功能。</p>
+
+<p><code class="highlighter-rouge">start_kernel</code> 会执行一众初始化功能。设置中断处理程序，进一步配置内存，<strong>启动初始化进程</strong>（第一个用户空间进程），然后通过 <code class="highlighter-rouge">cpu_idle()</code> 启动闲置任务。</p>
+
+<p>注意，内核启动的同时，也会 <strong>把 initrd 挂载为临时根文件系统</strong>，于是可以从中直接 <strong>加载驱动模块</strong>，然后通过 <strong>调用 <code class="highlighter-rouge">pivot_root()</code> 卸载临时根文件系统</strong>，用真正的根文件系统来替换，一旦真正根文件系统可用，initrd 占用的内存就被释放。</p>
+
+<p>因此，内核先是初始化设备，以只读方式挂载根文件系统，然后运行 1 号初始化进程。</p>
+
+<p>进行到这里，中断已经可用，调度程序可以全面掌控系统的管理了，预先提供多任务管理。</p>
+
+<p>初始化进程被留下，继续启动用户空间的用户环境。</p>
+
+<h3 id="842-启动阶段">8.4.2 启动阶段</h3>
+
+<p>初始化进程启动之后，进入系统启动阶段。启动阶段会把 Linux 最终置于可作业状态。</p>
+
+<h4 id="初始化程序">初始化程序</h4>
+
+<p>这里只考虑 systemd 系统。</p>
+
+<p>内核镜像中的 systemd 负责初始化所需的文件系统、服务及驱动程序。这些过程被分割成离散的步骤，以 <strong>目标单元</strong> 的方式呈现。启动进程是 <strong>高度并行</strong> 的，因此特定目标单元的启动顺序并不是确定的，但仍遵循 <strong>有限的排序架构</strong>。</p>
+
+<p>systemd 启动系统时，它会递归激活 <code class="highlighter-rouge">default.target</code> 依赖的所有的单元，<code class="highlighter-rouge">default.target</code> 通常只是 <code class="highlighter-rouge">graphical.target</code> 或 <code class="highlighter-rouge">multi-user.target</code> 的别名，决定于默认配置。为了在众多单元并行的同时能维持相对的顺序，需要几个重要的目标来辅助。</p>
+
+<p>下图为这些常用的目标及其在启动逻辑中所处的位置，上面的单元最先启动。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+local-fs-pre.target
+         |
+         v
+(various mounts and   (various swap   (various cryptsetup
+ fsck services...)     devices...)        devices...)       (various low-level   (various low-level
+         |                  |                  |             services: udevd,     API VFS mounts:
+         v                  v                  v             tmpfiles, random     mqueue, configfs,
+  local-fs.target      swap.target     cryptsetup.target    seed, sysctl, ...)      debugfs, ...)
+         |                  |                  |                    |                    |
+         \__________________|_________________ | ___________________|____________________/
+                                              \|/
+                                               v
+                                        sysinit.target
+                                               |
+          ____________________________________/|\________________________________________
+         /                  |                  |                    |                    \
+         |                  |                  |                    |                    |
+         v                  v                  |                    v                    v
+     (various           (various               |                (various          rescue.service
+    timers...)          paths...)              |               sockets...)               |
+         |                  |                  |                    |                    v
+         v                  v                  |                    v              rescue.target
+   timers.target      paths.target             |             sockets.target
+         |                  |                  |                    |
+         v                  \_________________ | ___________________/
+                                              \|/
+                                               v
+                                         basic.target
+                                               |
+          ____________________________________/|                                 emergency.service
+         /                  |                  |                                         |
+         |                  |                  |                                         v
+         v                  v                  v                                 emergency.target
+     display-        (various system    (various system
+ manager.service         services           services)
+         |             required for            |
+         |            graphical UIs)           v
+         |                  |           multi-user.target
+         |                  |                  |
+         \_________________ | _________________/
+                           \|/
+                            v
+                  graphical.target
+
+</code></pre></div></div>
+
+<p>其中的 <code class="highlighter-rouge">rescue.target</code>、<code class="highlighter-rouge">graphical.target</code>、<code class="highlighter-rouge">multi-user.target</code>、<code class="highlighter-rouge">emergency.target</code> 通常可以做为启动目标。可以在命令行上使用 <code class="highlighter-rouge">systemd.unit=</code> 来指定，或将 <code class="highlighter-rouge">default.target</code> 软链接到它们来实现。</p>
+
+<p><code class="highlighter-rouge">sysinit.target</code> 和 <code class="highlighter-rouge">basic.target</code> 可被看成启动阶段的 <strong>重要关卡</strong>。虽然 systemd 被设计为并行启动系统服务，仍然存在一些服务和功能性目标必须最先启动，这些关卡不能略过，直到其所需的服务和目标均已启动完毕。</p>
+
+<h5 id="读取配置文件">读取配置文件</h5>
+
+<h6 id="systemd-配置文件">systemd 配置文件</h6>
+
+<p><code class="highlighter-rouge">/etc/systemd/system/default.target</code>  确定本次启动的默认目标</p>
+
+<h6 id="加载用户指定模块">加载用户指定模块</h6>
+
+<p>如果想在系统启动时，加载 <strong>特定的驱动程序</strong>，或需要 <strong>调整指定模块的参数</strong>，可以使用这两个配置文件来指定。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">/etc/modules-load.d/*.conf</code> ：指定需要直接加载的模块，如 <code class="highlighter-rouge">nf_conntrack_ftp</code></li>
+  <li><code class="highlighter-rouge">/etc/modprobe.d/*.conf</code> ：加载模块时需要带参数，如 <code class="highlighter-rouge">options nf_conntrack_ftp ports=555</code></li>
+</ul>
+
+<p>若想测试是否修改成功，可以先重启模块加载服务，再查看是否被系统自动加载：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# systemctl restart systemd-modules-load.service
+~]# lsmod | grep nf_conntrack_ftp
+nf_conntrack_ftp       18638  0
+nf_conntrack          105702  1 nf_conntrack_ftp
+</code></pre></div></div>
+
+<h6 id="设置用户认证机制">设置用户认证机制</h6>
+
+<p><code class="highlighter-rouge">/etc/sysconfig/authconfig</code></p>
+
+<p>用于设置用户认证的机制，包括</p>
+
+<ul>
+  <li>是否使用本机的 <code class="highlighter-rouge">/etc/passwd</code>，<code class="highlighter-rouge">/etc/shadow</code></li>
+  <li><code class="highlighter-rouge">/etc/shadow</code> 用哪种加密算法记录密码（系统默认使用 SHA512）</li>
+  <li>是否使用外部密码服务器进行帐号验证（NIS，LDAP），默认不使用</li>
+</ul>
+
+<p class="notice--info">不建议手动修改此配置文件文件，应该用 <code class="highlighter-rouge">authconfig-tui</code> 命令来修改。</p>
+
+<h6 id="指定-cpu-操作模式">指定 CPU 操作模式</h6>
+
+<p><code class="highlighter-rouge">/etc/sysconfig/cpupower</code></p>
+
+<p><code class="highlighter-rouge">cpupower.service</code> 服务的配置文件，指定 Linux 内核应如何操作 CPU。</p>
+
+<p>一般来说，启动该服务之后，系统会让 CPU 性能优先的方式来运行，否则默认就是用多少算多少。</p>
+
+<h6 id="防火墙相关服务">防火墙相关服务</h6>
+
+<p><code class="highlighter-rouge">/etc/sysconfig/firewalld</code></p>
+
+<p><code class="highlighter-rouge">/etc/sysconfig/iptables-config</code></p>
+
+<p><code class="highlighter-rouge">/etc/sysconfig/ebtables-config</code></p>
+
+<h6 id="设置网卡">设置网卡</h6>
+
+<p><code class="highlighter-rouge">/etc/sysconfig/network-scripts/*</code></p>
+
+<h5 id="启动-sysinittarget">启动 <code class="highlighter-rouge">sysinit.target</code></h5>
+
+<p>经过 <code class="highlighter-rouge">sysinit.target</code> 的初始化之后，系统可以正常存取数据了。</p>
+
+<p><code class="highlighter-rouge">sysinit.target</code> 的依赖：</p>
+
+<ul>
+  <li>
+    <p><code class="highlighter-rouge">local-fs.target</code>，<code class="highlighter-rouge">swap.target</code></p>
+
+    <p>挂载由 <code class="highlighter-rouge">/etc/fstab</code> 指定的文件系统，包括所有的交换文件和分区。</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">cryptsetup.target</code></p>
+
+    <p>针对加密的文件系统启动加密服务。</p>
+  </li>
+  <li>
+    <p>各种底层服务</p>
+
+    <ul>
+      <li>
+        <p>动态设备管理服务 <code class="highlighter-rouge">udevd</code></p>
+      </li>
+      <li>
+        <p>临时文件系统 <code class="highlighter-rouge">tmpfiles</code></p>
+      </li>
+      <li>
+        <p>随机数生成器种子</p>
+      </li>
+      <li>
+        <p><code class="highlighter-rouge">sysctl</code> 服务</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>各种底层虚拟文件系统接口</p>
+
+    <ul>
+      <li>
+        <p>消息队列 <code class="highlighter-rouge">mqueue</code></p>
+      </li>
+      <li>
+        <p>内核虚拟文件系统 <code class="highlighter-rouge">configfs</code></p>
+      </li>
+      <li>
+        <p>调试内核的虚拟文件系统 <code class="highlighter-rouge">debugfs</code></p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>这些服务可以并行启动，它们是系统 <strong>最小化运作所必需的</strong> 所有底层服务和单元，它们都完成之后 <code class="highlighter-rouge">sysinit.target</code> 才能启动。</p>
+
+<h5 id="启动-basictarget">启动 <code class="highlighter-rouge">basic.target</code></h5>
+
+<p><code class="highlighter-rouge">basic.target</code> 的依赖：</p>
+
+<ul>
+  <li>
+    <p>音效驱动 <code class="highlighter-rouge">alsa</code></p>
+  </li>
+  <li>
+    <p>防火墙 <code class="highlighter-rouge">firewalld</code></p>
+  </li>
+  <li>
+    <p>CPU 微指令</p>
+  </li>
+  <li>
+    <p>启动并设置 SELinux 的安全上下文</p>
+  </li>
+  <li>
+    <p>把当前启动过程保存到 <code class="highlighter-rouge">/var/log/dmesg</code> 中</p>
+  </li>
+  <li>
+    <p>从 <code class="highlighter-rouge">/etc/sysconfig/modules/*.modules</code> 及 <code class="highlighter-rouge">/etc/rc.modules</code> 加载特定模块</p>
+  </li>
+  <li>
+    <p>timer 服务</p>
+  </li>
+</ul>
+
+<h5 id="运行-systemv-init-脚本">运行 SystemV init 脚本</h5>
+
+<p>systemd 的原生服务格式为服务单元，systemd 管理系统时只认这类格式。总共有 <strong>9 个目录</strong> 中含有 <code class="highlighter-rouge">.service</code> 文件，其中包括 <code class="highlighter-rouge">/etc/systemd/system</code>，<code class="highlighter-rouge">/run/systemd/system</code>，<code class="highlighter-rouge">/usr/local/lib/systemd/system</code> 和 <code class="highlighter-rouge">/usr/lib/systemd/system</code>。</p>
+
+<p>对 SystemV init 脚本的兼容是通过一个 <strong>转换程序</strong> 实现的，名为 <code class="highlighter-rouge">systemd-sysv-generator</code>。该程序位于 <code class="highlighter-rouge">/usr/lib/systemd/system-generators/</code> 目录。</p>
+
+<p>这个程序是一个生成器，它的任务是在一个临时文件系统中 <strong>实时迅速生成服务单元文件</strong>，该 <code class="highlighter-rouge">tmpfs</code> 中有 3 个目录中含有 <code class="highlighter-rouge">.service</code> 文件，均为该程序专属。如果该程序在另外 6 个目录中没找到同名的原生的服务单元，它就生成这个服务单元，由这个服务单元来运行 <code class="highlighter-rouge">/etc/init.d</code> 目录中的 SystemV init 脚本。</p>
+
+<p>SystemV init 脚本中的 LSB header 不是必需的，如果没有 LSB header，<code class="highlighter-rouge">systemd-sysv-generator</code> 可以识别早期 RedHat comment headers （description:, pidfile 等）。此外，如果没有 LSB header，systemd 会去检查 <code class="highlighter-rouge">/etc/rc?.d</code> 的软链接，从文件名中读取优先级，据此创建服务单元的先后顺序，保持服务间的连续性，这些服务不是并行的。</p>
+
+<p>之所以 <code class="highlighter-rouge">/etc/rc3.d</code> 完全不重要，是因为很有可能已经通过另一个 <code class="highlighter-rouge">/etc/rc?.d</code> 目录激活此脚本了。该程序还会把 <code class="highlighter-rouge">/etc/rc2.d</code>，<code class="highlighter-rouge">/etc/rc3.d/</code>，<code class="highlighter-rouge">/etc/rc4.d/</code> 任何目录中的文件，翻译成一个原生的 <code class="highlighter-rouge">multi-user.target</code> 的 Wanted-By 单元。在 systemd 的世界里，运行级别被完全废弃。</p>
+
+<p>systemd 不支持将 SysV 脚本加入到系统启动的早期阶段，所有包装单元都排在 <code class="highlighter-rouge">basic.target</code> 之后。</p>
+
+<blockquote>
+  <p>systemd-sysv-generator 生成器用于在系统启动过程中以及在 systemd 重新加载其配置时， 将 <code class="highlighter-rouge">/etc/init.d/*</code> 目录中的 SysV init 脚本 包装为 <code class="highlighter-rouge">.service</code> 单元。 这样就可以让 systemd 兼容传统的 SysV init 脚本。</p>
+</blockquote>
+
+<blockquote>
+  <p>SysV init 脚本中的 LSB headers 可以被正确解释，其中定义的启动顺序将被转化为单元之间的依赖关系。 LSB 设施(facility) “$remote_fs”, “$network”, “$named”, “$portmap”, “$time” 将会被转化为对特定 <code class="highlighter-rouge">.target</code> 单元的依赖，从而得到支持。参见 systemd.special(5) 以了解详情。</p>
+</blockquote>
+
+<blockquote>
+  <p>SysV 运行级将会被转化为对应的 <code class="highlighter-rouge">.target</code> 单元（<code class="highlighter-rouge">runlevelX.target</code>）， 并在其中包含从该运行级所启用的脚本生成的包装单元。</p>
+</blockquote>
+
+<h5 id="启动-multi-usertarget">启动 <code class="highlighter-rouge">multi-user.target</code></h5>
+
+<p>🚩<code class="highlighter-rouge">multi-user.target</code> 必须先于 <code class="highlighter-rouge">graphical.target</code> 的依赖服务启动。</p>
+
+<p>各种系统服务和网络服务均挂在 <code class="highlighter-rouge">multi-user.target</code> 下面，具体位置为 <code class="highlighter-rouge">/etc/systemd/system/multi-user.target.wants/</code>，该目录中的各个软链接文件即是 <code class="highlighter-rouge">systectl enable</code> 的结果，<code class="highlighter-rouge">systemctl disable</code> 时会删除软链接。</p>
+
+<h6 id="兼容-systemv-的-rc-localservice">兼容 SystemV 的 <code class="highlighter-rouge">rc-local.service</code></h6>
+
+<p>在 SystemV 时期，当系统完成引导后，如果想让 Linux 额外执行某些程序，可以把该程序命令或脚本的绝对路径写入 <code class="highlighter-rouge">/etc/rc.d/rc.local</code> 文件。</p>
+
+<p>新的 systemd 机制中，建议直接写一个 systemd 的启动脚本配置文件到 <code class="highlighter-rouge">/etc/systemd/system</code> 中，然后使用 <code class="highlighter-rouge">systemctl enable</code> 的方式来启用。</p>
+
+<p>systemd 实际上仍然支持原始的执行脚本的办法，使用 <code class="highlighter-rouge">rc-local.service</code> 服务。它不需要启动，会通过检查 <code class="highlighter-rouge">/etc/rc.d/rc.local</code> 文件是否具有 <strong>可执行权限</strong> 来判断是否启动该服务。</p>
+
+<p>因为在 systemd 环境下，<code class="highlighter-rouge">/etc/rc.d/rc.local</code> 文件默认没有可执行权限，因此  rc-local.service 服务默认不会自动启动。</p>
+
+<p>因此为其增加可执行权限，并重启守护进程：<code class="highlighter-rouge">chmod a+x /etc/rc.d/rc.local; systemctl daemon-reload</code></p>
+
+<p>这样一来，用户可以把脚本放在 <code class="highlighter-rouge">/etc/rc.d/rc.local</code> 文件中， 系统在每次启动后都会自动执行该文件中的命令。</p>
+
+<p>🍎打开该服务以后， <code class="highlighter-rouge">/etc/rc.d/rc.local</code> 文件就会被拉进 multi-user target 来执行。</p>
+
+<blockquote>
+  <p>如果查看该服务状态会发现，其状态为 “have no installation config…static” ，这是正常的，因为静态服务其单元文件中通常没有 [Install] 部分，而且通常是其它服务的依赖服务。因此根本就不需要 enabled。</p>
+</blockquote>
+
+<h6 id="gettytarget"><code class="highlighter-rouge">getty.target</code></h6>
+
+<p>提供终端命令行界面</p>
+
+<h6 id="systemd-logindservice-systemd-user-sessionsservice"><code class="highlighter-rouge">systemd-logind.service</code>, <code class="highlighter-rouge">systemd-user-sessions.service</code></h6>
+
+<p>用户登陆服务</p>
+
+<h5 id="启动-graphicaltarget">启动 <code class="highlighter-rouge">graphical.target</code></h5>
+
+<p>如果 <code class="highlighter-rouge">default.target</code> 链接到 <code class="highlighter-rouge">multi-user.target</code>，该步骤就不会执行；如果是 <code class="highlighter-rouge">graphical.target</code>，systemd 就会开始加载用户管理服务与图形界面管理器（Window Display Manager, WDM） 等，启动图形界面的登陆框。</p>
+
+<p><code class="highlighter-rouge">graphical.target</code> 的依赖服务：</p>
+
+<ul>
+  <li><code class="highlighter-rouge">accounts-daemon.service</code></li>
+  <li><code class="highlighter-rouge">gdm.service</code>	该服务负责图形显示及用户登陆</li>
+  <li><code class="highlighter-rouge">network.service</code></li>
+  <li><code class="highlighter-rouge">rtkit-daemon.service</code></li>
+  <li><code class="highlighter-rouge">systemd-update-utmp-runlevel.service</code></li>
+  <li><code class="highlighter-rouge">multi-user.target</code></li>
+</ul>
+
+<h5 id="用户看到登陆画面整个启动阶段完成">用户看到登陆画面，整个启动阶段完成。</h5>
+
+<h2 id="85-内核与内核模块">8.5 内核与内核模块</h2>
+
+<p>Linux 内核是一种开源的类 Unix 操作系统宏内核。整个 Linux 操作系统家族基于该内核部署在传统计算机平台和各种嵌入式平台，如路由器、无线接入点、专用小交换机、机顶盒、FTA 接收器、智能电视、数字视频录像机、网络附加存储（NAS）等。工作于平板电脑、智能手机及智能手表的 Android 操作系统同样通过 Linux 内核提供的服务完成自身功能。尽管于桌面电脑的占用率较低，基于 Linux 的操作系统统治了几乎从移动设备到主机的其他全部领域。截至2017年11月，世界前500台最强的超级计算机全部使用 Linux。</p>
+
+<p>从技术上说，Linux 只是一个匹配 POSIX 标准的内核。它提供了一套应用程序接口（API），通过接口用户程序能与内核及硬件交互。仅仅一个内核并不是一套完整的操作系统。有一套基于 Linux 内核的完整操作系统叫作 Linux 操作系统，或是 GNU/Linux（在该系统中包含了很多 GNU 计划的系统组件）。</p>
+
+<p>内核通常是压缩文件，需 <strong>解压缩</strong> 后才能加载到内存。</p>
+
+<p>为了使加载内存最小化，所有的内核都是以自解压方式存在的压缩包，比较节省空间。与内核保存在一起的，还有 <strong>initrd 镜像</strong> 以及 <strong>硬盘的设备映射文件</strong>。</p>
+
+<h3 id="851-内核相关文件">8.5.1 内核相关文件</h3>
+
+<p>内核模块： <code class="highlighter-rouge">/lib/modules/*</code></p>
+
+<p>内核源代码： <code class="highlighter-rouge">/usr/src/kernels/</code> （默认不安装）</p>
+
+<p>内核顺利载入以后，会自动记录以下信息：</p>
+
+<p>内核版本： <code class="highlighter-rouge">/proc/version</code></p>
+
+<p>内核功能： <code class="highlighter-rouge">/proc/sys/kernel/*</code></p>
+
+<h4 id="boot-目录中常见的文件"><code class="highlighter-rouge">/boot/</code> 目录中常见的文件</h4>
+
+<p><code class="highlighter-rouge">config-3.10.0-229.el7.x86_64</code>               此版本内核被编译时选择的功能与模块配置文件</p>
+
+<p><code class="highlighter-rouge">grub/ </code>                                     旧版 grub</p>
+
+<p><code class="highlighter-rouge">grub2/</code>                                     grub2</p>
+
+<p><code class="highlighter-rouge">initramfs-0-rescue-309eb890d3d95ec7a.img</code>    initrd 镜像文件，用于紧急修复</p>
+
+<p><code class="highlighter-rouge">initramfs-3.10.0-229.el7.x86_64.img</code>         正常引导使用的 <strong>initrd 镜像</strong></p>
+
+<p><code class="highlighter-rouge">initramfs-3.10.0-229.el7.x86_64kdump.img</code>    内核出问题时使用的 <strong>initrd 镜像</strong></p>
+
+<p><code class="highlighter-rouge">System.map-3.10.0-229.el7.x86_64</code>            内核功能加载到内存地址的 <strong>映射表</strong></p>
+
+<p><code class="highlighter-rouge">vmlinuz-0-rescue-309eb890d09543d95ec7a</code>     紧急修复用的内核文件</p>
+
+<p><code class="highlighter-rouge">vmlinuz-3.10.0-229.el7.x86_64</code>              Linux 系统 <strong>内核文件</strong></p>
+
+<h3 id="852-内核模块">8.5.2 内核模块</h3>
+
+<p>内核中的一些 <strong>驱动程序被分离出来</strong>，以模块的形式单独保存在 <code class="highlighter-rouge">/lib/modules/</code> 目录中，可以在需要时使用 <code class="highlighter-rouge">modprobe</code> <strong>动态加载</strong> 到系统中。因此 USB, SATA, SCSI 等 <strong>磁盘的驱动程序通常都是以模块的方式存在</strong>。</p>
+
+<p>因此，要想在 Linux 使用新硬件，要么把新硬件驱动程序加入源代码后，重新 <strong>编译内核</strong>；要么将 <strong>驱动程序编译成为模块</strong>，在 <strong>开机时载入</strong>。</p>
+
+<h4 id="常见内核模块">常见内核模块</h4>
+
+<p>内核模块扩展名是 <strong><code class="highlighter-rouge">.ko</code></strong>，是 Kernel Object 的意思。</p>
+
+<p>内核模块目录为 <code class="highlighter-rouge">/lib/modules/$(uname -r)/kernel</code>，其常见子目录：</p>
+
+<ul>
+  <li><code class="highlighter-rouge">arch</code>    平台架构</li>
+  <li><code class="highlighter-rouge">crypto</code>    加密技术</li>
+  <li><code class="highlighter-rouge">drivers</code>   硬件驱动程序</li>
+  <li><code class="highlighter-rouge">fs</code>    文件系统</li>
+  <li><code class="highlighter-rouge">lib</code>    函数库</li>
+  <li><code class="highlighter-rouge">net</code>    网络协议，防火墙模块等</li>
+  <li><code class="highlighter-rouge">sound</code>    声音模块</li>
+</ul>
+
+<h4 id="模块间依赖关系">模块间依赖关系</h4>
+
+<p>Linux 内核的 <strong>不同模块之间可以提供服务</strong>，称之为 “<strong>符号</strong>”。</p>
+
+<p class="notice">痛恨起 “符号” 这个名的人，不可理解，就叫服务不是挺好的么？“符号” 在上下文中特别影响理解，非常容易造成语义上的混淆，毕竟它在中文有太多的意义。</p>
+
+<p>如果模块 B 使用模块 A 提供的服务，则可以说 B 依赖 A。这种依赖有关系可能会变得特别复杂。</p>
+
+<h5 id="modulesdep-文件"><code class="highlighter-rouge">modules.dep</code> 文件</h5>
+
+<p><code class="highlighter-rouge">/lib/modules/$(uname -r)/modules.dep</code></p>
+
+<p>该文件记录了 <strong>模块之间依赖关系</strong> 的列表，表明了每个模块所 <strong>输出</strong> 和 <strong>需要</strong> 的符号分别是什么。</p>
+
+<h5 id="depmod-命令"><code class="highlighter-rouge">depmod</code> 命令</h5>
+
+<p>通过 <strong>读取</strong> <code class="highlighter-rouge">/lib/modules/&lt;version&gt;</code> 目录中 <strong>所有模块</strong>，depmod 命令会 <strong>更新 <code class="highlighter-rouge">modules.dep</code> 文件</strong>，及其哈希版本的二进制文件 <strong><code class="highlighter-rouge">modules.dep.bin</code></strong>。</p>
+
+<blockquote>
+  <p>如果在命令中指定了模块文件名，则只会检查指定的模块。不过很少人这么做，除非把所有模块都列出来。</p>
+</blockquote>
+
+<p>depmod 还会生成一个由模块提供的符号的 <strong>别名列表</strong>，文件名为 <code class="highlighter-rouge">modules.symbols</code> 及其二进制 hash 版本 <code class="highlighter-rouge">modules.symbols.bin</code>。</p>
+
+<p>最后，如果这些模块要使用特殊的设备文件名，而且这些设备文件在引导时需要出现在 <code class="highlighter-rouge">/dev</code> 目录，则 depmod 会输出一个名为 <code class="highlighter-rouge">modules.devname</code> 的文件。</p>
+
+<p>如果在命令中指定内核版本，depmod 则会检查指定的内核目录。</p>
+
+<h6 id="语法">语法</h6>
+
+<p><code class="highlighter-rouge">depmod [-Ane]</code></p>
+
+<p>不加任何参数时， depmod 会分析当前内核的模块，并重写 modules.dep。</p>
+
+<p><code class="highlighter-rouge">-A</code>	有新模块才更新</p>
+
+<p><code class="highlighter-rouge">-n</code>	不写入 modules.dep ，只把结果输出到 stdout</p>
+
+<p><code class="highlighter-rouge">-e</code>	显示每个模块的所有未解析的符号。</p>
+
+<h6 id="范例更新-modulesdep">范例：更新 <code class="highlighter-rouge">modules.dep</code></h6>
+
+<p>系统添加了一个网卡驱动程序 <code class="highlighter-rouge">a.ko</code>，更新 <code class="highlighter-rouge">modules.dep</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# cp a.ko /lib/modules/$(uname -r)/kernel/drivers/net
+~]# depmod
+</code></pre></div></div>
+
+<h3 id="853-查看内核模块">8.5.3 查看内核模块</h3>
+
+<h4 id="查看已加载的模块">查看已加载的模块</h4>
+
+<p><code class="highlighter-rouge">lsmod</code> 命令用于查看 <strong>当前已加载的内核模块</strong> 的状态，它显示的信息取自 <code class="highlighter-rouge">/proc/modules</code>。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ lsmod
+</code></pre></div></div>
+
+<p>返回的结果：</p>
+
+<p><code class="highlighter-rouge">Module</code>  模块名称</p>
+
+<p><code class="highlighter-rouge">size</code>  模块的大小</p>
+
+<p><code class="highlighter-rouge">Used by</code>  此模块是否被其他模块所使用</p>
+
+<h4 id="查看静态模块信息">查看静态模块信息</h4>
+
+<p><code class="highlighter-rouge">modinfo</code> 命令用于查询指定模块的信息。</p>
+
+<p>查询时，可以指定 <strong>模块名称</strong>，也可以指定 <strong>模块的文件名</strong>。如果指定模块名称，则会搜索 <code class="highlighter-rouge">/lib/modules/$(uname -r)</code> 目录。</p>
+
+<p>该命令默认会以 <code class="highlighter-rouge">字段:值</code> 的格式列出模块的每个属性，包括文件名。</p>
+
+<h5 id="语法-1">语法</h5>
+
+<p><code class="highlighter-rouge">modinfo [-F field] [-adln] [module_name|filename]</code></p>
+
+<p><code class="highlighter-rouge">-a</code>   仅查看作者</p>
+
+<p><code class="highlighter-rouge">-d</code>   仅查看模块说明</p>
+
+<p><code class="highlighter-rouge">-l </code>  仅查看授权</p>
+
+<p><code class="highlighter-rouge">-n</code>   仅查看模块的详细路径</p>
+
+<p>接模块名：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# modinfo drm
+filename:       /lib/modules/3.10.0-693.11.6.el7.x86_64/kernel/drivers/gpu/drm/drm.ko.xz
+license:        GPL and additional rights
+description:    DRM shared core routines
+author:         Gareth Hughes, Leif Delgass, José Fonseca, Jon Smirl
+license:        GPL and additional rights
+description:    DRM bridge infrastructure
+author:         Ajay Kumar &lt;ajaykumar.rs@samsung.com&gt;
+rhelversion:    7.4
+srcversion:     4D91436EA4E1CAAAAA64794
+depends:        i2c-core
+intree:         Y
+vermagic:       3.10.0-693.11.6.el7.x86_64 SMP mod_unload modversions
+signer:         CentOS Linux kernel signing key
+sig_key:        2C:BC:98:70:54:63:43:CA:3A:E1:20:C2:BC:EB:98:44:01:95:59:62
+sig_hashalgo:   sha256
+parm:           edid_fixup:Minimum number of valid EDID header bytes (0-8, default 6) (int)
+parm:           debug:Enable debug output, where each bit enables a debug category.
+                Bit 0 (0x01) will enable CORE messages (drm core code)
+                Bit 1 (0x02) will enable DRIVER messages (drm controller code)
+                Bit 2 (0x04) will enable KMS messages (modesetting code)
+                Bit 3 (0x08) will enable PRIME messages (prime code)
+                Bit 4 (0x10) will enable ATOMIC messages (atomic code)
+                Bit 5 (0x20) will enable VBL messages (vblank code) (int)
+parm:           vblankoffdelay:Delay until vblank irq auto-disable [msecs] (0: never disable, &lt;0: disable immediately) (int)
+parm:           timestamp_precision_usec:Max. error on timestamps [usecs] (int)
+parm:           timestamp_monotonic:Use monotonic timestamps (int)
+</code></pre></div></div>
+
+<p>接文件名：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# modinfo /lib/modules/$(uname -r)/kernel/arch/x86/kernel/iosf_mbi.ko.xz  
+filename:       /lib/modules/3.10.0-693.11.6.el7.x86_64/kernel/arch/x86/kernel/iosf_mbi.ko.xz
+license:        GPL v2
+description:    IOSF Mailbox Interface accessor
+author:         David E. Box &lt;david.e.box@linux.intel.com&gt;
+rhelversion:    7.4
+srcversion:     E6609E796D1747C4E14F1AB
+alias:          pci:v00008086d00000F00sv*sd*bc*sc*i*
+depends:        
+intree:         Y
+vermagic:       3.10.0-693.11.6.el7.x86_64 SMP mod_unload modversions
+signer:         CentOS Linux kernel signing key
+sig_key:        2C:BC:98:70:54:63:43:CA:3A:E1:20:C2:BC:EB:98:44:01:95:59:62
+sig_hashalgo:   sha256
+</code></pre></div></div>
+
+<h3 id="854-模块的加载与移除">8.5.4 模块的加载与移除</h3>
+
+<p>模块的动态的加载与移除，主要通过 <code class="highlighter-rouge">modprobe</code> 命令来完成。</p>
+
+<p>模块的名称中经常使用下划线 <code class="highlighter-rouge">_</code> 和短划线 <code class="highlighter-rouge">-</code>，在 <code class="highlighter-rouge">/etc/modprobe.d/</code> 目录中的配置文件中使用 <code class="highlighter-rouge">modprobe</code> 时可以混用，而且在模块命令的使用中它们也可以混用。</p>
+
+<h4 id="modprobe"><code class="highlighter-rouge">modprobe</code></h4>
+
+<p><code class="highlighter-rouge">modprobe</code> 命令用于在内核中 <strong>智能加载或删除模块</strong>。它会在 <code class="highlighter-rouge">/lib/modules/$(uname -r)</code> 目录中查找模块及其它文件，在 <code class="highlighter-rouge">/etc/modprobe.d</code> 目录中查找配置文件。</p>
+
+<p><code class="highlighter-rouge">modprobe</code> 需要最近更新的 <code class="highlighter-rouge">modules.dep.bin</code> 文件，它会参照其中的依赖关系，来判断需要加载和删除哪些模块。</p>
+
+<p>当内核请求一个模块时，实际上它也是通过 <code class="highlighter-rouge">modprobe</code> 来请求的。</p>
+
+<p class="notice--info">通常是间接使用 <code class="highlighter-rouge">modprobe</code> 命令：如 <code class="highlighter-rouge">udev</code> 也是依靠 <code class="highlighter-rouge">modprobe</code> 为检测到的硬件自动加载驱动程序的。</p>
+
+<h5 id="特点">特点</h5>
+
+<p>它的功能比诸如 <code class="highlighter-rouge">insmod</code>、<code class="highlighter-rouge">rmmod</code> 同类软件要丰富的多：</p>
+
+<ul>
+  <li>能够更直观地决定加载哪些模块</li>
+  <li>它有能力了解模块间的依赖性，因此当请求加载模块时，<code class="highlighter-rouge">modprobe</code> 首先添加其他所需模块</li>
+  <li>根据需要解决递归模块依赖关系</li>
+</ul>
+
+<h5 id="配置文件">配置文件</h5>
+
+<p><code class="highlighter-rouge">/etc/modprobe.d/</code> 目录中的 <code class="highlighter-rouge">*.conf</code> 是 <code class="highlighter-rouge">modprobe</code> 的配置文件。</p>
+
+<p>如果需要内核模块加载时带上某些特定的参数，可以在该目录中创建自定义的配置文件来实现。</p>
+
+<p>配置文件可以用来指定模块参数、创建模块别名，用特殊的需求来覆盖 <code class="highlighter-rouge">modprobe</code> 加载模块时的常规行为。</p>
+
+<h5 id="语法-2">语法</h5>
+
+<p><code class="highlighter-rouge">modprobe [-cfr] module_name</code></p>
+
+<p><code class="highlighter-rouge">-c</code>	显示 <code class="highlighter-rouge">/etc/modprobe.d/</code> 目录中有效的配置</p>
+
+<p><code class="highlighter-rouge">-f</code>	尝试去掉模块版本信息，避免影响加载</p>
+
+<p><code class="highlighter-rouge">-r</code>	移除模块</p>
+
+<p>不加参数，直接使用时，它默认加载指定模块到内核。</p>
+
+<h6 id="模块附加参数">模块附加参数</h6>
+
+<p>可以在加载模块时使用特定的参数来规范模块的行为，加在模块名称后面的任何参数都会传递给内核。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># modprobe module_name parameter=value ...
+</code></pre></div></div>
+
+<p>用空格把多个 <code class="highlighter-rouge">参数/值</code> 分开，数组值用逗号分隔：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># modprobe foo arrayparm=1,2,3,4
+</code></pre></div></div>
+
+<h5 id="范例">范例</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# modprobe vfat		# 加载模块
+
+~]# modprobe -r vfat	# 移除模块
+</code></pre></div></div>
+
+<h4 id="insmod"><code class="highlighter-rouge">insmod</code></h4>
+
+<p><code class="highlighter-rouge">insmod</code> 命令用于 <strong>直接把模块插入内核中</strong>，<strong>不分析依赖关系</strong>。需要指定模块的完整文件路径。</p>
+
+<p>如果处理不好依赖关系，很可能加载会失败。</p>
+
+<p><code class="highlighter-rouge">insmod [/full/path/module_name] [parameters]</code></p>
+
+<h5 id="范例-1">范例</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# insmod /lib/modules/$（uname -r）/kernel/fs/fat/fat.ko
+</code></pre></div></div>
+
+<h4 id="rmmod"><code class="highlighter-rouge">rmmod</code></h4>
+
+<p><code class="highlighter-rouge">rmmod</code> 用于从内核中移除模块。</p>
+
+<p><code class="highlighter-rouge">rmmod [-fw] module_name</code></p>
+
+<p><code class="highlighter-rouge">-f</code>  强制移除，不论是否在用</p>
+
+<ul>
+  <li>范例：</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# rmmod fat
+</code></pre></div></div>
+
+<h2 id="86-grub">8.6 GRUB</h2>
+
+<p>GRUB，GNU GRand Unified Boot loader 是一个引导程序，它在系统启动时，给用户提供选择菜单，以决定启动哪个操作系统或内核，或由用户设定不同的参数来引导内核。</p>
+
+<p>🍎 GRUB1 目前已经停止开发和维护。而新版的 GRUB2 是完全重新编写的。当前的发行版大多使用 GRUB2 ，且通常简称其为 GRUB，称从前的 GRUB1 为 GRUB Legacy。</p>
+
+<figure class="">
+  <img src="http://localhost:4000/assets/images/GRUB_components.png" alt="GRUB 要素" />
+  
+</figure>
+
+<blockquote>
+  <p>MBR 中只有 <strong>446</strong> 字节的空间留给引导程序，要想让引导程序支持多文件系统、启动菜单，其体积会比较庞大，无法完全容纳于 MBR 中，于是引导程序会被分割成几部分。</p>
+</blockquote>
+
+<h3 id="861-grub-的安装">8.6.1 GRUB 的安装</h3>
+
+<p>对于 BIOS 系统，安装 GRUB</p>
+
+<h4 id="mbr-格式分区表">MBR 格式分区表</h4>
+
+<p>在传统 BIOS 平台上使用的分区表称为 MBR 格式，这个格式允许使用最多 4 个主分区及额外的逻辑分区。</p>
+
+<p>对于这种格式的分区表，有两种方式来安装 GRUB：</p>
+
+<h5 id="安装到-dos-兼容区">安装到 DOS 兼容区</h5>
+
+<p>无法保证该空间的彻底安全，有些专用的软件可以修改该区域内容。有时会被其它系统占用。</p>
+
+<h5 id="安装到-vbr">安装到 VBR</h5>
+
+<p>GRUB 很容易被 <code class="highlighter-rouge">tail packing</code> 或 <code class="highlighter-rouge">fsck</code> 等工具移动到其它位置。而且要想把 GRUB 安装到文件系统中，必须保证 <code class="highlighter-rouge">/boot</code> 文件系统与 BIOS 要引导的文件系统是在同一个磁盘上，这样，在 BIOS 成功引导之后，GRUB 才能直接访问内核文件。</p>
+
+<p>通常建议安装到 DOS 兼容区，除非有特殊需求。当然要保证第一分区至少从第 63 扇区开始划分，才能给 DOS 兼容区腾出空间。好在当下的磁盘都以性能为先，分区都是在较大的位置（如 1MiB）对齐，即第一分区通常是从第 2,048 扇区开始划分。</p>
+
+<h4 id="gpt-格式分区表">GPT 格式分区表</h4>
+
+<p>一些较新的系统使用 GPT（GUID Partition Table） 格式，属于 EFI（Extensible Firmware Interface） 的一部分，但如果系统软件支持的话，也可以用在 BIOS 平台上，如 GRUB 和 Linux 就可以。</p>
+
+<p>使用这种格式时，允许 <strong>为 GRUB 单独保留一个分区</strong>，称为 <strong>BIOS 引导分区</strong>，这样一来，GRUB 就可以嵌入这个分区，再也不用担心被其它软件覆盖，或是被操作系统移走了。</p>
+
+<p>在 GTP 系统上创建 BIOS 引导分区时，必须确保分区大于 31 KiB。GTP 格式的磁盘通常较大，因此建议引导分区要大于其最小单位，如 1 MiB，以便为将来更新容纳更多内容。同时也要确保该分区使用正确的类型。</p>
+
+<h5 id="用-fdisk-分区">用 <code class="highlighter-rouge">fdisk</code> 分区</h5>
+
+<p>使用分区类型号 <code class="highlighter-rouge">4</code></p>
+
+<h5 id="用-parted-分区">用 <code class="highlighter-rouge">parted</code> 分区</h5>
+
+<p><code class="highlighter-rouge"># parted /dev/disk set partition-number bios_grub on</code> 使用 <code class="highlighter-rouge">bios_grub</code> 参数</p>
+
+<h5 id="用-gdisk-分区">用 <code class="highlighter-rouge">gdisk</code> 分区</h5>
+
+<p>将分区类型设为 <code class="highlighter-rouge">0xEF02</code></p>
+
+<h5 id="其它软件">其它软件</h5>
+
+<p>使用 GUID：<code class="highlighter-rouge">21686148-6449-6e6f-744e656564454649</code></p>
+
+<p>安装 GRUB 时，一定要仔细确认所选的分区，GRUB 在安装过程中如果发现了 BIOS 引导分区，它会自动覆盖，因此要确保该分区不含有任何有用数据。</p>
+
+<h4 id="安装方法">安装方法</h4>
+
+<p>通常在类 UNIX 系统中用 <code class="highlighter-rouge">grub2-install</code> 命令来安装 GRUB。<code class="highlighter-rouge">grub2-install</code> 实际上只是一个脚本，真实的任务是由其它工具如 <code class="highlighter-rouge">grub2-mkimage</code> 等完成的。</p>
+
+<blockquote>
+  <p>因此，也可以直接执行这些命令来安装 GRUB，而不用 <code class="highlighter-rouge">grub2-install</code>，仅在非常熟悉 GRUB 内部结构时才建议这样做。</p>
+</blockquote>
+
+<p><code class="highlighter-rouge">grub2-install</code> 命令会用 <code class="highlighter-rouge">grub2-mkimage</code> 生成一个 GRUB 内核镜像，将其安装在系统中。</p>
+
+<h5 id="语法-3">语法</h5>
+
+<p><code class="highlighter-rouge">grub2-install [--boot-directory=DIR] INSTALL_DEVICE</code></p>
+
+<p><code class="highlighter-rouge">--boot-directory=DIR</code>  指定 GRUB 的安装目录，缺省时用默认值  <code class="highlighter-rouge">/boot</code></p>
+
+<p><code class="highlighter-rouge">INSTALL_DEVICE</code>  可以是操作系统的设备文件名，或 GRUB 的设备文件名。</p>
+
+<h3 id="862-grub-文件构成">8.6.2 GRUB 文件构成</h3>
+
+<p>GRUB 的文件被分割为三部分：1 级引导程序，1.5 级引导程序，2 级引导程序</p>
+
+<h4 id="1-级引导程序">1 级引导程序</h4>
+
+<p>文件名 <code class="highlighter-rouge">boot.img</code>，被装进 MBR。</p>
+
+<h4 id="15-级引导程序">1.5 级引导程序</h4>
+
+<p>文件名为 <strong>core.img</strong>，25,389 字节，通常在 DOS 兼容区。</p>
+
+<blockquote>
+  <p>通常保存在 MBR 与第一分区之间的空白扇区，这个位置一般称为 DOS 兼容区（ <code class="highlighter-rouge">DOS compatibility region</code>），或 <code class="highlighter-rouge">boot track</code>，<code class="highlighter-rouge">MBR gap</code>，<code class="highlighter-rouge">embedding area</code>。由于技术原因，这一片空间通常不被占用，第一分区的硬盘起始分区通常为 63 扇区，因此留给 1.5 级引导程序 62 个 512 字节的扇区，即 31,744 字节（<strong>32 KB</strong>）的空间。因此这个空间足够大，1.5 级引导程序可以拥有足够丰富的代码，来容纳一些常用的 <strong>文件系统驱动程序</strong>，如 EXT 家族，FAT，NTFS等。</p>
+</blockquote>
+
+<p>如果 DOS 兼容区被占用，也可以使用文件系统中其他固定的位置来保存 1.5 级引导程序。</p>
+
+<blockquote>
+  <p><code class="highlighter-rouge">core.img</code> 是由 <code class="highlighter-rouge">grub-mkimage</code> 程序动态生成的 GRUB 内核镜像，来源为 GRUB 内核镜像及不定数量的模块。它通常包含足够多的模块，以实现对 <code class="highlighter-rouge">/boot/grub2</code> 的访问，从文件系统加载启动菜单、操作系统内核等。模块化的设计使得 GRUB 内核镜像很小，因为通常要把它安装在仅 32K 大小的空间里。</p>
+</blockquote>
+
+<blockquote>
+  <p><code class="highlighter-rouge">diskboot.img</code> 是做为 <code class="highlighter-rouge">core.img</code> 内核镜像的第一个扇区来使用的，它会读取内核镜像的其它部分，进而启动 GRUB 内核。因为文件系统尚不可用，因此它会把 <code class="highlighter-rouge">core.img</code> 的具体位置使用块列表（block list）的格式进行硬编码，以保证 GRUB 能直读取。</p>
+</blockquote>
+
+<h4 id="2-级引导程序">2 级引导程序</h4>
+
+<p>包含多个实体文件，保存在 <code class="highlighter-rouge">/boot/grub2/</code> 目录中</p>
+
+<blockquote>
+  <p>2 级引导的所有文件均位于 <code class="highlighter-rouge">/boot/grub2</code> 目录和几个子目录中。2 级引导不用镜像文件，而使用 GRUB 运行时 <strong>内核模块</strong>，这些模块位于 <code class="highlighter-rouge">/boot/grub2/i386-pc</code> 目录，按需加载。</p>
+</blockquote>
+
+<blockquote>
+  <p>在 <code class="highlighter-rouge">core.img</code> 所在扇区之后，第 63 扇区之前，剩余的可用空间不多，不足以容纳其余的 GRUB 文件；</p>
+</blockquote>
+
+<blockquote>
+  <p>同时，1.5 级引导已经使得 GRUB 有能力直接访问各种常用的文件系统。因此，2 级引导程序的文件完全可以保存在 EXT 文件系统中，但不可以保存到逻辑卷。于是，2 级文件均被保存在 <code class="highlighter-rouge">/boot/grub2</code> 目录中。</p>
+</blockquote>
+
+<blockquote>
+  <p>注意，<code class="highlighter-rouge">/boot</code> 目录必须保存在 GRUB 支持的文件系统中，而非任何文件系统。</p>
+</blockquote>
+
+<h4 id="grub-常用文件">GRUB 常用文件</h4>
+
+<h5 id="bootgrub2"><code class="highlighter-rouge">/boot/grub2/*</code></h5>
+
+<p><code class="highlighter-rouge">device.map</code>	GRUB 的磁盘映射表</p>
+
+<p><code class="highlighter-rouge">fonts</code>	引导过程使用的字体</p>
+
+<p><code class="highlighter-rouge">grub.cfg</code>	GRUB 的配置文件</p>
+
+<p><code class="highlighter-rouge">grubenv</code>	引导期间使用的环境变量</p>
+
+<p><code class="highlighter-rouge">i386-pc</code>	GRUB 内核模块目录</p>
+
+<p><code class="highlighter-rouge">locale</code>	语系</p>
+
+<p><code class="highlighter-rouge">themes</code>	主题画面</p>
+
+<h5 id="bootgrub2i386-pc"><code class="highlighter-rouge">/boot/grub2/i386-pc/*</code></h5>
+
+<p><code class="highlighter-rouge">acpi.mod</code>	电源管理模块</p>
+
+<p><code class="highlighter-rouge">ata.mod</code>	磁盘模块</p>
+
+<p><code class="highlighter-rouge">chain.mod</code>	控制权移交模块</p>
+
+<p><code class="highlighter-rouge">command.lst</code>	命令列表，描述每个模块可以通过什么命令来加载</p>
+
+<p><code class="highlighter-rouge">efiemu32.o</code>	EFI 模块</p>
+
+<p><code class="highlighter-rouge">efiemu64.o</code>	EFI 模块</p>
+
+<p><code class="highlighter-rouge">efiemu.mod</code>	EFI 模块</p>
+
+<p><code class="highlighter-rouge">ext2.mod</code>	EXT 家族文件系统模块</p>
+
+<p><code class="highlighter-rouge">fat.mod</code>	FAT 文件系统模块</p>
+
+<p><code class="highlighter-rouge">gcry_sha256.mod</code>	加密模块</p>
+
+<p><code class="highlighter-rouge">gcry_sha512.mod</code>	加密模块</p>
+
+<p><code class="highlighter-rouge">iso9660.mod</code>	光盘文件系统模块</p>
+
+<p><code class="highlighter-rouge">lvm.mod</code>	LVM 文件系统模块</p>
+
+<p><code class="highlighter-rouge">mdraid09.mod</code>	软 RAID 模块</p>
+
+<p><code class="highlighter-rouge">minix.mod</code>	MINIX 文件系统模块</p>
+
+<p><code class="highlighter-rouge">msdospart.mod</code>	MBR 分区表</p>
+
+<p><code class="highlighter-rouge">part_gpt.mod</code>	GPT 分区表</p>
+
+<p><code class="highlighter-rouge">part_msdos.mod</code>	MBR 分区表</p>
+
+<p><code class="highlighter-rouge">scsi.mod</code>	SCSI 相关模块</p>
+
+<p><code class="highlighter-rouge">usb_keyboard.mod</code>	USB 键盘模块</p>
+
+<p><code class="highlighter-rouge">usb.mod</code>	USB 模块</p>
+
+<p><code class="highlighter-rouge">vga.mod</code>	VGA 显卡模块</p>
+
+<p><code class="highlighter-rouge">xfs.mod</code>	XFS 文件系统模块</p>
+
+<h5 id="grub-的镜像">GRUB 的镜像</h5>
+
+<p>GRUB 由几类镜像文件组成：决定 GRUB 不同的启动方式的镜像，GRUB 内核镜像，及一系列模块，这些模块被用来与 GRUB 内核镜像合并重新生成 <code class="highlighter-rouge">core.img</code>。</p>
+
+<h3 id="863-grub-工作方式">8.6.3 GRUB 工作方式</h3>
+
+<p>GRUB 有两种截然不同的启动方式：</p>
+
+<h4 id="直接加载">直接加载</h4>
+
+<p>直接加载操作系统内核。</p>
+
+<p>GRUB 允许用户选择引导当前发行版的 <strong>不同的内核</strong>。如果更新内核失败，或某个重要软件发生不兼容问题，该功能可以让用户引导上一版本的内核。</p>
+
+<h4 id="链式加载">链式加载</h4>
+
+<p>链式加载另一个引导程序，然后再加载操作系统内核。</p>
+
+<p>链式加载主要用于非 GRUB 原生支持的操作系统。GRUB 默认支持 <strong>多操作系统</strong> 的引导，默认支持引导 Linux 及其它免费操作系统，也可以通过链式加载来引导 Windows 等 <strong>其他操作系统</strong>。</p>
+
+<p>GRUB1 时期，官方使用三个级别来定义不同的启动阶段：1 级，1.5 级，2 级</p>
+
+<p>但到了 GRUB2 时期，官方声明不再使用这三个阶段的命名。但实际上的流程是一样的，因此为了方便理解，我们仍然沿用这个概念。</p>
+
+<h3 id="864-grub-文件系统语法">8.6.4 GRUB 文件系统语法</h3>
+
+<p>GRUB 中对设备的描述方法与 Linux 系统中的不一样， GRUB 使用特殊的语法来指定 BIOS 可访问的磁盘，因为 BIOS 的限制，GRUB 无法区分 IDE，ESDI，SCSI 或其它的设备。因此用户自己必须清楚 <strong>BIOS 中的设备对应操作系统中的哪个设备</strong>。</p>
+
+<h4 id="设备的描述">设备的描述</h4>
+
+<p><code class="highlighter-rouge">(device[,partmap-name1part-num1[,partmap-name2part-num2[,...]]])</code></p>
+
+<p>最外面用 <code class="highlighter-rouge">( )</code> 括起来，<code class="highlighter-rouge">[ ]</code> 中的内容为可选。其中 <code class="highlighter-rouge">partmap-name1part-num1</code> 是 <code class="highlighter-rouge">partmap-name1</code> + <code class="highlighter-rouge">part-num1</code> 的组合。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">硬盘查找顺序</th>
+      <th style="text-align: left">在 GRUB 中的代号</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">第一块（MBR）</td>
+      <td style="text-align: left">（hd0） （hd0,msdos1） （hd0,msdos2） （hd0,msdos3）….</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">第二块（GPT）</td>
+      <td style="text-align: left">（hd1） （hd1,gpt1） （hd1,gpt2） （hd1,gpt3）….</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">第三块</td>
+      <td style="text-align: left">（hd2） （hd2,1） （hd2,2） （hd2,3）….</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="设备">设备</h5>
+
+<p><code class="highlighter-rouge">device</code>：设备名取决于磁盘驱动的类型，</p>
+
+<ul>
+  <li>BIOS 和 EFI 磁盘使用 <code class="highlighter-rouge">fd</code> 或 <strong><code class="highlighter-rouge">hd</code></strong> 加一位数字，从 <strong>0</strong> 开始</li>
+  <li>AHCI，PATA，crypto，USB 使用磁盘名称加一串数字</li>
+  <li>虚拟磁盘（Memdisk）和主机（host）只能有一个，因此只用磁盘名称</li>
+  <li>RAID，ofdisk，LVM，LDV，virtio，arcdsik 使用磁盘的 intrinsic 名称，加磁盘名称做前缀</li>
+</ul>
+
+<p>如果名称发生冲突则用一串数字做后缀，逗号前面需要转义符。</p>
+
+<h5 id="分区">分区</h5>
+
+<p><code class="highlighter-rouge">part-num</code> 为设备的 <strong>分区号</strong>，从 <strong>1</strong> 开始</p>
+
+<p><code class="highlighter-rouge">partmap-name</code> <strong>分区名</strong>。可选，建议使用，因为同一个磁盘可以包含多种不同类型的映射。</p>
+
+<blockquote>
+  <p><code class="highlighter-rouge">/boot/grub2/device.map</code> 是驱动器映射文件，其内容为 BIOS 识别的驱动器（hd0）与 Linux 设备文件（/dev/sda）的映射。<code class="highlighter-rouge">grub-probe</code> 等软件会读取该文件来获取映射。</p>
+</blockquote>
+
+<h5 id="范例-2">范例</h5>
+
+<p><code class="highlighter-rouge">(hd0,1)</code>    第一块磁盘，第一分区</p>
+
+<p><code class="highlighter-rouge">(hd0,msdos1)</code>     第一块磁盘，第一分区，MBR 格式</p>
+
+<p><code class="highlighter-rouge">(hd0,gpt1)</code>      第一块磁盘，第一分区，GPT 格式</p>
+
+<p><code class="highlighter-rouge">(hd0)</code>	第一块磁盘整个磁盘</p>
+
+<p><code class="highlighter-rouge">(hd0,msdos5)</code>	第一块磁盘的第一个逻辑分区</p>
+
+<p>假设当前系统仅有一块 SATA 硬盘，其第一个逻辑分区，在 Linux 中的文件名为 <code class="highlighter-rouge">/dev/sda5</code>，在 GRUB 中的磁盘代号为 <code class="highlighter-rouge">(hd0,msdos5)</code> 或 <code class="highlighter-rouge">(hd0,5)</code></p>
+
+<h4 id="文件的描述">文件的描述</h4>
+
+<p>可以用两种方式来指定文件，通过 <strong>绝对文件名</strong> 和 <strong>块列表</strong>。</p>
+
+<h5 id="绝对文件名">绝对文件名</h5>
+
+<p>绝对文件名：使用 <strong><code class="highlighter-rouge">/</code></strong> 来连接 <strong>设备</strong> 和 <strong>文件</strong>。</p>
+
+<p><code class="highlighter-rouge">(hd0,1)/boot/grub/grub.cfg</code> 表示第一块磁盘第一分区中的 <code class="highlighter-rouge">/boot/grub/grub.cfg</code> 文件。</p>
+
+<p>如果省略了设备名，GRUB 会使用其配置文件中的根设备（<code class="highlighter-rouge">set root=(hd1,1)</code>），则 <code class="highlighter-rouge">/boot/kernel</code> 等同于 <code class="highlighter-rouge">(hd1,1)/boot/kernel</code>。</p>
+
+<p>在 ZFS 文件系统中，设备名的格式为 <code class="highlighter-rouge">volume@[snapshot]</code>，因此 <code class="highlighter-rouge">/rootvol@snap-129/boot/grub/grub.cfg</code> 代表 <code class="highlighter-rouge">rootvol</code> 卷中的，名为 <code class="highlighter-rouge">snap-129</code> 的快照中的， <code class="highlighter-rouge">/boot/grub/grub.cfg</code> 文件。卷标后面的 <code class="highlighter-rouge">@</code> 是必须要有的，快照名可以省略。</p>
+
+<h5 id="块列表">块列表</h5>
+
+<p>块列表（Block List）用于 <strong>描述没有出现在操作系统中的文件</strong>，如引导程序，</p>
+
+<p>语法：</p>
+
+<p><code class="highlighter-rouge">[位移]+长度[，[位移]+长度]...</code></p>
+
+<p><code class="highlighter-rouge">0+100</code> 表示 GRUB 应该从 0 开始，读 100 个块，即 0 ~ 99 块</p>
+
+<p><code class="highlighter-rouge">200+1</code> 表示第 200 块</p>
+
+<p><code class="highlighter-rouge">300+300</code> 表示从第 300 块一直读取到第 599 块。</p>
+
+<ul>
+  <li>
+    <p>如果省略 “位移”，则 GRUB 认为是从 <code class="highlighter-rouge">0</code> （第 1 块，MBR 或 VBR）开始。</p>
+  </li>
+  <li>
+    <p>如果块列表中没有指定设备文件名，GRUB 自动使用 GRUB 配置文件中的根设备。如根设备为<code class="highlighter-rouge">(hd0,2)</code> ，则 <code class="highlighter-rouge">+1</code> 表示 <code class="highlighter-rouge">(hd0,2)+1</code>，即 GRUB 会读取第一块磁盘的第 2 个分区的 VBR。</p>
+  </li>
+</ul>
+
+<h4 id="grub-配置文件">GRUB 配置文件</h4>
+
+<p><code class="highlighter-rouge">grub.cfg</code> 是 GRUB 的内核配置文件，<strong>不能手动修改</strong>，只能 <strong>使用 <code class="highlighter-rouge">grub2-mkconfig</code> 命令来创建</strong>。</p>
+
+<h5 id="grubcfg-的组成"><code class="highlighter-rouge">grub.cfg</code> 的组成</h5>
+
+<ul>
+  <li>设置环境变量</li>
+  <li>设置默认菜单</li>
+  <li>引导菜单设置</li>
+</ul>
+
+<h5 id="菜单参数">菜单参数</h5>
+
+<p>每一个菜单都通过 <code class="highlighter-rouge">menuentry</code> 命令来指定参数：</p>
+
+<p><code class="highlighter-rouge">menuentry title [--class=class …] [--users=users] [--unrestricted] [--hotkey=key] [--id=id] [arg …] { command; … }</code></p>
+
+<p><code class="highlighter-rouge">title</code>	此项菜单的名字</p>
+
+<p><code class="highlighter-rouge">--class</code>	使用该选项可以把菜单分成不同的类别，每种类别的菜单其显示样式可以单独设置</p>
+
+<p><code class="highlighter-rouge">--users</code>	仅特定用户才能访问该菜单</p>
+
+<p><code class="highlighter-rouge">--unrestricted</code>	所有用户都可以访问该菜单</p>
+
+<p><code class="highlighter-rouge">--hotkey</code>  为菜单设置快捷键，可以是字母、回退、TAB、删除键</p>
+
+<p><code class="highlighter-rouge">--id</code>  将菜单与某个由 ASCII 码组成的唯一的 ID 关联</p>
+
+<p><code class="highlighter-rouge">{ command; … }</code> 该项菜单要执行的所有命令用 <code class="highlighter-rouge">{ }</code> 括起来</p>
+
+<p>在使用 <code class="highlighter-rouge">menuentry</code> 命令时，其后面携带的，从 <code class="highlighter-rouge">tilte</code> 开始的所有的参数，都会被做为 <strong>位置参数</strong> 传递，而 <code class="highlighter-rouge">title</code> 永远是 $1。</p>
+
+<h5 id="menuentry-中的命令列表"><code class="highlighter-rouge">menuentry</code> 中的命令列表</h5>
+
+<h6 id="加载模块">加载模块</h6>
+
+<p>通常是内核文件所在磁盘、分区、文件系统的 <strong>驱动程序</strong>，及 <strong>解压缩软件</strong>，如 <code class="highlighter-rouge">load_video, insmod gzio, insmod part_gpt, insmod xfs</code> 等。</p>
+
+<h6 id="指定-grubcfg-所在分区">指定 grub.cfg 所在分区</h6>
+
+<p><code class="highlighter-rouge">set root='hd0,gpt2'</code></p>
+
+<h6 id="加载-linux-内核">加载 Linux 内核</h6>
+
+<p>本菜单条目要加载的 Linux 内核的文件名以，及执行内核所用的参数。</p>
+
+<p><code class="highlighter-rouge">linux16 /vmlinuz-... root=/dev/mapper/centos-root ... </code> root 指根目录所在的设备，可以用设备文件名、 UUID 或 LABEL 来表示。</p>
+
+<p>该项指定的内核文件名为 <strong>相对路径</strong>，需要与上一项 <code class="highlighter-rouge">set root=</code> 一起组成 Linux 内核文件真实路径。</p>
+
+<p>GRUB 对 Linux 内核文件绝对路径的判断过程：</p>
+
+<p>如果当前系统没有 <code class="highlighter-rouge">/boot</code> 分区，只有 <code class="highlighter-rouge">/</code> 分区：</p>
+
+<p><code class="highlighter-rouge">/boot/vmlinuz-xxx</code> –&gt; <code class="highlighter-rouge">(/)/boot/vmlinuz-xxx</code> –&gt; <code class="highlighter-rouge">(hd0,msdos1)/boot/vmlinuz-xxx</code></p>
+
+<p>如果 /boot 是独立分区，则 Linux 内核文件名为：</p>
+
+<p><code class="highlighter-rouge">/boot/vmlinuz-xxx</code> –&gt; <code class="highlighter-rouge">(/boot)/vmlinuz-xxx</code> –&gt; <code class="highlighter-rouge">(hd0,msdos1)/vmlinuz-xxx</code></p>
+
+<h6 id="加载-initrd-镜像">加载 initrd 镜像</h6>
+
+<p><code class="highlighter-rouge">initrd16 /initramfs-3.10...</code> 为 INITRAMFS 镜像文件，该文件名也需与上面的 <code class="highlighter-rouge">set root=</code> 组合成绝对路径</p>
+
+<h4 id="修改--grub-配置">修改  GRUB 配置</h4>
+
+<p>修改 <code class="highlighter-rouge">/etc/default/grub</code> 和 <code class="highlighter-rouge">/etc/grub.d/*</code>，然后使用 <code class="highlighter-rouge">grub2-mkconfig</code> 命令重建 <code class="highlighter-rouge">grub.cfg</code>。</p>
+
+<h5 id="配置文件-1">配置文件</h5>
+
+<p><code class="highlighter-rouge">/etc/default/grub</code> 是 GRUB 的主要环境配置文件</p>
+
+<h6 id="倒计时秒数">倒计时秒数</h6>
+
+<p><code class="highlighter-rouge">GRUB_TIMEOUT=0</code>	不等待用户选择，直接执行默认菜单</p>
+
+<p><code class="highlighter-rouge">GRUB_TIMEOUT=30</code>	等待 30 秒，之后执行默认菜单</p>
+
+<p><code class="highlighter-rouge">GRUB_TIMEOUT=-1</code>	不限时等待，用户选择才能继续</p>
+
+<h6 id="菜单显示方式">菜单显示方式</h6>
+
+<p><code class="highlighter-rouge">GRUB_TIMEOUT_STYLE=menu</code>	显示菜单 – 倒计时 – 启动默认菜单</p>
+
+<p><code class="highlighter-rouge">GRUB_TIMEOUT_STYLE=countdown</code>	（显示秒数）倒计时 – 启动默认菜单</p>
+
+<p><code class="highlighter-rouge">GRUB_TIMEOUT_STYLE=hidden</code>	（隐藏秒数）倒计时 – 启动默认菜单</p>
+
+<p>如果未设置此项目或设置为 <code class="highlighter-rouge">menu</code>，GRUB 会 <strong>显示菜单</strong>，并倒计时。设置为 <code class="highlighter-rouge">countdown</code> 或 <code class="highlighter-rouge">hidden</code> 会 <strong>隐藏菜单</strong>。</p>
+
+<p>设置为 <code class="highlighter-rouge">countdown</code> 或<code class="highlighter-rouge"> hidden</code> 时，GRUB 会 <strong>隐藏菜单</strong>，倒计时期间按 <strong>ESC</strong> 键可以 <strong>显示菜单</strong>，同时停止倒计时，直到用户做出选择。</p>
+
+<h6 id="选择终端输出设备">选择终端输出设备</h6>
+
+<p>可以选择多个设备，用空格分隔。</p>
+
+<p><code class="highlighter-rouge">GRUB_TERMINAL_OUTPUT="console"</code> 最常用</p>
+
+<p>其它选择还有 “serial, gfxterm, vga_text”。</p>
+
+<h6 id="默认引导菜单">默认引导菜单</h6>
+
+<p><code class="highlighter-rouge">GRUB_DEFAULT</code> 指定默认引导菜单，默认值为 0。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">GRUB_DEFAULT=菜单序号</code>： GRUB 生成的菜单中的第几个为默认菜单，从 <code class="highlighter-rouge">0</code> 开始，1 为第 2 个菜单</li>
+  <li><code class="highlighter-rouge">GRUB_DEFAULT=saved</code>： 当 <code class="highlighter-rouge">GRUB_SAVEDEFAULT</code> 为 <code class="highlighter-rouge">true</code> 时，GRUB 会记住用户上次的选择</li>
+  <li><code class="highlighter-rouge">GRUB_DEFAULT=菜单标题</code>： 即 menuentry 中的 <code class="highlighter-rouge">--id</code> 指定的参数</li>
+</ul>
+
+<h6 id="指定内核的运行参数">指定内核的运行参数</h6>
+
+<p><code class="highlighter-rouge">GRUB_CMDLINE_LINUX</code></p>
+
+<p>如果希望在内核启动时加入额外的参数，用此项设置。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GRUB_CMDLINE_LINUX="..... crashkernel=auto rhgb quiet elevator=deadline"
+</code></pre></div></div>
+
+<h6 id="是否允许-grub-查找其它操作系统">是否允许 GRUB 查找其它操作系统</h6>
+
+<p><code class="highlighter-rouge">GRUB_DISABLE_OS_PROBER</code></p>
+
+<p>设置为 <code class="highlighter-rouge">true</code> 时，<code class="highlighter-rouge">grub-mkconfig</code> 命令会尝试用外部程序 <code class="highlighter-rouge">os-prober</code> 来寻找安装在同一系统中的其它操作系统，并为其创建菜单。</p>
+
+<p>修改完 <code class="highlighter-rouge">/etc/default/grub</code> 文件之后，必须使用 <code class="highlighter-rouge">grub2-mkconfig</code> 来重新生成 <code class="highlighter-rouge">grub.cfg</code>。</p>
+
+<h5 id="etcgrubd-目录中的配置文件"><code class="highlighter-rouge">/etc/grub.d/*</code> 目录中的配置文件</h5>
+
+<p><code class="highlighter-rouge">grub-mkconfig</code> 命令会分析 <code class="highlighter-rouge">/etc/grub.d/</code> 目录中的文件，按顺序执行各文件，来 <strong>创建 <code class="highlighter-rouge">grub.cfg</code></strong>。</p>
+
+<p>该目录中的常用文件：</p>
+
+<h6 id="00_header"><code class="highlighter-rouge">00_header</code></h6>
+
+<p>该脚本 <strong>读取 <code class="highlighter-rouge">/etc/default/grub</code></strong> 中的参数 。</p>
+
+<h6 id="10_linux"><code class="highlighter-rouge">10_linux</code></h6>
+
+<p>在 <code class="highlighter-rouge">/boot</code> 目录中寻找 linux 内核文件，<strong>为每一个内核文件生成一个菜单</strong>，读取内核所需的文件系统模块与参数。</p>
+
+<h6 id="30_os-prober"><code class="highlighter-rouge">30_os-prober</code></h6>
+
+<p><strong>寻找其他分区中的操作系​​统</strong>，为其生成菜单。</p>
+
+<h6 id="40_custom"><code class="highlighter-rouge">40_custom</code></h6>
+
+<p><strong>用户自定义菜单</strong>。</p>
+
+<h5 id="自定义菜单">自定义菜单</h5>
+
+<p>通常只修改 <code class="highlighter-rouge">40_custom</code> ，保留另外三个。</p>
+
+<h6 id="引导指定内核">引导指定内核</h6>
+
+<p>从 <code class="highlighter-rouge">grub.cfg</code> 把菜单复制到 <code class="highlighter-rouge">40_custom</code> 中，加以修改。</p>
+
+<h6 id="移交控制权">移交控制权</h6>
+
+<p>通过 <code class="highlighter-rouge">chainloader</code> 命令来实现。先要加载目标分区的文件系统模块和 <code class="highlighter-rouge">chainloader</code> 模块。</p>
+
+<p>需指定两个参数：<strong>目标分区</strong> 和引导程序所在的 <strong>块列表</strong></p>
+
+<h6 id="范例-3">范例</h6>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>menuentry 'Go to Windows 7' --id 'win7' {
+        insmod chain      # 加载 chainloader 模块
+        insmod ntfs       # 加载 windows 文件系统模块
+        set root=（hd0,msdos2）  # 第一块磁盘第二分区
+        chainloader +1    # 读取 VBR 中的引导程序
+}
+
+menuentry 'Go to MBR' --id 'mbr' {
+        insmod chain
+        set root=（hd0）	# 第一块磁盘
+        chainloader +1		# 读取 MBR 中的引导程序
+}
+</code></pre></div></div>
+
+<h5 id="指定引导参数">指定引导参数</h5>
+
+<p>在引导菜单界面，在某个菜单上按 <strong><code class="highlighter-rouge">e</code></strong> 键会进入菜单编辑状态：</p>
+
+<p>此时屏幕分成上下两个部分，上方为编辑区，用方向键移动光标，直接编辑内容。</p>
+
+<p>屏幕下方画面为简要帮助说明，取消编辑用 <code class="highlighter-rouge">[crtl]+c</code> 或 <code class="highlighter-rouge">[esc]</code> 键，确认修改用 <code class="highlighter-rouge">[crtl]+x </code> ，系统会使用修改后的设置来引导。</p>
+
+<h6 id="范例-4">范例</h6>
+
+<p>通过临时修改菜单参数，让系统进入救援模式。</p>
+
+<p>在菜单上按 <code class="highlighter-rouge">e</code> 键之后，找到 <code class="highlighter-rouge">linux16</code> 那一行，在行尾加上 <code class="highlighter-rouge">systemd.unit=rescue.target</code>，按 <code class="highlighter-rouge">[crtl]+x</code> 进入系统，即进入救援环境。</p>
+
+<h3 id="865-多操作系统引导">8.6.5 多操作系统引导</h3>
+
+<p>每个操作系统上都可以安装 GRUB，都可以存在 GRUB 的文件。但MBR 决定了 2 级引导会加载哪个文件系统上的 GRUB。</p>
+
+<p class="notice--info">因为 <code class="highlighter-rouge">core.img</code> 中指定了根设备，从而决定了 GRUB 文件的绝对路径，因此 1.5 级引导程序会据此来寻找 GRUB 内核及配置文件，从而决定显示哪个分区上的 GRUB 菜单。</p>
+
+<p>每个文件系统中的 GRUB 可以有完全不同的配置，显示完全不同的菜单，不同的默认引导操作系统。</p>
+
+<p>要实现多操作系统的引导，可以通过以下两种方法来实现：</p>
+
+<h4 id="重装-grub">重装 GRUB</h4>
+
+<p>😈 重装 GRUB 的目的实际上是更新 <code class="highlighter-rouge">core.img</code> 中的 GRUB 根设备，使其指向用户需要的分区，让 MBR 知道下一步应该去哪个分区的 VBR 读取 GRUB。</p>
+
+<h5 id="范例-5">范例</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# fdisk -l /dev/vda
+   Device Boot      Start         End      Blocks   Id  System
+/dev/vda1            2048    10487807     5242880   83  Linux
+/dev/vda2   *    10487808   178259967    83886080    7  HPFS/NTFS/exFAT
+/dev/vda3       178259968   241174527    31457280   83  Linux
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">/dev/vda1</code>，<code class="highlighter-rouge">/dev/vda3</code> 是 CentOS 7，<code class="highlighter-rouge">/dev/vda2</code> 是 Windows 7。</p>
+
+<p>安装顺序：<code class="highlighter-rouge">/dev/vda1</code>	&gt;	<code class="highlighter-rouge">/dev/vda2</code>	&gt;	<code class="highlighter-rouge">/dev/vda3</code></p>
+
+<p>安装完  <code class="highlighter-rouge">/dev/vda3</code> 之后，系统会默认引导 <code class="highlighter-rouge">/dev/vda3</code> 的 CentOS 7。此时 MBR 会去读取 <code class="highlighter-rouge">(/dev/vda3)/boot/grub/grub.cfg</code>。</p>
+
+<p>要想让系统默认从 <code class="highlighter-rouge">/dev/vda1</code> 引导，MBR 的引导程序应该读取 <code class="highlighter-rouge">(/dev/vda1)/boot/grub/grub.cfg</code>。</p>
+
+<p>所以，首先要进入 <code class="highlighter-rouge">/dev/vda1</code> 文件系统，实现途径可有三种：</p>
+
+<ul>
+  <li>利用 CentOS 7 自动生成 <code class="highlighter-rouge">/dev/vda1</code> 的引导菜单</li>
+  <li>在 <code class="highlighter-rouge">/dev/vda3</code> 中使用 <strong><code class="highlighter-rouge">chroot</code></strong> 来进入 <code class="highlighter-rouge">/dev/vda1</code></li>
+  <li>用修复光盘来读取 <code class="highlighter-rouge">/dev/vda1</code></li>
+</ul>
+
+<p>用以上任一方法进入 <code class="highlighter-rouge">/dev/vda1</code> 系统后，修改 <code class="highlighter-rouge">/etc/default/grub</code> 及 <code class="highlighter-rouge">/etc/grub.d/40_custom</code> 完成菜单的设置，再用 <code class="highlighter-rouge">grub-mkconfig -o /boot/grub/grub.cfg</code> 创建新的配置文件，最后 <code class="highlighter-rouge">grub2-install /dev/vda</code> 安装新生成的 <code class="highlighter-rouge">core.img</code> ，MBR 便会默认读取 <code class="highlighter-rouge">/dev/vda1</code> 中的配置文件。</p>
+
+<h4 id="增加菜单">增加菜单</h4>
+
+<p>如果操作系统均为 GRUB 支持，则可以直接手动增加引导菜单。</p>
+
+<p>当前 GRUB 只有一个菜单，要想增加两个菜单，分别读取 MBR 和 <code class="highlighter-rouge">/dev/vda4</code> 的引导程序</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# vim /etc/grub.d/40_custom		# 增加自定义菜单
+
+menuentry 'Goto MBR' {
+        insmod chain
+        insmod part_gpt
+        set root=（hd0）
+        chainloader +1
+}
+
+menuentry 'Goto /dev/vda4' {
+        insmod chain
+        insmod part_gpt
+        set root=（hd0,gpt4）
+        chainloader +1
+}
+
+~]# grub2-mkconfig -o /boot/grub/grub.cfg
+</code></pre></div></div>
+
+<h3 id="866-以图形方式显示菜单">8.6.6 以图形方式显示菜单</h3>
+
+<p>先修改 <code class="highlighter-rouge">/etc/default/grub</code> 文件</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GRUB_TERMINAL=gfxterm       # 设置用图形界面显示菜单
+GRUB_GFXMODE=1024x768x24    # 图形界面的分辨率、色深
+GRUB_GFXPAYLOAD_LINUX=keep  # 保持上面的参数的设置，不要使用文字模式
+</code></pre></div></div>
+
+<p>重新创建配置文件</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# grub-mkconfig -o /boot/grub/grub.cfg
+</code></pre></div></div>
+
+<h3 id="867-给菜单加密码">8.6.7 给菜单加密码</h3>
+
+<p>对于通过物理方式连接到控制台的用户，引导程序默认对所有人开放。但有些环境需要对菜单的使用者进行认证，GRUB 可以针对每项菜单单独设置认证。</p>
+
+<p>GRUB 把用户同样分成两类，超级用户和普通用户。</p>
+
+<p class="notice--warning">GRUB 中设置的用户名与 Linux 的用户无关，仅限 GRUB 使用。</p>
+
+<h4 id="superusers">SUPERUSERS</h4>
+
+<p>环境变量 <code class="highlighter-rouge">superusers</code> 支持 <strong>用户列表</strong>，可以用 <code class="highlighter-rouge">空格、逗号、分号、管道、&amp;</code> 之一分隔，该参数指定的超级用户有权使用 “GRUB 命令行，编辑菜单参数，执行任何菜单”。</p>
+
+<ul>
+  <li>如果 <code class="highlighter-rouge">superusers</code> 指定了用户，则 “命令行的使用，菜单项的编辑” 自动变成 <strong>只对超级用户开放</strong></li>
+  <li>如果该项设置为 <strong>空</strong>，则 <strong>禁止任何人</strong> 使用 GRUB 命令行和编辑菜单。</li>
+</ul>
+
+<h4 id="users">Users</h4>
+
+<p>在 <code class="highlighter-rouge">menuentry</code> 中，用 <code class="highlighter-rouge">--user</code> 指定的用户有权 <strong>执行该菜单</strong>。</p>
+
+<p><code class="highlighter-rouge">--user</code> 参数同样支持 <strong>用户列表</strong>。</p>
+
+<p>如果菜单中使用了 <code class="highlighter-rouge">--unrestricted</code> 参数，则该菜单不受限，所有人可执行。</p>
+
+<p>如果菜单中 <code class="highlighter-rouge">--user</code> 参数为 <strong>空</strong>，则只有超级用户有权执行该菜单。</p>
+
+<p>如果菜单中 <code class="highlighter-rouge">--user</code> 参数指定了用户，则只有该用户和超级用户有权执行该菜单。</p>
+
+<h4 id="设置密码">设置密码</h4>
+
+<p>可以用 <code class="highlighter-rouge">password</code> 和 <code class="highlighter-rouge">password_pbkdf2</code> 命令来定义用户。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">password</code>  以明文方式设置，需要 <code class="highlighter-rouge">grub.cfg</code> 来帮助加密；</li>
+  <li><code class="highlighter-rouge">password_pbkdf2</code>  使用基于密码的密钥函数来设置密码的哈希值，需要使用 <code class="highlighter-rouge">grub2-mkpasswd-pbkdf2</code> 来生成密码哈希值。</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# grub2-mkpasswd-pbkdf2
+Enter password:    # 输入密码
+Reenter password:  # 再次输入
+PBKDF2 hash of your password is grub.pbkdf2.sha512.10000.9A2EBF7A1F484...
+#                                                           ^^^^^^^^^^^^^ 这之后的都是密码
+</code></pre></div></div>
+
+<h5 id="实施方法">实施方法</h5>
+
+<h6 id="设定用户及密码">设定用户及密码</h6>
+
+<p>在 <code class="highlighter-rouge">/etc/grub.d/</code> 目录，创建一个名为 <code class="highlighter-rouge">01_users</code> 的文件，在该文件设置密码参数。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# vim /etc/grub.d/01_users
+
+cat &lt;&lt; eof
+set superusers="neo"
+password_pbkdf2 neo grub.pbkdf2.sha512.10000.9A2EBF7A1F484904FF3681F97AE22D58DFBFE65A...
+password_pbkdf2 dmtsai grub.pbkdf2.sha512.10000.B59584C33BC12F3C9DB8B18BE9F557631473AED...
+eof
+
+~]# chmod a+x /etc/grub.d/01_users
+</code></pre></div></div>
+
+<p>之所以使用 <code class="highlighter-rouge">cat</code> 命令，是因为 <code class="highlighter-rouge">/etc/grub.d/</code> 目录中的文件是脚本，需要有可执行权限。因此不能直接把密码写在文件中，而是通过 <code class="highlighter-rouge">cat</code> 或 <code class="highlighter-rouge">echo</code> 等方式来输出。</p>
+
+<h6 id="etcgrubd-各文件与菜单权限"><code class="highlighter-rouge">/etc/grub.d/*</code> 各文件与菜单权限</h6>
+
+<ul>
+  <li>
+    <p><code class="highlighter-rouge">01_users</code> 文件中设置了 <code class="highlighter-rouge">set superusers="neo"</code>，则菜单中如果没有 <code class="highlighter-rouge">--unrestricted</code> 参数，非管理员就无权执行或修改菜单。</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">10_linux</code> 文件中的默认设置为 Linux 菜单不做限制，所有人都可执行。不建议直接修改该文件。</p>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CLASS="--class gnu-linux --class gnu --class os --unrestricted"
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">40_custom</code> 中，可以针对每个 menuentry 来单独设置。</li>
+</ul>
+
+<h2 id="87-系统启动常见问题">8.7 系统启动常见问题</h2>
+
+<p>多数故障可以用救援模式来解决。</p>
+
+<h3 id="871-忘记-root-密码">8.7.1 忘记 root 密码</h3>
+
+<p>只要想办法 <strong>进入系统</strong>，<strong>挂载根文件系统</strong> ，就可以重新设置 root 密码了。</p>
+
+<p>在 <code class="highlighter-rouge">systemd</code> 的管理机制中，默认的救援模式无法直接获取根的访问权限。可以使用内核参数 <code class="highlighter-rouge">rd.break</code> 来处理。<code class="highlighter-rouge">rd.break</code> 是在 RAM Disk 中的操作系统状态，无法直接获取真正 Linux 系统操作环境，需要借助 <code class="highlighter-rouge">chroot</code> ，还需要处理 SELinux 的限制。</p>
+
+<h4 id="使用-rdbreak-参数">使用 <code class="highlighter-rouge">rd.break</code> 参数</h4>
+
+<p>在引导菜单上按 <code class="highlighter-rouge">e</code> 进入编辑模式，在 <code class="highlighter-rouge">linux16</code> 项目的行尾加上 <code class="highlighter-rouge">rd.break</code> 参数。</p>
+
+<p>按 <code class="highlighter-rouge">[crtl]+x</code> ，系统会进入 RAM Disk 环境，即虚拟根文件系统，真正的系统会被挂载到 <code class="highlighter-rouge">/sysroot</code> 目录。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Generating "/run/initramfs/rdsosreport.txt"
+Enter emergency mode. Exit the shell to continue.
+Type "journalctl" to view system logs.
+You might want to save "/run/initramfs/rdsosreport.txt" to a USB stick or /boot
+after mounting them and attach it to a bug report.
+
+switch_root:/#         # 不用密码即可获取 root 权限
+switch_root:/# mount   # 检查挂载点，应该有 `/sysroot`
+/dev/mapper/centos-root on /sysroot type xfs （ro,relatime,attr,inode64,noquota）
+switch_root:/# mount -o remount,rw /sysroot  # 将其挂载为可读写
+switch_root:/# chroot /sysroot               # 切换到真正根目录
+sh-4.2# echo "your_root_new_pw" | passwd --stdin root     # 修改 root 密码
+sh-4.2# touch /.autorelabel                  # 重打 SELinux 标签
+sh-4.2# exit
+switch_root:/# reboot
+</code></pre></div></div>
+
+<h5 id="chroot-目录"><code class="highlighter-rouge">chroot 目录</code></h5>
+
+<p>把根目录 “临时” 切换到指定目录</p>
+
+<p>因此，<code class="highlighter-rouge">/sysroot</code> 临时被作为根目录，因为这是真正的根目录，所以可以用来处理文件系统，进行用户管理。</p>
+
+<h5 id="autorelabel"><code class="highlighter-rouge">/.autorelabel</code></h5>
+
+<p>在 <code class="highlighter-rouge">rd.break</code> 的 RAM Disk 环境下，没有启用 SELinux ，在修改了 <code class="highlighter-rouge">/etc/shadow</code> 之后，该文件的 SELinux 安全上下文会被取消。系统启动时如果不恢复 SELinux 上下文，会导致无法登陆（当 SELinux 为强制模式时）。</p>
+
+<p>加上 <code class="highlighter-rouge">/.autorelabel</code> 以后，系统在启动时，将自动重新为每个文件打标签，之后会自动删除 <code class="highlighter-rouge">/.autorelabel</code> 文件。</p>
+
+<h5 id="另一个方法">另一个方法</h5>
+
+<p>在 <code class="highlighter-rouge">rd.break</code> 模式下，修改完 root 密码后，将 <code class="highlighter-rouge">/etc/selinux/config</code> 中的 SELinux 类型改为 <code class="highlighter-rouge">permissive</code>。</p>
+
+<p>重启后，用 root 身份执行 <code class="highlighter-rouge">restorecon -Rv /etc</code> 仅修改 <code class="highlighter-rouge">/etc/</code> 目录中的文件。</p>
+
+<p>把 <code class="highlighter-rouge">/etc/selinux/config</code> 恢复为 <code class="highlighter-rouge">enforcing</code>，然后执行 <code class="highlighter-rouge">setenforce 1</code> 即可。</p>
+
+<h4 id="直接启动-bash">直接启动 bash</h4>
+
+<p>可以让系统在启动时直接启动 bash，编辑菜单中 linux16 项目，在行尾增加 <code class="highlighter-rouge">init=/bin/bash</code> 参数。启动后系统会直接进入 bash，不需要 root 密码，有 root 权限。</p>
+
+<p>因为把 PID=1 的程序换成了 bash，所以要操作该系统还需 remount 根目录，否则无法更改文件系统。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash-4.2# mount -o remount,rw /
+bash-4.2# echo "newpassword" | passwd --stdin root
+Changing password for user root.
+passwd: all authentication tokens updated successfully.
+</code></pre></div></div>
+
+<p>由于是最简单的 bash 环境，所以连 PATH 都只有 <code class="highlighter-rouge">/bin</code> 而已，无法使用 reboot 命令，同时，由于没有 systemd，所以即使用绝对路径来执行 reboot 也无效，此时只能按 reset 或强制关机，重启。</p>
+
+<p>由于 SELinux 上下文未写入，此时系统仍然无法登陆，重启后，进入 <code class="highlighter-rouge">rd.break</code> 模式，然后把 SELinux 临时修改为 permissive 模式，等顺利用 root 登陆后，用 restorecon -Rv /etc 测试，看是否 SELinux 可以正常工作，然后重新启用 SELinux。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# getenforce
+Permissive
+
+~]# restorecon -Rv /etc
+restorecon reset /etc/shadow context system_u:object_r:unlabeled_t:s0
+   -&gt;system_u:object_r:shadow_t:s0
+restorecon reset /etc/selinux/config context system_u:object_r:unlabeled_t:s0
+   -&gt;system_u:object_r:selinux_config_t:s0
+
+~]# vim /etc/selinux/config
+SELINUX=enforcing
+
+~]# setenforce 1
+</code></pre></div></div>
+
+<h3 id="872-因文件系统错误而无法启动">8.7.2 因文件系统错误而无法启动</h3>
+
+<p>如果因为设置错误导致无法启动，最常见的是 <code class="highlighter-rouge">/etc/fstab</code> 设置错误，尤其在 <code class="highlighter-rouge">Quota / LVM / RAID</code> 操作时，最容易写错参数，未使用 <code class="highlighter-rouge">mount -a</code> 来测试挂载，直接重启就会出错。</p>
+
+<p>此时应按提示输入 root 密码来获取 bash，用 <code class="highlighter-rouge">mount -o remount,rw /</code> <strong>以可读写方式挂载根目录</strong>。</p>
+
+<p>非正常关机也可能导致文件系统不一致，可能会出现相同的问题。如果是扇区错乱，上图第二行， fsck 告知 <code class="highlighter-rouge">/dev/md0</code> 出错， 此时应用 <code class="highlighter-rouge">fsck.ext3</code> 检测 <code class="highlighter-rouge">/dev/md0</code>，如果系统发现错误，并显示 <code class="highlighter-rouge">clear [Y/N]</code> 时，键入 “ y ”来修复。</p>
+
+<p>如果是 XFS 文件系统，要使用 <code class="highlighter-rouge">xfs_repair</code> 命令来修复。过程可能会很长，而且如果分区上的文件系统有太多数据损坏，即使 <code class="highlighter-rouge">fsck</code> 或 <code class="highlighter-rouge">xfs_repair</code> 完成后，也可能因为伤及系统盘，而导致某些关键系统文件数据的损坏，仍然无法进入系统。</p>
+
+<p>此时应该先把系统中的重要数据复制出来，然后重新安装，并且检查硬盘是否损坏。</p>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/linux" class="page__taxonomy-item" rel="tag">linux</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/启动" class="page__taxonomy-item" rel="tag">启动</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#linux" class="page__taxonomy-item" rel="tag">linux</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2015-01-08T00:00:00+08:00">January 08, 2015</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">分享</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=liloli&text=Linux+%E5%9F%BA%E7%A1%80+-+8.+Linux+%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%20http%3A%2F%2Flocalhost%3A4000%2Flinux%2Flinux.bootstrap%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Flinux%2Flinux.bootstrap%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Flinux%2Flinux.bootstrap%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Flinux%2Flinux.bootstrap%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/linux/linux.accontrol/" class="pagination--pager" title="Linux 基础 - 7. 访问控制
+">向前</a>
+    
+    
+      <a href="http://localhost:4000/linux/linux.kernel/" class="pagination--pager" title="Linux 基础 - 9. 内核简介
+">向后</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">猜您还喜欢</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/time/" rel="permalink">Bash 脚本 - 时间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/storage/" rel="permalink">Bash 脚本 - 存储空间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/numbers/" rel="permalink">Bash 脚本 - 数字
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/input/" rel="permalink">Bash 脚本 - 输入
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+      <li><a href="https://twitter.com/liloli"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+      <li><a href="https://www.facebook.com/lilolibj"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+    
+    
+      <li><a href="https://github.com/liloli"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+  
+  
+  <script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/linux/linux.bootstrap/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/linux/linux.bootstrap"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://liloli.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+  </body>
+</html>

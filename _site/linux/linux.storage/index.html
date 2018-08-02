@@ -1,0 +1,1577 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Linux 基础 - 3. 存储 - LINOTES</title>
+<meta name="description" content="用简洁清晰的语言讨论技术">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Linux 基础 - 3. 存储">
+<meta property="og:url" content="http://localhost:4000/linux/linux.storage/">
+
+
+  <meta property="og:description" content="用简洁清晰的语言讨论技术">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/header/linux.jpg">
+
+
+
+  <meta name="twitter:site" content="@liloli">
+  <meta name="twitter:title" content="Linux 基础 - 3. 存储">
+  <meta name="twitter:description" content="用简洁清晰的语言讨论技术">
+  <meta name="twitter:url" content="http://localhost:4000/linux/linux.storage/">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="http://localhost:4000/assets/images/header/linux.jpg">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2015-01-03T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/linux/linux.storage/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "Hawk Zhang",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- <link rel="stylesheet" href="/assets/css/vim.css"> -->
+
+
+
+  
+
+
+
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('http://localhost:4000/assets/images/header/linux.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Linux 基础 - 3. 存储
+
+        
+      </h1>
+      
+        <p class="page__lead">
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:liloli@gmail.com">
+            <meta itemprop="email" content="liloli@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Linux 基础 - 3. 存储">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="January 03, 2015">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-audible"></i> 3. 存储</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#31-磁盘">3.1 磁盘</a>
+    <ul>
+      <li><a href="#311-磁盘的物理结构">3.1.1 磁盘的物理结构</a></li>
+      <li><a href="#312-盘片的物理组成">3.1.2 盘片的物理组成</a></li>
+      <li><a href="#313-设备文件名">3.1.3 设备文件名</a></li>
+      <li><a href="#314-引导区">3.1.4 引导区</a></li>
+    </ul>
+  </li>
+  <li><a href="#32-分区">3.2 分区</a>
+    <ul>
+      <li><a href="#321-分区的目的">3.2.1 分区的目的</a></li>
+      <li><a href="#322-分区类型">3.2.2 分区类型</a></li>
+      <li><a href="#323-分区设备文件">3.2.3 分区设备文件</a></li>
+      <li><a href="#324-创建分区">3.2.4 创建分区</a></li>
+    </ul>
+  </li>
+  <li><a href="#33-分区表">3.3 分区表</a>
+    <ul>
+      <li><a href="#331-mbr-型分区表">3.3.1 MBR 型分区表</a></li>
+      <li><a href="#332-gpt-型分区表">3.3.2 GPT 型分区表</a></li>
+      <li><a href="#333-查看分区表">3.3.3 查看分区表</a></li>
+    </ul>
+  </li>
+  <li><a href="#34-raid">3.4 RAID</a>
+    <ul>
+      <li><a href="#341-raid-简介">3.4.1 RAID 简介</a></li>
+      <li><a href="#342-raid-分类">3.4.2 RAID 分类</a></li>
+      <li><a href="#343-热备盘">3.4.3 热备盘</a></li>
+      <li><a href="#344-raid-的优点">3.4.4 RAID 的优点</a></li>
+    </ul>
+  </li>
+  <li><a href="#35-lvm">3.5 LVM</a>
+    <ul>
+      <li><a href="#351-lvm-简介">3.5.1 LVM 简介</a></li>
+      <li><a href="#352-lvm-精简卷">3.5.2 LVM 精简卷</a></li>
+      <li><a href="#353-逻辑卷磁盘快照">3.5.3 逻辑卷磁盘快照</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="31-磁盘">3.1 磁盘</h2>
+
+<p>磁盘是一个物理概念。磁盘的种类和分区的类型，直接影响 I/O 性能。</p>
+
+<h3 id="311-磁盘的物理结构">3.1.1 磁盘的物理结构</h3>
+
+<p>盘片，机械手臂，磁头，主轴马达</p>
+
+<h3 id="312-盘片的物理组成">3.1.2 盘片的物理组成</h3>
+
+<ul>
+  <li>
+    <p>磁道：当磁盘旋转时，磁头若保持在一个位置上，则每个磁头都会在磁盘表面划出一个圆形轨迹，这些圆形轨迹就叫做磁道</p>
+  </li>
+  <li>
+    <p>扇区：磁盘上的每个磁道被等分为若干个弧段，这些弧段便是硬盘的扇区。它是最小的物理存储单位</p>
+  </li>
+  <li>
+    <p>柱面：不同盘片、同一磁道组成的圆柱</p>
+  </li>
+</ul>
+
+<figure class="">
+  <img src="http://localhost:4000/assets/images/2.2.disk.jpg" alt="" />
+  
+</figure>
+
+<figure class="">
+  <img src="http://localhost:4000/assets/images/2.2.disk2.jpg" alt="" />
+  
+</figure>
+
+<h3 id="313-设备文件名">3.1.3 设备文件名</h3>
+
+<p>系统按照检测到的磁盘顺序来决定设备文件名，与插槽号无关。</p>
+
+<p>USB 磁盘：<code class="highlighter-rouge">/dev/sdc</code></p>
+
+<p>实体磁盘	<code class="highlighter-rouge">/dev/sd[a-p]</code></p>
+
+<p>分区	<code class="highlighter-rouge">/dev/sda[1-128]</code></p>
+
+<p>虚拟机	<code class="highlighter-rouge">/dev/vd[a-p]</code></p>
+
+<p>软RAID	<code class="highlighter-rouge">/dev/md[0-128]</code></p>
+
+<p>LVM	<code class="highlighter-rouge">/dev/VGNAME/LVNAME</code></p>
+
+<h3 id="314-引导区">3.1.4 引导区</h3>
+
+<p>Boot Sector，引导区，是数据存储设备的一个区域，其中包含机器代码，会被固件加载到内存中。</p>
+
+<p>引导区的目的：引导计算机来加载存储设备中的程序或操作系统。</p>
+
+<p>主要分两类：MBR、VBR</p>
+
+<h4 id="mbr">MBR</h4>
+
+<p>Master Boot Record</p>
+
+<p>主引导记录，是 <strong>已分区</strong> 储存设备的 <strong>第一个扇区</strong>。</p>
+
+<p>它在硬盘上的三维地址为（柱面，磁头，扇区）＝（0，0，1）。</p>
+
+<ul>
+  <li>
+    <p>MBR 是由分区程序（如 gdisk）生成 的，不依赖任何操作系统。</p>
+  </li>
+  <li>
+    <p>在深入讨论主引导扇区内部结构的时候，<strong>MBR</strong> 也特指其开头的 <strong>446 字节</strong>。</p>
+
+    <p>因此，在谈及 MBR 时，需根据具体情况判断其到底是指整个 <strong>主引导扇区</strong>，还是主引导扇区的 <strong>前446字节</strong>。</p>
+  </li>
+  <li>
+    <p>早期的 Linux 系统为了兼容 Windows 的磁盘，使用 MBR 的方式来处理引导程序与分区表。</p>
+  </li>
+  <li>
+    <p>MBR 通常为 512 字节，包括：</p>
+
+    <ul>
+      <li>
+        <p>MBR：446 字节</p>
+      </li>
+      <li>
+        <p>分区表：记录硬盘整体分区信息，64 字节</p>
+      </li>
+      <li>
+        <p>结束标志：55，AA，是检验主引导记录是否有效的标志，2 字节</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="vbr">VBR</h4>
+
+<p>Volume Boot Record</p>
+
+<p>卷引导记录，<strong>尚未分区</strong> 的存储设备的第一个扇区，或存储设备的某一 <strong>分区</strong> 的第一个扇区。</p>
+
+<p>VBR 可以包含引导代码。</p>
+
+<h2 id="32-分区">3.2 分区</h2>
+
+<p>分区是一个 <strong>逻辑</strong> 概念，把磁盘空间在逻辑上划分成若干 <strong>连续</strong> 的磁盘空间。</p>
+
+<p>早期分区的最小单位是柱面，现在是 <strong>扇区</strong>。</p>
+
+<h3 id="321-分区的目的">3.2.1 分区的目的</h3>
+
+<ul>
+  <li>
+    <p>数据安全</p>
+  </li>
+  <li>
+    <p>提高系统的性能</p>
+  </li>
+</ul>
+
+<h3 id="322-分区类型">3.2.2 分区类型</h3>
+
+<h4 id="主分区">主分区</h4>
+
+<p>在 MBR 型磁盘上直接划分的分区，可以安装操作系统。主分区最多四个。</p>
+
+<h4 id="扩展分区">扩展分区</h4>
+
+<p>扩展分区也属于主分区，是一种特殊的 <strong>主分区</strong>。</p>
+
+<p>为了应对 MBR 的分区数量限制，可以在 MBR 型磁盘上划分出一个，最多一个，扩展分区。</p>
+
+<p>与主分区的区别：理论上可以划分为无数个逻辑分区。</p>
+
+<p>扩展分区使用额外的扇区来记录分区信息，从而实现使用更多的分区，<strong>扩展分区不能被格式化</strong>。</p>
+
+<blockquote>
+  <p>Windows系统默认情况下，一般都是只划分一个主分区给系统，剩余的部分全部划入扩展分区。</p>
+</blockquote>
+
+<h4 id="逻辑分区">逻辑分区</h4>
+
+<p>在 MBR 的扩展分区中 <strong>连续划分</strong> 出来的分区，可以直接安装操作系统。</p>
+
+<p>逻辑分区的数量依操作系统而不同，在 Linux 中， SATA 硬盘可以使用 63 个以上的分区。</p>
+
+<h3 id="323-分区设备文件">3.2.3 分区设备文件</h3>
+
+<p>不同分区的文件名用数字区分，数字越小，越靠近磁盘外侧。</p>
+
+<figure class="">
+  <img src="http://localhost:4000/assets/images/2.2.exten.part.png" alt="扩展分区" />
+  
+</figure>
+
+<ul>
+  <li>
+    <p>上图分区的设备文件名如下：</p>
+
+    <ul>
+      <li>
+        <p>P1: /dev/sda1</p>
+      </li>
+      <li>
+        <p>P2:  /dev/sda2</p>
+      </li>
+      <li>
+        <p>L1:  /dev/sda5</p>
+      </li>
+      <li>
+        <p>L2:  /dev/sda6</p>
+      </li>
+      <li>
+        <p>L3:  /dev/sda7</p>
+      </li>
+      <li>
+        <p>L4:  /dev/sda8</p>
+      </li>
+      <li>
+        <p>L5:  /dev/sda9</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>文件名之所以缺少 <code class="highlighter-rouge">/dev/sda3</code> 与 <code class="highlighter-rouge">/dev/sda4</code>，是因为前 4 个号码保留给 <strong>主分区或扩展分区</strong>，所以 <strong>逻辑分区</strong> 的设备号码从 <strong>5</strong> 号开始。</p>
+
+<h3 id="324-创建分区">3.2.4 创建分区</h3>
+
+<h4 id="分区之前">分区之前</h4>
+
+<ol>
+  <li>
+    <p>用 <code class="highlighter-rouge">lsblk</code> 查看磁盘的 <strong>设备文件名</strong></p>
+  </li>
+  <li>
+    <p>用 <code class="highlighter-rouge">parted</code> 命令查看 <strong>分区表类型</strong></p>
+  </li>
+  <li>
+    <p>MBR 分区表使用 <strong>fdisk</strong>，GPT 分区表使用 <strong>gdisk</strong>。</p>
+  </li>
+</ol>
+
+<h4 id="gdisk">GDISK</h4>
+
+<p>gdisk 只有 root 有权执行</p>
+
+<p>gdisk 不会即时生效，按下 “q”，期间所有的操作 “取消”。按下 “<strong>w</strong>” 使操作立即生效。</p>
+
+<p>gdisk 要接 <strong>磁盘名</strong>，非分区名</p>
+
+<h5 id="新增分区">新增分区</h5>
+
+<ol>
+  <li>
+    <p>按 l 查看分区类型对应的 <strong>Hex code</strong> 并记录</p>
+  </li>
+  <li>
+    <p>按 <strong>n</strong> 新增分区</p>
+  </li>
+  <li>
+    <p>Partition number，分区号，默认</p>
+  </li>
+  <li>
+    <p>First sector，起始扇区，默认</p>
+  </li>
+  <li>
+    <p>Last sector，结束扇区：+1G、+500M、+100K</p>
+  </li>
+  <li>
+    <p>Hex code or GUID：Linux <strong>8300</strong>，Linux LVM <strong>8e00</strong>，Windows <strong>0700</strong></p>
+  </li>
+  <li>
+    <p>按 p 验证结果，仔细检查分区大小及文件系统类型</p>
+  </li>
+  <li>
+    <p>没问题，按 w 确认执行分区操作</p>
+  </li>
+</ol>
+
+<h5 id="更新分区表">更新分区表</h5>
+
+<p><code class="highlighter-rouge">cat /proc/partitions</code> 会看到系统并未立即更新</p>
+
+<p>通过 <code class="highlighter-rouge">partprobe</code> 命令 <strong>手动更新分区表</strong>：</p>
+
+<p><code class="highlighter-rouge">partprobe -s</code>　　# -s 屏幕会显示信息</p>
+
+<p><code class="highlighter-rouge">/dev/vda: gpt partitions 1 2 3 4 5 6</code></p>
+
+<h5 id="删除分区">删除分区</h5>
+
+<p>如果要删除正在使用中的分区， 必须先将其卸载。</p>
+
+<h4 id="fdisk">FDISK</h4>
+
+<p>fdisk 跟 gdisk 使用的方式几乎一样。</p>
+
+<p>与 gdisk 区别：</p>
+
+<p>fdisk 有时会使用 <strong>柱面</strong> 作为分区的最小单位</p>
+
+<p>分区是有限制的 （Primary, Extended, Logical…）</p>
+
+<h4 id="parted">PARTED</h4>
+
+<p>若想用脚本来 <strong>自动化</strong> 分区全过程，而无需人工干预，可使用 parted 来分区。</p>
+
+<p>parted 可以用 <strong>一行命令完成分区</strong>，不需要与用户交互：</p>
+
+<p><code class="highlighter-rouge">parted [设备] [命令 [参数]]</code></p>
+
+<p><code class="highlighter-rouge">parted mkpart [primary|logical|extended] [ext4|vfat|xfs] 开始块 结束块</code></p>
+
+<p><code class="highlighter-rouge">parted mkpart xfs 开始块 结束块</code>	新增分区</p>
+
+<p><code class="highlighter-rouge">parted print</code>	查看分区，起始块、大小、文件系统</p>
+
+<p><code class="highlighter-rouge">parted rm /dev/sda6</code>	删除分区</p>
+
+<h2 id="33-分区表">3.3 分区表</h2>
+
+<p>分区表用于 <strong>描述磁盘各分区的起始位置</strong>。</p>
+
+<p>磁盘分区表两种类型：MBR ， GPT</p>
+
+<h3 id="331-mbr-型分区表">3.3.1 MBR 型分区表</h3>
+
+<p>MBR 分区表共 <strong>64字节</strong>，里面又分成 4 项，每项 16 个字节。所以，一个硬盘最多只能分四个主分区。</p>
+
+<p>每个主分区的 16 个字节，由 6 个部分组成：</p>
+
+<ul>
+  <li>分区标签：1 字节，如果为0x80，就表示该主分区是激活分区，控制权要转交给这个分区。四个主分区里面只能有一个是激活的。</li>
+  <li>分区起始位置：3 字节，主分区第一个扇区的物理位置（CHS）。</li>
+  <li>主分区类型：1 字节，。</li>
+  <li>分区结束位置：3 字节，主分区最后一个扇区的物理位置。</li>
+  <li>起始扇区：4 字节，该主分区第一个扇区的逻辑地址。</li>
+  <li>扇区总数：4 字节，主分区的扇区总数，决定了主分区的长度，即一个主分区的扇区总数最多不超过2<sup>32</sup>。</li>
+</ul>
+
+<p>如果每个扇区为 512 字节，则单个分区最大不超过 2 TB。再考虑到扇区的逻辑地址也是 32 位，所以单个硬盘可利用的空间最大也不超过 2 TB。</p>
+
+<p>要想使用更大的硬盘，要么提高每扇区的字节数，要么增加扇区总数。</p>
+
+<h4 id="ebr">EBR</h4>
+
+<p>Extended boot record</p>
+
+<p>扩展引导记录，仅仅是 <strong>逻辑分区</strong> 专用的 <strong>描述符</strong>，与 MBR 和 VBR 本质上不同，它不含程序代码。</p>
+
+<p>每一个逻辑分区都有一个 EBR，其结构与 MBR 类似。</p>
+
+<h5 id="ebr-结构">EBR 结构</h5>
+
+<figure class="">
+  <img src="http://localhost:4000/assets/images/2.2.ebr.png" alt="EBR的结构" />
+  
+</figure>
+
+<p>EBR 大小为 512 字节</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>内容</th>
+      <th>字节数</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>通常不用，用 0 填充，可以保存 VBR 等另一个引导程序</td>
+      <td>446</td>
+    </tr>
+    <tr>
+      <td>分区表第一条</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <td>分区表第二条</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <td>不用，用 0 填充</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <td>不用，用 0 填充</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <td>55AAh 签名，同 0xAA55</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="ebr-中的分区表">EBR 中的分区表</h5>
+
+<p>EBR 分区表的 <strong>第一项</strong> 指向该逻辑分区 <strong>自身</strong> 的引导扇区，<strong>第二项</strong> 指向 <strong>下一个</strong> 逻辑驱动器的 EBR，分区表第三、第四项没有用到。</p>
+
+<h4 id="mbr-分区表的缺陷">MBR 分区表的缺陷</h4>
+
+<ul>
+  <li>操作系统无法读取超过 <strong>2.2T</strong> 的磁盘空间</li>
+</ul>
+
+<blockquote>
+  <p>MBR 分区表中，用来定义磁盘大小的位置只有 <strong>4 字节</strong>，即最多可以用 4 * 8 = 32 位来表示磁盘总扇区的数量，最多管理 2<sup>32</sup> 个扇区 。如扇区大小为 <strong>512 字节</strong>，其最大值即为 <strong>2.2 T</strong>；如扇区大小为 <strong>4 KB</strong>，最大值为 <strong>17.6 T</strong> 。</p>
+</blockquote>
+
+<ul>
+  <li>
+    <p>MBR <strong>无备份</strong> 措施，被破坏以后，很难修复。</p>
+  </li>
+  <li>
+    <p>MBR 内保存引导程序的块仅 446 字节，<strong>无法容纳较多的程序代码</strong>。</p>
+  </li>
+</ul>
+
+<h3 id="332-gpt-型分区表">3.3.2 GPT 型分区表</h3>
+
+<p>GPT 分区表支持的 <strong>分区数量</strong> 和 <strong>磁盘容量</strong> 更多。</p>
+
+<h4 id="gpt">GPT</h4>
+
+<p>GUID Partition Table</p>
+
+<p>GUID，Globally Unique IDentifier，是一种由算法生成的唯一标识，通常为 <strong>32个</strong> 16 进制数字组成的字符串，本质上是一个 128 位长的二进制整数。</p>
+
+<p>GUID 一词有时也专指微软对 UUID 标准的实现。</p>
+
+<p>GUID 的主要目的是产生完全 <strong>唯一的数字</strong>。</p>
+
+<h4 id="gpt-特点">GPT 特点</h4>
+
+<ul>
+  <li>
+    <p>为了兼容所有的磁盘，在定义扇区时，多使用逻辑块地址（<strong>LBA</strong>，Logical Block Address）。</p>
+  </li>
+  <li>
+    <p>LBA 默认大小为 512 字节，GPT 把磁盘所有的块以 LBA 来规划，从 0 开始编号，第一个 LBA 称为 LBA0。</p>
+  </li>
+</ul>
+
+<p>GPT 使用前 34 个 LBA 块（0~33）来记录分区信息，另外，整个磁盘的最后 33 个 LBA （-1 ~ -33）也拿来作为另一个 <strong>备份</strong>。</p>
+
+<h4 id="gpt-分区表结构">GPT 分区表结构</h4>
+
+<figure class="">
+  <img src="http://localhost:4000/assets/images/2.2.gpt_partition.jpg" alt="GPT 分区表结构" />
+  
+</figure>
+
+<p>上述图示说明：</p>
+
+<ul>
+  <li>LBA0 （<strong>MBR 兼容块</strong>）</li>
+</ul>
+
+<p>在原 MBR 位置保存一级引导程序。</p>
+
+<p>原分区表位置仅保存一个 <strong>特殊标志</strong>，用来声明 GPT 格式。</p>
+
+<blockquote>
+  <p>之所以设置这样的MBR兼容块，是因为<strong>BIOS无法识别GPT的分区表</strong>，在BIOS看来，它以为LBA0就是普通的MBR。</p>
+</blockquote>
+
+<ul>
+  <li>LBA1 （GPT 表头记录）</li>
+</ul>
+
+<p>包括：分区表本身的位置与大小，备份GPT的分区位置，分区表的校验码。</p>
+
+<blockquote>
+  <p>操作系统可以根据校验码来判断GPT 是否正确。如有错误，还可以通过这个记录区来读取备份GPT来恢复GPT 的正常运行。</p>
+</blockquote>
+
+<ul>
+  <li>LBA2-33 （实际分区记录）</li>
+</ul>
+
+<p>每个 LBA 可以记录 4 个分区，共可记录 4*32 = 128 个分区。每分区最大容量为 1840 TB。</p>
+
+<p>GPT 分区没有主、扩展、逻辑分区的概念，每个分区都可以格式化。</p>
+
+<h3 id="333-查看分区表">3.3.3 查看分区表</h3>
+
+<h4 id="lsblk">LSBLK</h4>
+
+<p>查看块设备的 <strong>文件名</strong>、加载点、磁盘大小、<strong>文件系统</strong> 等信息</p>
+
+<p><code class="highlighter-rouge">lsblk [option] [device]</code></p>
+
+<p><code class="highlighter-rouge">-d</code>		只查看磁盘，不显示分区</p>
+
+<p><code class="highlighter-rouge">-f</code>		显示文件系统类型</p>
+
+<p><code class="highlighter-rouge">-i</code>		用 ASCII 输出，防止乱码</p>
+
+<p><code class="highlighter-rouge">-m</code>		显示设备文件权限</p>
+
+<p><code class="highlighter-rouge">-p</code>		查看完整设备文件名</p>
+
+<p><code class="highlighter-rouge">-t</code>		显示块设备的详细数据，包括磁盘队列机制、预读写的数据量大小等</p>
+
+<h4 id="blkid">BLKID</h4>
+
+<p>blkid 命令可以查看所有块设备的 <strong>文件名</strong>、 <strong>卷标</strong>、<strong>UUID</strong> 及 <strong>文件系统类型</strong>。</p>
+
+<p>UUID，Universally Unique IDentifier，全域单一识别码，Linux 将系统内所有设备分配一个独一无二的识别码。</p>
+
+<h4 id="parted-1">PARTED</h4>
+
+<p>parted 是一款功能强大的磁盘分区工具，与 fdisk 不同，它 <strong>支持调整分区的大小</strong>。</p>
+
+<p>也可以用于查看磁盘的 <strong>分区表类型</strong> 与 <strong>分区</strong> 信息。</p>
+
+<p><code class="highlighter-rouge">parted device_name print</code></p>
+
+<p>parted 后面接的是 <strong>磁盘</strong> 的文件名，如 <code class="highlighter-rouge">/dev/sda</code> 。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>parted /dev/vda print
+
+Model: Virtio Block Device （virtblk）　　# 磁盘的模块名称（厂商）
+
+Disk /dev/vda: 42.9GB　　　# 磁盘的总容量
+
+Sector size （logical/physical）: 512B/512B　　# 磁盘的单个逻辑/物理扇区容量
+
+Partition Table: gpt　　　　# 分区表的格式 （MBR/GPT）
+
+Disk Flags: pmbr_boot
+
+Number Start End Size File system Name Flags 　　# 以下三行为分区数据
+
+1 1049kB 3146kB 2097kB bios_grub
+
+2 3146kB 1077MB 1074MB xfs
+
+3 1077MB 33.3GB 32.2GB lvm
+</code></pre></div></div>
+
+<h2 id="34-raid">3.4 RAID</h2>
+
+<h3 id="341-raid-简介">3.4.1 RAID 简介</h3>
+
+<p>独立硬盘冗余阵列（RAID, Redundant Array of Independent Disks），旧称廉价磁盘冗余阵列（Redundant Array of Inexpensive Disks），简称磁盘阵列。</p>
+
+<p>RAID 是一种 <strong>数据存储虚拟化</strong> 技术，它把多个物理磁盘合并成为一个或多个逻辑单元，以实现数据冗余及性能的提升。</p>
+
+<p>数据会以多种方式分布于各驱动器中，表现为各种 RAID 级别，</p>
+
+<h4 id="raid-优势">RAID 优势</h4>
+
+<p>增强 <strong>数据集成度</strong>，增强 <strong>容错</strong> 功能，提升 <strong>数据吞吐量</strong>，提升 <strong>容量</strong>。</p>
+
+<h4 id="raid-常用技术">RAID 常用技术</h4>
+
+<h5 id="数据分割">数据分割</h5>
+
+<p>Data Striping</p>
+
+<p>是一种对逻辑顺序数据（如文件）进行 <strong>分段</strong> 的技术，以便 <strong>把连续段存储在不同的物理存储设备上</strong>。</p>
+
+<p>组成 RAID 0 时，每块磁盘先被分隔成 <code class="highlighter-rouge">chunk</code>，4K~1M。写入时，数据会按区块大小切割，然后依次保存到不同的磁盘中。</p>
+
+<p>当进程请求数据的速度比单个存储设备所能提供的读取速度更快时，数据分割变得非常有用。把数据分割后有序保存到多个设备中，这些设备可以被同时读取，这样一来，总的数据处理量就大大提升了。同时它也是平衡磁盘阵列 I/O 读取的有效手段。</p>
+
+<p>数据分割广泛应用于 RAID、网络接口控制、集群文件系统中的不同计算机、某些文件系统中的 RAM。</p>
+
+<h5 id="奇偶校验位">奇偶校验位</h5>
+
+<p>Parity Bit</p>
+
+<p>奇偶校验位是一个二进制数字，用于表示在给定位数的二进制数中，<strong><code class="highlighter-rouge">1</code> 的个数</strong> 是奇数还是偶数。</p>
+
+<p>奇偶校验位是最简单的 <strong>错误检测码</strong>。</p>
+
+<p>奇偶校验位有两种类型：偶校验位与奇校验位。</p>
+
+<ul>
+  <li>如果一组给定数据位中 1 的个数是奇数，那么偶校验位就置为 1，从而使得 1 的个数是偶数。</li>
+  <li>如果给定一组数据位中 1 的个数是偶数，那么奇校验位就置为 1，使得总的 1 的个数是奇数。</li>
+</ul>
+
+<h6 id="在-raid-中使用奇偶校验位">在 RAID 中使用奇偶校验位</h6>
+
+<p>某些 RAID 会使用奇偶校验块实现 <strong>冗余</strong>。如果阵列中的一块磁盘出现故障，工作磁盘中的数据块与奇偶校验块一起来重建丢失的数据。</p>
+
+<p>假设由三块磁盘组成 RAID，分别为 A1 = 00000111、A2 = 00000101、A3 = 00000000。</p>
+
+<p>A1、A2、A3 <strong>异或</strong>（XOR） 得到的 Ap = 00000010。如果第二个磁盘出现故障，A2 将不能被访问，但是可以通过 A1、A3 与 Ap 的异或进行重建：</p>
+
+<p>A1 XOR A3 XOR Ap = 00000101</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  冗余磁盘阵列  A1        A2        A3 ------------------------  Ap        B1        B2  Bp        C1        C2  C3        C4        Cp
+</code></pre></div></div>
+
+<h5 id="磁盘镜像">磁盘镜像</h5>
+
+<p>Disk Mirroring</p>
+
+<p>磁盘镜像是把磁盘的逻辑卷复制到单独的物理磁盘中，以保证数据的连续可用。</p>
+
+<p>常用于 RAID1。</p>
+
+<p>镜像卷是独立卷副本的完整逻辑表示形式。</p>
+
+<h3 id="342-raid-分类">3.4.2 RAID 分类</h3>
+
+<p>分为 RAID 0，RAID 1，RAID 1E，RAID 5，RAID-6，RAID-7，RAID 10，RAID 50，RAID-60。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">项目</th>
+      <th style="text-align: left">RAID 0</th>
+      <th style="text-align: left">RAID 1</th>
+      <th style="text-align: left">RAID 10</th>
+      <th style="text-align: left">RAID 5</th>
+      <th style="text-align: left">RAID 6</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">最少磁盘数</td>
+      <td style="text-align: left">2</td>
+      <td style="text-align: left">2</td>
+      <td style="text-align: left">4</td>
+      <td style="text-align: left">3</td>
+      <td style="text-align: left">4</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">最大容错磁盘数</td>
+      <td style="text-align: left">无</td>
+      <td style="text-align: left">n-1</td>
+      <td style="text-align: left">n/2</td>
+      <td style="text-align: left">1</td>
+      <td style="text-align: left">2</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">数据安全性</td>
+      <td style="text-align: left">完全没有</td>
+      <td style="text-align: left">最佳</td>
+      <td style="text-align: left">最佳</td>
+      <td style="text-align: left">好</td>
+      <td style="text-align: left">比 RAID 5 好</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">理论写入性能</td>
+      <td style="text-align: left">n</td>
+      <td style="text-align: left">1</td>
+      <td style="text-align: left">n/2</td>
+      <td style="text-align: left">&lt;n-1</td>
+      <td style="text-align: left">&lt;n-2</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">理论读出性能</td>
+      <td style="text-align: left">n</td>
+      <td style="text-align: left">n</td>
+      <td style="text-align: left">n</td>
+      <td style="text-align: left">&lt;n-1</td>
+      <td style="text-align: left">&lt;n-2</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">可用容量</td>
+      <td style="text-align: left">n</td>
+      <td style="text-align: left">1</td>
+      <td style="text-align: left">n/2</td>
+      <td style="text-align: left">n-1</td>
+      <td style="text-align: left">n-2</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">用途</td>
+      <td style="text-align: left">高性能，低可靠性</td>
+      <td style="text-align: left">数据与备份</td>
+      <td style="text-align: left">服务器、云系统</td>
+      <td style="text-align: left">数据与备份</td>
+      <td style="text-align: left">数据与备份</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="raid-0">RAID 0</h4>
+
+<figure class="">
+  <img src="http://localhost:4000/assets/images/raid0.png" alt="RAID 0 工作原理" />
+  
+</figure>
+
+<p>RAID 0 包含 <strong>数据分割</strong>，无镜像，无校验。</p>
+
+<p>多个磁盘组成磁盘组。</p>
+
+<ul>
+  <li>容量：RAID 0 的容量是阵列中所有磁盘的总和。</li>
+  <li>容错、冗余：无，无法容错。</li>
+  <li>保存：数据几乎平均分配在各磁盘中，所有磁盘可以同时保存，保存速度成倍提升</li>
+  <li>读取：并行读写多个磁盘，读取速度成倍提升，</li>
+  <li>吞吐量：单个磁盘吞吐量乘以磁盘数量</li>
+</ul>
+
+<h5 id="特点">特点</h5>
+
+<p>读写速度快，可靠性低。</p>
+
+<p>只要组中有一个磁盘损坏，所有数据丢失。</p>
+
+<h4 id="raid-1">RAID 1</h4>
+
+<figure class="">
+  <img src="http://localhost:4000/assets/images/raid1.png" alt="RAID 1 工作原理" />
+  
+</figure>
+
+<p>RAID 1 包含 <strong>数据镜像</strong>，无校验和分块。</p>
+
+<p>多个磁盘为一组，典型的为两个磁盘一组。</p>
+
+<ul>
+  <li>容量：组中容量最小的磁盘</li>
+  <li>冗余：镜像磁盘，容错一块硬盘</li>
+  <li>保存：数据完全一致地、同时保存在所有驱动器中，因此保存速度决定于组中最慢的磁盘。</li>
+  <li>读取：读取请求可以由任一磁盘来完成。如果该请求被广播到磁盘组中的所有磁盘，哪个磁盘能最先访问到数据，则由谁来读取。</li>
+  <li>吞吐量：持续的读取吞吐量，如果控制器或软件经过优化，总吞吐量可以达到所有驱动器的总和，与 RAID 0 相同。但实际上，RAID 1 的读取吞吐量要小于组中最快的驱动器。写入的吞吐量总是很慢，因为所有磁盘都要更新，组中最慢的磁盘限制了写入的性能。</li>
+</ul>
+
+<h5 id="特点-1">特点</h5>
+
+<p>读取性能高，可靠性好，写性能差，容量低。</p>
+
+<p>只要组中尚有一块磁盘完好，阵列就可以正常工作。</p>
+
+<h4 id="raid-10-混用">RAID 1/0 混用</h4>
+
+<h5 id="raid-10">RAID 1+0</h5>
+
+<figure class="">
+  <img src="http://localhost:4000/assets/images/raid10.png" alt="RAID 1+0" />
+  
+</figure>
+
+<p>RAID 1+0 ：两块磁盘 <strong>先组成 RAID 1</strong>，两组 RAID 1 <strong>再组成 RAID 0</strong>。</p>
+
+<p>利用 RAID 0 的 <strong>并行高速</strong> 优势，及 RAID 1 的 <strong>冗余备份</strong> 优势。</p>
+
+<p>有一个硬盘损坏时，其余硬盘会 <strong>继续运作</strong>。</p>
+
+<p>因此 RAID 1+0 的可靠性更高。</p>
+
+<h5 id="raid-01">RAID 0+1</h5>
+
+<figure class="">
+  <img src="http://localhost:4000/assets/images/raid01.png" alt="RAID 0+1" />
+  
+</figure>
+
+<p>两块磁盘 <strong>先组成 RAID 0</strong>，两组 RAID 0 <strong>再组成 RAID 1</strong>。</p>
+
+<p>RAID 0+1 只要有一个硬盘受损，同组 RAID 0 的所有硬盘就会停止工作，只剩下其他组的硬盘，可靠性较低。</p>
+
+<h4 id="raid-5">RAID 5</h4>
+
+<figure class="">
+  <img src="http://localhost:4000/assets/images/raid5.png" alt="RAID 5 工作原理" />
+  
+</figure>
+
+<p>RAID 5 包含块级别的数据分割，及分布式保存的校验。</p>
+
+<ul>
+  <li>容量：总磁盘数减一</li>
+  <li>冗余：分布保存在所有磁盘中，容错一块磁盘，超过一块则数据损坏</li>
+  <li>保存：写入性能提升，所有磁盘都均响应写入请求</li>
+</ul>
+
+<p>RAID 5 <strong>至少需要三块硬盘</strong>，RAID 5 会把数据和相对应的奇偶校验信息保存到各个磁盘中，并且 <strong>奇偶校验信息和相对应的数据分别保存在不同的磁盘上</strong>。当 RAID 5 的一个磁盘数据发生损坏后，可以利用剩下的数据和相应的奇偶校验信息去恢复被损坏的数据。</p>
+
+<p>RAID 5 具有和 RAID 0 相近似的数据读取速度，只是因为多了一个奇偶校验信息，写入数据的速度相对单独写入一块硬盘的速度略慢，若使用 <code class="highlighter-rouge">回写缓存</code> 可以让性能改善不少。</p>
+
+<p>同时由于多个数据对应一个奇偶校验信息，RAID 5 的磁盘空间利用率要比 RAID 1 高，存储成本相对较便宜。</p>
+
+<p class="notice--info">用同样的方法设计了另一种类似的模式 RAID 6，最多可以允许两块硬盘损坏。</p>
+
+<h5 id="特点-2">特点</h5>
+
+<p>RAID 5 是一种 <strong>写入性能</strong>、<strong>数据安全</strong> 和 <strong>存储成本</strong> 兼顾的存储解决方案。</p>
+
+<h3 id="343-热备盘">3.4.3 热备盘</h3>
+
+<p>Hot Spare Disk</p>
+
+<p>热备盘是一块或一组磁盘，根据热备策略，当 RAID 磁盘出错时，自动或手动替换上去，使 RAID 恢复正常运行。</p>
+
+<p>通过使用自动热备盘，可以尽可能地缩短恢复时间，从而降低在此期间，发生第二块磁盘出错的风险。</p>
+
+<h3 id="344-raid-的优点">3.4.4 RAID 的优点</h3>
+
+<ol>
+  <li>
+    <p>数据安全与可靠性</p>
+  </li>
+  <li>
+    <p>读写性能</p>
+  </li>
+  <li>
+    <p>容量</p>
+  </li>
+</ol>
+
+<h2 id="35-lvm">3.5 LVM</h2>
+
+<p>Logical Volume Manager</p>
+
+<p>LVM 是一种可用在 Linux 内核的逻辑分卷管理器；可用于管理磁盘驱动器或其他类似的大容量存储设备。</p>
+
+<h3 id="351-lvm-简介">3.5.1 LVM 简介</h3>
+
+<p>LVM 利用 Linux 内核的设备映射来实现存储系统的虚拟化（系统分区独立于底层硬件）。 通过 LVM，可以实现存储空间的抽象化，并在上面建立虚拟分区（virtual partitions），可以更简便地扩大和缩小分区，在增删分区时无需担心某个硬盘上没有足够的连续空间，LVM 是用来方便管理的，不提供额外的安全保证。</p>
+
+<p>LVM 需要核心的支持，并需要安装 lvm2 软件。</p>
+
+<p>CentOS 与其他较新的发行版默认支持，并预装了 lvm2。</p>
+
+<h4 id="基本概念">基本概念</h4>
+
+<figure class="">
+  <img src="http://localhost:4000/assets/images/lvm.png" alt="LVM 结构" />
+  
+</figure>
+
+<h5 id="pv">PV</h5>
+
+<p>physical volume，<strong>物理卷</strong>。</p>
+
+<p>可以在上面建立卷组的媒介，可以是分区、磁盘或环回文件。</p>
+
+<p>物理卷包括一个特殊的 header，其余部分被切割为一块块物理区域（physical extents）。</p>
+
+<h5 id="vg">VG</h5>
+
+<p>volume group，<strong>卷组</strong>。</p>
+
+<p>将一组物理卷组成一个存储设备，可以看作普通意义上的硬盘。每个卷组可以被划分为多个 LV 。</p>
+
+<h5 id="lv">LV</h5>
+
+<p>logical volume，<strong>逻辑卷</strong>。</p>
+
+<p>由卷组划分出来的虚拟分区，可以看作普通意义上分区，由 physical extents 组成。</p>
+
+<h5 id="pe">PE</h5>
+
+<p>physical extent，物理区域。</p>
+
+<p>硬盘可供指派给逻辑卷的最小单位（通常为 4MB）。</p>
+
+<p>通过 “交换 PE ”来进行数据转换，在不同的 LV 之间 <strong>转移 PE</strong>，以实现弹性空间调整。</p>
+
+<h4 id="lvm-工作模式">LVM 工作模式</h4>
+
+<ul>
+  <li>线性模式（linear）：在同一个卷组中，只有前一个逻辑卷的空间用完，才会开始使用下一个逻辑卷。</li>
+  <li>交错模式（triped）：同时使用同一个卷组中的多个逻辑卷空间来保存数据，类似 RAID 0 的 striping，读写性能较好。</li>
+</ul>
+
+<p>LVM 主要的优势在于实现文件系统容量的弹性调整，因此 <strong>默认</strong> 的读写模式为 <strong>线性模式</strong>。</p>
+
+<h4 id="lvm-优点">LVM 优点</h4>
+
+<p>比起正常的硬盘分区管理，LVM 更富于弹性：</p>
+
+<ul>
+  <li>使用卷组，使众多硬盘空间看起来像一个大硬盘。</li>
+  <li>使用逻辑卷，可以创建跨越众多硬盘空间的分区。</li>
+  <li>可以创建小的逻辑卷，在空间不足时再动态调整它的大小。</li>
+  <li>在调整逻辑卷大小时，无需考虑逻辑卷在硬盘上的位置，不用担心没有可用的连续空间。</li>
+  <li>可以在线对逻辑卷和卷组进行创建、删除、调整大小等操作。LVM 上的文件系统也需要重新调整大小，某些文件系统也支持这样的在线操作。</li>
+  <li>无需重新启动服务，可以将服务中用到的逻辑卷在线、实时迁移到别的硬盘上。</li>
+  <li>允许创建快照，可以保存文件系统的备份，同时使服务的下线时间（downtime）降到最小。</li>
+</ul>
+
+<h3 id="352-lvm-精简卷">3.5.2 LVM 精简卷</h3>
+
+<p>LVM thin Volume</p>
+
+<p>thin logical volume 精简逻辑卷</p>
+
+<p>thin pool 存储池</p>
+
+<p>可以创建比实际可用的 extents 大的逻辑卷，通过精简预处理，可以管理一个 <strong>可用空间</strong> 的 <strong>存储池</strong>。无论应用程序需要分配多少设备文件都能满足，可以创建一个绑定到存储池的设备，以便在应用程序实际写入逻辑卷时进行后期分配。存储池可以 <strong>动态扩展</strong>，以满足高性价比的空间分配。</p>
+
+<h3 id="353-逻辑卷磁盘快照">3.5.3 逻辑卷磁盘快照</h3>
+
+<p>LVM 可以给系统创建一个快照，由于使用了写入时复制（copy-on-write）策略，相比传统的备份更有效率。 初始的快照只包含实际数据的 inode 的硬链接。只要实际的数据没有改变，快照就仅仅包含指向数据 inode 的指针，而非数据本身。一旦更改了快照对应的文件或目录，LVM 就会自动拷贝相应的数据，包括快照所对应的旧数据的拷贝和当前系统所对应的新数据的拷贝。这样的话，只要被修改的数据（包括原始的和快照的）不超过 2G，就可以只使用 2G 的空间对一个有 35G 数据的系统创建快照。</p>
+
+<p>要想创建快照，卷组中必须有未分配的空间，像其它卷一样，快照也会占用磁盘空间。因此必须为其预留足够的空间。</p>
+
+<p>快照区与原逻辑卷共享很多物理 extents，因此快照区与逻辑卷必须在 <strong>同一个卷组</strong> 中。</p>
+
+<h4 id="恢复快照">恢复快照</h4>
+
+<p>要恢复的数据量不能大于快照区所能负载的实际容量。由于原始数据会被搬移到快照区，若原始数据被修改的实际数据量比快照区大，快照区就容纳不了，快照功能会失效。</p>
+
+<h4 id="快照用于测试">快照用于测试</h4>
+
+<p>把原逻辑卷当作备份，把快照区用于实际运行，任何测试都在快照区进行。测试完毕只需将快照区删除即可。要想复制一个原逻辑卷的系统，只需再做另一个快照区。</p>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/分区" class="page__taxonomy-item" rel="tag">分区</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/分区表" class="page__taxonomy-item" rel="tag">分区表</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/linux" class="page__taxonomy-item" rel="tag">linux</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/fdisk" class="page__taxonomy-item" rel="tag">fdisk</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/gdisk" class="page__taxonomy-item" rel="tag">gdisk</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/raid" class="page__taxonomy-item" rel="tag">raid</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#linux" class="page__taxonomy-item" rel="tag">linux</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2015-01-03T00:00:00+08:00">January 03, 2015</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">分享</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=liloli&text=Linux+%E5%9F%BA%E7%A1%80+-+3.+%E5%AD%98%E5%82%A8%20http%3A%2F%2Flocalhost%3A4000%2Flinux%2Flinux.storage%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Flinux%2Flinux.storage%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Flinux%2Flinux.storage%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Flinux%2Flinux.storage%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/linux/linux.intro/" class="pagination--pager" title="Linux 基础 - 2. Linux 简介
+">向前</a>
+    
+    
+      <a href="http://localhost:4000/linux/linux.filesystem/" class="pagination--pager" title="Linux 基础 - 4. 文件系统基础
+">向后</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">猜您还喜欢</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/time/" rel="permalink">Bash 脚本 - 时间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/storage/" rel="permalink">Bash 脚本 - 存储空间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/numbers/" rel="permalink">Bash 脚本 - 数字
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/input/" rel="permalink">Bash 脚本 - 输入
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+      <li><a href="https://twitter.com/liloli"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+      <li><a href="https://www.facebook.com/lilolibj"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+    
+    
+      <li><a href="https://github.com/liloli"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+  
+  
+  <script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/linux/linux.storage/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/linux/linux.storage"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://liloli.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+  </body>
+</html>

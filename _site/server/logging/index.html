@@ -1,0 +1,1001 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Apache 日志 - LINOTES</title>
+<meta name="description" content="本节内容来自 Apache HTTP Server 2.4 官方文档。">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Apache 日志">
+<meta property="og:url" content="http://localhost:4000/server/logging/">
+
+
+  <meta property="og:description" content="本节内容来自 Apache HTTP Server 2.4 官方文档。">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/header/datacenter-3.jpg">
+
+
+
+  <meta name="twitter:site" content="@liloli">
+  <meta name="twitter:title" content="Apache 日志">
+  <meta name="twitter:description" content="本节内容来自 Apache HTTP Server 2.4 官方文档。">
+  <meta name="twitter:url" content="http://localhost:4000/server/logging/">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="http://localhost:4000/assets/images/header/datacenter-3.jpg">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2016-01-02T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/server/logging/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "Hawk Zhang",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- <link rel="stylesheet" href="/assets/css/vim.css"> -->
+
+
+
+  
+
+
+
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('http://localhost:4000/assets/images/header/datacenter-3.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Apache 日志
+
+        
+      </h1>
+      
+        <p class="page__lead">本节内容来自 Apache HTTP Server 2.4 <a href="https://httpd.apache.org/docs/2.4/zh-cn/">官方文档</a>。
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:liloli@gmail.com">
+            <meta itemprop="email" content="liloli@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Apache 日志">
+    <meta itemprop="description" content="本节内容来自 Apache HTTP Server 2.4 官方文档。">
+    <meta itemprop="datePublished" content="January 02, 2016">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-copy"></i> Apache 日志</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#apache-日志">Apache 日志</a>
+    <ul>
+      <li><a href="#安全警示">安全警示</a></li>
+      <li><a href="#错误日志">错误日志</a></li>
+      <li><a href="#每模块日志">每模块日志</a></li>
+      <li><a href="#访问日志">访问日志</a></li>
+      <li><a href="#日志的滚动">日志的滚动</a></li>
+      <li><a href="#管道日志">管道日志</a></li>
+      <li><a href="#虚拟主机的日志">虚拟主机的日志</a></li>
+      <li><a href="#其它日志文件">其它日志文件</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="apache-日志">Apache 日志</h2>
+
+<p>日志文件相关的模块主要有 <code class="highlighter-rouge">mod_log_config</code>、<code class="highlighter-rouge">mod_log_forensic</code>、<code class="highlighter-rouge">mod_logio</code>、<code class="highlighter-rouge">mod_cgi</code>。</p>
+
+<p>Apache 提供了多种不同的机制来记录日志，从初始的请求，经过 URL 映射的过程，到连接最终的解析，包括期间所有可能发生的错误。</p>
+
+<p>此外，第三方的模块也可以提供日志功能，或者向现有日志插入条目。</p>
+
+<p>各种应用程序如 CGI 程序、PHP 脚本或其它处理程序可以向服务器错误日志发送消息。</p>
+
+<h3 id="安全警示">安全警示</h3>
+
+<p>如果用户有权写入日志文件所在目录，他几乎一定会获取到 root 权限。</p>
+
+<p>绝对不要随便给用户授予对日志所在目录的写入权限。</p>
+
+<p>另外，日志文件会包含直接由客户端提供的信息，没有经过转义。因此，怀有恶意的客户端有可能把控制字符插入日志文件中，因此在处理原始日志时一定要特别小心。</p>
+
+<h3 id="错误日志">错误日志</h3>
+
+<p>相关模块 ：<code class="highlighter-rouge">core</code></p>
+
+<p>相关指令 ：<code class="highlighter-rouge">ErrorLog</code>、<code class="highlighter-rouge">ErrorLogFormat</code>、<code class="highlighter-rouge">LogLevel</code></p>
+
+<p>服务器的错误日志，其文件名和位置由 <code class="highlighter-rouge">ErrorLog</code> 指令指定，它是最重要的日志文件。httpd 会把诊断信息记录在其中，还会把处理请求的过程中遇到的错误记录下来。在服务端启动出错错误时，或服务端运行出问题时，首先就应该查看错误日志，因为它不仅包含了错误的细节，还会提示如何修复这些错误。</p>
+
+<p>错误日志通常会写入一个文件中，Linux 中通常为 <code class="highlighter-rouge">error_log</code>，根据需要，服务端还可以把错误发送给 <code class="highlighter-rouge">syslog</code> 或用管道发送给某个程序。</p>
+
+<p>错误日志的格式由 <code class="highlighter-rouge">ErrorLogFormat</code> 指令指定，可以自定义要记录哪些内容。典型的日志消息格式：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Fri Sep 09 10:42:29.902022 2011] [core:error] [pid 35708:tid 4328636416] [client 72.15.99.187] File does not exist: /usr/local/apache2/htdocs/favicon.ico
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">[Fri Sep 09 10:42:29.902022 2011]</code> ：消息产生的日期和时间</p>
+
+<p><code class="highlighter-rouge">[core:error]</code> ：产生消息的模块及消息的严重等级</p>
+
+<p><code class="highlighter-rouge">[pid 35708:tid 4328636416]</code> ：进程 ID 与 线程 ID</p>
+
+<p><code class="highlighter-rouge">[client 72.15.99.187]</code> ：客户端地址</p>
+
+<p><code class="highlighter-rouge">File does not exist: /usr/local/apache2/htdocs/favicon.ico</code> ：消息具体内容</p>
+
+<p>错误日志中可以有多种不同类型的消息，大多格式都如上例所示。错误日志也可以包含 CGI 脚本的调试输出，CGI 脚本写到标准错误的所有信息都会直接复制到错误日志中。</p>
+
+<p>在错误日志与访问日志中同时放入一个 <code class="highlighter-rouge">%L</code> 字符串会生成一个日志条目 ID，通过它可以把两个日志中相关的条目关联起来。如果 <code class="highlighter-rouge">mod_unique_id</code> 已经加载，其唯一的请求 ID 也会用作日志条目 ID。</p>
+
+<p>进行测试时，持续监控错误日志往往非常有用：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">tail</span> <span class="nt">-f</span> error_log
+</code></pre></div></div>
+
+<h3 id="每模块日志">每模块日志</h3>
+
+<p>通过 <code class="highlighter-rouge">LogLevel</code> 指令可以基于特定模块指定一个日志的严重级别。通过这种办法，如果你正在为某个特定的模块排错，可以单独将其敏感级别调低，以输出更详细的日志。对其它模块的日志没有任何影响。尤其适合于 <code class="highlighter-rouge">mod_proxy</code> 或 <code class="highlighter-rouge">mod_rewrite</code> 这样的模块。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">LogLevel</span> <span class="n">info</span> <span class="n">rewrite</span>:<span class="n">trace5</span>
+</code></pre></div></div>
+
+<p>该命令把日志的主要级别调整为 <code class="highlighter-rouge">info</code>，但把模块 <code class="highlighter-rouge">mod_rewrite</code> 的级别调到了 <code class="highlighter-rouge">trace5</code>。</p>
+
+<h3 id="访问日志">访问日志</h3>
+
+<p>相关模块 ：<code class="highlighter-rouge">mod_log_config</code>、<code class="highlighter-rouge">mod_setenvif</code></p>
+
+<p>相关指令 ：<code class="highlighter-rouge">CustomLog</code>、<code class="highlighter-rouge">LogFormat</code>、<code class="highlighter-rouge">SetEnvIf</code></p>
+
+<p>服务端的访问日志用于记录服务端处理过的所有请求。日志的位置和内容由 <code class="highlighter-rouge">CustomLog</code> 指令控制，<code class="highlighter-rouge">LogFormat</code> 指令可用于日志的内容。</p>
+
+<p>当然，把信息保存在访问日志中只是日志管理的开始而已，下一步是分析这些信息，以生成有用的统计数据。</p>
+
+<p>不同版本的 Apache httpd 曾经使用了其它的模块和指令来控制访问日志，包括 mod_log_refere、mod_log_agent 以及 TransferLog 指令。现在，<code class="highlighter-rouge">CustomLog</code> 指令将所有旧版本的功能全部归纳。</p>
+
+<p>访问日志的格式是高可定制的，其格式是由一个看上去类似 C 风格 <code class="highlighter-rouge">printf(1)</code> 的格式化字符串指定的。</p>
+
+<h4 id="通用日志格式">通用日志格式</h4>
+
+<p>Common Log Format，<strong>CLF</strong> 通用日志格式。</p>
+
+<p>访问日志典型的配置为：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">LogFormat</span> <span class="s2">"%h %l %u %t \"</span>%<span class="n">r</span>\<span class="s2">" %&gt;s %b"</span> <span class="n">common</span>
+<span class="n">CustomLog</span> <span class="n">logs</span>/<span class="n">access_log</span> <span class="n">common</span>
+</code></pre></div></div>
+
+<p>该命令定义了昵称 <code class="highlighter-rouge">common</code>，将其与特定的格式化字符串关联到一起。格式化字符串由百分号指令组成，每个指令都告诉服务端记录一段特定的信息。真实的字符也可以放置于格式化字符串中，将会直接复制到日志输出中。双引号 <code class="highlighter-rouge">"</code> 必须被转义，还可以包含换行符 <code class="highlighter-rouge">\n</code> 和制表符 <code class="highlighter-rouge">\t</code>。</p>
+
+<p>第二行的 <code class="highlighter-rouge">CustomLog</code> 指令用定义好的昵称来设置一个新日志文件。访问日志的文件名是相对于 <code class="highlighter-rouge">ServerRoot</code> 的，除非以斜线开头。</p>
+
+<p>这两行配置将会以通用的日志格式来写入日志条目。这种标准的格式可以由许多不同的网页服务端程序生成，并可以被许多日志分析程序读取，CLF 中生成的日志文件条目其格式大致如下：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1 - frank [10/Oct/2000:13:55:36 -0700] "GET /apache_pb.gif HTTP/1.0" 200 2326
+</code></pre></div></div>
+
+<h5 id="127001-h"><code class="highlighter-rouge">127.0.0.1</code> (%h)</h5>
+
+<p>客户端的 IP 地址，对服务端的请求是从该主机发起的。如果 <code class="highlighter-rouge">HostnameLookups</code> 设置为 <code class="highlighter-rouge">On</code>，服务端会尝试解析其主机名，然后替换掉 IP 地址。然而，不推荐这样的配置，因为会严重拖慢服务端的运行。取而代之，最好使用后处理程序来处理主机名的解析，如 <code class="highlighter-rouge">logresovle</code>。此处报告的 IP 地址不一定是用户所处的机器的地址，如果在用户与服务端之间存在代理服务器，该地址将是代理的地址，而不是原始主机的地址。</p>
+
+<h5 id="--l"><code class="highlighter-rouge">-</code> (%l)</h5>
+
+<p>这个破折号表明被请求的信息不可用。这种情况下，不可用的信息是指由 RFC 1413 定义的客户端身份，由客户端主机中的 <code class="highlighter-rouge">identd</code> 决定。该信息是高度不可靠的，几乎永远不要使用，除非是在内部完全可控的网络中。Apache httpd 甚至不会去判断该信息，除非 <code class="highlighter-rouge">IdentityCheck</code> 设置为 <code class="highlighter-rouge">On</code>。</p>
+
+<h5 id="frank-u"><code class="highlighter-rouge">frank</code> (%u)</h5>
+
+<p>这是由 HTTP 验证判断的发起文档请求的用户的 ID。相同的值通常会用变量 <code class="highlighter-rouge">REMOTE_USER</code> 赋给 CGI 脚本。如果该请求的状态码为 401，则该值不能信任，因为用户还没通过验证。如果文档没有密码保护，该值应该也是 <code class="highlighter-rouge">-</code>。</p>
+
+<h5 id="10oct2000135536--0700-t"><code class="highlighter-rouge">[10/Oct/2000:13:55:36 -0700]</code> (%t)</h5>
+
+<p>接收到请求的时间，格式为：</p>
+
+<p><code class="highlighter-rouge">[day/month/year:hour:minute:second zone]</code></p>
+
+<p>day = 2 位数字</p>
+
+<p>month = 3 位字母</p>
+
+<p>year = 4 位数字</p>
+
+<p>hour = 2 位数字</p>
+
+<p>minute = 2 位数字</p>
+
+<p>second = 2 位数字</p>
+
+<p>zone = (<code class="highlighter-rouge">+' | </code>-‘) 4 位数字</p>
+
+<p>如果需要，可以自定义时间显示格式，通过在日志格式字符串中设定 <code class="highlighter-rouge">%{format}t</code> 来实现。其中 <code class="highlighter-rouge">format</code> 可以是 C 标准库中的 <code class="highlighter-rouge">strftime(3)</code>，也可以是支持的特殊字符。</p>
+
+<h5 id="get-apache_pbgif-http10-r"><code class="highlighter-rouge">"GET /apache_pb.gif HTTP/1.0"</code> ("%r")</h5>
+
+<p>来自客户端的请求是用双引号括起来的，这行请求包含了大量的有用信息。</p>
+
+<p>客户端使用的方法是 <code class="highlighter-rouge">GET</code></p>
+
+<p>客户端请求的资源为 <code class="highlighter-rouge">/apache_pb.gif</code></p>
+
+<p>客户端使用的协议为 <code class="highlighter-rouge">HTTP/1.0</code></p>
+
+<p>如果需要，也可以决定请求行中的信息，哪些需要保存到日志。当前使用的字符是 <code class="highlighter-rouge">%r</code>，其实如果换成 <code class="highlighter-rouge">%m %U%q %H</code> 同样会把方法、路径、查询字符串、协议保存到日志中，和当前效果一样。</p>
+
+<h5 id="200-s"><code class="highlighter-rouge">200</code> (%&gt;s)</h5>
+
+<p>这是服务端返回给客户端的状态码。这个信息非常有价值，因为它反映了请求得到了一个成功的回复（代码是以 2 开头的）。</p>
+
+<p>以 3 开头的表示重定向，以 4 开头表示客户端发生了错误，以 5 开头表示服务端发生了错误，<a href="http://www.w3.org/Protocols/rfc2616/rfc2616.txt">完整的状态码列表</a>。</p>
+
+<h5 id="2326-b"><code class="highlighter-rouge">2326</code> (%b)</h5>
+
+<p>最后这部分代表返回给客户端的对象的大小，不包括回复的标头。</p>
+
+<p>如果没有任何内容返回给客户端，该值也应该是 <code class="highlighter-rouge">-</code>。</p>
+
+<p>如果希望没有内容返回时用 <code class="highlighter-rouge">0</code> 来记录，此处用 <code class="highlighter-rouge">%B</code> 来替换。</p>
+
+<h4 id="合并日志格式">合并日志格式</h4>
+
+<p>Combined Log Format</p>
+
+<p>另一个常用的格式字符串称为合并日志格式：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">LogFormat</span> <span class="s2">"%h %l %u %t \"</span>%<span class="n">r</span>\<span class="s2">" %&gt;s %b \"</span>%{<span class="n">Referer</span>}<span class="n">i</span>\<span class="s2">" \"</span>%{<span class="n">User</span>-<span class="n">agent</span>}<span class="n">i</span>\<span class="s2">""</span> <span class="n">combined</span>
+<span class="n">CustomLog</span> <span class="n">log</span>/<span class="n">access_log</span> <span class="n">combined</span>
+</code></pre></div></div>
+
+<p>该格式其实与通用格式一样，只不过是加了几个字段而已。每个字段也都使用百分号指令 <code class="highlighter-rouge">%{header}i</code>，其中 <code class="highlighter-rouge">header</code> 可以是任何 HTTP 的请求标头。</p>
+
+<p>这种格式的访问日志长这个样子：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1 - frank [10/Oct/2000:13:55:36 -0700] "GET /apache_pb.gif HTTP/1.0" 200 2326 "http://www.example.com/start.html" "Mozilla/4.08 [en] (Win98; I ;Nav)"
+</code></pre></div></div>
+
+<p>新加的字段：</p>
+
+<h5 id="httpwwwexamplecomstarthtml-refereri"><code class="highlighter-rouge">"http://www.example.com/start.html"</code> ("%{Referer}i")</h5>
+
+<p>这是 HTTP 请求标头的引用者，给出了客户端报告引用的站点，即链接到或包含 <code class="highlighter-rouge">/apache_pb.gif</code> 的那个页面。</p>
+
+<h5 id="mozilla408-en-win98-i-nav-user-agenti"><code class="highlighter-rouge">"Mozilla/4.08 [en] (Win98; I ;Nav)"</code> ("%{User-agent}i")</h5>
+
+<p>用户代理 HTTP 请求标头。这是客户端浏览器报告自身的标识信息。</p>
+
+<h4 id="多个访问日志">多个访问日志</h4>
+
+<p>通过在配置文件中指定多个 <code class="highlighter-rouge">CustomLog</code>，可以生成多个访问日志。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">LogFormat</span> <span class="s2">"%h %l %u %t \"</span>%<span class="n">r</span>\<span class="s2">" %&gt;s %b"</span> <span class="n">common</span>
+<span class="n">CustomLog</span> <span class="n">logs</span>/<span class="n">access_log</span> <span class="n">common</span>
+<span class="n">CustomLog</span> <span class="n">logs</span>/<span class="n">referer_log</span> <span class="s2">"%{Referer}i -&gt; %U"</span>
+<span class="n">CustomLog</span> <span class="n">logs</span>/<span class="n">agent_log</span> <span class="s2">"%{User-agent}i"</span>
+</code></pre></div></div>
+
+<p>该配置将会生成三个访问日志。第一个包含基本的 CLF 信息，第二个和第三个包含引用者和浏览器信息。</p>
+
+<h4 id="基于条件的日志">基于条件的日志</h4>
+
+<p>有时会基于客户端请求的具体细节，需要从访问日志中排除特定的条目。</p>
+
+<p>通常借助环境变量的帮助来完成：必须设置环境变量，令其能代表满足特定条件的请求。通常使用 <strong><code class="highlighter-rouge">SetEnvIf</code></strong> 指令来 <strong>设定条件</strong>。然后在 <code class="highlighter-rouge">CustomLog</code> 指令中使用 <strong><code class="highlighter-rouge">env=</code> 子句</strong>，来包含或排除环境变量所代表的请求。</p>
+
+<h5 id="范例一">范例一</h5>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 忽略来自环回接口的请求
+</span><span class="n">SetEnvIf</span> <span class="n">Remote_Addr</span> <span class="s2">"127\.0\.0\.1"</span> <span class="n">dontlog</span>
+<span class="c"># 忽略对 robots.txt 的请求
+</span><span class="n">SetEnvIf</span> <span class="n">Request_URI</span> <span class="s2">"^/robots\.txt$"</span> <span class="n">dontlog</span>
+<span class="c"># 其余的保存到日志
+</span><span class="n">CustomLog</span> <span class="n">logs</span>/<span class="n">access_log</span> <span class="n">common</span> <span class="n">env</span>=!<span class="n">dontlog</span>
+</code></pre></div></div>
+
+<h5 id="范例二">范例二</h5>
+
+<p>把讲英语的用户发来的请求保存到一个日志，非英语用户保存到另一个日志：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">SetEnvIf</span> <span class="n">Accept</span>-<span class="n">Language</span> <span class="s2">"en"</span> <span class="n">english</span>
+<span class="n">CustomLog</span> <span class="n">logs</span>/<span class="n">english_log</span> <span class="n">common</span> <span class="n">env</span>=<span class="n">english</span>
+<span class="n">CustomLog</span> <span class="n">logs</span>/<span class="n">non_english_log</span> <span class="n">common</span> <span class="n">env</span>=!<span class="n">english</span>
+</code></pre></div></div>
+
+<h5 id="范例三">范例三</h5>
+
+<p>把缓存的效率保存到日志：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">SetEnv</span> <span class="n">CACHE_MISS</span> <span class="m">1</span>
+<span class="n">LogFormat</span> <span class="s2">"%h %l %u %t "</span>%<span class="n">r</span> <span class="s2">" %&gt;s %b %{CACHE_MISS}e"</span> <span class="n">common</span>-<span class="n">cache</span>
+<span class="n">CustomLog</span> <span class="n">logs</span>/<span class="n">access_log</span> <span class="n">common</span>-<span class="n">cache</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">mod_cache</code> 会在 <code class="highlighter-rouge">mod_env</code> 之前运行，如果运行成功，将在没有它的情况下提供内容。在这种情况下，缓存命中将记录 <code class="highlighter-rouge">-</code>，而缓存错过将记录 1。</p>
+
+<h5 id="范例四">范例四</h5>
+
+<p>除了 <code class="highlighter-rouge">env=</code> 子句，<strong><code class="highlighter-rouge">LogFormat</code></strong> 还支持根据 HTTP <strong>回复代码</strong> 来保存日志：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">LogFormat</span> <span class="s2">"%400,501{User-agent}i"</span> <span class="n">browserlog</span>
+<span class="n">LogFormat</span> <span class="s2">"%!200,304,302{Referer}i"</span> <span class="n">refererlog</span>
+</code></pre></div></div>
+
+<p>第一行，如果 HTTP 状态码为 400 或 501，则保存 <code class="highlighter-rouge">User-agent</code>，其它情况将保存 <code class="highlighter-rouge">-</code>。</p>
+
+<p>第二行，如果 HTTP 状态码非 200、204、302，则保存 <code class="highlighter-rouge">Referer</code>。</p>
+
+<p class="notice--success">虽然条件日志非常强大、灵活，但它不是唯一控制日志内容的方法。实际上，日志所包含的内容越完整才越有用，在需要时对日志进行后期处理才是最实际的做法。</p>
+
+<h3 id="日志的滚动">日志的滚动</h3>
+
+<p>即使在一个中等繁忙的服务端上，其日志文件所保存信息的数量也很大。访问日志文件一般每一万个请求就会增长 1 MB。因此有必要阶段性地滚动日志文件，移动或删除现有的日志。服务端运行时是无法进行的，因为只要 Apache httpd 还打开着日志文件，它就会持续写入。日志文件被移动或删除以后，需要重启服务端，以便让它打开新的日志文件。</p>
+
+<p>通过优雅的重启，服务端在授命打开新日志文件时，不会丢失任何现有及未决的客户端连接。然而，为了实现这个目的，在服务端完成之前的请求时，它必须继续向原日志文件写入。因此服务端重启后，对日志文件进行任何处理之前，有必要等待一段时间。</p>
+
+<p>典型的单纯滚动日志并压缩旧日志的方法：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mv </span>access_log access_log.old
+<span class="nb">mv </span>error_log error_log.old
+apachectl graceful
+<span class="nb">sleep </span>600
+<span class="nb">gzip </span>access_log.old error_log.old
+</code></pre></div></div>
+
+<h3 id="管道日志">管道日志</h3>
+
+<p>Apache httpd 可以通过管道把错误日志和访问日志写入另一个进程，而不是直接写入文件中。这个能力显著地提升了日志的灵活性。要想把日志写入管道，只需用管道操作符 <code class="highlighter-rouge">|</code> 替换文件名即可，后面跟接收日志的程序。服务端启动时将会启动管道日志，服务端运行期间，如果管道日志崩溃也会被重启，因此管道是可靠的日志。</p>
+
+<p>管道日志进程是由 Aapche httpd 进程创建的，并继承其 UID，这意味着管道日志程序通常以 root 身份运行。因此必须保证程序的简单、安全。</p>
+
+<p>管道日志一个重要的用处是不重启服务端的情况下进行日志的滚动。Apache HTTP Server 包含一个名为 <code class="highlighter-rouge">rotatelogs</code> 的简单的程序，就是做这个用的。例如，想要每 24 小时滚动日志：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">CustomLog</span> <span class="s2">"|/usr/local/apache/bin/rotatelogs /var/log/access_log 86400"</span> <span class="n">common</span>
+</code></pre></div></div>
+
+<p>注意：要作为管道末端的命令整体被双括号引用。</p>
+
+<p>对于条件日志，管道日志也是非常强大的工具，但是如果有更简单的办法就不要使用，比如可以离线事后处理的时候。</p>
+
+<p>创建管道日志时默认是不会调用 shell 的，要想使用 shell，不要用 <code class="highlighter-rouge">|</code>，而该用 <code class="highlighter-rouge">|$</code>：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 用 shell 调用 "rotatelogs"
+</span><span class="n">CustomLog</span> <span class="s2">"|$/usr/local/apache/bin/rotatelogs   /var/log/access_log 86400"</span> <span class="n">common</span>
+</code></pre></div></div>
+
+<p>这是 Apache 2.2 的默认行为。根据所指定的 shell 的具体情况，可能会生成一个 shell 进程，在日志管道程序的生存期一直存在，但在重启时会产生信号处理问题。为了与 Apache 2.2 兼容，<code class="highlighter-rouge">||</code> 这种标记法也可以使用，与 <code class="highlighter-rouge">|</code> 等效。</p>
+
+<h3 id="虚拟主机的日志">虚拟主机的日志</h3>
+
+<p>运行一个含有许多虚拟主机的服务端时，有几个选项可用来处理日志文件：</p>
+
+<h4 id="统一管理">统一管理</h4>
+
+<p>可以像在单一主机服务端一样使用日志，只需把日志指令从 <code class="highlighter-rouge">&lt;VirtualHost&gt;</code> 拿出来，放到主服务器区块中。可以把所有请求都保存到同一个访问日志和一个错误日志中。此时要想单独把每个虚拟主机的统计提出来是不可能的。</p>
+
+<h4 id="分别管理">分别管理</h4>
+
+<p>如果 <code class="highlighter-rouge">CustomLog</code> 或 <code class="highlighter-rouge">ErrorLog</code> 指令放进了 <code class="highlighter-rouge">&lt;VirtualHost&gt;</code> 区块中，所有对该虚拟主机发起的请求或错误都会被保存到单独的文件。</p>
+
+<p>如果某虚拟主机没有其自已的日志指令，对它发起的请求仍然会被保存到主服务端日志中。</p>
+
+<p>这种技术对于数量较少的虚拟机比较有用，但如果数量特别大，管理起来会特别复杂。而且经常会因为文件描述符不足而产生问题。</p>
+
+<h4 id="可行办法">可行办法</h4>
+
+<p>对于访问日志来说，有一个好的解决办法：把虚拟主机的信息加入日志格式化字符串中，这样，可以把所有主机都保存到同一个日志中，事后再分隔成单独的文件。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">LogFormat</span> <span class="s2">"%v %l %u %t \"</span>%<span class="n">r</span>\<span class="s2">" %&gt;s %b"</span> <span class="n">comonvhost</span>
+<span class="n">CustomLog</span> <span class="n">logs</span>/<span class="n">access_log</span> <span class="n">comonvhost</span>
+</code></pre></div></div>
+
+<p>其中 <code class="highlighter-rouge">%v</code> 用于保存响应请求的虚拟主机的名称。然后，使用 <code class="highlighter-rouge">split-logfile</code> 这样的程序来处理访问日志，将其按虚拟主机分割成独立的文件。</p>
+
+<h3 id="其它日志文件">其它日志文件</h3>
+
+<p>相关模块 ：<code class="highlighter-rouge">mod_logio</code>、<code class="highlighter-rouge">mod_log_config</code>、<code class="highlighter-rouge">mod_log_forensic</code>、<code class="highlighter-rouge">mod_cgi</code></p>
+
+<p>相关指令 ：<code class="highlighter-rouge">LogFormat</code>、<code class="highlighter-rouge">BufferedLogs</code>、<code class="highlighter-rouge">ForensicLog</code>、<code class="highlighter-rouge">PidFile</code>、<code class="highlighter-rouge">ScriptLog</code>、<code class="highlighter-rouge">ScriptLogBuffer</code>、<code class="highlighter-rouge">ScriptLogLength</code></p>
+
+<h4 id="实际传输的日志字节数">实际传输的日志字节数</h4>
+
+<p><code class="highlighter-rouge">mod_logio</code> 额外增加了两个 <code class="highlighter-rouge">LogFormat</code> 字段，<code class="highlighter-rouge">%I</code> 和 <code class="highlighter-rouge">%O</code>，用于保存在网络上实际接收和发送的字节数。</p>
+
+<h4 id="日志">日志</h4>
+
+<p><code class="highlighter-rouge">mod_log_forensic</code> 用于在日志中鉴证客户端请求。在请求处理之前和之后分别保存一次日志，因此针对每个请求，鉴证日志包含两个日志行。鉴证日志的格式是非常严格的，不允许自定义。它是一个宝贵的调试和安全工具。</p>
+
+<h4 id="pid-文件">PID 文件</h4>
+
+<p>Apache httpd 启动时，会把 httpd 父进程的 ID 保存到文件 <code class="highlighter-rouge">logs/httpd.pid</code> 中。该文件名可以用 <code class="highlighter-rouge">PidFile</code> 指令来修改。该 PID 是提供给管理员用于重启或终止守护进程用的，通过向父进程发送信号来实现。</p>
+
+<h4 id="脚本日志">脚本日志</h4>
+
+<p>为了协助调试，<code class="highlighter-rouge">ScriptLog</code> 指令可以帮助记录给予 CGI 脚本的输入，以及从 CGI 脚本得到的输出。该指令应该只用于测试，不能用于实时服务端。</p>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/apache" class="page__taxonomy-item" rel="tag">apache</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/log" class="page__taxonomy-item" rel="tag">log</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#server" class="page__taxonomy-item" rel="tag">server</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2016-01-02T00:00:00+08:00">January 02, 2016</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">分享</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=liloli&text=Apache+%E6%97%A5%E5%BF%97%20http%3A%2F%2Flocalhost%3A4000%2Fserver%2Flogging%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fserver%2Flogging%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fserver%2Flogging%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fserver%2Flogging%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/server/intro/" class="pagination--pager" title="Apache HTTP Server 简介
+">向前</a>
+    
+    
+      <a href="http://localhost:4000/server/mod_proxy/" class="pagination--pager" title="Apache mod_proxy 模块使用说明
+">向后</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">猜您还喜欢</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/time/" rel="permalink">Bash 脚本 - 时间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/storage/" rel="permalink">Bash 脚本 - 存储空间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/numbers/" rel="permalink">Bash 脚本 - 数字
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/input/" rel="permalink">Bash 脚本 - 输入
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+      <li><a href="https://twitter.com/liloli"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+      <li><a href="https://www.facebook.com/lilolibj"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+    
+    
+      <li><a href="https://github.com/liloli"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+  
+  
+  <script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/server/logging/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/server/logging"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://liloli.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+  </body>
+</html>

@@ -1,0 +1,911 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Nginx 基本功能 - LINOTES</title>
+<meta name="description" content="用简洁清晰的语言讨论技术">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Nginx 基本功能">
+<meta property="og:url" content="http://localhost:4000/server/nginx_basic/">
+
+
+  <meta property="og:description" content="用简洁清晰的语言讨论技术">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/header/nginx.jpeg">
+
+
+
+  <meta name="twitter:site" content="@liloli">
+  <meta name="twitter:title" content="Nginx 基本功能">
+  <meta name="twitter:description" content="用简洁清晰的语言讨论技术">
+  <meta name="twitter:url" content="http://localhost:4000/server/nginx_basic/">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="http://localhost:4000/assets/images/header/nginx.jpeg">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2016-01-03T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/server/nginx_basic/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "Hawk Zhang",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- <link rel="stylesheet" href="/assets/css/vim.css"> -->
+
+
+
+  
+
+
+
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('http://localhost:4000/assets/images/header/nginx.jpeg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Nginx 基本功能
+
+        
+      </h1>
+      
+        <p class="page__lead">
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:liloli@gmail.com">
+            <meta itemprop="email" content="liloli@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Nginx 基本功能">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="January 03, 2016">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-copy"></i> Nginx 基本功能</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#控制-nginx-运行时进程">控制 nginx 运行时进程</a>
+    <ul>
+      <li><a href="#主进程与工人进程">主进程与工人进程</a></li>
+      <li><a href="#nginx-的控制">nginx 的控制</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="控制-nginx-运行时进程">控制 nginx 运行时进程</h2>
+
+<h3 id="主进程与工人进程">主进程与工人进程</h3>
+
+<p>nginx 有一个主进程与一个或多个工人进程。如果启用了缓存，在启动服务时还会运行缓存启动器进程和缓存管理器进程。</p>
+
+<p class="notice">主进程的主要任务是读取和验证配置文件，维护工人进程。</p>
+
+<p>工人进程的任务则是处理请求。nginx 靠的是依赖于操作系统的机制，把请求高效地分配给工人进程。工人进程的数量由配置文件定义，可以是固定的，也可以根据可用 CPU 核心的数量来自动调整。</p>
+
+<h3 id="nginx-的控制">nginx 的控制</h3>
+
+<h4 id="用信号控制进程">用信号控制进程</h4>
+
+<p>nginx 可以由信号来控制，主进程的 ID 默认被写入 <code class="highlighter-rouge">/run/nginx.pid</code> 文件。</p>
+
+<h5 id="主进程支持以下信号">主进程支持以下信号：</h5>
+
+<p><code class="highlighter-rouge">GERM</code>,<code class="highlighter-rouge">INT</code> ：快速关闭</p>
+
+<p><code class="highlighter-rouge">QUIT</code> ：优雅关闭</p>
+
+<p><code class="highlighter-rouge">HUP</code> ：修改配置，修改了时区，用新配置开启新工人进程，优雅关闭旧工人进程</p>
+
+<p><code class="highlighter-rouge">USR1</code> ：重新打开日志文件</p>
+
+<p><code class="highlighter-rouge">USR2</code> ：升级可执行文件</p>
+
+<p><code class="highlighter-rouge">WINCH</code> ：优雅关闭工人进程</p>
+
+<h5 id="工人进程支持的信号">工人进程支持的信号：</h5>
+
+<p>单独的工人进程也可以由信号来控制，虽然并不需要这么做。</p>
+
+<p><code class="highlighter-rouge">TERM</code>,<code class="highlighter-rouge">INT</code> ：快速关闭</p>
+
+<p><code class="highlighter-rouge">QUIT</code> ：优雅关闭</p>
+
+<p><code class="highlighter-rouge">USR1</code> ：重新打开日志文件</p>
+
+<p><code class="highlighter-rouge">WINCH</code> ：异常终止，用于调试，需启用 <code class="highlighter-rouge">debug_points</code></p>
+
+<h5 id="重载配置">重载配置</h5>
+
+<p>要想重载配置，可以停止或重启 nginx ，或向主进程发送信号。可以用 <code class="highlighter-rouge">nginx -s</code> 命令来发送信号：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nginx <span class="nt">-s</span> &lt;SIGNAL&gt;
+</code></pre></div></div>
+
+<SIGNAL> 可以是以下信号：
+
+* `stop` ：快速关闭
+* `quit` ：优雅关闭
+* `reload` ：重新加载配置文件
+* `reopen` ：重新打开日志文件
+
+
+##### 用 `kill` 发信号
+
+还可以用 `kill` 命令直接给主进程发信号，这种情况下会直接把信号发给指定 PID 的进程。
+
+```bash
+ps -ax | grep nginx
+  3129 ?        Ss     0:00 nginx: master process /usr/sbin/nginx
+
+kill -s QUIT 3129
+```
+
+
+
+
+#### 修改配置
+
+为了让 nginx 重新读取配置文件，可以向主进程发送 `HUP` 信号。
+
+主进程首先会检查语法是否正确，然后会尝试应用新的配置，即，打开日志文件及新的侦听套接字。
+
+如果失败，回滚本次所做的修改，继续用旧配置工作。
+
+如果成功，开启新的工人进程，并向旧工人进程发送消息，要求它们优雅关闭。旧工人进程关闭侦听套接字，继续处理之前的请求，处理完毕以后，旧工人进程关闭。
+
+
+
+
+
+#### 滚动日志文件
+
+滚动日志文件之前，需要先重命名旧日志文件。
+
+之后，应该向主进程发送 `USR1` 信号。主进程会把当前打开的日志文件重新打开，并为其分配一个普通权限的用户，以该用户身份来运行工人进程。
+
+在成功地重新打开之后，主进程关闭所有打开的文件，向工人进程发送消息，要求它们重新打开文件。
+
+工人进程同样地马上打开新文件，关闭旧文件。
+
+此时，旧文件几乎可以立即用于后期处理，如压缩。
+
+
+
+
+#### 在线升级可执行文件
+
+升级可执行文件时，要先用新的可执行文件把旧的替换掉。
+
+之后，向主进程发送 `USR2` 信号。
+
+主进程先是重命名其 PID 文件，在原文件名基础上添加后缀 `.oldbin`，如 `nginx.pid.oldbin`；然后再运行新的可执行文件，随之启动新的工人进程。
+
+之后，所有的新旧工人进程继续接受请求。如果向第一个主进程发送了 `WINCH` 信号，它会向其工人进程发送消息，要求它们优雅关闭，它们会开始退出。
+
+过了一段时间，只有新的工人来处理请求。
+
+要注意的一点是，旧的主进程不会关闭其侦听套接字，需要时可以再次启动其工人进程。
+
+如果新的可执行文件由于某种原因工作不正常，可以选择以下操作之一：
+
+* 向旧主进程发送 `HUP` 信号。旧主进程会启动新的工人进程，不会重新读取配置。然后，向新主进程发送 `QUIT` 信号，其工人进程可被优雅关闭。
+* 向新主进程发送 `TERM` 信号。它会发消息给其工人进程，要求它们立即退出，于是这些工人进程几乎会立即退出。如果没能退出，可以向它们发送 `KILL` 信号来强制退出。新主进程退出之后，旧主进程会自动启动新工人进程。
+
+如果新的主进程退出，则旧主进程会丢弃 `.oldbin` 后缀，恢复 PID 文件名。
+
+如果升级成功，应该向旧主进程发送 `QUIT` 信号，最后只留下新进程。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 创建配置文件
+
+nginx 也是使用文本格式的配置文件，默认文件名为 `/etc/nginx/nginx.conf`。
+
+
+
+
+#### 指令
+
+配置文件由指令及其参数组成。
+
+简单指令以分号结尾。其它指令充当 “容器”，可以把相关的指令放在一起，外面用大括号包围，通常称之为 “块”。
+
+
+
+
+#### 特定功能的配置文件
+
+为了让配置更易于维护，建议把配置文件分割成一组特定功能的文件，保存在`/etc/nginx/conf.d` 目录中，然后在主配置文件中用 `include` 指令来引用。
+
+
+
+
+#### contexts
+
+有几个最高层的指令，被称为 context，它把应用到不同流量类型的指令集中到一起：
+
+`events` ：一般连接的处理
+
+`http` ：HTTP 流量
+
+`mail` ：邮件流量
+
+`stream` ：TCP 和 UDP 流量
+
+置于这些 context 之外的指令被称为处于 main context 之中。
+
+
+##### 虚拟服务器
+
+在每个用来处理流量的 context 中，可以包含一个或多个 `server` 块来定义虚拟服务器，用它来控制对请求的处理。在 `server` 中可以容纳的指令依流量类型而有所不同。
+
+对于 HTTP 流量来说，每个 `server` 指令是用来控制那些 “对特定域名或 IP 地址中资源的” 请求的。`server` 中，用一个或多个 `location` 来定义如何处理特定的网址。
+
+对于 mail 和 TCP/UDP  流量来说，每个 `server` 指令用来控制 “抵达特定 TCP 端口或 UNIX 套接字的” 流量的处理。
+
+
+##### 多 context 配置文件范例
+
+```conf
+user nobody; # 'main' context 中的一个指令
+
+events {
+    # 配置如何处理连接
+}
+
+http {
+    # 此处配置为 HTTP 专用，并影响所有虚拟服务器  
+
+    server {
+        # 1 号 HTTP 虚拟服务器的配置
+        location /one {
+            # 如何处理以 '/one' 开头的网址
+        }
+        location /two {
+            # 如何处理以 '/two' 开头的网址
+        }
+    }
+
+    server {
+        # 2 号 HTTP 虚拟服务器的配置
+    }
+}
+
+stream {
+    # 此处配置为 TCP/UDP 专用，并影响所有虚拟服务器
+    server {
+        # 1 号 TCP 虚拟服务器的配置
+    }
+}
+```
+
+
+##### 继承
+
+一般来说，子 context 会继承上一层级指令的配置。有一些指令可以出现在多个 context 中，此时，子 context 中的指令会覆盖其从上层继承来的对应的指令。
+
+
+
+
+#### 重载配置
+
+要想让配置文件的修改生效，必须将其重载。可以重启 `nginx` 进程，也可以向其发送 `reload` 信号，更新配置的同时，不会打扰对当前请求的处理。
+</SIGNAL>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/nginx" class="page__taxonomy-item" rel="tag">nginx</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#server" class="page__taxonomy-item" rel="tag">server</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2016-01-03T00:00:00+08:00">January 03, 2016</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">分享</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=liloli&text=Nginx+%E5%9F%BA%E6%9C%AC%E5%8A%9F%E8%83%BD%20http%3A%2F%2Flocalhost%3A4000%2Fserver%2Fnginx_basic%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fserver%2Fnginx_basic%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fserver%2Fnginx_basic%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fserver%2Fnginx_basic%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/server/vhost/" class="pagination--pager" title="Apache 虚拟主机
+">向前</a>
+    
+    
+      <a href="http://localhost:4000/server/nginx_contentcaching/" class="pagination--pager" title="Nginx 的内容缓存
+">向后</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">猜您还喜欢</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/time/" rel="permalink">Bash 脚本 - 时间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/storage/" rel="permalink">Bash 脚本 - 存储空间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/numbers/" rel="permalink">Bash 脚本 - 数字
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/input/" rel="permalink">Bash 脚本 - 输入
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+      <li><a href="https://twitter.com/liloli"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+      <li><a href="https://www.facebook.com/lilolibj"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+    
+    
+      <li><a href="https://github.com/liloli"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+  
+  
+  <script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/server/nginx_basic/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/server/nginx_basic"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://liloli.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+  </body>
+</html>

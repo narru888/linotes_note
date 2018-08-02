@@ -1,0 +1,1024 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Linux 基础 - 2. Linux 简介 - LINOTES</title>
+<meta name="description" content="用简洁清晰的语言讨论技术">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Linux 基础 - 2. Linux 简介">
+<meta property="og:url" content="http://localhost:4000/linux/linux.intro/">
+
+
+  <meta property="og:description" content="用简洁清晰的语言讨论技术">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/header/linux.jpg">
+
+
+
+  <meta name="twitter:site" content="@liloli">
+  <meta name="twitter:title" content="Linux 基础 - 2. Linux 简介">
+  <meta name="twitter:description" content="用简洁清晰的语言讨论技术">
+  <meta name="twitter:url" content="http://localhost:4000/linux/linux.intro/">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="http://localhost:4000/assets/images/header/linux.jpg">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2015-01-02T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/linux/linux.intro/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "Hawk Zhang",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- <link rel="stylesheet" href="/assets/css/vim.css"> -->
+
+
+
+  
+
+
+
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('http://localhost:4000/assets/images/header/linux.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Linux 基础 - 2. Linux 简介
+
+        
+      </h1>
+      
+        <p class="page__lead">
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:liloli@gmail.com">
+            <meta itemprop="email" content="liloli@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Linux 基础 - 2. Linux 简介">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="January 02, 2015">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-globe"></i> 2. Linux 简介</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#21-linux-简介">2.1 Linux 简介</a>
+    <ul>
+      <li><a href="#211-操作系统">2.1.1 操作系统</a></li>
+      <li><a href="#212-unix">2.1.2 Unix</a></li>
+      <li><a href="#213-自由软件">2.1.3 自由软件</a></li>
+    </ul>
+  </li>
+  <li><a href="#22-linux-发展">2.2 Linux 发展</a>
+    <ul>
+      <li><a href="#221-linux-历程">2.2.1 Linux 历程</a></li>
+      <li><a href="#222-linux-的开发">2.2.2 Linux 的开发</a></li>
+      <li><a href="#223-linux-内核版本">2.2.3 Linux 内核版本</a></li>
+      <li><a href="#224-linux-发行版">2.2.4 Linux 发行版</a></li>
+    </ul>
+  </li>
+  <li><a href="#23-linux-应用">2.3 Linux 应用</a>
+    <ul>
+      <li><a href="#231-企业环境">2.3.1 企业环境</a></li>
+      <li><a href="#232-个人环境">2.3.2 个人环境</a></li>
+      <li><a href="#233-云端运用">2.3.3 云端运用</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="21-linux-简介">2.1 Linux 简介</h2>
+
+<h3 id="211-操作系统">2.1.1 操作系统</h3>
+
+<p>Linux 就是一套操作系统。</p>
+
+<p>不同的硬件支持不同的函数，所以同一套操作系统无法在不同硬件平台上运行。如果想让 x86 上面跑的操作系统也能够在 Power CPU 上运行，需要“<strong>软件移植</strong>”。</p>
+
+<p>Windows操作系统只能在 x86 的个人计算机上面运行。Linux 具有 <strong>可移植性</strong>。</p>
+
+<p>Linux 提供了一个完整的操作系统当中最底层的硬件控制与资源管理的完整架构， 该架构沿袭 Unix 的传统，稳定而强大。”</p>
+
+<h3 id="212-unix">2.1.2 Unix</h3>
+
+<ul>
+  <li>
+    <p>Unix 的前身是由贝尔实验室（Bell lab.）的 Ken Thompson 利用组合语言写成的， 后来在 1971-1973 年间由 Dennis Ritchie 以 C 语言进行改写，才称为 Unix。</p>
+  </li>
+  <li>
+    <p>1977 年由 Bill Joy 发布 BSD （Berkeley Software 套件），这些称为 Unix-like 的操作系统。</p>
+  </li>
+  <li>
+    <p>1984年由 Andrew Tanenbaum 开始制作 Minix 操作系统，该系统可以提供源代码以及软件；</p>
+  </li>
+  <li>
+    <p>1984 年由 Richard Stallman 提倡 GNU 计划，倡导自由软件（Free software）， 强调其软件可以“自由的取得、复制、修改与再发行”，设计 GPL 授权模式， 任何 GPL（General Public License）软件均不可单纯仅销售其软件，也不可修改软件授权。</p>
+  </li>
+  <li>
+    <p>1991 年芬兰人 Linus Torvalds 开发出 Linux 操作系统。简而言之，Linux 成功的地方主要在于： Minix（Unix）, GNU, Internet, POSIX 及虚拟团队的产生。</p>
+  </li>
+</ul>
+
+<h3 id="213-自由软件">2.1.3 自由软件</h3>
+
+<h4 id="自由软件的活动">自由软件的活动：</h4>
+
+<p>1984 年创立 GNU 计划与 FSF 基金会的 Stallman 先生认为，写程序最大的快乐就是开发好软件给所有人使用。如果使用者有能力完善别人开发的程序，可以互相促进，共同提高。</p>
+
+<h4 id="自由软件的版权">自由软件的版权</h4>
+
+<p>而为了避免自己的开发出来的开源自由软件被拿去做成专利软件，Stallman 同时将 GNU 与 FSF 开发的软件，都挂上 GPL 的版权声明，FSF 的核心观念是 “版权制度是促进社会进步的手段，版权本身不是自然权力。”</p>
+
+<p>GNU = GNU’s Not Unix</p>
+
+<h4 id="自由">自由</h4>
+
+<p>Stallman 对 GPL 一直是强调 Free：</p>
+
+<p>Free Software 是一种自由的权力，并非是 “价格”，用户可以自由的使用、复制、再发行、学习、修改与强化自由软件。</p>
+
+<ul>
+  <li>
+    <p>GPL 软件版权声明意味着：</p>
+
+    <ul>
+      <li>
+        <p>取得软件与源代码：可以根据自己的需求来使用该软件</p>
+      </li>
+      <li>
+        <p>复制：可以自由的复制该软件</p>
+      </li>
+      <li>
+        <p>修改：可以修改源代码</p>
+      </li>
+      <li>
+        <p>再发行：可以把修改过的程序，重新自由发布</p>
+      </li>
+      <li>
+        <p>回馈：应把修改过的源代码回馈于社区</p>
+      </li>
+      <li>
+        <p>禁止修改授权：禁止将一个 GPL 授权的自由软件，修改后取消 GPL授权</p>
+      </li>
+      <li>
+        <p>禁止单纯销售：禁止单纯销售自由软件，而不搭配售后服务与相关手册。</p>
+
+        <blockquote>
+          <p>自由软件可以销售，但必须搭配售后服务和相关手册。</p>
+        </blockquote>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="自由软件与商业行为">自由软件与商业行为</h4>
+
+<p>很多 Linux 开发商销售 Linux 的售后服务，他们使用的自由软件可以在其网站下载。</p>
+
+<p>GPL 对于自由软件的作者的好处：</p>
+
+<ul>
+  <li>
+    <p>软件安全性好</p>
+  </li>
+  <li>
+    <p>软件使用性能好</p>
+  </li>
+  <li>
+    <p>软件除错时间较短</p>
+  </li>
+  <li>
+    <p>贡献的源代码永远都存在</p>
+  </li>
+</ul>
+
+<h4 id="开放源代码">开放源代码</h4>
+
+<p>1998 年成立开放源代码促进会（开源 Initiative），提出了开源（开放源代码）一词。</p>
+
+<h5 id="开源软件的授权要求">开源软件的授权要求</h5>
+
+<ul>
+  <li>
+    <p>公布源代码且用户有修改权</p>
+  </li>
+  <li>
+    <p>任意再发布：该源代码全部或部份可以被销售，且源代码可成为其他软件的元件之一，作者不该宣称具有拥有权或收取其他额外费用。</p>
+  </li>
+  <li>
+    <p>允许修改衍生作品，且可让再发布的软件使用相似的授权来发表</p>
+  </li>
+  <li>
+    <p>用户可用与原软件不同的名称来发布</p>
+  </li>
+  <li>
+    <p>不可限制个人或团体使用</p>
+  </li>
+  <li>
+    <p>不可限制应用领域</p>
+  </li>
+  <li>
+    <p>源代码可用于多个不同产品</p>
+  </li>
+  <li>
+    <p>不可具有排他条款</p>
+  </li>
+</ul>
+
+<p>根据上面的定义，GPL 自由软件也可以算是开源软件的一个，只是对于商业应用的限止稍微多一些而已。</p>
+
+<h4 id="闭源软件">闭源软件</h4>
+
+<p>凌源的程序仅发布可用的二进制程序。</p>
+
+<p>免费的闭源软件授权模式：</p>
+
+<ul>
+  <li>
+    <p>Freeware： “免费软件”</p>
+  </li>
+  <li>
+    <p>Shareware： 共享软件，使用初期免费，超过试用期必须付费。</p>
+  </li>
+</ul>
+
+<h2 id="22-linux-发展">2.2 Linux 发展</h2>
+
+<h3 id="221-linux-历程">2.2.1 Linux 历程</h3>
+
+<ul>
+  <li>Minix</li>
+</ul>
+
+<p>Linus Torvalds 在购买了最新的 Intel 386 的个人计算机后，安装了 Minix 操作系统，该操作系统随机附送源代码，Torvalds 从源代码学到很多的内核程序设计概念。</p>
+
+<ul>
+  <li>对 386 硬件多任务测试</li>
+</ul>
+
+<p>早期 Intel x86 架构计算机不是很受重视的原因，是因为 x86 的芯片对于多任务的支持不好，CPU 无法顺畅地在不同的工作之间切换。该状况在 386 计算机推出后有很大改善。托瓦兹是个性能癖。为了彻底发挥 386 的性能，他花了不少时间在测试 386 机器上。</p>
+
+<ul>
+  <li>初次发布 Linux 0.02</li>
+</ul>
+
+<p>托瓦兹参考 Minix 的设计理念与书上的程序码，然后仔细研究出 386 个人计算机的性能最优化， 然后使用 GNU 的自由软件将内核程序码与 386 紧紧的结合在一起，最终写出他所需要的内核程序 Linux。为了让更多的软件能够在 Linux 上运行，托瓦兹开始参考标准的 POSIX 规范。</p>
+
+<p>这个正确的决定让 Linux 在起步的时候就比别人优秀，因为 POSIX 标准主要是针对 Unix 与软件运行时标准，Unix 上的软件也遵循该标准，Linux 很容易就与 Unix 共享互有的软件了。</p>
+
+<h3 id="222-linux-的开发">2.2.2 Linux 的开发</h3>
+
+<ul>
+  <li>单人维护阶段</li>
+</ul>
+
+<p>托瓦兹自己一人开发</p>
+
+<ul>
+  <li>众多志愿者加入</li>
+</ul>
+
+<p>志愿者根据 Linux 的设计架构， 写出兼容的驱动程序或软件。托瓦兹将该驱动程序或软件测试成功后，加到内核中。</p>
+
+<p>对于 Linux 内核所欠缺的项目，他保持 “先求有且能跑， 再求进一步改良” 的态度。</p>
+
+<p>Linux 逐渐把某些功能剥离出内核，做为单独的模块，在需要的时候才加载到内核。</p>
+
+<ul>
+  <li>内核功能细分</li>
+</ul>
+
+<p>全球各个角落的人们共同开发出现在的 Linux。</p>
+
+<h3 id="223-linux-内核版本">2.2.3 Linux 内核版本</h3>
+
+<h4 id="早期奇偶数版本号">早期奇偶数版本号</h4>
+
+<p>在 2.6.x 版本以前，托瓦兹将内核的开发方向分为两条，并根据这两条内核的开发分别给予不同的内核编号：</p>
+
+<ul>
+  <li>
+    <p>主、次版本为奇数：开发中版本（development） 如 2.5.xx</p>
+  </li>
+  <li>
+    <p>主、次版本为偶数：稳定版本（stable） 如 2.6.xx</p>
+  </li>
+</ul>
+
+<p>奇数、偶数的编号格式在 3.0 版本之后就放弃了。</p>
+
+<h4 id="新版本号命名">新版本号命名</h4>
+
+<p>在 3.0 以后，版本的格式为 3.A.B，A 是内核的版本，B是安全补丁。4.0 延续 3.A.B 的命名方法。</p>
+
+<h4 id="主线版本长期维护版本">主线版本、长期维护版本</h4>
+
+<p>主线版本：MainLine</p>
+
+<p>长期维护版本：Longterm</p>
+
+<p>从 3.0 版开始，内核主要依据主线版本来开发，开发完毕后会往下一个主线版本进行。如 3.10 是在 3.9 的架构下继续开发出来的新的主线版本。通常新一版的主线版本大约在 2~3 个月会被提出，之所以会有新的主线版本，是因为加入了新功能。</p>
+
+<p>旧的版本在新的主线版本出现之后，会有两种机制来处理，一种机制为结束开发（End of Live, EOL），另外一种机制为保持该版本的持续维护，亦即为长期维护版本，如 3.10 即为一个长期维护版本。</p>
+
+<h3 id="224-linux-发行版">2.2.4 Linux 发行版</h3>
+
+<p>Linux 是一个操作系统最底层的内核及其提供的内核工具，GNU GPL 授权模式，参考 POSIX 设计规范，兼容于 Unix 操作系统。</p>
+
+<h4 id="linux-发行版">Linux 发行版</h4>
+
+<p>Torvalds 开发的 Linux 仅包含内核及其工具。更完整的 “Kernel + Softwares + Tools + 可完整安装程序”，称为 Linux 发行版。</p>
+
+<p>很多商业公司开始销售 Linux 发行版。而由于 Linux 的 GPL 版权宣告，这些 Linux 发行版通常也都可以从网上下载。</p>
+
+<h4 id="各发行版区别">各发行版区别</h4>
+
+<p>发行版使用的内核都是 www.kernel.org 发布的，他们所选择的软件，几乎都是目前很知名的软件，重复性特别高。</p>
+
+<p>此外，软件开发商在开发的时候必须遵循 LSB （Linux Standard Base）、FHS （Filesystem Hierarchy Standard）标准规范。各家的产品其区别在于自家开发出来的管理工具，以及发行版整体管理的模式。</p>
+
+<p>发行版的两大系统：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left"> </th>
+      <th style="text-align: left">RPM 软件管理</th>
+      <th style="text-align: left">DPKG 软件管理</th>
+      <th style="text-align: left">其他未分类</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">商业公司</td>
+      <td style="text-align: left">RHEL （Red Hat ） SuSE （Micro Focus）</td>
+      <td style="text-align: left">Ubuntu （Canonical Ltd.）</td>
+      <td style="text-align: left"> </td>
+    </tr>
+    <tr>
+      <td style="text-align: left">技术社区</td>
+      <td style="text-align: left">Fedora， CentOS， OpenSuSE</td>
+      <td style="text-align: left">Debian， B2D</td>
+      <td style="text-align: left">Gentoo</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>使用者较多： RHEL、Fedora、SuSE、CentOS</p>
+
+<p>更严谨：Debian</p>
+
+<p>高性能：Gentoo</p>
+
+<h2 id="23-linux-应用">2.3 Linux 应用</h2>
+
+<h3 id="231-企业环境">2.3.1 企业环境</h3>
+
+<h4 id="网络服务器">网络服务器</h4>
+
+<p>Linux网络功能特别的稳定与强大，开发了很多优秀的软件，服务器软件几乎都是自由软件。</p>
+
+<h4 id="关键任务的应用">关键任务的应用</h4>
+
+<p>金融业与大型企业都已经使用 Linux 做为他们的关键任务应用。</p>
+
+<h4 id="学术机构的高性能运算任务">学术机构的高性能运算任务</h4>
+
+<p>Linux 有强大的运算能力，并且 Linux 具有支持度相当广泛的 GCC 编译软件， 因此 Linux 在这方面的优势可是相当明显的！</p>
+
+<h3 id="232-个人环境">2.3.2 个人环境</h3>
+
+<h4 id="桌面电脑">桌面电脑：</h4>
+
+<ul>
+  <li>
+    <p>上网浏览 + 实时通讯</p>
+  </li>
+  <li>
+    <p>文本处理</p>
+  </li>
+  <li>
+    <p>在线办公系统</p>
+  </li>
+  <li>
+    <p>Office</p>
+  </li>
+  <li>
+    <p>电子邮件</p>
+  </li>
+</ul>
+
+<p>图形化软件 X Window System 仅只是 Linux 中的一套软件，不属于内核。</p>
+
+<h4 id="移动系统pda手机">移动系统（PDA、手机）：</h4>
+
+<p>Android 是 Linux 内核的一个分支，针对手机、平板这类的 ARM 机器设计。</p>
+
+<h4 id="嵌入式系统">嵌入式系统：</h4>
+
+<p>家电产品、PDA、手机、数码相机以及其他微型的计算机配备，其操作系统是直接嵌入于产品当中的，所以就称为嵌入式系统。</p>
+
+<p>包括路由器、防火墙、手机、IP共享器、交换器、机器人控制芯片、家电用品的微计算机控制器等等，都可以是 Linux 操作系统。</p>
+
+<h3 id="233-云端运用">2.3.3 云端运用</h3>
+
+<p>个人计算机的 CPU 内置的核心数越来越多，导致硬件资源经常闲置，虚拟化技术得以快速发展。</p>
+
+<h4 id="云程序">云程序</h4>
+
+<p>许多公司都有将资源集中管理的打算，公司可以选择建立自己内部的私有云，或使用公有云。</p>
+
+<h4 id="终端设备">终端设备</h4>
+
+<p>运算资源都集中在云里面，连网到云程序的设备越来越轻量化，如智能手机、平板、树莓派、香蕉派等。</p>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/linux" class="page__taxonomy-item" rel="tag">linux</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#linux" class="page__taxonomy-item" rel="tag">linux</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2015-01-02T00:00:00+08:00">January 02, 2015</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">分享</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=liloli&text=Linux+%E5%9F%BA%E7%A1%80+-+2.+Linux+%E7%AE%80%E4%BB%8B%20http%3A%2F%2Flocalhost%3A4000%2Flinux%2Flinux.intro%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Flinux%2Flinux.intro%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Flinux%2Flinux.intro%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Flinux%2Flinux.intro%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/linux/linux.computer/" class="pagination--pager" title="Linux 基础 - 1. 计算机基础
+">向前</a>
+    
+    
+      <a href="http://localhost:4000/linux/linux.storage/" class="pagination--pager" title="Linux 基础 - 3. 存储
+">向后</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">猜您还喜欢</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/time/" rel="permalink">Bash 脚本 - 时间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/storage/" rel="permalink">Bash 脚本 - 存储空间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/numbers/" rel="permalink">Bash 脚本 - 数字
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/input/" rel="permalink">Bash 脚本 - 输入
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+      <li><a href="https://twitter.com/liloli"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+      <li><a href="https://www.facebook.com/lilolibj"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+    
+    
+      <li><a href="https://github.com/liloli"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+  
+  
+  <script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/linux/linux.intro/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/linux/linux.intro"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://liloli.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+  </body>
+</html>

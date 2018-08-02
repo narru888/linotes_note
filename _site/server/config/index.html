@@ -1,0 +1,1094 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Apache 的配置 - LINOTES</title>
+<meta name="description" content="配置文件的语法，配置指令的作用域">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Apache 的配置">
+<meta property="og:url" content="http://localhost:4000/server/config/">
+
+
+  <meta property="og:description" content="配置文件的语法，配置指令的作用域">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/header/network.service.jpg">
+
+
+
+  <meta name="twitter:site" content="@liloli">
+  <meta name="twitter:title" content="Apache 的配置">
+  <meta name="twitter:description" content="配置文件的语法，配置指令的作用域">
+  <meta name="twitter:url" content="http://localhost:4000/server/config/">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="http://localhost:4000/assets/images/header/network.service.jpg">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2016-01-02T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/server/config/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "Hawk Zhang",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- <link rel="stylesheet" href="/assets/css/vim.css"> -->
+
+
+
+  
+
+
+
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('http://localhost:4000/assets/images/header/network.service.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Apache 的配置
+
+        
+      </h1>
+      
+        <p class="page__lead">配置文件的语法，配置指令的作用域
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:liloli@gmail.com">
+            <meta itemprop="email" content="liloli@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Apache 的配置">
+    <meta itemprop="description" content="配置文件的语法，配置指令的作用域">
+    <meta itemprop="datePublished" content="January 02, 2016">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-code"></i> Apache 的配置</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#主配置文件">主配置文件</a></li>
+  <li><a href="#配置文件语法">配置文件语法</a></li>
+  <li><a href="#模块">模块</a></li>
+  <li><a href="#指令的作用域">指令的作用域</a></li>
+  <li><a href="#htaccess-文件">.htaccess 文件</a></li>
+</ul>
+            </nav>
+          </aside>
+        
+        <p>Apache，是非常流行的网页服务器软件。通常和脚本语言比如 PHP，数据库 MySQL 一起工作，合称为 LAMP。本文主要参考 apache <a href="https://httpd.apache.org/docs/2.4/configuring.html">官方文档</a>。</p>
+
+<p>用默认配置可以启动一个简单的服务，有用户访问时会提供目录 <code class="highlighter-rouge">/srv/http</code> 下的内容。</p>
+
+<p>启动 httpd.service systemd 服务，Apache 就会启动，从浏览器中访问 http://localhost/ 会显示一个简单的索引页面。</p>
+
+<p>Apache 本身的架构是 <code class="highlighter-rouge">一个核心</code> ＋ <code class="highlighter-rouge">外围的模块</code>，它的配置也遵循这个结构。</p>
+
+<h3 id="主配置文件">主配置文件</h3>
+
+<p>Apache 配置文件位于 <code class="highlighter-rouge">/etc/httpd/conf</code> 目录，主配置文件是 <code class="highlighter-rouge">/etc/httpd/conf/httpd.conf</code>, 此文件可以通过 <code class="highlighter-rouge">Include</code> 指令来引用其它配置文件，可以用通配符引用多个配置文件。这些配置文件中可以使用任何指令。对于主配置文件的修改，只有启动或重启 httpd 之后才会生效。</p>
+
+<p>服务器还会读取一个包含 mine 文档类型的文件，文件名由 <code class="highlighter-rouge">TypesConfig</code> 指令指定，默认为 <code class="highlighter-rouge">mime.type</code>。</p>
+
+<h3 id="配置文件语法">配置文件语法</h3>
+
+<p>httpd 配置文件每行包含一条指令，如果太长可以在行尾使用 <code class="highlighter-rouge">\</code> 来续接下一行。</p>
+
+<p>指令的参数与指令之间用空白字符分隔，如果参数包含空格，必须用括号引用。</p>
+
+<p>指令前的空格会被忽略，所以如果需要，可以用缩进让配置更有条理。</p>
+
+<p>无论是由 <code class="highlighter-rouge">Define</code> 语句定义的变量，还是 shell 的环境变量，都可以在配置文件中使用，语法为 <code class="highlighter-rouge">${VAR}</code>。如果变量名正确，变量值会在原位被替换。在查找变量名时，由 <code class="highlighter-rouge">Define</code> 定义的变量比环境变量更有优先级。</p>
+
+<p>只有在服务器启动前定义的环境变量才会被扩展。在配置文件中定义的环境变量，生效太晚，无法用来扩展。</p>
+
+<p>可以用 <code class="highlighter-rouge">apachectl configtest</code> 或 <code class="highlighter-rouge">-t</code> 选项来检查配置文件是否存在问题。</p>
+
+<h3 id="模块">模块</h3>
+
+<p class="notice--info">httpd 是模块化的服务器，这意味着核心服务器只有最基本的功能，其它功能都由扩展的模块来完成。</p>
+
+<p>服务器编译时，默认会收纳一部分模块，如果服务器编译为使用动态加载模块，则这些模块可以单独编译，然后在运行时使用 <code class="highlighter-rouge">LoadModule</code> 指令加载。否则，如果添加或删除模块，就要重新编译 httpd。</p>
+
+<p>可以用 <code class="highlighter-rouge">&lt;IfModule&gt;</code> 条件结构来检查某些模块是否存在，配置指令可以基于这样的条件来加载。然而，有时修改这些条件结构会让人忽视某个重要模块没有被加载的事实。</p>
+
+<p>要想查看当前有哪些模块被编译到了服务器中，可以使用 <code class="highlighter-rouge">-l</code> 选项。还可以用 <code class="highlighter-rouge">-M</code> 选项查看动态加载了哪些模块。</p>
+
+<h3 id="指令的作用域">指令的作用域</h3>
+
+<p>放在主配置文件中的指令作用于整个服务器。如果希望修改作用域，让指令更有针对性，可以将其置于 <code class="highlighter-rouge">&lt;Directory&gt;</code>、<code class="highlighter-rouge">&lt;DirectoryMatch&gt;</code>、<code class="highlighter-rouge">&lt;Files&gt;</code>、<code class="highlighter-rouge">&lt;FilesMatch&gt;</code>、<code class="highlighter-rouge">&lt;Location&gt;</code>、<code class="highlighter-rouge">&lt;LocationMatch&gt;</code> 段落中。这些段落将指令作用的范围限制于特定的文件系统路径或网址，可以嵌套，以实现更加 <strong>细化</strong> 的控制。</p>
+
+<p>httpd 支持同时提供多个不同的网站，称之为 <strong>虚拟主机</strong>。对应的段落为 <code class="highlighter-rouge">&lt;VirtualHost&gt;</code>。</p>
+
+<p class="notice">本文中把这样的 block 称为 <strong>段落</strong> 或 <strong>容器</strong>。</p>
+
+<h4 id="段落容器的类型">段落容器的类型</h4>
+
+<p>主要有两类基本的容器，多数的容器会被每个请求解析。容器中的指令只作用于那些匹配该容器的请求。</p>
+
+<p>然而，<code class="highlighter-rouge">&lt;ifDefine&gt;</code>、<code class="highlighter-rouge">&lt;IfModule&gt;</code>、<code class="highlighter-rouge">&lt;IfVersion&gt;</code> 这些容器只有在服务器启动和重启时才会解析。解析时，如果当时条件为真，则其中的指令会作用于 <strong>所有请求</strong>，否则会忽略。</p>
+
+<p>这些容器可以 <strong>嵌套</strong>，在条件中加上 <strong><code class="highlighter-rouge">!</code></strong> 来表示相反的条件。</p>
+
+<h5 id="ifdefine"><code class="highlighter-rouge">&lt;IfDefine&gt;</code></h5>
+
+<p><code class="highlighter-rouge">&lt;IfDefine&gt;</code> 容器中的指令，只有在使用了适当的 httpd 命令行选项时才会生效。例如，如果使用以下的配置，只有在服务器使用 <code class="highlighter-rouge">httpd -DClosedForNow</code> 启动时，所有的请求才会被重定向到另一个网站：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;<span class="n">IfDefine</span> <span class="n">ClosedForNow</span>&gt;
+    <span class="n">Redirect</span> <span class="s2">"/"</span> <span class="s2">"http://otherserver.example.com/"</span>
+&lt;/<span class="n">IfDefine</span>&gt;
+</code></pre></div></div>
+
+<h5 id="ifmodule"><code class="highlighter-rouge">&lt;IfModule&gt;</code></h5>
+
+<p><code class="highlighter-rouge">&lt;IfModule&gt;</code> 容器与之很相似，只不过其条件是特定的模块当前在服务器中可用。该模块要么是静态编译在服务器中；要么是动态编译的，而且其 <code class="highlighter-rouge">LoadModule</code> 加载的指令在配置文件中必须等于当前容器。只有在该模块的存在对配置有影响时才需要使用这个容器，如果希望其中的指令始终要执行，就不能使用该容器，因为它会抑制关于模块缺失的有用的错误消息。</p>
+
+<p>下面这个范例中，只有在 <code class="highlighter-rouge">mod_mime_magic</code> 模块可用时，才会应用 <code class="highlighter-rouge">MimeMagicFile</code> 指令。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;<span class="n">IfModule</span> <span class="n">mod_mime_magic</span>.<span class="n">c</span>&gt;
+    <span class="n">MimeMagicFile</span> <span class="s2">"conf/magic"</span>
+&lt;/<span class="n">IfModule</span>&gt;
+</code></pre></div></div>
+
+<h5 id="ifversion"><code class="highlighter-rouge">&lt;IfVersion&gt;</code></h5>
+
+<p>只有特定版本的服务器在运行，才会执行该容器中的指令。该容器主要用于测试，以及在大型网络中要同时处理不同版本、不同配置的 httpd 的情况。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;<span class="n">IfVersion</span> &gt;= <span class="m">2</span>.<span class="m">4</span>&gt;
+    <span class="c"># this happens only in versions greater or
+</span>    <span class="c"># equal 2.4.0.
+</span>&lt;/<span class="n">IfVersion</span>&gt;
+</code></pre></div></div>
+
+<h4 id="文件系统网页空间布尔表达式">文件系统、网页空间、布尔表达式</h4>
+
+<p>最常使用的配置段落容器是那些用来修改文件系统或网页空间特定位置的。</p>
+
+<p>文件系统：是从操作系统的角度来看磁盘。</p>
+
+<p>网页空间：是从客户端的角度来看网站。</p>
+
+<p>因此，默认安装后，网页空间中的路径 <code class="highlighter-rouge">/dir/</code> 对应的是文件系统中的 <code class="highlighter-rouge">/usr/local/apache2/htdocs/dir</code>。网页空间无需直接映射到文件系统，因为有时候网页是由数据库动态生成的，或来自其它路径。</p>
+
+<h5 id="文件系统容器">文件系统容器</h5>
+
+<p><code class="highlighter-rouge">&lt;Directory&gt;</code>、<code class="highlighter-rouge">&lt;DirectoryMatch&gt;</code>、<code class="highlighter-rouge">&lt;Files&gt;</code>、<code class="highlighter-rouge">&lt;FilesMatch&gt;</code> 这些容器中的指令对文件系统的局部产生作用。</p>
+
+<h6 id="directory"><code class="highlighter-rouge">&lt;Directory&gt;</code></h6>
+
+<p><code class="highlighter-rouge">&lt;Directory&gt;</code> 中的指令应用于指定名称的目录及其所有子目录、所有文件。用 <code class="highlighter-rouge">.htaccess</code> 文件也能取得同样的效果。</p>
+
+<p>以下范例中，会针对 <code class="highlighter-rouge">/var/web/dir1</code> 目录启用目录索引。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;<span class="n">Directory</span> <span class="s2">"/var/web/dir1"</span>&gt;
+    <span class="n">Options</span> +<span class="n">Indexes</span>
+&lt;/<span class="n">Directory</span>&gt;
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">&lt;DirectoryMatch&gt;</code> 与此类似，只不过不是直接指定目录名，而是用正则表达式来指定。</p>
+
+<h6 id="files"><code class="highlighter-rouge">&lt;Files&gt;</code></h6>
+
+<p><code class="highlighter-rouge">&lt;Files&gt;</code> 中的指令作用于指定名称的文件，不管其位于什么目录中。</p>
+
+<p>以下范例中，无论哪个目录中的 <code class="highlighter-rouge">private.html</code> 都禁止访问：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;<span class="n">Files</span> <span class="s2">"private.html"</span>&gt;
+    <span class="n">Require</span> <span class="n">all</span> <span class="n">denied</span>
+&lt;/<span class="n">Files</span>&gt;
+</code></pre></div></div>
+
+<h6 id="directory-与-files-捆绑使用"><code class="highlighter-rouge">&lt;Directory&gt;</code> 与 <code class="highlighter-rouge">&lt;Files&gt;</code> 捆绑使用</h6>
+
+<p>要想专门指定特定的文件，可以把两个容器组合使用。</p>
+
+<p>以下范例中，<code class="highlighter-rouge">/var/web/dir1</code> 目录中，以及其所有子目录中的 <code class="highlighter-rouge">private.html</code> 文件均会被禁止访问。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;<span class="n">Directory</span> <span class="s2">"/var/web/dir1"</span>&gt;
+    &lt;<span class="n">Files</span> <span class="s2">"private.html"</span>&gt;
+        <span class="n">Require</span> <span class="n">all</span> <span class="n">denied</span>
+    &lt;/<span class="n">Files</span>&gt;
+&lt;/<span class="n">Directory</span>&gt;
+</code></pre></div></div>
+
+<h5 id="网页空间容器">网页空间容器</h5>
+
+<p><code class="highlighter-rouge">&lt;Location&gt;</code>、<code class="highlighter-rouge">&lt;LocationMatch&gt;</code> 指令用于修改网页空间内容的配置。</p>
+
+<p>以下范例中，禁止访问所有以 <code class="highlighter-rouge">/private</code> 开头的网址：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;<span class="n">LocationMatch</span> <span class="s2">"^/private"</span>&gt;
+    <span class="n">Require</span> <span class="n">all</span> <span class="n">denied</span>
+&lt;/<span class="n">LocationMatch</span>&gt;
+</code></pre></div></div>
+
+<p>因此，这些网址均会被禁止访问：</p>
+
+<p>http://yoursite.example.com/private</p>
+
+<p>http://yoursite.example.com/private123</p>
+
+<p>http://yoursite.example.com/private/dir/file.html</p>
+
+<p><code class="highlighter-rouge">&lt;Location&gt;</code> 容器不一定非要与文件系统有关系。</p>
+
+<p>以下范例中，是把特定的网址映射到由 <code class="highlighter-rouge">mod_status</code> 提供的服务器内部的处理器，与文件系统无关。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;<span class="n">Location</span> <span class="s2">"/server-status"</span>&gt;
+    <span class="n">SetHandler</span> <span class="n">server</span>-<span class="n">status</span>
+&lt;/<span class="n">Location</span>&gt;
+</code></pre></div></div>
+
+<h5 id="重叠的网页空间">重叠的网页空间</h5>
+
+<p>要想处理两个有重叠部分的网页空间，必须安排好它们的先后顺序。</p>
+
+<p>对于 <code class="highlighter-rouge">&lt;Location&gt;</code> 应该短地址在先：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;<span class="n">Location</span> <span class="s2">"/foo"</span>&gt;
+&lt;/<span class="n">Location</span>&gt;
+&lt;<span class="n">Location</span> <span class="s2">"/foo/bar"</span>&gt;
+&lt;/<span class="n">Location</span>&gt;
+</code></pre></div></div>
+
+<p>对于 <code class="highlighter-rouge">&lt;Alias&gt;</code> 应该长地址在先：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Alias</span> <span class="s2">"/foo/bar"</span> <span class="s2">"/srv/www/uncommon/bar"</span>
+<span class="n">Alias</span> <span class="s2">"/foo"</span> <span class="s2">"/srv/www/common/foo"</span>
+</code></pre></div></div>
+
+<p>对于 <code class="highlighter-rouge">ProxyPass</code> 指令也是长地址在先：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ProxyPass</span> <span class="s2">"/special-area"</span> <span class="s2">"http://special.example.com"</span> <span class="n">smax</span>=<span class="m">5</span> <span class="n">max</span>=<span class="m">10</span>
+<span class="n">ProxyPass</span> <span class="s2">"/"</span> <span class="s2">"balancer://mycluster/"</span> <span class="n">stickysession</span>=<span class="n">JSESSIONID</span>|<span class="n">jsessionid</span> <span class="n">nofailover</span>=<span class="n">On</span>
+</code></pre></div></div>
+
+<h5 id="通配符及正则表达式">通配符及正则表达式</h5>
+
+<p><code class="highlighter-rouge">&lt;Directory&gt;</code>、<code class="highlighter-rouge">&lt;Files&gt;</code>、<code class="highlighter-rouge">&lt;Location&gt;</code> 这些指令都可以使用 shell 风格的通配符：</p>
+
+<p><code class="highlighter-rouge">*</code> 匹配任意序列的字符</p>
+
+<p><code class="highlighter-rouge">?</code> 匹配任意单个字符</p>
+
+<p><code class="highlighter-rouge">[seq]</code> 匹配 seq 中任意一个字符</p>
+
+<p><code class="highlighter-rouge">/</code> 不会被任何通配符匹配，必须显式指定</p>
+
+<p>如果需要更加复杂的匹配，则使用 <code class="highlighter-rouge">&lt;DirectoryMatch&gt;</code>、<code class="highlighter-rouge">&lt;FilesMatch&gt;</code>、<code class="highlighter-rouge">&lt;LocationMatch&gt;</code>，它们可以使用兼容 PERL 的正则表达式进行匹配。</p>
+
+<h6 id="范例">范例</h6>
+
+<p>想要修改所有用户目录的配置，在不用正则表达式的 <code class="highlighter-rouge">&lt;Directory&gt;</code> 中是这样：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;<span class="n">Directory</span> <span class="s2">"/home/*/public_html"</span>&gt;
+    <span class="n">Options</span> <span class="n">Indexes</span>
+&lt;/<span class="n">Directory</span>&gt;
+</code></pre></div></div>
+
+<p>而在使用正则表达式的 <code class="highlighter-rouge">&lt;FilesMatch&gt;</code> 中，可以同时指定多种图片文件的类型：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;<span class="n">FilesMatch</span> <span class="s2">"\.(?i:gif|jpe?g|png)$"</span>&gt;
+    <span class="n">Require</span> <span class="n">all</span> <span class="n">denied</span>
+&lt;/<span class="n">FilesMatch</span>&gt;
+</code></pre></div></div>
+
+<p>可以把包含指定组名和反向引用的表达式添加到环境变量中，用大写字母表示。这样一来，就可以在表达式或 <code class="highlighter-rouge">mod_rewrite</code> 这样的模块中引用文件名路径和网址中的元素。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;<span class="n">DirectoryMatch</span> <span class="s2">"^/var/www/combined/(?&lt;SITENAME&gt;[^/]+)"</span>&gt;
+    <span class="n">require</span> <span class="n">ldap</span>-<span class="n">group</span> <span class="s2">"cn=%{env:MATCH_SITENAME},ou=combined,o=Example"</span>
+&lt;/<span class="n">DirectoryMatch</span>&gt;
+</code></pre></div></div>
+
+<h5 id="布尔表达式">布尔表达式</h5>
+
+<p><code class="highlighter-rouge">&lt;If&gt;</code> 指令会根据条件来修改配置，其条件可以用布尔表达式来表示。</p>
+
+<p>以下范例中，如果 HTTP 的 Referer 标头不是以 <code class="highlighter-rouge">http://www.example.com/</code> 开头的，则拒绝访问。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;<span class="n">If</span> <span class="s2">"!(%{HTTP_REFERER} -strmatch 'http://www.example.com/*')"</span>&gt;
+    <span class="n">Require</span> <span class="n">all</span> <span class="n">denied</span>
+&lt;/<span class="n">If</span>&gt;
+</code></pre></div></div>
+
+<h5 id="如何选择">如何选择</h5>
+
+<p>在文件系统容器和网页空间容器之间做选择其实是很简单的：</p>
+
+<ul>
+  <li>如果指令要作用的对象在文件系统一侧，则使用文件系统容器</li>
+  <li>如果指令要作用的对象不在文件系统一侧，则使用网页空间容器，如数据库生成的网页</li>
+</ul>
+
+<p>有一点很重要：绝对不要用 <code class="highlighter-rouge">&lt;Location&gt;</code> 来限制对文件系统对象的访问。因为可能有许多不同的网页空间其网址是映射到同一个文件系统的路径的，这个 Location 被限制，可以通过其它 Location 来访问，而它们映射的可能是同一个目录，这就导致限制被规避。</p>
+
+<p>例如：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;<span class="n">Location</span> <span class="s2">"/dir/"</span>&gt;
+    <span class="n">Require</span> <span class="n">all</span> <span class="n">denied</span>
+&lt;/<span class="n">Location</span>&gt;
+</code></pre></div></div>
+
+<p>如果请求对象是 <code class="highlighter-rouge">http://yoursite.example.com/dir/</code>，该配置会正常工作。但假如当前系统是大小写不敏感的，用户就可以使用 <code class="highlighter-rouge">http://yoursite.example.com/DIR/</code> 来规避限制了。</p>
+
+<p>相比之下，<code class="highlighter-rouge">&lt;Directory&gt;</code> 指令则从文件系统一侧加以限制，无论它被映射为什么网址，其限制都有效。但是，因为 <code class="highlighter-rouge">&lt;Directory&gt;</code> 中的符号链接不会被解析为真实地址，所以也有一定的风险。因此应该用适当的 <code class="highlighter-rouge">Options</code> 指令来禁用符号链接。</p>
+
+<p class="notice--success">因此，在可能的情况下应该尽量使用 <strong>文件系统容器</strong>，以避免多重映射带来的危险。</p>
+
+<p>当然，对于使用 <code class="highlighter-rouge">&lt;Location "/"&gt;</code> 来做限制就可以完全放心了，因为它会作用于所有请求，不管网址是什么。</p>
+
+<h5 id="容器的嵌套">容器的嵌套</h5>
+
+<p>有些容器类型可以嵌套于别的容器。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">&lt;Files&gt;</code> 可以嵌套在 <code class="highlighter-rouge">&lt;Directory&gt;</code> 中</li>
+  <li><code class="highlighter-rouge">&lt;If&gt;</code> 可以嵌套在 <code class="highlighter-rouge">&lt;Directory&gt;</code>、<code class="highlighter-rouge">&lt;Location&gt;</code>、<code class="highlighter-rouge">&lt;Files&gt;</code> 中</li>
+  <li><code class="highlighter-rouge">&lt;If&gt;</code> 不可以嵌套于另一个 <code class="highlighter-rouge">&lt;If&gt;</code></li>
+</ul>
+
+<p class="notice">嵌套的容器会在同类型的非嵌套容器之后合并。</p>
+
+<h4 id="虚拟主机">虚拟主机</h4>
+
+<p><code class="highlighter-rouge">&lt;VirtualHost&gt;</code> 容器中的指令作用于特定的主机。在同一系统提供多个虚拟主机时可以分别配置各主机。</p>
+
+<h4 id="代理">代理</h4>
+
+<p><code class="highlighter-rouge">&lt;Proxy&gt;</code> 和 <code class="highlighter-rouge">&lt;ProxyMatch&gt;</code> 容器用于正向代理，匹配的网址会通过 <code class="highlighter-rouge">mod_proxy</code> 代理服务器来访问。</p>
+
+<p>以下范例中，只允许 yournetwork.example.com 这个域中的 host 通过代理访问 www.example.com 网站。通常代表局域网中的用户通过代理访问互联网。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;<span class="n">Proxy</span> <span class="s2">"http://www.example.com/*"</span>&gt;
+    <span class="n">Require</span> <span class="n">host</span> <span class="n">yournetwork</span>.<span class="n">example</span>.<span class="n">com</span>
+&lt;/<span class="n">Proxy</span>&gt;
+</code></pre></div></div>
+
+<h4 id="容器中允许使用的指令">容器中允许使用的指令</h4>
+
+<p><code class="highlighter-rouge">&lt;Directory&gt;</code> 段落中可以使用的指令也可以在 <code class="highlighter-rouge">&lt;DirectoryMatch&gt;</code>、<code class="highlighter-rouge">&lt;Files&gt;</code>、<code class="highlighter-rouge">&lt;FilesMatch&gt;</code>、<code class="highlighter-rouge">&lt;Location&gt;</code>、<code class="highlighter-rouge">&lt;LocationMatch&gt;</code>、<code class="highlighter-rouge">&lt;Proxy&gt;</code>、<code class="highlighter-rouge">&lt;ProxyMatch&gt;</code> 中使用。</p>
+
+<p>还有一些例外的情况：</p>
+
+<ul>
+  <li><code class="highlighter-rouge">AllowOverride</code> 指令只能用于 <code class="highlighter-rouge">&lt;Directory&gt;</code></li>
+  <li><code class="highlighter-rouge">FollowSymLinks</code> 和 <code class="highlighter-rouge">SymLinksIfOwnerMatch</code> 这两个 <code class="highlighter-rouge">Options</code> 只能用于 <code class="highlighter-rouge">&lt;Directory&gt;</code> 或 <code class="highlighter-rouge">.htaccess</code> 文件</li>
+  <li><code class="highlighter-rouge">Options</code> 指令不能用于 <code class="highlighter-rouge">&lt;Files&gt;</code> 和 <code class="highlighter-rouge">&lt;FilesMatch&gt;</code></li>
+</ul>
+
+<h4 id="各段落是如何合并的">各段落是如何合并的</h4>
+
+<p>各个配置段落是以特定 <strong>顺序</strong> 应用的，这对配置指令的解析有重要的影响。</p>
+
+<p>合并的顺序：</p>
+
+<ol>
+  <li><code class="highlighter-rouge">&lt;Directory&gt;</code> 和 <code class="highlighter-rouge">.htaccess</code> 同时解析。不包括 <code class="highlighter-rouge">&lt;DirectoryMatch&gt;</code>。如果允许，<code class="highlighter-rouge">.htaccess</code> 可以覆盖 <code class="highlighter-rouge">&lt;Directory&gt;</code></li>
+  <li><code class="highlighter-rouge">&lt;DirectoryMatch&gt;</code> 和 <code class="highlighter-rouge">&lt;Directory "~"&gt;</code></li>
+  <li><code class="highlighter-rouge">&lt;Files&gt;</code> 和 <code class="highlighter-rouge">&lt;FilesMatch&gt;</code></li>
+  <li><code class="highlighter-rouge">&lt;Location&gt;</code> 和 <code class="highlighter-rouge">&lt;LocationMatch&gt;</code></li>
+  <li><code class="highlighter-rouge">&lt;If&gt;</code></li>
+</ol>
+
+<h5 id="重要提示">重要提示</h5>
+
+<p>以上每一条，我们这里暂且称为一个指令组。</p>
+
+<ul>
+  <li>除了 <code class="highlighter-rouge">&lt;Directory&gt;</code>， 每个指令组中的段落按其在配置文件中出现的先后次序来处理。</li>
+  <li><code class="highlighter-rouge">&lt;Directory&gt;</code>，即上面的指令组 1 中，先处理最短的目录，再处理长的目录。</li>
+  <li>如果有多个 <code class="highlighter-rouge">&lt;Directory&gt;</code> 段落应用到同一个目录，则按其在配置文件中出现的顺序处理。</li>
+  <li>由 <code class="highlighter-rouge">Include</code> 指令引用进来的配置，会被看作它们本就处在 <code class="highlighter-rouge">Include</code> 指令中。</li>
+  <li>如果某个指令同时在主配置中和 <code class="highlighter-rouge">&lt;VirtualHost&gt;</code> 中存在，<code class="highlighter-rouge">&lt;VirtualHost&gt;</code> 中的会覆盖主配置中的。</li>
+  <li>如果请求是由 <code class="highlighter-rouge">mod_proxy</code> 处理的，在处理次序上 <code class="highlighter-rouge">&lt;Proxy&gt;</code> 会代替 <code class="highlighter-rouge">&lt;Directory&gt;</code> 第一个处理。</li>
+</ul>
+
+<h5 id="各模块与配置段落的关系">各模块与配置段落的关系</h5>
+
+<p>像 <code class="highlighter-rouge">mod_rewrite</code> 这样的模块，其指令是如何、什么时候被处理的呢？</p>
+
+<p>每个 httpd 的模块都会管理其自身的配置，<code class="highlighter-rouge">httpd.conf</code> 配置文件中的每个模块的指令都指定特定上下文中的配置。</p>
+
+<p>在 <strong>运行时</strong> 中，httpd 的内核会对所有的配置段落进行迭代，就按照上面所说的顺序，来决定哪些用来处理当前的请求。如果匹配了第一个段落，则把这个配置用于该请求；如果也匹配随后的段落，则前后两个段落中的模块及指令就有机会合并到一起，这样就得到了一个 <strong>合并之后的配置</strong>。然后会继续解析其他的段落，直到所有段落解析完毕。</p>
+
+<p>在以上的步骤之后，真正针对 HTTP 请求的处理开始了：</p>
+
+<p>每个模块都有机会运行，完成各种任务。它们随时可以 <strong>从 httpd 内核中获取其合并后的配置</strong>，据此来决定该如何操作。</p>
+
+<h6 id="范例-1">范例</h6>
+
+<p>本例中的配置使用 <code class="highlighter-rouge">mod_header</code> 模块中的 <code class="highlighter-rouge">Header</code> 指令来指定 HTTP 标头。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;<span class="n">Directory</span> <span class="s2">"/"</span>&gt;
+    <span class="n">Header</span> <span class="n">set</span> <span class="n">CustomHeaderName</span> <span class="n">one</span>
+    &lt;<span class="n">FilesMatch</span> <span class="s2">".*"</span>&gt;
+        <span class="n">Header</span> <span class="n">set</span> <span class="n">CustomHeaderName</span> <span class="n">three</span>
+    &lt;/<span class="n">FilesMatch</span>&gt;
+&lt;/<span class="n">Directory</span>&gt;
+
+&lt;<span class="n">Directory</span> <span class="s2">"/example"</span>&gt;
+    <span class="n">Header</span> <span class="n">set</span> <span class="n">CustomHeaderName</span> <span class="n">two</span>
+&lt;/<span class="n">Directory</span>&gt;
+</code></pre></div></div>
+
+<p>根据以上配置，针对指向 <code class="highlighter-rouge">/example/index.html</code> 的请求，httpd 应该在 <code class="highlighter-rouge">CustomHeaderName</code> 标头中设置什么值呢？</p>
+
+<ul>
+  <li>在第一个 <code class="highlighter-rouge">&lt;Directory&gt;</code> 段落中，匹配目录 <code class="highlighter-rouge">/</code> ，所以此时为 <code class="highlighter-rouge">CustomHeaderName</code> 标头配置的值为 one</li>
+  <li>在第二个 <code class="highlighter-rouge">&lt;Directory&gt;</code> 段落中，匹配目录 <code class="highlighter-rouge">/example</code>，因为模块 <code class="highlighter-rouge">mod_headers</code> 在其代码中被设定为合并时允许覆盖，所以一产生新的配置，为 <code class="highlighter-rouge">CustomHeaderName</code> 标头分配新值 two</li>
+  <li>在 <code class="highlighter-rouge">&lt;FilesMatch&gt;</code> 段落中，匹配 <code class="highlighter-rouge">.*</code>，于是另一个合并的机会产生了，导致 <code class="highlighter-rouge">CustomHeaderName</code> 标头再一次分配新值 three</li>
+  <li>最后，在随后对 HTTP 请求进行处理时，<code class="highlighter-rouge">mod_headers</code> 被调用，它会收到该配置，为 <code class="highlighter-rouge">CustomHeaderName</code> 标头分配值 three。<code class="highlighter-rouge">mod_headers</code> 通常使用该配置完成其工作，即配置标头。</li>
+</ul>
+
+<p>因为 <code class="highlighter-rouge">.htaccess</code> 与 <code class="highlighter-rouge">&lt;Directory&gt;</code> 有相同的优先级，所以对于它也是如此。</p>
+
+<p>有一个重要的概念要理解：像 <code class="highlighter-rouge">&lt;Directory&gt;</code> 和 <code class="highlighter-rouge">&lt;FilesMatch&gt;</code> 这样的配置段落不能拿来与特定模块指令相比较，如 <code class="highlighter-rouge">Header</code> 或 <code class="highlighter-rouge">RewriteRule</code>，因为它们是在不同的级别操作的。</p>
+
+<h5 id="非常有用的范例">非常有用的范例</h5>
+
+<p>以下范例是为了展示合并的顺序。假设它们都适用于当前的请求，范例中的指令会按 A &gt; B &gt; C &gt; D &gt; E 的顺序应用。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;<span class="n">Location</span> <span class="s2">"/"</span>&gt;
+    <span class="n">E</span>
+&lt;/<span class="n">Location</span>&gt;
+
+&lt;<span class="n">Files</span> <span class="s2">"f.html"</span>&gt;
+    <span class="n">D</span>
+&lt;/<span class="n">Files</span>&gt;
+
+&lt;<span class="n">VirtualHost</span> *&gt;
+    &lt;<span class="n">Directory</span> <span class="s2">"/a/b"</span>&gt;
+        <span class="n">B</span>
+    &lt;/<span class="n">Directory</span>&gt;
+&lt;/<span class="n">VirtualHost</span>&gt;
+
+&lt;<span class="n">DirectoryMatch</span> <span class="s2">"^.*b$"</span>&gt;
+    <span class="n">C</span>
+&lt;/<span class="n">DirectoryMatch</span>&gt;
+
+&lt;<span class="n">Directory</span> <span class="s2">"/a/b"</span>&gt;
+    <span class="n">A</span>
+&lt;/<span class="n">Directory</span>&gt;
+</code></pre></div></div>
+
+<p>再来一个实际的范例：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;<span class="n">Location</span> <span class="s2">"/"</span>&gt;
+    <span class="n">Require</span> <span class="n">all</span> <span class="n">granted</span>
+&lt;/<span class="n">Location</span>&gt;
+
+<span class="c"># 这个 &lt;Directory&gt; 段落根本不会生效
+</span>&lt;<span class="n">Directory</span> <span class="s2">"/"</span>&gt;
+    &lt;<span class="n">RequireAll</span>&gt;
+        <span class="n">Require</span> <span class="n">all</span> <span class="n">granted</span>
+        <span class="n">Require</span> <span class="n">not</span> <span class="n">host</span> <span class="n">badguy</span>.<span class="n">example</span>.<span class="n">com</span>
+    &lt;/<span class="n">RequireAll</span>&gt;
+&lt;/<span class="n">Directory</span>&gt;
+</code></pre></div></div>
+
+<p>即使 <code class="highlighter-rouge">&lt;Directory&gt;</code> 费了半天劲做了限制，但最后应用的是 <code class="highlighter-rouge">&lt;Location&gt;</code> 段落，它说一路放行，于是它说了算。</p>
+
+<h3 id="htaccess-文件"><code class="highlighter-rouge">.htaccess</code> 文件</h3>
+
+<p>httpd 可以通过把特殊的文件放到网页目录树中实现 <strong>去中心化的配置管理</strong>。所谓特殊的文件通常名为 <code class="highlighter-rouge">.htaccess</code>，也可以用 <code class="highlighter-rouge">AccessFileName</code> 指令来指定。</p>
+
+<p>放置在该文件中的指令作用于它所在的目录，及其所有子目录。</p>
+
+<p>其语法也与主配置文件相同。</p>
+
+<p>因为处理每个请求时都会读取一次该文件，因此对它的修改会立即生效。</p>
+
+<p>如果同一个指令，先出现在主配置，之后又出现在 <code class="highlighter-rouge">.htaccess</code> 中，服务器需要是否要用后者覆盖前者。如果在主配置中用 <code class="highlighter-rouge">AllowOverride</code> 标明，就会进行覆盖。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">AllowOverride</span> <span class="n">AuthConfig</span> <span class="n">Indexes</span>
+</code></pre></div></div>
+
+<p class="notice--success">值得注意的是，<code class="highlighter-rouge">AllowOverride</code> 只在 <code class="highlighter-rouge">&lt;Directory&gt;</code> 段落中有效，在其它段落中无效。</p>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/apache" class="page__taxonomy-item" rel="tag">apache</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/lamp" class="page__taxonomy-item" rel="tag">lamp</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#server" class="page__taxonomy-item" rel="tag">server</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2016-01-02T00:00:00+08:00">January 02, 2016</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">分享</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=liloli&text=Apache+%E7%9A%84%E9%85%8D%E7%BD%AE%20http%3A%2F%2Flocalhost%3A4000%2Fserver%2Fconfig%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fserver%2Fconfig%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fserver%2Fconfig%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fserver%2Fconfig%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/server/comconf/" class="pagination--pager" title="Apache 的常用配置指令
+">向前</a>
+    
+    
+      <a href="http://localhost:4000/server/filter/" class="pagination--pager" title="Apache 过滤器
+">向后</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">猜您还喜欢</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/time/" rel="permalink">Bash 脚本 - 时间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/storage/" rel="permalink">Bash 脚本 - 存储空间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/numbers/" rel="permalink">Bash 脚本 - 数字
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/input/" rel="permalink">Bash 脚本 - 输入
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+      <li><a href="https://twitter.com/liloli"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+      <li><a href="https://www.facebook.com/lilolibj"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+    
+    
+      <li><a href="https://github.com/liloli"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+  
+  
+  <script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/server/config/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/server/config"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://liloli.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+  </body>
+</html>

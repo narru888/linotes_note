@@ -1,0 +1,1032 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>文件描述符简介 - LINOTES</title>
+<meta name="description" content="用简洁清晰的语言讨论技术">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="文件描述符简介">
+<meta property="og:url" content="http://localhost:4000/kernel/filedescriptor/">
+
+
+  <meta property="og:description" content="用简洁清晰的语言讨论技术">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/header/linux-kernel.jpg">
+
+
+
+  <meta name="twitter:site" content="@liloli">
+  <meta name="twitter:title" content="文件描述符简介">
+  <meta name="twitter:description" content="用简洁清晰的语言讨论技术">
+  <meta name="twitter:url" content="http://localhost:4000/kernel/filedescriptor/">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="http://localhost:4000/assets/images/header/linux-kernel.jpg">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2017-06-01T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/kernel/filedescriptor/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "Hawk Zhang",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- <link rel="stylesheet" href="/assets/css/vim.css"> -->
+
+
+
+  
+
+
+
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('http://localhost:4000/assets/images/header/linux-kernel.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          文件描述符简介
+
+        
+      </h1>
+      
+        <p class="page__lead">
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:liloli@gmail.com">
+            <meta itemprop="email" content="liloli@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="文件描述符简介">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="June 01, 2017">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-code"></i> 文件描述符简介</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#文件描述符">文件描述符</a>
+    <ul>
+      <li><a href="#文件-io">文件 I/O</a></li>
+      <li><a href="#文件描述符-1">文件描述符</a></li>
+      <li><a href="#文件描述符与-pcb">文件描述符与 PCB</a></li>
+      <li><a href="#文件描述的限制">文件描述的限制</a></li>
+      <li><a href="#文件描述符与打开的文件">文件描述符与打开的文件</a></li>
+    </ul>
+  </li>
+  <li><a href="#管道">管道</a>
+    <ul>
+      <li><a href="#管道的实现机制">管道的实现机制</a></li>
+      <li><a href="#匿名管道">匿名管道</a></li>
+      <li><a href="#命名管道">命名管道</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="文件描述符">文件描述符</h2>
+
+<h3 id="文件-io">文件 I/O</h3>
+
+<p>处理文件 I/O 的基本系统调用：</p>
+
+<ul>
+  <li><code class="highlighter-rouge">open</code> ：请求生成到某文件的连接</li>
+  <li><code class="highlighter-rouge">close</code> ：请求关闭到某文件的连接</li>
+  <li><code class="highlighter-rouge">read</code> ：请求通过特定连接来读取文件的部分字节</li>
+  <li><code class="highlighter-rouge">write</code> ：请求通过特定连接来写入部分字节到文件</li>
+</ul>
+
+<h3 id="文件描述符-1">文件描述符</h3>
+
+<p>File Descriptor</p>
+
+<p class="notice--info">由 <code class="highlighter-rouge">open</code> 系统调用返回的值称为文件描述符，本质上是内核维护的打开文件数组的一个索引。</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">fd</span> <span class="o">=</span> <span class="n">open</span><span class="p">(</span><span class="s">"/dev/sr0"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>上面提到的数组即文件描述符表，文件描述符是该表的 <strong>索引</strong>。针对每一个 <code class="highlighter-rouge">open</code> 系统调用，即进程打开一个文件时，内核就会创建一个文件描述符，并将其与底层的文件对象关联起来，该文件可以是设备文件，也可以是其它文件。</p>
+
+<p>文件描述符是内核为了高效管理被打开的文件所创建的索引，是一个非负整数（通常是小整数），用于 <strong>指代</strong> 被打开的文件，所有执行 <strong>I/O 操作</strong> 的系统调用都要通过文件描述符。</p>
+
+<p>每个 Unix 进程（除了可能的守护进程）均应有三个标准的 POSIX 文件描述符，对应于三个标准流：</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>文件描述符</td>
+      <td>用途</td>
+      <td>POSIX 名称</td>
+      <td>标准 I/O 流</td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>标准输入</td>
+      <td>STDIN_FILENO</td>
+      <td>stdin</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>标准输出</td>
+      <td>STDOUT_FILENO</td>
+      <td>stdout</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>标准错误</td>
+      <td>STDERR_FILENO</td>
+      <td>stderr</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>程序刚刚启动的时候，0 是标准输入，1 是标准输出，2 是标准错误。如果此时去打开一个新的文件，它的文件描述符会是 3。</p>
+
+<p>文件描述符在形式上是一个非负整数。实际上，它是一个索引值，指向内核为每一个进程所维护的该进程打开文件的记录表。当程序打开一个现有文件或者创建一个新文件时，内核向进程返回一个文件描述符。在程序设计中，一些涉及底层的程序编写往往会围绕着文件描述符展开。但是文件描述符这一概念往往只适用于 UNIX、Linux 这样的操作系统。</p>
+
+<p>POSIX 标准要求每次打开文件时（含 socket）必须使用当前进程中可用的最小的文件描述符号码，因此，在网络通信过程中，稍不注意就有可能造成串话。</p>
+
+<p>在 Linux 的系统调用中，<strong>大量的系统调用都是依赖于文件描述符</strong>。文件描述符为在该系列平台上进行设备相关的编程提供了一个统一的方法。</p>
+
+<h4 id="流">流</h4>
+
+<p>Stream</p>
+
+<p>文件描述符是个抽象的句柄，通过它可以访问一个文件或任何其它的输入、输出资源，如网络套接字或管道。只要文件处于打开状态，就可以随时使用其文件描述符来对其进行读写操作。而此时的文件不是通常意义上的磁盘中的文件，而是代表一个流，可以对流进行读取的操作。</p>
+
+<p>打开一个文件时，操作系统会创建一个到该文件的 <strong>流</strong>，将其连接到打开的文件上。描述符实际上就代表了这个流。类似的，操作系统创建了一些默认的流，但它们不是连接到文件，而是连接到终端。因此，你在终端输入时，会发送到标准输入流和操作系统中。当你在终端键入 <code class="highlighter-rouge">ls</code> 命令时，操作系统会将结果输出到标准输出流。而标准输出流是连接到显示终端的，于是你看到了输出结果。</p>
+
+<h3 id="文件描述符与-pcb">文件描述符与 PCB</h3>
+
+<p>每个进程在 Linux 内核中都有一个 <code class="highlighter-rouge">task_struct</code> 结构体来维护进程相关的信息，称为进程描述符（Process Descriptor），而在操作系统理论中称为进程控制块（PCB，Process Control Block）。</p>
+
+<p><code class="highlighter-rouge">task_struct</code> 中有一个指针（files）指向 <code class="highlighter-rouge">files_struct</code> 结构体，称为文件描述符表，其中每个表项包含一个指向已打开的文件的指针，如下图。</p>
+
+<p><img src="/assets/images/2017.4.1.fd.png" alt="image-center" class="align-center" /></p>
+
+<p>用户程序不能直接访问内核中的文件描述符表，只能使用文件描述符表的索引（即 0、1、2、3 这些数字），这些索引即文件描述符，用 int 型变量保存。</p>
+
+<p>当调用 open 打开一个文件或创建一个新文件时，内核分配一个文件描述符，并返回给用户程序，该文件描述符表项中的指针指向新打开的文件。当读写文件时，用户程序把文件描述符传给 read 或 write ，内核根据文件描述符找到相应的表项，再通过表项中的指针找到相应的文件。</p>
+
+<h3 id="文件描述的限制">文件描述的限制</h3>
+
+<p>文件描述符是系统的一个重要资源，虽然说系统内存有多少就可以打开多少的文件描述符，但是在实际实现过程中内核是会做相应的处理。</p>
+
+<p>整个系统可以打开的最大文件数通常限制在系统内存的 10%（以 KB 计算），称之为系统级限制。可用 <code class="highlighter-rouge">sysctl -a | grep fs.file-max</code> 查看。</p>
+
+<p>为了避免某一个进程消耗掉所有的文件资源，内核也会对单个进程可打开的最大文件数加以限制，称用户级限制，默认值为 1024，用 <code class="highlighter-rouge">ulimit -n</code> 查看。在 Web 服务器中，常通过更改该默认值来优化服务器。</p>
+
+<h3 id="文件描述符与打开的文件">文件描述符与打开的文件</h3>
+
+<p>每一个文件描述符与一个打开的文件相对应，不同的文件描述符可指向同一个文件。既它们之间的关系可以是 <strong>一对一</strong>，也可以是 <strong>多对一</strong>。</p>
+
+<p>同一个文件可以被 <strong>不同的进程</strong> 打开，也可以在 <strong>同一个进程</strong> 中被 <strong>多次</strong> 打开。</p>
+
+<p>系统为每个进程维护了一个文件描述符表，该表的值都是从 0 开始的，所以在不同的进程中你会看到相同的文件描述符，但相同的文件描述符不一定指向同一个文件。</p>
+
+<p>具体指向哪个文件，需要查看由内核维护的 3 个数据结构：</p>
+
+<ol>
+  <li>进程级的文件描述符表</li>
+  <li>系统级的打开文件描述符表</li>
+  <li>文件系统的 i-node 表</li>
+</ol>
+
+<p class="notice--info">从在进程中打开一个文件，一直到获取文件内容，这期间要经历几级的间接寻址。从实施角度来看，经历某个级别通常意味着：在内核中翻译成为某种 <strong>数据结构</strong>，然后指向下一级。</p>
+
+<h4 id="进程级描述符表">进程级描述符表</h4>
+
+<p>The per-process Open File Descriptor Table</p>
+
+<p>对于 <strong>每一个进程</strong>，内核都为其维护一个打开文件描述符的表。表中的每个条目都记录了单个文件描述符的相关信息，包括：</p>
+
+<ol>
+  <li>控制文件描述符操作的一组标签（目前，此类标志仅定义了一个，即 <code class="highlighter-rouge">close-on-exec</code> 标签）</li>
+  <li>对打开文件描述符的引用</li>
+</ol>
+
+<h5 id="数据结构">数据结构</h5>
+
+<p>在 Linux 系统中，进程打开的文件是由 <code class="highlighter-rouge">files_struct</code> 结构来管理的，而该结构又是位于进程的 <code class="highlighter-rouge">task_struct</code> 结构中：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct task_struct {
+    ...
+    /* open file information */
+    struct files_struct *files;
+</code></pre></div></div>
+
+<p>每进程的文件描述符表（fdt）位于 <code class="highlighter-rouge">files_strct</code> 结构中：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct files_struct {
+    ...
+    struct fdtable __rcu *fdt;
+</code></pre></div></div>
+
+<p>当进程要打开文件时，它会产生一个 <code class="highlighter-rouge">open</code> 调用，继而调用 <code class="highlighter-rouge">sys_open</code>：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sys_open(filename, …)
+    // 1)   从用户空间拷贝文件名
+    getname(filename)
+            strncpy_from_user()
+    // 2)  获取第一个未用的描述符，会将其返回给进程
+    int fd = get_unused_fd()
+        struct files_struct *files = current-&gt;files
+    // 3) 从文件系统获取文件
+    struct file *f = file_open(filename)
+        open_namei
+            // lookup operation for filesystem
+            dentry = cached_lookup or real_lookup
+            // initializes file struct
+            dentry_open
+    // 4) 把文件系统返回的文件安装到进程的描述符表中
+    fd_install
+        current-&gt;files-&gt;fd[fd] = file
+</code></pre></div></div>
+
+<p>进程于是得到了返回的索引号，即描述符表指向该打开的文件的索引。</p>
+
+<h4 id="系统级描述符表">系统级描述符表</h4>
+
+<p>The system-wide table of open file descriptions，打开文件描述表</p>
+
+<p class="notice">注意：该结构保存的是 file description，是比较详细的文件描述信息，而描述符 file descriptor 只是一个数字而已。</p>
+
+<p>内核针对 <strong>所有打开的文件</strong> 会维护一个系统级的描述表，也称 <strong>打开文件表</strong>（open file table），并将表中各条目称为 <strong>打开文件句柄</strong>（open file handle），其中存储了与一个打开文件相关的全部信息：</p>
+
+<ol>
+  <li>当前文件偏移量（调用 <code class="highlighter-rouge">read()</code> 和 <code class="highlighter-rouge">write()</code> 时更新，或使用 <code class="highlighter-rouge">lseek()</code> 直接修改）</li>
+  <li>打开文件时所使用的状态标识（即，<code class="highlighter-rouge">open()</code> 的 <code class="highlighter-rouge">flags</code> 参数）</li>
+  <li>文件访问模式（如调用 <code class="highlighter-rouge">open()</code> 时所设置的只读模式、只写模式或读写模式）</li>
+  <li>与信号驱动相关的设置</li>
+  <li>对该文件 i-node 对象的引用</li>
+</ol>
+
+<p>Linux 系统中，系统级描述符表是由 <code class="highlighter-rouge">struct file</code> 数据结构实现的。</p>
+
+<h4 id="文件系统-i-node-表">文件系统 i-node 表</h4>
+
+<p>每个文件系统都有一个 i-node 表，维护整个文件系统所有的文件，其中的信息包括：</p>
+
+<ol>
+  <li>文件类型（例如：常规文件、套接字或 FIFO）和访问权限</li>
+  <li>一个指针，指向该文件所持有的锁列表</li>
+  <li>文件的各种属性，包括文件大小以及与不同类型操作相关的时间戳</li>
+</ol>
+
+<h4 id="三个数据结构的关系">三个数据结构的关系</h4>
+
+<p>下图展示了文件描述符、打开的文件句柄以及 i-node 之间的关系，图中，两个进程拥有诸多打开的文件描述符。</p>
+
+<figure class="">
+  <img src="http://localhost:4000/assets/images/2017.4.1.pcb.inode.png" alt="" />
+  
+</figure>
+
+<p>图中，进程 A 的描述符 1 和 20 是指向打开文件表中同一个句柄的，这种情况可能是由调用 <code class="highlighter-rouge">dup()</code>、<code class="highlighter-rouge">dup2()</code> 或 <code class="highlighter-rouge">fcntl()</code> 导致的，即 <strong>复制了描述符</strong>。</p>
+
+<p>而进程 A 的描述符 2 与进程 B 的描述符 2 同时指向句柄 73。这种情况可能是因为调用了 <code class="highlighter-rouge">fork()</code>，如 A 和 B 可能是父子进程关系，或者，<strong>一个进程通过域套接字传递了一个描述符给另一个进程</strong>。</p>
+
+<p>进程 A 的描述符 0 与进程 B 的描述符 3 虽然指向不同的句柄，但这些句柄是指向同一个 i-node 表条目 1976 的，即指向同一个文件。当 <strong>一个进程重复两次打开同一文件</strong> 时会导致该结果。</p>
+
+<h4 id="总结">总结</h4>
+
+<ul>
+  <li>由于进程级文件描述符表的存在，不同的进程中会出现相同的文件描述符，它们可能指向同一个文件，也可能指向不同的文件</li>
+  <li>如果两个不同的描述符指向同一个句柄，则这两个描述符共享相同的文件偏移量。因此，如果文件偏移量被其中的一个描述符修改了（<code class="highlighter-rouge">read()</code>、<code class="highlighter-rouge">write()</code>、<code class="highlighter-rouge">lseek()</code> 都可导致），则该修改对于另一个描述符也是可见的。无论这两个描述符是属于同一进程还是不同进程，该情况都适用。当文件状态被某个描述符修改时，结果也是一样的。</li>
+  <li>描述符的标签（如 <code class="highlighter-rouge">close-on-exec</code>）对于进程和描述符是私有的，修改这些标签不会影响另一个描述符。</li>
+</ul>
+
+<h2 id="管道">管道</h2>
+
+<p>管道是进程间通信的主要手段之一。</p>
+
+<p>Linux 管道有两种：<strong>匿名管道</strong> 与 <strong>命名管道</strong></p>
+
+<p>管道有一个特点，如果管道中没有数据，那么取管道数据的操作就会滞留，直到管道内进入数据，然后读出后才会终止这一操作；同理，写入管道的操作如果没有读取管道的操作，这一动作就会滞留。</p>
+
+<h3 id="管道的实现机制">管道的实现机制</h3>
+
+<p>管道是由 <strong>内核管理</strong> 的一个 <strong>缓冲区</strong>，相当于我们放入内存中的一个纸条。</p>
+
+<p>管道的一端连接一个进程的输出。这个进程会向管道中放入信息。管道的另一端连接一个进程的输入，这个进程取出被放入管道的信息。</p>
+
+<p>一个缓冲区不需要很大，一般为 4K，它被设计成为 <strong>环形的数据结构</strong>，以便管道可以被循环利用。当管道中没有信息时，从管道中读取的进程会等待，直到另一端的进程放入信息。当管道被放满信息的时候，尝试放入信息的进程会等待，直到另一端的进程取出信息。当两个进程都终结的时候，管道也自动消失。</p>
+
+<p><img src="/assets/images/2017.4.1.pipe.fork.png" alt="image-center" class="align-center" /></p>
+
+<p>从原理上，管道利用 <code class="highlighter-rouge">fork</code> 机制建立，从而让两个进程可以连接到同一个管道上：</p>
+
+<ul>
+  <li>最开始的时候，管道的两端都连接在同一个进程上</li>
+  <li>复用 fork 复制进程时，会将这两个连接也复制到新进程上</li>
+  <li>随后，每个进程关闭自己不需要的一个连接，剩下的连接就构成了管道</li>
+</ul>
+
+<h3 id="匿名管道">匿名管道</h3>
+
+<p class="notice--info">一个匿名管道实际上就是个 <strong>只存在于内存中的文件</strong>，对这个文件的操作要通过两个已经打开的文件进行，它们分别代表管道的两端。</p>
+
+<p>匿名管道使用 <code class="highlighter-rouge">|</code> 作为操作符，两端是两个普通的、匿名的、打开的文件描述符：一个 <strong>只读端</strong> 和一个 <strong>只写端</strong>，这就让其它进程无法连接到该匿名管道。</p>
+
+<p>管道两端的进程均将该管道 <strong>看做一个文件</strong>，一个进程负责往管道中写内容，而另一个从管道中读取。这种传输遵循 “先入先出”（FIFO）的规则。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat </span>file | less
+</code></pre></div></div>
+
+<p>为了执行以上命令，shell 会创建两个进程来分别执行 <code class="highlighter-rouge">cat</code> 和 <code class="highlighter-rouge">less</code>：</p>
+
+<p><img src="/assets/images/2017.4.1.pipe.png" alt="image-center" class="align-center" /></p>
+
+<p>两个进程都连接到了管道上，写入进程 <code class="highlighter-rouge">cat</code> 将其标准输出（描述符 1）连接到了管道的写入端，读取进程 <code class="highlighter-rouge">less</code> 将其标准输入（描述符 0）连接到了管道的读入端。实际上，两个进程并不知道管道的存在，它们只是从标准文件描述符中读取数据和写入数据。</p>
+
+<h4 id="匿名管道的特点">匿名管道的特点</h4>
+
+<ul>
+  <li><strong>半双工</strong>：数据只能向 <strong>一个方向</strong> 流动，需要双方通信时，需建立起两个管道</li>
+  <li>管道没有名字：因此只能用于有 <strong>亲缘关系</strong> 的进程，如父子进程或兄弟进程之间</li>
+  <li>单独构成一种 <strong>独立的文件系统</strong>：管道对于其两端的进程而言，就是一个文件，但不是普通的文件，不属于某种文件系统，而是单独构成一种文件系统，且只存在于内存中</li>
+  <li>数据的读取和写入：一个进程向管道中写入的内容被另一端的进程读取。<strong>写入</strong> 的内容每次都添加在管道 <strong>缓冲区</strong> 的 <strong>末尾</strong>，并且每次都是从缓冲区的 <strong>头部</strong> 读取数据</li>
+  <li>向管道中写入数据时，linux 将不保证写入的原子性，管道缓冲区一有空闲区域，写进程就会试图向管道写入数据。如果读进程不读走管道缓冲区中的数据，那么写操作将一直 <strong>阻塞</strong>。</li>
+  <li>只有在管道的 <strong>读端存在</strong> 时，向管道中写入数据才有意义。否则，向管道中写入数据的进程将收到内核传来的 SIFPIPE 信号，应用程序可以处理该信号，也可以忽略（默认动作则是应用程序终止）。</li>
+  <li>管道的 <strong>缓冲区是有限的</strong>：管道只存在于内存中，创建管道时，为缓冲区分配一个页面大小</li>
+  <li>管道所传递的是 <strong>无格式字节流</strong>：这就要求管道双方必须事先约定好数据的格式，比如多少字节算作一个消息、命令或记录</li>
+</ul>
+
+<h3 id="命名管道">命名管道</h3>
+
+<p>命名管道是为了解决匿名管道只能用于近亲进程之间通信的缺陷而设计的，也称 FIFO。</p>
+
+<p>命名管道是建立在 <strong>实际的磁盘介质或文件系统上的有自己名字的文件</strong>，任何进程可以在任何时间通过文件名或路径名与该文件建立联系。即使与 FIFO 的创建进程不存在亲缘关系的进程，只要可以访问该路径，就能够彼此通过 FIFO 相互通信，因此，通过 FIFO，<strong>不相关的进程也能交换数据</strong>。</p>
+
+<p>FIFO 严格遵循先进先出（first in first out），对管道及 FIFO 的读总是从 <strong>开始处</strong> 返回数据，对它们的写则把数据添加到 <strong>末尾</strong>。它们不支持诸如 <code class="highlighter-rouge">lseek()</code> 等文件定位操作。</p>
+
+<h4 id="命名管道的特点">命名管道的特点</h4>
+
+<p>从语义上来讲，FIFO 其实与匿名管道类似，其特点为：</p>
+
+<ul>
+  <li>在文件系统中，FIFO 拥有 <strong>名称</strong>，并且是以 <strong>设备特殊文件</strong> 的形式存在的；</li>
+  <li><strong>任何进程</strong> 都可以通过 FIFO <strong>共享</strong> 数据；</li>
+  <li>FIFO 两端必须同时有读与写的进程，否则 FIFO 的数据流通将会阻塞；</li>
+  <li>匿名管道是由 shell 自动创建的，存在于内核中；而 FIFO 则是由程序创建的（如 <code class="highlighter-rouge">mkfifo</code> 命令），存在于 <strong>文件系统</strong> 中；</li>
+  <li>匿名管道是单向的字节流，而 FIFO 则是 <strong>双向</strong> 的字节流；</li>
+</ul>
+
+<p class="notice--info">匿名管道与命名管道的唯一区别就是它们 <strong>创建和打开的方式</strong>，一旦这些任务完成，对管道的 I/O 操作在语义上是相同的。</p>
+
+<h4 id="fifo-文件">FIFO 文件</h4>
+
+<p>FIFO（First in, First out）为一种特殊的文件类型，它在文件系统中有对应的路径。</p>
+
+<p>为了实现命名管道，引入了一种新的文件类型 —— FIFO 文件（遵循先进先出的原则）。实现一个命名管道实际上就是实现一个 FIFO 文件。命名管道一旦建立，其读、写及关闭操作都与普通管道完全相同。虽然 FIFO 文件的 inode 节点在磁盘上，但是仅是一个节点而已，<strong>文件的数据</strong> 还是存在于 <strong>内存</strong> 缓冲页面中，和普通管道相同。</p>
+
+<p>FIFO 实际上也 <strong>由内核管理</strong>，不与硬盘打交道。当进程之间通过 FIFO 进行数据交换时，内核 <strong>直接</strong> 在管道内交换数据，而不会写入文件系统。因此，FIFO 文件在文件系统中没有任何内容，文件系统的入口只是作为一个引用点，以便进程能够使用文件系统中的 <strong>文件名</strong> 来访问管道。</p>
+
+<p>FIFO 可以被 <strong>多个进程</strong> 打开，进行读取或写入。但一个 FIFO 文件即使被多个进程打开，内核也同时只维护一个管道对象。而且，FIFO 必须同时在 <strong>两端都打开</strong> 才能开始传递数据。当只有一端打开时，FIFO 会暂时 <strong>阻塞</strong>，直到另一端也被打开。</p>
+
+<p>另外，一个进程也可以用非阻塞模式打开 FIFO，在这种情况下，即使写入端没有打开，以 <strong>只读方式</strong> 也能够成功打开；但是，只有另一端打开时，才能以只写方式打开，否则会报 “找不到设备或地址” 的错误。</p>
+
+<p>当 <strong>删除</strong> FIFO 文件时，管道连接也随之 <strong>消失</strong>。</p>
+
+<p>FIFO 的好处在于我们可以通过文件的路径来识别管道，从而让没有亲缘关系的进程之间可以建立连接。</p>
+
+<p>在 Linux 中，无论处于阻塞还是非阻塞模式，都可以打开 FIFO 成功地读写。POSIX 没有定义该行为，因此可以利用这一点，在 <strong>没有读取端</strong> 时，打开 FIFO 进行 <strong>写入</strong>。如果一个进程要复用管道的两端与自己通讯，一定要谨防死锁。</p>
+
+<h4 id="fifo-读写规则">FIFO 读写规则</h4>
+
+<h5 id="关于文件的阻塞">关于文件的阻塞</h5>
+
+<p>所谓的阻塞，即内核在对文件操作 I/O 系统调用时，如果条件不满足（可能需要产生 I/O），则内核会将该进程 <strong>挂起</strong>。</p>
+
+<p>非阻塞则是发现条件不满足就会 <strong>立即返回</strong>。</p>
+
+<p>此外需要注意的是非阻塞并不是轮询，不然就和阻塞没多大区别了，它只是调用不成功就直接返回了，不会再去看啥时候会满足条件，而是由你自己去选择接下来该做什么。</p>
+
+<p>read/write 系统调用 <strong>不会直接读写文件</strong>，只是去操作文件所对应的内存页（此时的页为虚拟内存）：</p>
+
+<p>对于 read，如果在页中找到了想要读写的数据，则直接从页中将数据 <strong>复制到用户缓存</strong> 即可；如果要读的页没有找到，只能从磁盘读出该页内容，缓存在内存中即可。所谓的读过程，其实文件系统所要做的只是 <strong>锁定页面</strong>，然后 <strong>构造一个读请求</strong>，并将请求发给底层的 I/O 子系统即可。linux 内核中默认 read 系统调用是阻塞的，write 调用是非阻塞的，因为写入时只是将用户态的数据写入缓存页面中即可返回。</p>
+
+<h5 id="从-fifo-中读取数据">从 FIFO 中读取数据</h5>
+
+<p><strong>【 约定 】</strong>：一个进程想从 FIFO 中读取数据，如果 <strong>以阻塞模式打开</strong> FIFO，称该进程的读操作为 “<strong>设置了阻塞标志</strong> 的” 读操作。</p>
+
+<p>以下把为了写入而打开 FIFO 简称 <strong>写打开</strong>，为了读取数据而打开 FIFO 简称 <strong>读打开</strong>。</p>
+
+<ul>
+  <li>如果有进程写打开 FIFO，且当前 FIFO 内没有数据，则设置了阻塞标志的读操作将一直阻塞，没有设置阻塞标志的读操会返回 -1，errno 值为 EAGAIN，提醒以后再试。</li>
+  <li>对于设置了阻塞标志的读操作，如果 FIFO 内没有数据，或 FIFO 内虽然有数据，但其它进程在读，会造成阻塞。只要 FIFO 中有新的数据写入，就会解阻塞。</li>
+  <li>读打开的阻塞标志只对本进程第一个读操作起作用，如果本进程内有多个读操作序列，则在第一个读操作被唤醒并完成读操作后，其它将要执行的读操作将不再阻塞，即使在执行读操作时，FIFO 中没有数据也一样（此时，读操作返回 0）。</li>
+  <li>如果没有进程写打开 FIFO，则设置了阻塞标志的读操作会阻塞。</li>
+</ul>
+
+<p>注：如果 FIFO 中有数据，则设置了阻塞标志的读操作不会因为 FIFO 中的字节数小于请求读的字节数而阻塞，此时，读操作会返回 FIFO 中现有的数据量。</p>
+
+<h5 id="向-fifo-中写入数据">向 FIFO 中写入数据</h5>
+
+<p>【 约定 】：如果一个进程为了向 FIFO 中写入数据而以阻塞模式打开 FIFO，那么称该进程内的写操作为 <strong>设置了阻塞标志</strong> 的写操作。</p>
+
+<h6 id="对于设置了阻塞标志的写操作">对于设置了阻塞标志的写操作：</h6>
+
+<p>当要写入的数据量不大于 <code class="highlighter-rouge">PIPE_BUF</code> 时，linux 将保证写入的原子性。如果此时管道可用缓冲区不足以容纳要写入的字节数，则进入睡眠，直到当缓冲区中能够容纳要写入的字节数时，才开始进行一次性写操作。</p>
+
+<p>当要写入的数据量大于 <code class="highlighter-rouge">PIPE_BUF</code> 时，linux 将不再保证写入的原子性。FIFO 缓冲区一有可用区域，写进程就会试图向管道写入数据，写操作在写完所有请求写的数据后返回。</p>
+
+<h6 id="对于没有设置阻塞标志的写操作">对于没有设置阻塞标志的写操作：</h6>
+
+<p>当要写入的数据量不大于 <code class="highlighter-rouge">PIPE_BUF</code> 时，linux 将保证写入的原子性。如果当前 FIFO 空闲缓冲区能够容纳请求写入的字节数，写完后成功返回；如果当前 FIFO 空闲缓冲区不能够容纳请求写入的字节数，则返回 EAGAIN 错误，提醒以后再写；</p>
+
+<p>当要写入的数据量大于 <code class="highlighter-rouge">PIPE_BUF</code> 时，linux 将不再保证写入的原子性。在写满所有 FIFO 空闲缓冲区后，写操作返回。</p>
+
+<p>.</p>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/文件描述符" class="page__taxonomy-item" rel="tag">文件描述符</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/管道" class="page__taxonomy-item" rel="tag">管道</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#kernel" class="page__taxonomy-item" rel="tag">kernel</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2017-06-01T00:00:00+08:00">June 01, 2017</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">分享</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=liloli&text=%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6%E7%AE%80%E4%BB%8B%20http%3A%2F%2Flocalhost%3A4000%2Fkernel%2Ffiledescriptor%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fkernel%2Ffiledescriptor%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fkernel%2Ffiledescriptor%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fkernel%2Ffiledescriptor%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/programming/bash03/" class="pagination--pager" title="Bash 入门 03
+">向前</a>
+    
+    
+      <a href="http://localhost:4000/bash/debug/" class="pagination--pager" title="Bash 脚本 - 调试
+">向后</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">猜您还喜欢</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/time/" rel="permalink">Bash 脚本 - 时间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/storage/" rel="permalink">Bash 脚本 - 存储空间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/numbers/" rel="permalink">Bash 脚本 - 数字
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/input/" rel="permalink">Bash 脚本 - 输入
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+      <li><a href="https://twitter.com/liloli"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+      <li><a href="https://www.facebook.com/lilolibj"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+    
+    
+      <li><a href="https://github.com/liloli"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+  
+  
+  <script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/kernel/filedescriptor/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/kernel/filedescriptor"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://liloli.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+  </body>
+</html>

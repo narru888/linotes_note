@@ -1,0 +1,2158 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>rsync 的用法 - LINOTES</title>
+<meta name="description" content="用简洁清晰的语言讨论技术">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="rsync 的用法">
+<meta property="og:url" content="http://localhost:4000/app/rsync/">
+
+
+  <meta property="og:description" content="用简洁清晰的语言讨论技术">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/header/frames.jpg">
+
+
+
+  <meta name="twitter:site" content="@liloli">
+  <meta name="twitter:title" content="rsync 的用法">
+  <meta name="twitter:description" content="用简洁清晰的语言讨论技术">
+  <meta name="twitter:url" content="http://localhost:4000/app/rsync/">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="http://localhost:4000/assets/images/header/frames.jpg">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2017-04-01T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/app/rsync/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "Hawk Zhang",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- <link rel="stylesheet" href="/assets/css/vim.css"> -->
+
+
+
+  
+
+
+
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('http://localhost:4000/assets/images/header/frames.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          rsync 的用法
+
+        
+      </h1>
+      
+        <p class="page__lead">
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:liloli@gmail.com">
+            <meta itemprop="email" content="liloli@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="rsync 的用法">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="April 01, 2017">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-bitbucket"></i> rsync 的用法</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#rsync-简介">rsync 简介</a>
+    <ul>
+      <li><a href="#rsync-特点">rsync 特点</a></li>
+      <li><a href="#rsync-的增量传输">rsync 的增量传输</a></li>
+      <li><a href="#rsync-同步基本说明">rsync 同步基本说明</a></li>
+      <li><a href="#rsync-工作方式">rsync 工作方式</a></li>
+    </ul>
+  </li>
+  <li><a href="#rsync-命令语法">rsync 命令语法</a>
+    <ul>
+      <li><a href="#基本语法">基本语法</a></li>
+      <li><a href="#常用选项">常用选项</a></li>
+      <li><a href="#rsync-路径参数注意事项">rsync 路径参数注意事项</a></li>
+    </ul>
+  </li>
+  <li><a href="#rsync-筛选规则">rsync 筛选规则</a>
+    <ul>
+      <li><a href="#筛选的原则">筛选的原则</a></li>
+      <li><a href="#筛选规则的生效时机">筛选规则的生效时机</a></li>
+      <li><a href="#从文件读取规则">从文件读取规则</a></li>
+      <li><a href="#筛选规则的语法">筛选规则的语法</a></li>
+    </ul>
+  </li>
+  <li><a href="#连接到-rsync-daemon">连接到 rsync daemon</a>
+    <ul>
+      <li><a href="#基本语法-1">基本语法</a></li>
+      <li><a href="#与使用远程-ssh-的区别">与使用远程 ssh 的区别</a></li>
+      <li><a href="#用户认证">用户认证</a></li>
+      <li><a href="#通过代理连接">通过代理连接</a></li>
+      <li><a href="#rsync-daemon-的配置">rsync daemon 的配置</a></li>
+    </ul>
+  </li>
+  <li><a href="#通过远程-shell-使用-rsync-daemon-的功能">通过远程 shell 使用 rsync daemon 的功能</a></li>
+  <li><a href="#批处理模式">批处理模式</a>
+    <ul>
+      <li><a href="#批处理文件的作用">批处理文件的作用</a></li>
+      <li><a href="#如何使用批处理文件">如何使用批处理文件</a></li>
+      <li><a href="#批处理注意事项">批处理注意事项</a></li>
+    </ul>
+  </li>
+  <li><a href="#rsync-工作流程分析">rsync 工作流程分析</a>
+    <ul>
+      <li><a href="#基本概念">基本概念</a></li>
+      <li><a href="#rsync-工作流程">rsync 工作流程</a></li>
+      <li><a href="#rsync-适用场景">rsync 适用场景</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <p>Remote Sync，1996 年 由 Andrew Tridgell 和 Paul Mackerras 编写。几乎所有发行版都内置了该工具。</p>
+
+<h2 id="rsync-简介">rsync 简介</h2>
+
+<p>rsync 是可以实现增量备份的工具。配合任务计划，rsync 能实现定时或间隔同步，配合 inotify 或 sersync，可以实现 <strong>触发式的实时同步</strong>。</p>
+
+<ul>
+  <li>可用于 <strong>本地</strong> 复制及远程复制，不支持两个远程主机间的同步。</li>
+  <li>提供了大量的参数来控制其行为的每个要素，可以对要复制的文件进行非常灵活的设定。</li>
+  <li>其 <strong>delta-transfer 机制</strong> 比较著名，该机制通过 <strong>仅传输两端文件的差异部分</strong>，而减少了网络传输的数据量。</li>
+  <li>广泛应用于备份及镜像，同时还是一个功能强大的复制工具。</li>
+  <li><strong>默认</strong> 使用一种 <strong>快速检查</strong> 机制来确定需传输的文件。</li>
+</ul>
+
+<h3 id="rsync-特点">rsync 特点</h3>
+
+<ul>
+  <li>支持复制链接、设备、所有者、组、权限</li>
+  <li>支持排除特定文件，用法与 GNU tar 相似</li>
+  <li>支持 CVS 模式的排除</li>
+  <li>支持使用任何透明的远程 shell ，包括 ssh 或 rsh</li>
+  <li>无需超级用户身份就可使用</li>
+  <li>通过管道传输文件，减小延迟</li>
+  <li>支持匿名或授权同步</li>
+</ul>
+
+<h4 id="delta-transfer-机制">delta-transfer 机制</h4>
+
+<p>rsync 使用一种 <code class="highlighter-rouge">delta-transfer</code> 机制。首先会假设两端主机使用一个低带宽、高延迟、双向通信的连接，该机制会把源文件中与目标文件相同的部分标记出来，然后 <strong>只传输不同的部分</strong>。该机制能有效地计算出双方文件的不同之处，尤其适合于两端文件很相似的场合。</p>
+
+<p>该机制有效地减少了同步时需要传输的数据量。</p>
+
+<h3 id="rsync-的增量传输">rsync 的增量传输</h3>
+
+<p>发起连接的一端称为 <strong>客户端</strong>，即执行 rsync 命令的一端，另一端称为 <strong>服务端</strong>。</p>
+
+<p>假设待传输文件为 A，如果目标路径中没有该文件，则 rsync 会直接传输，如果已存在，则视情况决定是否要传输。</p>
+
+<p>rsync 默认使用快速检查算法（quick check），它比较源文件和目标文件的 <strong>文件大小</strong> 和 <strong>mtime</strong>，如果不同，则传输该文件，否则忽略。</p>
+
+<p>当发现两端文件内容没变，只是 <strong>属性</strong> 发生变化时，只在服务端对文件属性进行更新。</p>
+
+<p>如果决定要传输文件 A，不会传输整个文件，而是 <strong>只传</strong> 源文件和目标文件之间 <strong>不同的部分</strong>，即 <strong>增量传输</strong>。</p>
+
+<h3 id="rsync-同步基本说明">rsync 同步基本说明</h3>
+
+<p>rsync 的 <strong>目的</strong> 是实现 <strong>文件同步</strong>，因此涉及 <strong>源文件</strong>、<strong>目标文件</strong>、以及 <strong>同步基准</strong> 的概念。</p>
+
+<p>同步过程中还会涉及到源与目标之间的 <strong>版本控制</strong> 问题。</p>
+
+<p>例如，是否要删除源主机上没有但目标上多出来的文件，目标文件比源文件更新 (newer than source) 时是否仍要保持同步，遇到软链接时是拷贝软链接本身还是拷贝软链接所指向的文件，目标文件已存在时是否要先对其做个备份等等。</p>
+
+<h3 id="rsync-工作方式">rsync 工作方式</h3>
+
+<p>在使用 rsync 命令时，需指定 <strong>源路径</strong> 及 <strong>目标路径</strong> 参数。</p>
+
+<ul>
+  <li><strong>第一个</strong> 路径参数一定是 <strong>源文件路径</strong>，即 <strong>同步基准</strong>。</li>
+  <li><strong>最后一个</strong> 路径参数一定是 <strong>目标文件路径</strong>，即 <strong>待同步方</strong>。</li>
+</ul>
+
+<h4 id="本地文件系统同步">本地文件系统同步</h4>
+
+<p>本质是 <strong>通过管道通信</strong>。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rsync [OPTION...] SRC... [DEST]
+</code></pre></div></div>
+
+<p>路径格式为本地路径。</p>
+
+<h4 id="使用远程-shell-连接">使用远程 shell 连接</h4>
+
+<p>本质是 <strong>通过管道通信</strong>。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Pull: rsync [OPTION...] [USER@]HOST:SRC... [DEST]
+Push: rsync [OPTION...] SRC... [USER@]HOST:DEST
+</code></pre></div></div>
+
+<p>主机与路径之间用一个冒号 <code class="highlighter-rouge">:</code> 分隔，路径格式为 <code class="highlighter-rouge">user@host:path</code></p>
+
+<h4 id="通过网络套接字连接-rsync-daemon">通过网络套接字连接 rsync daemon</h4>
+
+<p>远程主机运行 <strong>rsync 服务</strong>，持续 <strong>监听</strong> 特定端口，等待客户端的连接。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Pull: rsync [OPTION...] [USER@]HOST::SRC... [DEST]
+	  rsync [OPTION...] rsync://[USER@]HOST[:PORT]/SRC... [DEST]
+Push: rsync [OPTION...] SRC... [USER@]HOST::DEST
+	  rsync [OPTION...] SRC... rsync://[USER@]HOST[:PORT]/DEST
+</code></pre></div></div>
+
+<p>主机与路径之间用两个冒号 <code class="highlighter-rouge">::</code> 分隔，路径参数格式为 <code class="highlighter-rouge">user@host::path</code> 或 <code class="highlighter-rouge">rsync://user@host/path</code>。</p>
+
+<h4 id="通过远程-shell-连接服务端启动临时-rsync-daemon">通过远程 shell 连接，服务端启动临时 rsync daemon</h4>
+
+<p>远程主机无需启动 rsync 服务，而是 <strong>临时派生</strong> 出 <strong>rsync daemon</strong>，它是单用途的 <strong>一次性 daemon</strong>，仅用于 <strong>临时读取 daemon 的配置文件</strong>。</p>
+
+<p>当此次 rsync 同步完成，远程 shell 启动的 rsync daemon 进程也会 <strong>自动结束</strong>。</p>
+
+<p>语法同上，区别在于选项部分须 <strong>指定 <code class="highlighter-rouge">--rsh</code> 或 <code class="highlighter-rouge">-e</code></strong>。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Pull: rsync [OPTION...] [USER@]HOST::SRC... [DEST]
+	  rsync [OPTION...] rsync://[USER@]HOST[:PORT]/SRC... [DEST]
+Push: rsync [OPTION...] SRC... [USER@]HOST::DEST
+	  rsync [OPTION...] SRC... rsync://[USER@]HOST[:PORT]/DEST
+</code></pre></div></div>
+
+<h2 id="rsync-命令语法">rsync 命令语法</h2>
+
+<h3 id="基本语法">基本语法</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Local:  rsync [OPTION...] SRC... [DEST]
+
+Access via remote shell:
+  Pull: rsync [OPTION...] [USER@]HOST:SRC... [DEST]
+  Push: rsync [OPTION...] SRC... [USER@]HOST:DEST
+
+Access via rsync daemon:
+  Pull: rsync [OPTION...] [USER@]HOST::SRC... [DEST]
+        rsync [OPTION...] rsync://[USER@]HOST[:PORT]/SRC... [DEST]
+  Push: rsync [OPTION...] SRC... [USER@]HOST::DEST
+        rsync [OPTION...] SRC... rsync://[USER@]HOST[:PORT]/DEST
+</code></pre></div></div>
+
+<h3 id="常用选项">常用选项</h3>
+
+<p>rsync 的选项实在太过丰富，此处按类别将常用的选项加以简要说明。</p>
+
+<h4 id="操作辅助">操作辅助</h4>
+
+<h5 id="-v"><code class="highlighter-rouge">-v</code></h5>
+
+<p>显示同步过程中的 <strong>详细信息</strong>。使用 <code class="highlighter-rouge">-vvvv</code> 会获取 <strong>更多</strong> 的详细信息。</p>
+
+<p><code class="highlighter-rouge">rsync -av --delete /media/hdd1/data1/ /media/hdd2/data2/</code></p>
+
+<h5 id="--dry-run"><code class="highlighter-rouge">--dry-run</code></h5>
+
+<p><code class="highlighter-rouge">-n</code> = <code class="highlighter-rouge">--dry-run</code></p>
+
+<p><strong>模拟运行</strong> 将要进行的同步，以便了解将会发生的操作，确认是否符合用户初衷。常与 <code class="highlighter-rouge">-vvvv</code> 配合使用。</p>
+
+<h5 id="--progress"><code class="highlighter-rouge">--progress</code></h5>
+
+<p>显示文件传输的 <strong>进度</strong> 信息。</p>
+
+<h4 id="连接选项">连接选项</h4>
+
+<h5 id="-e"><code class="highlighter-rouge">-e</code></h5>
+
+<p>指定要使用的 <strong>远程 shell</strong>，默认为 ssh。</p>
+
+<h5 id="--port"><code class="highlighter-rouge">--port</code></h5>
+
+<p>连接 rsync daemon 时使用的 <strong>端口号</strong>，默认为 873。</p>
+
+<h5 id="--password-file"><code class="highlighter-rouge">--password-file</code></h5>
+
+<p>连接到 rsync daemon 时使用，指定本地的某个 <strong>密码文件</strong>。</p>
+
+<p>rsync 会读取密码文件的内容，做为连接到服务端 rsync daemon 的密码。</p>
+
+<ul>
+  <li>文件内容：<strong>只有一行</strong>，内容 <strong>仅仅为密码本身</strong></li>
+  <li>该文件权限： <strong>他人无任何权限</strong></li>
+  <li>该选项仅供 rsync daemon 使用，对 ssh 无效</li>
+  <li>通过远程 shell 连接到 rsync daemon 时，该选项仅在通过 ssh 认证之后开始生效</li>
+</ul>
+
+<h4 id="同步选项">同步选项</h4>
+
+<h5 id="-a"><code class="highlighter-rouge">-a</code></h5>
+
+<p><code class="highlighter-rouge">-a</code> = <code class="highlighter-rouge">--archive</code> = <code class="highlighter-rouge">-rtopgDl</code></p>
+
+<p><strong>归档模式</strong>：递归传输并保留属性，包括符号链接、权限、mtime、组、所有者等</p>
+
+<h5 id="--delete"><code class="highlighter-rouge">--delete</code></h5>
+
+<p>使用该选项，服务端才会 <strong>同步删除</strong>。</p>
+
+<p>不用该选项，rsync 只会传输新建和修改过的文件，不理会发送端的删除。那些在发送端已删除的文件，在服务端仍会保留。</p>
+
+<h5 id="-r"><code class="highlighter-rouge">-r</code></h5>
+
+<p><code class="highlighter-rouge">-r</code> = <code class="highlighter-rouge">--recursive</code>  <strong>递归</strong> 目录。</p>
+
+<h5 id="-t"><code class="highlighter-rouge">-t</code></h5>
+
+<p><code class="highlighter-rouge">-t</code> = <code class="highlighter-rouge">--times</code>  保留 <strong>mtime</strong> 属性。</p>
+
+<p>强烈建议任何时候都加上该参数，否则目标文件的 mtime 会设定为系统时间，导致下次会被更新。</p>
+
+<h5 id="-o"><code class="highlighter-rouge">-o</code></h5>
+
+<p><code class="highlighter-rouge">-o</code> = <code class="highlighter-rouge">--owner</code>  保留 <strong>所有者</strong> 属性。</p>
+
+<h5 id="-g"><code class="highlighter-rouge">-g</code></h5>
+
+<p><code class="highlighter-rouge">-g</code> = <code class="highlighter-rouge">--group</code>  保留 <strong>属组</strong> 属性。</p>
+
+<h5 id="-p"><code class="highlighter-rouge">-p</code></h5>
+
+<p><code class="highlighter-rouge">-p</code> = <code class="highlighter-rouge">--perms</code>  保留 <strong>权限</strong> 属性，不包括特殊权限。</p>
+
+<h5 id="-h"><code class="highlighter-rouge">-H</code></h5>
+
+<p>保留 <strong>硬链接</strong></p>
+
+<h5 id="-a-1"><code class="highlighter-rouge">-A</code></h5>
+
+<p>保留 <strong>ACL</strong></p>
+
+<h5 id="-x"><code class="highlighter-rouge">-X</code></h5>
+
+<p>保留 <strong>扩展属性</strong></p>
+
+<h5 id="-d"><code class="highlighter-rouge">-D</code></h5>
+
+<p><code class="highlighter-rouge">-D</code> = <code class="highlighter-rouge">--device --specials</code> 的组合</p>
+
+<p>复制 <strong>设备文件和特殊文件</strong>。</p>
+
+<h5 id="-l"><code class="highlighter-rouge">-l</code></h5>
+
+<p><code class="highlighter-rouge">-l</code> = <code class="highlighter-rouge">--links</code>  如果是 <strong>软链接</strong>，则复制软链接本身，而非所指对象。</p>
+
+<h5 id="-z"><code class="highlighter-rouge">-z</code></h5>
+
+<p>传输时进行 <strong>压缩</strong>，以提高效率。</p>
+
+<h5 id="-r-1"><code class="highlighter-rouge">-R</code></h5>
+
+<p><code class="highlighter-rouge">-R</code> = <code class="highlighter-rouge">--relative</code>  使用 <strong>相对路径</strong>，而不仅使用最后一段。</p>
+
+<p>意味着将命令行中指定的 <strong>全部路径参数</strong> 而非路径最尾部的文件名发送给服务端，包括它们的属性。</p>
+
+<p>如 <code class="highlighter-rouge">rsync -av dir1/host/tmp/rd.tmp remote:dest/</code> 中，源路径参数为 <code class="highlighter-rouge">dir1/host/tmp/rd.tmp</code>，rsync 默认仅会把 <code class="highlighter-rouge">rd.tmp</code> 发送给服务端。</p>
+
+<p>但 <code class="highlighter-rouge">rsync -av -R dir1/host/tmp/rd.tmp remote:dest/</code> 会把 <code class="highlighter-rouge">dir1/host/tmp/rd.tmp</code> 发送给服务端。</p>
+
+<h5 id="-d-1"><code class="highlighter-rouge">-d</code></h5>
+
+<p><code class="highlighter-rouge">-d</code> = <code class="highlighter-rouge">--dirs</code>  以 <strong>不递归</strong> 的方式复制目录本身。</p>
+
+<p>默认递归时，如果源为 <code class="highlighter-rouge">dir1/file1</code>，不会复制 <code class="highlighter-rouge">dir1</code> 目录，使用该选项将复制 <code class="highlighter-rouge">dir1</code> 但不复制 <code class="highlighter-rouge">file1</code>。</p>
+
+<h5 id="-w"><code class="highlighter-rouge">-W</code></h5>
+
+<p><code class="highlighter-rouge">-W</code> = <code class="highlighter-rouge">--whole-file</code>  不再使用增量传输，而 <strong>使用全量传输</strong>。在网络带宽高于磁盘带宽时，该选项更高效。</p>
+
+<h5 id="--remove-source-files"><code class="highlighter-rouge">--remove-source-files</code></h5>
+
+<p><strong>删除</strong> 源端已经成功传输的文件。</p>
+
+<h4 id="限定传输文件">限定传输文件</h4>
+
+<h5 id="--max-size"><code class="highlighter-rouge">--max-size</code></h5>
+
+<p>设定 rsync 传输的 <strong>文件大小上限</strong>，更大的文件不会被传输。可以使用文件大小的单位后缀，如 <code class="highlighter-rouge">m</code>。允许使用小数。</p>
+
+<h5 id="--min-size"><code class="highlighter-rouge">--min-size</code></h5>
+
+<p>设定 rsync 传输的 <strong>文件大小下限</strong>，更小的文件不会被传输。</p>
+
+<h5 id="--exclude"><code class="highlighter-rouge">--exclude</code></h5>
+
+<p>指定 <strong>排除规则</strong>，来排除无需传输的文件。</p>
+
+<h5 id="--existing"><code class="highlighter-rouge">--existing</code></h5>
+
+<p><strong>只更新</strong> 目标端 <strong>已存在</strong> 的文件，目标端尚不存在的不传输。</p>
+
+<p>注意，使用相对路径时，如果上层目录不存在，也不会传输。</p>
+
+<h5 id="--ignore-existing"><code class="highlighter-rouge">--ignore-existing</code></h5>
+
+<p><strong>只更新</strong> 目标端 <strong>不存在</strong> 的文件。</p>
+
+<h5 id="-m"><code class="highlighter-rouge">-m</code></h5>
+
+<p><code class="highlighter-rouge">-m</code> = <code class="highlighter-rouge">--prune-empty-dirs</code>  从文件列表中 <strong>删除空目录</strong>。</p>
+
+<p>该参数告诉接收端把空目录从文件列表中去掉，包括嵌套的空目录。避免在筛选规则的作用下生成一堆没用的目录。</p>
+
+<p>如 <code class="highlighter-rouge">+ */</code> 与筛选规则配合使用时，经常会生成多个空目录，可以用该参数不传输这些空目录。</p>
+
+<h4 id="续传">续传</h4>
+
+<h5 id="--partial"><code class="highlighter-rouge">--partial</code></h5>
+
+<p><code class="highlighter-rouge">-P</code> = <code class="highlighter-rouge">--partial</code></p>
+
+<p>选项 <code class="highlighter-rouge">--partial</code> 告知接收端，如果在文件完整传输之前发送端不见了，请 <strong>保留未传输完成的文件</strong>。</p>
+
+<p>使用 rsync 传输文件时，文件被临时保存为目标目录中的一个隐藏文件，或保存在 <code class="highlighter-rouge">--partial-dir</code> 指定的临时目录中。</p>
+
+<p>如果发生传输失败：</p>
+
+<ul>
+  <li>不使用 <code class="highlighter-rouge">--partial</code> 选项：该 <strong>隐藏文件会保留在目标目录</strong> 中不动</li>
+  <li>使用 <code class="highlighter-rouge">--partial</code> 选项：该 <strong>隐藏文件会被更名为真正的目标文件名</strong>，即使没有传输完成。</li>
+</ul>
+
+<p>下一次可以使用 <code class="highlighter-rouge">--apend</code> 或 <code class="highlighter-rouge">--apend-verify</code> 选项来再次运行 rsync，以期进行续传。</p>
+
+<p class="notice--success">因此，<code class="highlighter-rouge">--partial</code> 需要与 <code class="highlighter-rouge">--apend</code> 配合使用，才能实现断点续传。</p>
+
+<h5 id="--append-选项"><code class="highlighter-rouge">--append</code> 选项</h5>
+
+<p><code class="highlighter-rouge">--append</code> 选项是真正的续传开关，无论是否使用了 <code class="highlighter-rouge">--partial</code> 选项，都可以使用它。</p>
+
+<p>当使用 <code class="highlighter-rouge">--append</code> 选项时，不会再创建临时文件，<strong>文件会被直接创建到目标</strong>，于是，突然的中断，产生的结果与使用 <code class="highlighter-rouge">--partial</code> 是一致的，留下的未传完的文件均是真正的文件名，只不过 <code class="highlighter-rouge">--append</code> 不会产生那些隐藏的临时文件。</p>
+
+<p>如果要续传大型文件，在续传时，应使用 <code class="highlighter-rouge">--append</code> 或 <code class="highlighter-rouge">--append-verify</code> 开关。</p>
+
+<p>rsync 是在版本 3.0.0 之后，开始支持 <code class="highlighter-rouge">--append-verify</code> 选项的。</p>
+
+<p>版本 3.0.0 之前：</p>
+
+<ul>
+  <li><code class="highlighter-rouge">--append</code> 始终会比较两端的文件，不会假想它们相同</li>
+</ul>
+
+<p>在传输之前会对目标文件进行完整的校验，如果检验失败就会从头重新传输。</p>
+
+<p>版本 3.0.0 之后：</p>
+
+<ul>
+  <li><code class="highlighter-rouge">--append</code> 会认为两端的文件是完全相同的，不会比较两端的文件，不做校验而直接传输</li>
+  <li><code class="highlighter-rouge">--append-verify</code> 始终会比较两端的文件，进行校验，不会假想它们相同</li>
+</ul>
+
+<h4 id="文件的检查">文件的检查</h4>
+
+<p>检查文件是否有变化是确定是否要传输该文件的前提。</p>
+
+<h5 id="-u"><code class="highlighter-rouge">-u</code></h5>
+
+<p><code class="highlighter-rouge">-u</code> = <code class="highlighter-rouge">--update</code>  <strong>忽略</strong> 那些接收端比发送端要 <strong>新</strong> 的文件。</p>
+
+<p>注意：该选项是接收端判断的，不会影响删除行为。</p>
+
+<h5 id="--ignore-times"><code class="highlighter-rouge">--ignore-times</code></h5>
+
+<p><code class="highlighter-rouge">--ignore-times</code> 选项会 <strong>关闭</strong> rsync 对文件时间和大小的检查，<strong>无条件地传输所有文件</strong>。</p>
+
+<h5 id="--size-only"><code class="highlighter-rouge">--size-only</code></h5>
+
+<p><strong>只检查文件大小</strong>，相同就忽略。</p>
+
+<h5 id="-c"><code class="highlighter-rouge">-c</code></h5>
+
+<p><code class="highlighter-rouge">-c</code> = <code class="highlighter-rouge">--checksum</code></p>
+
+<p>该选项会改变 rsync 检查文件的方法。</p>
+
+<p>不用该选项时，在传输之前，rsync 默认使用快速检查，即检查每个文件的大小和修改时间。</p>
+
+<p>使用该选项以后，rsync 会 <strong>忽略文件时间</strong>，只检查文件大小。<strong>如果文件大小相同，则进一步检查校验码</strong>。</p>
+
+<p><strong>生成校验码</strong> 意味着，在传输之前，两端主机都要花费大量的时间在磁盘 I/O 上，读取文件中的所有数据。这会 <strong>严重影响传输速度</strong>。</p>
+
+<p>发送端扫描文件系统并生成文件列表时，会创建校验码。接收端在扫描变化的文件时生成校验码。</p>
+
+<ul>
+  <li>如果发现 <strong>文件大小相同</strong>，则会 <strong>进一步检查其校验码</strong> ，如果 <strong>检验码不同，则仅传输该文件的差异部分</strong>。</li>
+  <li>如果发现文件 <strong>大小不同</strong>，会 <strong>重新传输整个文件</strong>，覆盖目标文件。</li>
+</ul>
+
+<p class="notice--success">因此，<code class="highlighter-rouge">--checksum</code> 选项最适合其文件内容经常有 <strong>小变化的大型文件的同步</strong>。</p>
+
+<p class="notice--warning">要注意一点，rsync 传输的每个文件传到对端后，都要进行整个文件的校验，以 <strong>确保文件被正确重建</strong>。但该检验是在文件 <strong>传输之后</strong>，无论如何都要进行的，与 <code class="highlighter-rouge">--checksum</code> 的作用完全不同，后者是在 <strong>传输之前</strong> 想弄清楚 <strong>对端文件是否需要更新</strong>。</p>
+
+<h5 id="--whole-file-选项"><code class="highlighter-rouge">--whole-file</code> 选项</h5>
+
+<p>使用 <code class="highlighter-rouge">-W</code> 或 <code class="highlighter-rouge">--whole-file</code> 选项时，rsync <strong>不会使用 delta-transfer 机制</strong>，即会 <strong>传输整个文件</strong>，而非仅仅不同的部分。</p>
+
+<p>当网络带宽大于本地磁盘的带宽时，使用该选项会加快同步速度。因此它是本地同步的默认选项。</p>
+
+<h4 id="服务端主机上的操作">服务端主机上的操作</h4>
+
+<p class="notice--success">😈 rsync 同步时，希望尽量 <strong>减少不必要的网络传输</strong>。因此，无论本地还是服务端，能本地解决的，就决不应该通过网络传输来解决。</p>
+
+<p>某些时候，可能需要在目标主机上同时保存某个文件的多个副本，如果能让发送端知道目标主机已经存在该文件，就无需重复传输。</p>
+
+<h5 id="--compare-dest-选项"><code class="highlighter-rouge">--compare-dest</code> 选项</h5>
+
+<p><code class="highlighter-rouge">--compare-dest=DIR</code></p>
+
+<p>DIR 为目标主机上的目录。当目标目录中某文件丢失，可能需要重传时，该选项会让 rsync 在传输之前，先在本地 DIR 寻找，<strong>如果找到了相同的文件，就不会传输该文件</strong>。</p>
+
+<p>可以使用多个 <code class="highlighter-rouge">--compare-dest</code> 选项来指定多个比较目录，rsync 会按顺序依次在这些目录中寻找。</p>
+
+<p>如果在这些目录中找到了相同的文件，但文件属性不同，rsync 会生成一个本地副本，并将其更新为所需的属性。</p>
+
+<p>如果没有找到，会找到一个接近的文件，以尝试加速传输。</p>
+
+<p>如果 DIR 用的是相对路径，它一定要相对于目标目录。</p>
+
+<h5 id="--copy-dest-选项"><code class="highlighter-rouge">--copy-dest</code> 选项</h5>
+
+<p><code class="highlighter-rouge">--copy-dest=DIR</code></p>
+
+<p>工作原理与上面选项类似。如果在目标主机的比较目录中 <strong>找到了相同的文件</strong>，rsync 就不会从网络传输，而是从该目录中 <strong>把文件从本地复制到目标目录</strong>。</p>
+
+<h5 id="--link-dest-选项"><code class="highlighter-rouge">--link-dest</code> 选项</h5>
+
+<p><code class="highlighter-rouge">--link-dest=DIR</code></p>
+
+<p>工作原理相同。如果在比较目录中找到的文件不仅与目标文件大小时间相同，而且 <strong>属性也完全一致</strong>，则会从比较目录把该文件 <strong>硬链接到目标目录</strong>，可以大大减少不必要的磁盘占用。</p>
+
+<p>如果发现 rsync 没有生成链接，首先应该检查两地的文件属性是否一致，另外还要检查是否某些属性被管控，而导致 rsync 无法检查。比如挂载选项将超级用户作为了唯一合法用户，导致普通用户无权读取文件属性；或用了普通权限挂载可移动驱动器。</p>
+
+<p>该选项特别适用于 <strong>向空目录复制文件</strong>。做了硬链接以后，rsync 就不用再去比较目录查找，而且其延展性很强，如果哪天需要修改所有文件的属性，只需要修改比较目录中的文件，其硬链接就自动跟着变化了。</p>
+
+<h5 id="--delete-1"><code class="highlighter-rouge">--delete</code></h5>
+
+<p>同步时，以源为基准，对服务端的文件进行操作。<strong>多则删，少则补</strong>。</p>
+
+<p><code class="highlighter-rouge">--delete</code> 是在接收端执行的，所以它是在 exclude/include 规则生效之后才执行的。</p>
+
+<h5 id="-b"><code class="highlighter-rouge">-b</code></h5>
+
+<p><code class="highlighter-rouge">-b</code> = <code class="highlighter-rouge">--backup</code>  对目标上已存在的文件做一个 <strong>备份</strong>，备份文件后缀为 <code class="highlighter-rouge">~</code></p>
+
+<h5 id="--backup-dir"><code class="highlighter-rouge">--backup-dir</code></h5>
+
+<p>指定 <strong>备份文件的保存路径</strong>。不指定时默认与原文件同目录。</p>
+
+<h4 id="小结">小结</h4>
+
+<ul>
+  <li>如果经常使用 rsync 来单纯地把文件从 A 移动到 B，<strong>只需要续传功能</strong>，不要使用 <code class="highlighter-rouge">--checksum</code>，一定要用 <code class="highlighter-rouge">--append-verify</code>。</li>
+  <li>如果使用 rsync 来备份文件，而且备份的主要为大型文件，其修改内容通常很少，可以使用 <code class="highlighter-rouge">--append-verify</code></li>
+</ul>
+
+<h4 id="范例">范例</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rsync -azvHP -e ssh --delete --exclude Cache --link-dest=yesterdaystargetdir remote1:sourcedir todaystargetdir
+</code></pre></div></div>
+
+<ul>
+  <li>遍历子目录</li>
+  <li>复制符号链接</li>
+  <li>保留权限</li>
+  <li>保留 mtime</li>
+  <li>保留组</li>
+  <li>保留所有者</li>
+  <li>保留设备文件及特殊文件</li>
+  <li>保留硬链接</li>
+  <li>使用 SSH 做为服务端 shell</li>
+  <li>同步删除动作</li>
+  <li>排除 Cache 目录</li>
+  <li>比较目录</li>
+  <li>支持续传</li>
+  <li>传输前压缩</li>
+  <li>显示传输进度</li>
+</ul>
+
+<h3 id="rsync-路径参数注意事项">rsync 路径参数注意事项</h3>
+
+<h4 id="传输的根">传输的根</h4>
+
+<p>rsync 所传输的文件结构往往是一个经筛选后得到的目录树结构，该目录树的最根一层目录，称为传输的根目录，或传输的根（root of the transfer）。与 Linux 根目录没有直接关系。</p>
+
+<p>如：本地主机有目录 <code class="highlighter-rouge">/tmp/dir1/test/</code>，如果用 rsync 把 <code class="highlighter-rouge">/tmp/dir1</code> 目录及其内容同步给服务端主机，则 <code class="highlighter-rouge">dir1</code> 就是传输的根。</p>
+
+<h4 id="指定多个源路径">指定多个源路径</h4>
+
+<p>通过使用 <strong>多个 <code class="highlighter-rouge">host:file</code> 参数</strong>，可以 <strong>同时指定多个源文件路径</strong>，第二个起可以 <strong>省略主机</strong>：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rsync -av host:file1 :file2 host:file{3,4} /dest/
+rsync -av host::modname/file{1,2} host:modname/file3 /dest/
+rsync -av host::modname/file1 ::modname/file{3,4}
+</code></pre></div></div>
+
+<blockquote>
+  <p>较早版本的 rsync 是先用空格分隔各目录，再用单引号括起来：</p>
+
+  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rsync -av host:`dir1/file1 dir2/file2` /dest
+rsync host::`modname/dir1/file1 modname/dir2/file2` /dest
+</code></pre></div>  </div>
+
+  <p>以上用法在新版本也可以使用，但不如之前的方法便于使用。</p>
+</blockquote>
+
+<p>如果传输的文件名含有空格，可以使用 <code class="highlighter-rouge">--protect-args</code> 参数，或者把空格转义：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rsync -av host:`file\ name\ with\ spaces` /dest
+</code></pre></div></div>
+
+<h4 id="只有一个路径参数">只有一个路径参数</h4>
+
+<p>如果在 rsync 命令中 <strong>仅有一个路径参数</strong>，将被视为源路径，其效果类似于 <code class="highlighter-rouge">ls -l</code>，会列出该主机上的 <strong>文件列表</strong>，而 <strong>不会复制文件</strong>。</p>
+
+<h4 id="源路径结尾的斜线">源路径结尾的斜线</h4>
+
+<p>当源路径是目录时，</p>
+
+<ul>
+  <li>若 <strong>目录结尾有斜线</strong> <code class="highlighter-rouge">dir/</code>，表示 <strong>同步目录中的文件</strong>，不包括目录本身</li>
+  <li>若 <strong>目录结尾没有斜线</strong> <code class="highlighter-rouge">dir</code>，表示 <strong>同步整个目录</strong>，包括目录本身</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# rsync /etc /tmp
+~]# rsync /etc/ /tmp
+</code></pre></div></div>
+
+<p>第一个命令会在 <code class="highlighter-rouge">/tmp</code> 目录下创建 <code class="highlighter-rouge">etc</code> 目录，而第二个命令不会，源路径 <code class="highlighter-rouge">/etc/</code> 中的所有文件都直接放到 <code class="highlighter-rouge">/tmp</code> 目录下。</p>
+
+<p>注意，无论目录结尾有否斜线，<strong>目录的属性始终会传输给对端</strong>：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rsync -av /src/foo /dest
+rsync -av /src/foo/ /dest/foo
+</code></pre></div></div>
+
+<p>🚩 即，以上两种情况的结果是一致的，会以同样的方式复制文件，而且 <code class="highlighter-rouge">/dest/foo</code> 的属性最终也是一致的。</p>
+
+<h4 id="服务端主机路径的省略">服务端主机路径的省略</h4>
+
+<p>如果服务端主机或模块的末尾 <strong>省略了路径</strong>，则代表路径为 <strong>默认目录</strong>：</p>
+
+<p>通过 ssh 连接时，默认目录为 Linux 用户家目录：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rsync -av src/ host:
+</code></pre></div></div>
+
+<p>连接到 rsync daemon 时，默认目录为该模块指定的目录：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rsync -av host::module /dest
+</code></pre></div></div>
+
+<p>如果在服务端主机后 <code class="highlighter-rouge">::</code> <strong>省略了模块</strong>，将查看该主机 rsync 模块列表：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rsync somehost.mydomain.com::
+</code></pre></div></div>
+
+<h4 id="隐含目录">隐含目录</h4>
+
+<p>Implied Directories</p>
+
+<h5 id="默认行为">默认行为</h5>
+
+<p>默认情况下，rsync 只会传输命令行中源路径参数中最后一个斜线后面的字符串，可以是文件，也可以是目录。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rsync -av /foo/bar/baz.c remote:/tmp/
+</code></pre></div></div>
+
+<p>该命令会把本地的 <code class="highlighter-rouge">baz.c</code> 文件复制到服务端主机的 <code class="highlighter-rouge">/tmp/</code> 目录，同步结果为在服务端创建 <code class="highlighter-rouge">/tmp/baz.c</code>。前面的 <code class="highlighter-rouge">/foo/bar/</code> 被忽略。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rsync -av /foo/bar/baz remote:/tmp/
+</code></pre></div></div>
+
+<p>该命令会把本地的 <code class="highlighter-rouge">baz</code> 目录复制到服务端 <code class="highlighter-rouge">/tmp/</code> 目录，即 <code class="highlighter-rouge">/tmp/baz</code>。前面的 <code class="highlighter-rouge">/foo/bar/</code> 被忽略。</p>
+
+<h5 id="使用--r-选项">使用 <code class="highlighter-rouge">-R</code> 选项</h5>
+
+<p>而当使用 <code class="highlighter-rouge">-R</code> 选项时，rsync 会使用相对路径，即把命令行中完整的路径参数全部发送给接收端，而不仅仅是路径参数的最后部分。非常适用于 <strong>需要传输多个不同的目录</strong> 的场合。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rsync -avR /foo/bar/baz.c remote:/tmp/
+</code></pre></div></div>
+
+<p>使用 <code class="highlighter-rouge">-R</code> 后，<code class="highlighter-rouge">baz.c</code> 将 <strong>连同其上层目录结构</strong> 一起被复制到服务端，同步结果为在服务端创建 <code class="highlighter-rouge">/tmp/foo/bar/baz.c</code>。这些额外的路径元素被称为 <strong>隐含目录</strong>。</p>
+
+<h5 id="限制隐含目录的层级">限制隐含目录的层级</h5>
+
+<p>如果 <strong>不希望</strong> 源路径参数 <strong>全部</strong> 做为隐含目录发送给对方，对于每个路径参数，都可以指定哪一部分要做为隐含目录。</p>
+
+<p>通过在源路径参数中加入 <code class="highlighter-rouge">./</code> 来分隔路径参数，只有其后面的才会做为隐含目录发送给接收端。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rsync -avR /foo/./bar/baz.c remote:/tmp/
+</code></pre></div></div>
+
+<p>该命令的结果是在接收端创建 <code class="highlighter-rouge">/tmp/bar/baz.c</code>。</p>
+
+<h2 id="rsync-筛选规则">rsync 筛选规则</h2>
+
+<p class="notice--warning">写到这里，必须抱怨一句，rsync man page 写的实在是过于难懂了，逻辑也很混乱！导致普通用户的学习成本急剧增加，浪费了很多本不该浪费的时间。这就是本人倡导 “<strong>用简洁清晰的语言讨论技术</strong>” 的原因。能写代码、编程序是一回事，而能把事情讲清楚是另一回事。</p>
+
+<p>通过筛选规则可以灵活 <strong>选择需要同步或排除的文件</strong>。</p>
+
+<p>用 <code class="highlighter-rouge">--include</code> 选项可以指定需要传输的文件，称 <strong>包含规则</strong>。</p>
+
+<p>用 <code class="highlighter-rouge">--exclude</code> 选项可以排除无需传输的文件，称 <strong>排除规则</strong>。</p>
+
+<p class="notice--success">rsync 会根据命令行中的 <code class="highlighter-rouge">--include</code>、<code class="highlighter-rouge">--exclude</code> 选项 <strong>依次</strong> 生成一个过滤 <strong>规则列表</strong>。</p>
+
+<h3 id="筛选的原则">筛选的原则</h3>
+
+<ul>
+  <li><strong>排除了目录，就排除了其中所有文件</strong></li>
+  <li><strong>包含了目录，不会自动包含其中的文件</strong></li>
+  <li>命令行选项中，<code class="highlighter-rouge">--filter</code> 支持全部规则的解析，而 <code class="highlighter-rouge">--include</code> 和 <code class="highlighter-rouge">--exclude</code> 只支持使用 <code class="highlighter-rouge">!</code> 来清除规则列表。</li>
+  <li>使用 <code class="highlighter-rouge">--filter</code> 选项时，在规则的 <strong>开头必须指定规则名称</strong></li>
+  <li><code class="highlighter-rouge">--include</code>，<code class="highlighter-rouge">--exclude</code>，<code class="highlighter-rouge">--filter</code> 一次只能指定一条规则，要想指定多条规则：
+    <ul>
+      <li>可以在命令行上 <strong>多次使用</strong> 选项</li>
+      <li>可以 <strong>从文件读取</strong> 规则：<code class="highlighter-rouge">--filter=". mergefile"</code>，或 <code class="highlighter-rouge">--include-from</code>，<code class="highlighter-rouge">--exclude-from</code>，</li>
+    </ul>
+  </li>
+</ul>
+
+<p>生成要文件列表之后，对于其中的每个文件，rsync 都会对照筛选规则列表 <strong>依次</strong> 检查，并按 <strong>首个匹配的筛选规则</strong> 行事，该条规则：</p>
+
+<ul>
+  <li>如果是排除，便忽略该文件不同步</li>
+  <li>如果是包含，则不会忽略该文件</li>
+  <li>如果没有匹配的规则，也不会忽略文件文件</li>
+</ul>
+
+<p>根据 rsync 的以上工作特点，我们在指定筛选规则或编辑规则列表时，一定要 <strong>注意先后顺序</strong>。因为 rsync 会 <strong>按照匹配到的第一个规则行事</strong>。</p>
+
+<p>因此，编写规则通常会按以下顺序进行：</p>
+
+<ul>
+  <li>设定包含规则</li>
+  <li>逐层包含子目录</li>
+  <li>设定排除规则</li>
+</ul>
+
+<h3 id="筛选规则的生效时机">筛选规则的生效时机</h3>
+
+<p>发送端运行 rsync 命令后，rsync 会立即 <strong>扫描</strong> 命令行中给定的文件和目录，扫描过程中还会按照目录进行排序，将同一个目录的文件放在相邻的位置，称为 <strong>拷贝树</strong>（copy tree）。扫描完成后将需同步的文件或目录记录到 <strong>文件列表</strong> 中，然后将文件列表 <strong>传输给接收端</strong>。</p>
+
+<p>而 <strong>筛选规则的作用时刻是在扫描拷贝树</strong> 时，所以会根据规则来匹配，并决定是否把文件记录到文件列表中。</p>
+
+<p>实际上，即使是排除的文件，也会记录到文件列表中，只不过被标记为 hide 而隐藏起来。</p>
+
+<p class="notice--success">筛选规则的生效时间在 rsync 整个同步过程中是非常靠前的，它会影响很多选项的操作对象，最典型的如 <code class="highlighter-rouge">--delete</code>。</p>
+
+<h3 id="从文件读取规则">从文件读取规则</h3>
+
+<p>使用 <code class="highlighter-rouge">--filter=</code>，<code class="highlighter-rouge">--include-from</code>，<code class="highlighter-rouge">--exclude-from</code> 选项都可以从文件读取规则。</p>
+
+<ul>
+  <li>使用 <code class="highlighter-rouge">--include-from</code> 或 <code class="highlighter-rouge">--exclude-from</code> 选项读取规则文件</li>
+  <li>通过 <code class="highlighter-rouge">--filter="merge file"</code> 或 <code class="highlighter-rouge">--filter="dir-merge file"</code> 可以把整个规则文件合并到筛选规则中来</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rsync -av --include-from=include.file src/ dest/
+rsync -av --exclude-from=include.file src/ dest/
+</code></pre></div></div>
+
+<p>规则文件有两种形式：<strong>单独</strong> 的规则文件，以及 <strong>每目录</strong> 一个独立的规则文件</p>
+
+<h4 id="单独的规则文件">单独的规则文件</h4>
+
+<p><code class="highlighter-rouge">--filter="merge file"</code> 或简写为 <code class="highlighter-rouge">--filter=". file"</code></p>
+
+<p>单独的规则文件用于一次全部读取，其规则会被合并到规则列表中。</p>
+
+<h4 id="每目录的规则文件">每目录的规则文件</h4>
+
+<p><code class="highlighter-rouge">--filter="dir-merge file"</code> 或简写为 <code class="highlighter-rouge">--filter=": file"</code></p>
+
+<p>rsync 会遍历扫描每个目录，寻找目录中的特定名称（命令中指定的，如上 <code class="highlighter-rouge">file</code>）的规则文件，如果存在，则将其内容合并到当前继承的规则列表中。</p>
+
+<p>这些每目录规则文件必须在发送端创建，因为要扫描发送端来决定传送哪些文件。</p>
+
+<p>如果希望这些规则文件能够控制接收端避免删除某些文件，则需要将它们发送给接收端。</p>
+
+<p>在每目录规则概念出现以后，有必要区分一下全局规则和每目录规则：</p>
+
+<ul>
+  <li><strong>全局规则</strong>：本次 rsync 同步过程中全程有效的规则，基本上在 dir-merge 之前读取的规则只要不重复就是全局规则</li>
+  <li><strong>每目录规则</strong>：仅对每个目录自身有效，加上其继承的父目录的规则</li>
+</ul>
+
+<h5 id="merge-使用的修饰符">merge 使用的修饰符</h5>
+
+<p>在 merge 或 dir-merge 后面也可以跟修饰符，如 <code class="highlighter-rouge">--filter=":n- file"</code>。</p>
+
+<p>修饰符的主要作用是让 rsync 更好地了解该规则文件，以及应该如何使用它。</p>
+
+<p><strong><code class="highlighter-rouge">-</code></strong>  规则文件仅由排除表达式组成，不含其他规则。</p>
+
+<p><strong><code class="highlighter-rouge">+</code></strong>  规则文件仅由包含表达式组成，不含其他规则。</p>
+
+<p><strong><code class="highlighter-rouge">C</code></strong>  规则文件应该以 CVS 兼容方式来读取。该修饰符同时会开启 <code class="highlighter-rouge">n</code>，<code class="highlighter-rouge">w</code>，<code class="highlighter-rouge">-</code>，同时也允许使用 <code class="highlighter-rouge">!</code> 来反向指定，如果没有指定文件名，默认会使用 <code class="highlighter-rouge">.cvsignore</code>。</p>
+
+<p><strong><code class="highlighter-rouge">e</code></strong>  传输时排除规则文件本身。即规则文件自身不会被传输。</p>
+
+<p><strong><code class="highlighter-rouge">n</code></strong>  规则不会被子目录继承。</p>
+
+<p><strong><code class="highlighter-rouge">w</code></strong>  规则使用空格分隔，而非换行符。此时不允许规则中使用注释。</p>
+
+<p class="notice--info">除了以上这些修饰符，merge 还可以使用下文中的为 <code class="highlighter-rouge">+</code> 和 <code class="highlighter-rouge">-</code> 准备的修饰符（除了 <code class="highlighter-rouge">!</code>，它用不上）。</p>
+
+<p>如：</p>
+
+<p><code class="highlighter-rouge">:s</code>  表示每目录的规则文件仅在发送端生效。</p>
+
+<p>如果命令行中的 merge 选项中已经使用了 <code class="highlighter-rouge">s</code> 或 <code class="highlighter-rouge">r</code> 这类令规则仅在一端生效的修饰符，则其读取的规则文件中就不能重复出现它们。</p>
+
+<h5 id="子目录的规则">子目录的规则</h5>
+
+<p>每目录规则默认会被其子目录继承，除非使用了 <code class="highlighter-rouge">n</code> 修饰符。</p>
+
+<p>如果子目录中存在自己的规则文件，则其自己的规则会排在它继承规则的前面，具有更高的优先级。</p>
+
+<h5 id="防止规则被继承的方法">防止规则被继承的方法</h5>
+
+<p>命令行中 merge 的位置，决定了全体每目录规则在全局规则列表中的位置。因此，如果在 <strong>命令行中更靠前的位置指定规则</strong>，会覆盖每目录的规则，因为它位于全局规则列表中更靠前的位置。</p>
+
+<p>从每目录规则文件中读取到的 <code class="highlighter-rouge">!</code>，即清除列表规则（list-clearing rule），只会清除其继承的规则。</p>
+
+<p>另外，如果在规则中使用前导斜线 <code class="highlighter-rouge">/</code> ，就可以阻止该条规则被继承。因为每目录规则文件中的规则，均是相对于规则文件所在的目录的，因此规则中的 <code class="highlighter-rouge">/foo</code> 只会匹配该规则文件所在目录中的 <code class="highlighter-rouge">foo</code>，而不会匹配其子目录中的 <code class="highlighter-rouge">foo</code>。</p>
+
+<h5 id="使用每目录规则时删除的注意事项">使用每目录规则时，删除的注意事项</h5>
+
+<p>如果没有删除的选项，每目录规则只与发送端有关，因此完全可以使用 <code class="highlighter-rouge">--filter=":e .file"</code> 把规则文件自身给排除掉，不予传输。</p>
+
+<p>但是，如果需要在接收端进行删除操作，而且还需要排除某些文件，以避免被删除，则 <strong>必须要保证把所有规则文件都发送给接收端</strong>，这样两端的主机所获得的规则才完全相同。之后，需要 <strong>使用 <code class="highlighter-rouge">--delete-after</code> 选项</strong>，来告知接收端，直到 <strong>接收完所有的规则文件才开始执行删除的操作</strong>。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rsync -avF --delete-after host:src/dir /dest
+</code></pre></div></div>
+
+<h3 id="筛选规则的语法">筛选规则的语法</h3>
+
+<p><code class="highlighter-rouge">规则名称[,修饰符] [表达式或文件名]</code></p>
+
+<p>规则名称有两种形式：长名，如 <code class="highlighter-rouge">exclude</code>。短名，如 <code class="highlighter-rouge">-</code>。因短名只有一个字符，因此更多被使用。</p>
+
+<ul>
+  <li>使用 <strong>长名</strong>： <code class="highlighter-rouge">exclude,/ dir1/mergefile</code></li>
+  <li>使用 <strong>短名</strong>： <code class="highlighter-rouge">-,! */</code></li>
+  <li>使用 <strong>短名</strong> 时，可以省略修饰符前面的逗号：<code class="highlighter-rouge">-p *.tmp</code></li>
+</ul>
+
+<h4 id="规则名称">规则名称</h4>
+
+<p>本段落中规则名称均为 <code class="highlighter-rouge">长名, 短名</code> 格式。</p>
+
+<p><code class="highlighter-rouge">exclude, -</code>  指定要排除的文件。只作用于发送端，被排除的文件在文件列表中与隐藏规则一样被隐藏</p>
+
+<p><code class="highlighter-rouge">include, +</code>  指定要包括的文件。只作用于发送端，被包含的文件将明确记录到文件列表中</p>
+
+<p><code class="highlighter-rouge">merge, .</code>  指定额外文件，从中读取更多规则</p>
+
+<p><code class="highlighter-rouge">dir-merge, :</code>  指定额外目录，读取其中的所有规则文件</p>
+
+<p><code class="highlighter-rouge">hide, H</code>  指定传输中要隐藏的文件。只作用于发送端，隐藏后的文件对于接收端来说是看不见的，也就是说接收端会认为它不存在于源端。</p>
+
+<p><code class="highlighter-rouge">show, S</code>  指定要显示的文件。只作用于发送端，是隐藏规则的反向规则。</p>
+
+<p><code class="highlighter-rouge">protect, P</code>  指定要保护的文件。只作用于接收端，被保护的文件不会被删除掉。</p>
+
+<p><code class="highlighter-rouge">risk, R</code>  指定不保护的文件，可以删除</p>
+
+<p><code class="highlighter-rouge">clear, !</code>  清除当前规则列表</p>
+
+<p>如果从文件中读取规则，规则文件中的空行将被忽略，<code class="highlighter-rouge">#</code> 开头的行视为注释。</p>
+
+<h4 id="修饰符">修饰符</h4>
+
+<p>筛选规则中的修饰符是为了 <strong>更加细致地规范规则</strong>。</p>
+
+<p>以下的修饰符可以在 <code class="highlighter-rouge">+</code> 或 <code class="highlighter-rouge">-</code> 后面使用：</p>
+
+<h5><code class="highlighter-rouge">/</code></h5>
+
+<p><code class="highlighter-rouge">/</code> 表示规则匹配时必须 <strong>按绝对路径比较</strong>。</p>
+
+<p>如 <code class="highlighter-rouge">-/ /etc/passwd</code> 表示：从 <code class="highlighter-rouge">/etc</code> 目录发送的文件 <code class="highlighter-rouge">passwd</code> 会被排除</p>
+
+<p><code class="highlighter-rouge">-/ subdir/foo</code> 只要文件 <code class="highlighter-rouge">foo</code> 所在的目录为 <code class="highlighter-rouge">subdir</code> 就会排除，哪怕 <code class="highlighter-rouge">foo</code> 位于传输的根上。</p>
+
+<h5 id="-1"><code class="highlighter-rouge">!</code></h5>
+
+<p><code class="highlighter-rouge">!</code> 表示反向比较，可以理解为 “<strong>非</strong>”。</p>
+
+<p>如 <code class="highlighter-rouge">-! */</code> 表示排除所有非目录。</p>
+
+<h5 id="s"><code class="highlighter-rouge">s</code></h5>
+
+<p><code class="highlighter-rouge">s</code> 表示规则仅在发送端生效。</p>
+
+<p>如果规则在发送端生效，该规则就会 <strong>防止文件被传输</strong>。</p>
+
+<p>普通的规则默认是在发送端和接收端同时生效的。</p>
+
+<h5 id="r"><code class="highlighter-rouge">r</code></h5>
+
+<p><code class="highlighter-rouge">r</code> 表示规则仅在接收端生效。</p>
+
+<p>如果规则在接收端生效，该规则就会 <strong>防止文件被删除</strong>。</p>
+
+<h5 id="c"><code class="highlighter-rouge">C</code></h5>
+
+<p>本人未了解。</p>
+
+<h5 id="p"><code class="highlighter-rouge">p</code></h5>
+
+<p>当需要删除某个被排除的文件所在的目录时，可以使用 <code class="highlighter-rouge">p</code> 修饰符。</p>
+
+<p>假设本地主机有如下目录结构：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data
+├── cache
+│   └── config.tmp
+├── dir1
+│   └── go.tmp
+├── dir2
+│   └── over.tmp
+└── logs
+    └── error.log
+</code></pre></div></div>
+
+<p>同步时，我们不希望传输本地的 <code class="highlighter-rouge">*.tmp</code> 临时文件，以及 <code class="highlighter-rouge">data/logs</code> 目录中的日志文件，因为它们只对本地系统有意义。同时，我们也希望保存服务端主机上的临时文件和日志文件，不要被 rsync 删除。</p>
+
+<p>假设之前已经同步过，现在删除本地 <code class="highlighter-rouge">data/cache</code> 目录，然后再次同步：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rm -rf data/cache
+$ rsync --delete -d --exclude="*.tmp" --exclude="data/logs/*.log" src/ remote:dest/
+</code></pre></div></div>
+
+<p>运行时会得到 “cannot delete non-empty directory: data/cache” 的反馈信息，因为 <code class="highlighter-rouge">data/cache/config.tmp</code> 是被排除的文件，在服务端主机上没有被删除，rsync 就无法删除其所在目录。</p>
+
+<p>此时，即使加上 <code class="highlighter-rouge">--force</code> 这个强制删除非空目录的选项也无济于事。</p>
+
+<p>而 <code class="highlighter-rouge">--delete-excluded</code> 选项，虽然可以删除被排除的文件，但并不适合当前场景，因为我们需要保留服务端的 <code class="highlighter-rouge">*.tmp</code>，<code class="highlighter-rouge">*.log</code> 文件。</p>
+
+<p>rsync 有一个模式叫 <strong>“易逝” 模式</strong>（perishable mode），用 <code class="highlighter-rouge">p</code> 修饰符来实现。</p>
+
+<p class="notice--success">该模式下排除的文件不会传输，通常也不会在接收端被删除，<strong>除非</strong> 它们所在的目录不复存在。也就是说，如果 rsync 要删除某个目录时，发现其中有被排除的文件，会临时忽略排除的限制，继续删除该目录。</p>
+
+<p>因此，最终我们应该使用修饰符 <code class="highlighter-rouge">p</code> 来实现：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rsync --delete -d --filter="-p *.tmp" --filter="-p data/logs/" src/ remote:dest/
+</code></pre></div></div>
+
+<p>该命令运行后，接收端 <code class="highlighter-rouge">data/cache</code> 目录将被成功删除。</p>
+
+<h4 id="表达式">表达式</h4>
+
+<p>表达式可以有以下几种形式：</p>
+
+<h5 id="-前导斜线"><code class="highlighter-rouge">/</code> 前导斜线</h5>
+
+<p>如果表达式以 <code class="highlighter-rouge">/</code> 开头，则该表达式需要锚定到某个目录上。</p>
+
+<ul>
+  <li>对于命令行中指定的规则与单独规则文件中的规则来说，该前导斜线表示 <strong>相对于传输根</strong></li>
+  <li>对于每根目录规则文件来说，该斜线表示 <strong>相对于规则文件所在目录</strong></li>
+</ul>
+
+<h5 id="结尾斜线-">结尾斜线 <code class="highlighter-rouge">/</code></h5>
+
+<p>如果表达式以斜线结尾，表示 <strong>仅匹配目录</strong>，而非普通文件、链接或设备文件。</p>
+
+<h5 id="通配符">通配符</h5>
+
+<p>只有在表达式中发现 <code class="highlighter-rouge">*</code>，<code class="highlighter-rouge">?</code>，<code class="highlighter-rouge">[]</code> 时，rsync 才会进行通配符匹配，否则进行简单的字符串匹配。</p>
+
+<h5 id="-2"><code class="highlighter-rouge">*</code></h5>
+
+<p><code class="highlighter-rouge">*</code> 匹配所有文件、路径，但遇到斜线 <code class="highlighter-rouge">/</code> 会停止匹配。</p>
+
+<h5 id="-3"><code class="highlighter-rouge">**</code></h5>
+
+<p><code class="highlighter-rouge">**</code> 匹配所有文件、路径，包括斜线。</p>
+
+<h5 id="-4"><code class="highlighter-rouge">?</code></h5>
+
+<p><code class="highlighter-rouge">?</code> 匹配所有字符，除了 <code class="highlighter-rouge">/</code>。</p>
+
+<h5 id="-"><code class="highlighter-rouge">[ ]</code></h5>
+
+<p><code class="highlighter-rouge">[ ]</code>  会引入一组字符，如 <code class="highlighter-rouge">[a-z]</code>，<code class="highlighter-rouge">[[:alpha:]]</code>。</p>
+
+<h5 id="-5"><code class="highlighter-rouge">\</code></h5>
+
+<p>在通配符表达式中，反斜线 <code class="highlighter-rouge">\</code> 可用于转义通配符本身。</p>
+
+<p>如果在表达式中不含通配符，<code class="highlighter-rouge">\</code> 匹配反斜线自身。</p>
+
+<h5 id="-6"><code class="highlighter-rouge">/</code>，<code class="highlighter-rouge">**</code></h5>
+
+<p>如果表达式包含一个 <strong>斜线</strong> <code class="highlighter-rouge">/</code> （结尾斜线不算）或 <strong>双星号</strong> <code class="highlighter-rouge">**</code>，则应该用于 <strong>匹配全路径</strong>。</p>
+
+<p>如果表达式 <strong>不包含 <code class="highlighter-rouge">/</code> 或 <code class="highlighter-rouge">\*\*</code></strong>，则仅 <strong>匹配文件名</strong>。</p>
+
+<h5 id="dir"><code class="highlighter-rouge">dir/***</code></h5>
+
+<p>如果表达式的结尾是 <code class="highlighter-rouge">dirname/***</code>，则匹配 <strong>目录及其所有内容</strong>。</p>
+
+<h4 id="表达式范例">表达式范例</h4>
+
+<p><code class="highlighter-rouge">- *.o</code>  排除所有 <code class="highlighter-rouge">*.o</code> 文件</p>
+
+<p><code class="highlighter-rouge">- /foo</code>  排除传输根目录中名为 <code class="highlighter-rouge">foo</code> 的文件或目录</p>
+
+<p><code class="highlighter-rouge">- foo/</code>  排除所有名为 <code class="highlighter-rouge">foo</code> 的目录</p>
+
+<p><code class="highlighter-rouge">- /foo/*/bar</code>  在传输根目录中，排除 <code class="highlighter-rouge">foo</code> 目录下两层子目录中名为 <code class="highlighter-rouge">bar</code> 的文件</p>
+
+<p><code class="highlighter-rouge">- /foo/**/bar</code>  在传输根目录中，排除 <code class="highlighter-rouge">foo</code> 目录下两层及两层以上子目录中名为 <code class="highlighter-rouge">bar</code> 的文件</p>
+
+<p><code class="highlighter-rouge">+ */</code>, <code class="highlighter-rouge">+ *.c</code>, <code class="highlighter-rouge">- *</code>  包含所有目录，以及所有 <code class="highlighter-rouge">*.c</code> 文件，排除其他所有</p>
+
+<p><code class="highlighter-rouge">+ foo/</code>, <code class="highlighter-rouge">+ foo/bar.c</code>, <code class="highlighter-rouge">-*</code>  包含名为 <code class="highlighter-rouge">foo</code> 的目录，及该目录中的 <code class="highlighter-rouge">bar.c</code> 文件，排除其他所有</p>
+
+<h5 id="包含文件或目录">包含文件或目录</h5>
+
+<p>要想准确地包含文件或路径，首先要 <strong>逐层目录地包含</strong>，<strong>最后再把其余的排除掉</strong>。</p>
+
+<p>简单粗暴型：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+ */
+</code></pre></div></div>
+
+<p>细腻型：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+ data/
++ data/text_forms/
++ data/text_forms/*.per
++ data/text_forms/*.42f
++ data/text_forms/*.xml
++ data/text_forms/*.xml.*
+- *
+</code></pre></div></div>
+
+<p>只把要包含的目录单独指定，然后包含目录中特定文件，最后再排除其他所有。</p>
+
+<p>排除其余所有：</p>
+
+<p><code class="highlighter-rouge">- *</code></p>
+
+<h2 id="连接到-rsync-daemon">连接到 rsync daemon</h2>
+
+<p>可以不使用远程 shell 来传输，而直接连接到远程  rsync daemon，通常使用 <strong>TCP 873 端口</strong>。</p>
+
+<p>rsync daemon 会为每个连接 fork 出一个新的 rsync daemon 进程。进程启动时，会解析 <code class="highlighter-rouge">rsyncd.conf</code> 配置文件，了解存在哪些模块、设置全局选项。</p>
+
+<p>当 rsync daemon 收到针对某个 rsync 模块的连接时，它会 fork 出一个子进程来处理该连接。该子进程读取 <code class="highlighter-rouge">rsyncd.conf</code> 为该模块请求设定选项，该模块会 <code class="highlighter-rouge">chroot</code> 到其默认路径，并为该进程去掉 SUID、SGID。</p>
+
+<p>之后，该子进程就可以像其它 rsync 服务端进程一样运行了。</p>
+
+<h3 id="基本语法-1">基本语法</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Access via rsync daemon:
+  Pull: rsync [OPTION...] [USER@]HOST::SRC... [DEST]
+        rsync [OPTION...] rsync://[USER@]HOST[:PORT]/SRC... [DEST]
+  Push: rsync [OPTION...] SRC... [USER@]HOST::DEST
+        rsync [OPTION...] SRC... rsync://[USER@]HOST[:PORT]/DEST
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rsync -av host::src /dest
+</code></pre></div></div>
+
+<p>【 daemon 选项 】</p>
+
+<p><code class="highlighter-rouge">--daemon</code>  作为 daemon 运行</p>
+
+<p><code class="highlighter-rouge">--address</code>  绑定到特定 IP 地址或主机名，此举允许虚拟主机配合 <code class="highlighter-rouge">--config</code> 选项</p>
+
+<p><code class="highlighter-rouge">--config=FILE</code>  不使用默认的配置文件，指定本次运行 rsync 要使用的配置文件</p>
+
+<p><code class="highlighter-rouge">--port=PORT</code>  指定运行端口</p>
+
+<h3 id="与使用远程-ssh-的区别">与使用远程 ssh 的区别</h3>
+
+<ul>
+  <li>主机后要用双冒号 <code class="highlighter-rouge">::</code>，或使用 <code class="highlighter-rouge">rsync://</code> 格式</li>
+  <li>主机后的第一个名字是模块名 <code class="highlighter-rouge">host::module</code></li>
+  <li>服务端 rsync daemon 可以输出一条消息告知你连接的日期</li>
+  <li>如果省略服务端路径，则会列出服务端可访问的路径列表</li>
+  <li>如果没有指定本地目标目录，则会列出服务端目录中文件列表</li>
+  <li>不可使用 <code class="highlighter-rouge">-rsh</code> (<code class="highlighter-rouge">-e</code>) 参数</li>
+</ul>
+
+<blockquote>
+  <p>关于模块的概念见下文 “rsync daemon 的配置”</p>
+</blockquote>
+
+<h3 id="用户认证">用户认证</h3>
+
+<p>根据实际需要，可以对服务端 rsync daemon 中的某些模块进行强制密码认证，本地连接到服务端时，会收到输入密码的提示。要想避开该提示，可以使 <strong>用 <code class="highlighter-rouge">--password-file</code></strong> 选项来指定 <strong>本地保存密码的文件</strong>，也可以使用环境变量 <code class="highlighter-rouge">RSYNC_PASSWORD</code> 来保存密码。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rsync -av --password-file=pwd source/ host::module
+</code></pre></div></div>
+
+<h3 id="通过代理连接">通过代理连接</h3>
+
+<h4 id="web-代理">WEB 代理</h4>
+
+<p>可以 <strong>通过 WEB 代理服务器来建立连接</strong>，只需给环境变量 <code class="highlighter-rouge">RSYNC_PROXY</code> 赋值，格式为 <code class="highlighter-rouge">hostname:port</code>。注意，网页代理服务器的配置必须支持到 TCP 873 端口的连接。</p>
+
+<h4 id="程序代理">程序代理</h4>
+
+<p>也可以通过设定环境变量 <code class="highlighter-rouge">RSYNC_CONNECT_PROG</code> 为某个命令，实现 <strong>把一个程序做为代理来创建一个 rsync daemon 的连接</strong>，这样就可以不用直接创建一个套接字连接了。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export RSYNC_CONNECT_PROG='ssh proxyhost nc %H 873'
+rsync -av targethost1::module/src/ /dest/
+rsync -av rsync:://targethost2/module/src/ /dest/
+</code></pre></div></div>
+
+<p>以上命令表示使用 ssh 在代理主机 proxyhost 上运行 <code class="highlighter-rouge">nc</code> （netcat），netcat 会把所有数据转发给主机 <code class="highlighter-rouge">%H</code> 的端口 873。</p>
+
+<p><code class="highlighter-rouge">%H</code> 代表 rsync 命令中的主机名，hostname。</p>
+
+<h3 id="rsync-daemon-的配置">rsync daemon 的配置</h3>
+
+<h4 id="启动-rsync-daemon">启动 rsync daemon</h4>
+
+<p>要想连接到服务端系统的 rsync daemon，该守护进程必须在服务端系统中启动，或者当 <strong>特定端口传来入站连接时</strong>，设置诸如 inetd 等来 <strong>自动生成一个 rsync daemon</strong>。</p>
+
+<p><code class="highlighter-rouge">/etc/rsyncd.conf</code> 是 rsync daemon 的配置文件。</p>
+
+<p>如果使用了远程 shell 来传输，就不必再手动启动 rsync daemon 了。</p>
+
+<h2 id="通过远程-shell-使用-rsync-daemon-的功能">通过远程 shell 使用 rsync daemon 的功能</h2>
+
+<p>如果不用放行任何新的套接字连接进入系统，而又能使用 rsync daemon 的各种功能，有时候会特别有用。</p>
+
+<p>rsync 允许使用远程 shell 连接到主机，然后再产生一个单一用途的 rsync daemon，该进程可以按指定选项来读取配置文件。</p>
+
+<p>当你需要加密 daemon 风格的数据传输时，这个方法特别有用。但是，因为该进程是由服务端用户激发的，因此无法使用 <code class="highlighter-rouge">chroot</code> 功能，也无法修改进程使用的 UID。</p>
+
+<p>另一种加密 daemon 传输的方法是：用 ssh 为某个本地端口到服务端主机先创建一个隧道，然后再在服务端主机上配置一个普通的 rsync daemon，配置其只接受本地主机的连接。</p>
+
+<p>语法上基本与使用 ssh 相同，只是要用 <code class="highlighter-rouge">--rsh</code> 来指定远程 shell。当然也可以通过设置环境变量 <code class="highlighter-rouge">RSYNC_RSH</code> 达到相同的效果。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rsync -av --rsh=ssh host::module /dest
+</code></pre></div></div>
+
+<p>如果要使用其它的远程 shell 用户，可以使用 <code class="highlighter-rouge">user@host</code> 格式来指定，同时必须使用 <code class="highlighter-rouge">-l user</code> 选项：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rsync -av -e "ssh -l ssh-user" rsync-user@host::module /dest
+</code></pre></div></div>
+
+<p>注意：<code class="highlighter-rouge">ssh-user</code> 用于 SSH 连接，而 <code class="highlighter-rouge">rsync-user</code> 则用于登陆 rsync 的模块。</p>
+
+<h2 id="批处理模式">批处理模式</h2>
+
+<p>批处理模式可用于 <strong>向多组相同的系统应用同一批更新</strong>。</p>
+
+<p>假设有个目录树，在 <strong>多个主机上都有副本</strong>，该源目录树发生的修改需要传给多个主机。</p>
+
+<p class="notice--success">为了使用批处理模式，先是使用 <code class="highlighter-rouge">--write-batch</code> 选项，向某一台主机的目标来应用修改，<code class="highlighter-rouge">--write-batch</code> 选项会把本次 rsync <strong>对服务端进行的同步操作</strong> 完整保存到一个 <strong>批处理文件</strong> 中，之后可以用它来帮助其余的主机完成快速同步。</p>
+
+<p>为了方便用户，rsync 同时还会自动生成一个 <strong>同名脚本文件 <code class="highlighter-rouge">*.sh</code></strong>，内容为一行 rsync 命令，上面的批处理文件也会做为其中的选项。</p>
+
+<h3 id="批处理文件的作用">批处理文件的作用</h3>
+
+<p>之所以在第一次同步时生成批处理文件，是为了省去同步其余主机时不必要的文件状态检查、校验码检查，可以大大提升同步的效率。可以用 <strong>多播传输协议</strong>，<strong>同时对多个主机并行传输更新的文件</strong>，而无需单独对每个主机逐个传输相同的数据。</p>
+
+<h3 id="如何使用批处理文件">如何使用批处理文件</h3>
+
+<p>要想把批处理录制下来的同步操作应用给其他主机，可以在同步命令中使用 <code class="highlighter-rouge">--read-batch</code> 选项来指定批处理文件。</p>
+
+<h4 id="生成批处理文件">生成批处理文件</h4>
+
+<p class="notice">假设有 A、B、C、D、E、F、G 七台主机，同时保存相同的目录树副本，现在主机 A 上对目录树做了修改，希望其同步到其余所有主机上。</p>
+
+<p>可以先随意找一台主机，如主机 B，先在上面运行一次 rsync，把主机 A 中的修改同步到主机 B 的 <code class="highlighter-rouge">/destB/dir/</code> 目录。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rsync --write-batch=abc -av hostA:/source/dir/ /destB/dir/
+#                   ^^^
+</code></pre></div></div>
+
+<p>同步完成后，rsync 会生成两个文件：<code class="highlighter-rouge">abc</code> 及 <code class="highlighter-rouge">abc.sh</code>。</p>
+
+<ul>
+  <li><strong><code class="highlighter-rouge">abc</code> 为批处理文件</strong>，用于记录本次 rsync 的所有同步操作。如对文件的删除、同步等。</li>
+  <li><strong><code class="highlighter-rouge">abc.sh</code> 为脚本文件</strong>，其内容为 <code class="highlighter-rouge">rsync -av --read-batch=abc ${1:-/destA/dir/}</code></li>
+</ul>
+
+<p><code class="highlighter-rouge">abc.sh</code> 可以用 bash shell 来执行，运行时还可以传递一个 <strong>目标目录</strong> 的参数，该参数将覆盖脚本中的目标目录。当目标主机中的目标目录名各不相同时非常有用。</p>
+
+<h4 id="把批处理文件复制到其他主机">把批处理文件复制到其他主机</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scp abc* hostC：
+</code></pre></div></div>
+
+<p>使用 scp 命令把 <code class="highlighter-rouge">abc</code> 及 <code class="highlighter-rouge">abc.sh</code> 复制到主机 C。</p>
+
+<h4 id="远程执行同步脚本">远程执行同步脚本</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh hostC ./abc.sh /destC/dir/
+</code></pre></div></div>
+
+<p>用 ssh 连接到主机 C，并在主机 C 的 shell 上执行刚刚复制过去的脚本 <code class="highlighter-rouge">abc.sh</code>，即在主机 C 上运行 rsync 进行同步。</p>
+
+<h4 id="从标准输入读取批处理">从标准输入读取批处理</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh hostD rsync --read-batch=- -a /destD/dir/ &lt;abc
+#                            ^                 ^^^
+</code></pre></div></div>
+
+<p>也可以在 ssh 命令中直接使用 rsync 命令，此时 <code class="highlighter-rouge">--read-batch</code> 选项的值来自于重定向于 <code class="highlighter-rouge">abc</code> 的标准输入。</p>
+
+<p>这样的做法就省去了向服务端主机复制批处理文件的步骤。</p>
+
+<p>本例未使用脚本 <code class="highlighter-rouge">abc.sh</code> 是因为 <code class="highlighter-rouge">--read-batch</code> 选项需要使用标准输入。如果想在命令中使用脚本，必须要确保没有其他选项会使用标准输入，如 <code class="highlighter-rouge">--exclude-from=-</code>。</p>
+
+<h3 id="批处理注意事项">批处理注意事项</h3>
+
+<p>使用 <code class="highlighter-rouge">--read-batch</code> 选项时，必须确保目标目录树与生成批处理文件时的目标目录树完全一致。</p>
+
+<ul>
+  <li>如果目标目录树已经更新，同步时会被忽略，并出现警示信息</li>
+  <li>如果目标目录树出现验证错误，同步会忽略，并出现错误信息</li>
+</ul>
+
+<p>因此，如果同步被意外中断时，可以很安全地使用 <code class="highlighter-rouge">--read-batch</code> 再次运行 rsync 命令。</p>
+
+<p>在批处理模式中，如果希望每次同步时都忽略对文件大小和日期的检查，可以再加上 <code class="highlighter-rouge">-I</code> 选项。</p>
+
+<p>如果同步时的意外导致目标没有同步完成，可以使用 rsync 的普通模式来修复。</p>
+
+<p>同步的目标主机，其 rsync 版本不能低于生成批处理的主机。</p>
+
+<p>生成批处理文件时，如果在 rsync 命令中含有 <code class="highlighter-rouge">--exclude</code>，<code class="highlighter-rouge">--include</code> 或其他过滤选项，这些选项会被保存到 <code class="highlighter-rouge">*.sh</code> 脚本中，并以 here 文档的格式追加在 rsync 命令的下面：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]$ cat abc.sh
+rsync --filter=._- -av --read-batch=abc ${1:-~/source/} &lt;&lt;'#E#'
+- aaaa
+- bbbb
+#E#
+</code></pre></div></div>
+
+<p>上例中 <code class="highlighter-rouge">- aaaa</code> 和 <code class="highlighter-rouge">- bbbb</code> 就是被排除的目录名。</p>
+
+<h2 id="rsync-工作流程分析">rsync 工作流程分析</h2>
+
+<h3 id="基本概念">基本概念</h3>
+
+<h4 id="工作方式">工作方式</h4>
+
+<p>rsync 有三种工作方式：</p>
+
+<ul>
+  <li>本地传输</li>
+  <li>使用远程 shell 连接</li>
+  <li>使用网络套接字连接 rsync daemon</li>
+</ul>
+
+<h5 id="本地传输">本地传输</h5>
+
+<p>本地传输其实是一种特殊的工作方式。运行 rsync 命令时，</p>
+
+<ul>
+  <li>先生成一个 rsync 进程</li>
+  <li>根据此进程 fork 另一个 rsync 进程 <strong>作为连接的对端</strong></li>
+</ul>
+
+<p>连接建立之后，后续所有的 <strong>通信</strong> 将采用 <strong>管道</strong> 的方式。</p>
+
+<h5 id="使用远程-shell-连接-1">使用远程 shell 连接</h5>
+
+<p>以 SSH 为例：</p>
+
+<ul>
+  <li>本地键入 rsync 命令后，将 <strong>请求</strong> 和远程主机建立远程 <strong>ssh 连接</strong>，连接建立成功后</li>
+  <li>在远程主机上 <strong>fork 远程 ssh 进程</strong></li>
+  <li><strong>调用远程 rsync</strong> 程序</li>
+  <li>将 rsync 所需的 <strong>选项</strong> 通过远程 ssh <strong>传递给远程 rsync</strong></li>
+</ul>
+
+<p>这样两端就都启动了 rsync。之后，它们将通过 <strong>管道</strong> 的方式（即使它们之间是本地和远程的关系）<strong>进行通信</strong>。</p>
+
+<h5 id="使用网络套接字连接-rsync-daemon">使用网络套接字连接 rsync daemon</h5>
+
+<p>通过网络套接字连接到 rsync daemon 时，</p>
+
+<ul>
+  <li>rsync daemon 进程会 <strong>创建一个子进程</strong> 来响应该连接，并负责后续该连接的所有通信</li>
+</ul>
+
+<p>这样两端也都启动了连接所需的rsync，之后它们 <strong>通过网络套接字进行通信</strong>。</p>
+
+<h4 id="客户端与服务端">客户端与服务端</h4>
+
+<p>无论使用何种连接方式，发起连接的一端被称为 <strong>客户端</strong>，即执行 rsync 命令的一端，连接的另一端称为 <strong>服务端</strong>。</p>
+
+<p class="notice--warning">服务端可以是本地端，也可以是远程对端，还可以是远程 rsync daemon 端。</p>
+
+<p>rsync 的客户端和服务端的概念存活周期很短，当客户端和服务端都启动了 rsync 进程，并建立了 rsync 连接（管道、网络套接字）时，将使用 <strong>发送端</strong> 和 <strong>接收端</strong> 来代替客户端和服务端的概念。（啰嗦）</p>
+
+<h4 id="进程及流水线">进程及流水线</h4>
+
+<p>两端的 rsync 连接建立后，整个传输过程将由三个进程完成，它们是 <strong>高度流水线化</strong>（pipelined）的。进程之间以 <strong>单方向</strong> 的方式进行通信。在文件列表传输完成之后，流水线如下：</p>
+
+<p>generator  &gt;  发送端  &gt;  接收端</p>
+
+<p>generator 的输出结果是发送端的输入，发送端的输出结果是接收端的输入。</p>
+
+<p>它们每个进程独立运行，并且只有在流水线被阻塞，或等待磁盘 I/O、CPU 资源时才被延迟。</p>
+
+<p>虽然这三个进程是流水线式的，但它们是 <strong>完全独立、并行工作</strong> 的。每个进程在处理完相关工作的那一刻，都会立即将数据传输给接收进程，并开始处理下一个工作，接收进程收到数据后也马上开始处理。所以它们的工作基本上不会出现延迟和阻塞。</p>
+
+<h5 id="发送端进程">发送端进程</h5>
+
+<p>发送端 rsync 进程负责这一端的 <strong>所有工作</strong>。</p>
+
+<p>发送端进程收到 generator 的 <strong>校验码集合</strong>，会立即处理该文件。处理文件时，每遇到一个匹配块，都会 <strong>随时</strong> 将这部分相关数据 <strong>传递</strong> 给接收端进程，然后立即处理下一个数据块。</p>
+
+<h5 id="接收端进程">接收端进程</h5>
+
+<p>接收端 rsync 进程负责 <strong>接收数据、文件重组</strong>。</p>
+
+<p>接收端进程收到数据后，会立即开始 <strong>重组</strong> 工作。</p>
+
+<h5 id="接收端-generator-进程">接收端 generator 进程</h5>
+
+<p>它是另一个核心进程，负责执行 <strong>删除</strong> 操作、<strong>比较文件大小</strong>、<strong>比较 mtime</strong>、对每个文件 <strong>划分数据块</strong>、<strong>计算校验码</strong>、<strong>生成校验码集合</strong>，然后将校验码集合传递给发送端。</p>
+
+<p>generator 计算出一个文件的校验码集合，传给发送端，之后它会立即计算下一个文件的校验码集合。</p>
+
+<h4 id="文件列表">文件列表</h4>
+
+<p>rsync 连接建立完成之后，第一件事就是由发送端创建文件列表，并传递给接收端。</p>
+
+<p>文件列表中不仅包含路径，还包含文件的 <strong>部分属性</strong>：复制模式、权限、文件大小、所有者、属组、修改时间等。</p>
+
+<p>包含哪些属性决定于 rsync 使用的选项，如不指定 <code class="highlighter-rouge">-o</code>，<code class="highlighter-rouge">-g</code> 时，不会包含 UID、GID，指定 <code class="highlighter-rouge">--checksum</code> 会包含文件级的校验码。</p>
+
+<p>文件列表创建并传递完毕以后，两端都会按照相对于传递根目录的路径对文件列表进行排序（排序算法信赖于传输的协议版本号），排序完成后，之后对文件的引用就都通过文件列表中的 <strong>编号</strong> 来进行。</p>
+
+<p>以下为实例：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# rsync -a -vvvv /etc/cron.d /var/log/anaconda /etc/issue longshuai@172.16.10.5:/tmp
+......
+######### 发送端生成文件列表，发送给接收端 #############
+sending incremental file list
+[sender] make_file(cron.d,*,0)       # 第一个要传输的文件目录：cron.d文件，注意，此处cron.d是待传输的文件，而不认为是目录
+[sender] make_file(anaconda,*,0)     # 第二个要传输的为目录：anaconda
+[sender] make_file(issue,*,0)        # 第三个要传输的为目录：issue
+
+# 从文件列表的第1项开始，本次要传输的文件共有3个
+[sender] flist start=1, used=3, low=0, high=2   
+# 为这3个文件生成列表，包括文件id，所在目录，权限模式，长度，uid/gid，修饰符
+[sender] i=1 /etc issue mode=0100644 len=23 uid=0 gid=0 flags=5   
+#  隐含目录  ^^^^  ^^^^  需同步文件
+[sender] i=2 /var/log anaconda/ mode=040755 len=4096 uid=0 gid=0 flas=5
+#  隐含目录   ^^^^^^^  ^^^^^^^  需同步文件
+[sender] i=3 /etc cron.d/ mode=040755 len=51 uid=0 gid=0 flags=5   
+#  隐含目录  ^^^^  ^^^^^^  需同步文件
+send_file_list done
+file list sent
+</code></pre></div></div>
+
+<p>唯一需要注意的是文件所在目录，例如 <code class="highlighter-rouge">/var/log anaconda/</code>，但实际在命令行中指定的是 <code class="highlighter-rouge">/var/log/anaconda</code>。此处 <code class="highlighter-rouge">log</code> 和 <code class="highlighter-rouge">anaconda</code> 使用空格分开了，这个 <strong>空格</strong> 非常关键。空格的左边为 <strong>隐含目录</strong>，右边是 <strong>待同步的文件</strong>，<strong>默认</strong> 情况下将会在接收端生成 <code class="highlighter-rouge">anaconda/</code> 目录，而左边的 <strong>隐含目录不会创建</strong>。</p>
+
+<p>可以通过使用选项 <strong><code class="highlighter-rouge">-R</code></strong>，允许接收端同步时 <strong>创建隐含目录</strong>，以便创建 <strong>整个目录结构</strong>。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>############ 发送端发送文件属性信息 #####################
+# 由于前面的文件列表中有两个条目是目录，因此还要为目录中的每个文件生成属性信息并发送给接收端
+send_files starting
+[sender] make_file(anaconda/anaconda.log,*,2)
+[sender] make_file(anaconda/syslog,*,2)
+[sender] make_file(anaconda/program.log,*,2)
+[sender] make_file(anaconda/packaging.log,*,2)
+[sender] make_file(anaconda/storage.log,*,2)
+[sender] make_file(anaconda/ifcfg.log,*,2)
+[sender] make_file(anaconda/ks-script-1uLekR.log,*,2)
+[sender] make_file(anaconda/ks-script-iGpl4q.log,*,2)
+[sender] make_file(anaconda/journal.log,*,2)
+[sender] flist start=5, used=9, low=0, high=8
+[sender] i=5 /var/log anaconda/anaconda.log mode=0100600 len=6668 uid=0 gid=0 flags=0
+[sender] i=6 /var/log anaconda/ifcfg.log mode=0100600 len=3826 uid=0 gid=0 flags=0
+[sender] i=7 /var/log anaconda/journal.log mode=0100600 len=1102699 uid=0 gid=0 flags=0
+[sender] i=8 /var/log anaconda/ks-script-1uLekR.log mode=0100600 len=0 uid=0 gid=0 flags=0
+[sender] i=9 /var/log anaconda/ks-script-iGpl4q.log mode=0100600 len=0 uid=0 gid=0 flags=0
+[sender] i=10 /var/log anaconda/packaging.log mode=0100600 len=160420 uid=0 gid=0 flags=0
+[sender] i=11 /var/log anaconda/program.log mode=0100600 len=27906 uid=0 gid=0 flags=0
+[sender] i=12 /var/log anaconda/storage.log mode=0100600 len=78001 uid=0 gid=0 flags=0
+[sender] i=13 /var/log anaconda/syslog mode=0100600 len=197961 uid=0 gid=0 flags=0
+[sender] make_file(cron.d/0hourly,*,2)
+[sender] make_file(cron.d/sysstat,*,2)
+[sender] make_file(cron.d/raid-check,*,2)
+[sender] flist start=15, used=3, low=0, high=2
+[sender] i=15 /etc cron.d/0hourly mode=0100644 len=128 uid=0 gid=0 flags=0
+[sender] i=16 /etc cron.d/raid-check mode=0100644 len=108 uid=0 gid=0 flags=0
+[sender] i=17 /etc cron.d/sysstat mode=0100600 len=235 uid=0 gid=0 flags=0
+# 从上述结果中发现，没有i=4和i=14的文件信息，因为它们是目录anaconda和cron.d的文件信息
+# 还发现没有发送/etc/issue文件的信息，因为issue自身是普通文件而非目录，因此在发送目录前就发送了
+############# 文件列表所有内容发送完毕 ####################
+</code></pre></div></div>
+
+<h4 id="基准文件">基准文件</h4>
+
+<p>Basis File</p>
+
+<p>如果文件不被忽略，所有目标路径下 <strong>已存在的文件版本</strong> 将作为基准文件，它们将作为数据匹配源，使得发送端无需发送能匹配上这些数据源的部分，从而实现增量传输。</p>
+
+<h3 id="rsync-工作流程">rsync 工作流程</h3>
+
+<h4 id="建立连接启动进程">建立连接，启动进程</h4>
+
+<p>客户端启动，与服务端 <strong>建立通信连接</strong>。</p>
+
+<p>在通信最初阶段，双方会相互发送自己支持的最大的 <strong>协议版本号</strong>，使用两者之中较低版本进行传输。</p>
+
+<h5 id="连接远程-shell">连接远程 shell</h5>
+
+<p>当 rsync 通过远程 shell 连接到服务端时，服务端会 <strong>启动一个 rsync 进程</strong>。</p>
+
+<p>两端都通过 <strong>远程 shell 之间的管道</strong> 进行通信。</p>
+
+<p>在此过程中，rsync 进程未涉及到网络。</p>
+
+<p>该模式下，服务端的 rsync 进程所使用的 <strong>选项</strong> 是由远程 shell 传递给它的。</p>
+
+<h5 id="连接-rsync-daemon">连接 rsync daemon</h5>
+
+<p>连接到服务端的 rsync daemon 时，直接使用 <strong>网络套接字</strong> 通信。</p>
+
+<p>这是唯一一种可称为网络感知的 rsync 通信方式。</p>
+
+<p>该模式下，rsync 通过套接字先把 <strong>选项</strong> 传递给服务端，再传递排除列表。</p>
+
+<h5 id="本地">本地</h5>
+
+<p>rsync 在本地同步时，源文件端变成发送端，并 fork 一个服务端进程，来扮演接收端的角色，之后它们通过 <strong>管道</strong> 进行通信。</p>
+
+<h4 id="发送端传递文件列表">发送端传递文件列表</h4>
+
+<p>发送端进程根据 rsync 命令行中给定的选项和筛选规则来 <strong>收集待同步文件</strong>，将其 <strong>保存至文件列表</strong>，<strong>传递</strong> 给接收端。</p>
+
+<ul>
+  <li>创建文件列表时，先按照目录进行 <strong>排序</strong>，然后给文件 <strong>编号</strong>，便于随后对文件的引用。</li>
+  <li>无需等待全部文件扫描完毕，发送端每扫描完 <strong>一个目录</strong>，就会将这一部分的文件列表 <strong>随时</strong> 发给接收端。同样，接收端也是逐个目录接收的，收到的文件列表均经过排序。</li>
+  <li><code class="highlighter-rouge">exclude</code> 及 <code class="highlighter-rouge">hide</code> 筛选规则匹配的文件会在文件列表中 <strong>标记为隐藏</strong> <code class="highlighter-rouge">hide</code>，接收端看不见这些文件。</li>
+</ul>
+
+<h4 id="接收端比较文件传递校验码集合">接收端比较文件，传递校验码集合</h4>
+
+<p>接收端收到文件列表后，从接收端进程 <strong>fork 出 generator</strong> 进程，该进程参照文件列表来 <strong>扫描本地目录树</strong>。</p>
+
+<h5 id="删除操作">删除操作</h5>
+
+<p>generator 的工作流程中，最先执行的是 <strong>删除</strong> 操作。</p>
+
+<p>如果使用了 <code class="highlighter-rouge">--delete</code> 选项，会删除那些源路径中没有，但目标路径中存在的文件。</p>
+
+<h5 id="比较文件">比较文件</h5>
+
+<p>参照文件列表，按顺序逐个 <strong>比较本地文件</strong> 的大小和 mtime。</p>
+
+<h6 id="目标文件存在">目标文件存在</h6>
+
+<p>如果目标路径中的目标文件已经存在，则对两端文件的文件大小或 mtime 进行比较：</p>
+
+<p>如果 <strong>相同则忽略</strong>，如果 <strong>不同</strong>，则对目标文件进行 <strong>校验</strong>：</p>
+
+<p>generator 读取文件列表中的一个基准文件，将其 <strong>划分数据块并编号</strong>，对每个数据块计算 <strong>弱滚动校验码</strong>（rolling checksum）和 <strong>强校验码</strong>（MD5 hash），将这些校验码随数据块编号组合在一起，成为 <strong>校验码集合</strong>。</p>
+
+<p>数据块的大及块校验和的大小，是根据文件大小计算出来的，也支持自定义块大小。将该文件的 <strong>编号</strong> 与 <strong>校验码集合</strong> 一起传递给发送端。</p>
+
+<p>每文件的块校验码集合在计算出来之后也是 <strong>随时</strong> 发送的，不会等所有文件都计算完才一起发送。</p>
+
+<p>之后，继续处理文件列表中下一个文件。</p>
+
+<p>如果使用了 <code class="highlighter-rouge">--checksum</code> 选项，generator 会生成 <strong>文件级校验码</strong>，并加以比较。</p>
+
+<p>如果使用了 <code class="highlighter-rouge">--whole-file</code> 选项，则会对文件列表中的所有文件发送 <strong>空的块校验码</strong>，使得 rsync 强制采用 <strong>全量传输</strong>。</p>
+
+<h6 id="目标文件不存在">目标文件不存在</h6>
+
+<p>当 generator 比较文件时，对于那些接收端 <strong>没有的文件</strong>，会将其 <strong>校验码设置为空</strong>，再传递给发送端。rsync 对于该文件就会使用 <strong>全量传输</strong>，而不再用增量传输。</p>
+
+<h4 id="发送端传递匹配信息非匹配数据">发送端传递匹配信息、非匹配数据</h4>
+
+<p>发送端进程收到 generator 发来的 “文件编号及校验码集合”，对于 generator 发来的每个文件，发送端会存储块校验码，并生成它们的 hash 索引，以加快查找速度。</p>
+
+<p>然后，按照文件编号，发送端依次 <strong>为本地文件数据块计算校验码</strong>。为了节省时间，先是仅计算滚动校验码。</p>
+
+<p>发送端读取每个文件，在 <strong>所有偏移量上</strong> 查找，看有没有数据块与接收端相同。</p>
+
+<p>读取相同大小的数据块，并计算校验码，将其与接收端的校验码集合进行 <strong>比对</strong>，看能否 <strong>匹配</strong> 其中的某一项。</p>
+
+<h5 id="没有匹配项">没有匹配项</h5>
+
+<p>如果没有匹配项，表示两端数据存在差异，该数据块需要传输给接收端。</p>
+
+<p>这部分不匹配的数据 <strong>累加</strong> 到上一个不匹配数据中。</p>
+
+<p>向后 <strong>跳一个字节</strong>，比较下一个数据块。这就是所谓 “滚动检验”。</p>
+
+<h5 id="发现匹配项">发现匹配项</h5>
+
+<p>如果发现匹配项，会再次计算该数据块的强校验码，若仍然相同，表示该数据块两端都有，无需传输。</p>
+
+<p>此时，会把累加到当前的 <strong>不匹配数据</strong> 发送给接收端，然后发送 <strong>匹配项的偏移量及长度</strong>。</p>
+
+<p>向后 <strong>跳一个字节</strong>，比较下一个数据块。</p>
+
+<p class="notice--success">即使文件的数据块被重新排序过，或位于不同的偏移量上，用这种方法都能 <strong>把匹配项找出来</strong>，这是 rsync 机制的 <strong>核心</strong>。</p>
+
+<p>通过这种方法，发送端会传递出丰富的指令，以帮助接收端重组出最新的文件。这些指令详细地描述了如何从基准文件中把匹配的数据复制出来，同时还包含所有的不匹配的原始数据（raw data）。</p>
+
+<p>处理完每个文件，发送端还会把整个文件的校验码发给接收端，然后再处理下一个文件。</p>
+
+<h4 id="接收端重组文件">接收端重组文件</h4>
+
+<p>接收端会根据文件编号来读取发送端传来的该文件的数据，打开本地的基准文件，创建一个临时文件。</p>
+
+<p>接收端收到的都是若干个 <strong>不匹配数据 + 匹配记录</strong> 这样的序列，用它们就能重组成一个最新的文件。</p>
+
+<p>读取到的不匹配数据会被写入临时文件，接收端参照匹配记录的说明，定位基准文件的偏移量，将对应的部分复制到临时文件中。临时文件就是以这种方式一点点创建完成的。</p>
+
+<p>临时文件生成完毕，会为其生成文件校验码，将其与发送端的进行比对，要是不同，则删除该临时文件。如果失败一次，会重新再生成一遍，如果失败再次，则会报告错误信息。</p>
+
+<p>为临时文件设置拥有者、权限、mtime，然后重命名，覆盖基准文件。</p>
+
+<p>从基准文件把数据复制到临时文件的过程，会让接收端的磁盘操作变得密集。对于小文件，可以放到磁盘缓存，但若是大文件，generator 要处理下一个文件时，缓存就会发生抖动（thrash），会导致发送端产生延迟。</p>
+
+<p>另外，由于数据可能会从一个文件随机地被读取，再写到另一个文件中，如果整块数据大于磁盘缓存，则会导致 “寻道风暴” （seek storm），会进一步影响性能。</p>
+
+<h3 id="rsync-适用场景">rsync 适用场景</h3>
+
+<h4 id="资源消耗">资源消耗</h4>
+
+<p>增量传输时：</p>
+
+<ul>
+  <li><strong>发送端</strong> 因为要多次计算、多次比较各种校验码，因此对 <strong>CPU</strong> 的消耗很高。</li>
+  <li><strong>接收端</strong> 因为要从 basis file 中复制数据，因此对 <strong>I/O</strong> 的消耗很高。</li>
+</ul>
+
+<p>全量传输时：</p>
+
+<ul>
+  <li>发送端无需计算、比较校验码，接收端无需复制 basis file，rsync 消耗的资源与 scp 是一样的。</li>
+</ul>
+
+<h4 id="不适合同步数据库文件">不适合同步数据库文件</h4>
+
+<p>数据库文件比较大，频繁访问。如果要用 rsync 同步，发送端在计算、比较数据块校验码时会长期消耗大量的 CPU，从而影响数据库服务的性能。</p>
+
+<p>接收端每次都要从巨大的 basis file中复制大部分相同的数据块，来重组新文件，这几乎相当于直接 cp 了一个文件，I/O 压力特别大。</p>
+
+<p>因此，对于数据库文件，只适合用 rsync 偶尔备份一次，不适合做频繁的同步。</p>
+
+<p>数据库文件的同步应该 <strong>使用数据库自带的 replication 功能</strong>。</p>
+
+<h4 id="适合实时同步大量小文件">适合实时同步大量小文件</h4>
+
+<p>rsync 最适合实时同步大量的小文件。</p>
+
+<p>由于 rsync 是增量同步，所以对于接收端已存在的文件，不会发送。因此两端都只需要处理少量的文件。</p>
+
+<p>由于文件较小，因此无论是发送端的 CPU 还是接收端的 I/O 都不成问题。</p>
+
+<p>但，<strong>实时</strong> 同步需要 <strong>借助其它工具</strong> 来实现，如 inotify + rsync，sersync。</p>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/rsync" class="page__taxonomy-item" rel="tag">rsync</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/备份" class="page__taxonomy-item" rel="tag">备份</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/同步" class="page__taxonomy-item" rel="tag">同步</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#app" class="page__taxonomy-item" rel="tag">app</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2017-04-01T00:00:00+08:00">April 01, 2017</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">分享</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=liloli&text=rsync+%E7%9A%84%E7%94%A8%E6%B3%95%20http%3A%2F%2Flocalhost%3A4000%2Fapp%2Frsync%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fapp%2Frsync%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fapp%2Frsync%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fapp%2Frsync%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/database/mysql_server_managemt/" class="pagination--pager" title="MySQL 服务端的管理
+">向前</a>
+    
+    
+      <a href="http://localhost:4000/programming/programming_intro/" class="pagination--pager" title="Python 编程导论
+">向后</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">猜您还喜欢</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/time/" rel="permalink">Bash 脚本 - 时间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/storage/" rel="permalink">Bash 脚本 - 存储空间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/numbers/" rel="permalink">Bash 脚本 - 数字
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/input/" rel="permalink">Bash 脚本 - 输入
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+      <li><a href="https://twitter.com/liloli"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+      <li><a href="https://www.facebook.com/lilolibj"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+    
+    
+      <li><a href="https://github.com/liloli"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+  
+  
+  <script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/app/rsync/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/app/rsync"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://liloli.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+  </body>
+</html>

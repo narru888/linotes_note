@@ -1,0 +1,2316 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Linux 基础 - 13. SELinux - LINOTES</title>
+<meta name="description" content="用简洁清晰的语言讨论技术">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Linux 基础 - 13. SELinux">
+<meta property="og:url" content="http://localhost:4000/linux/linux.selinux/">
+
+
+  <meta property="og:description" content="用简洁清晰的语言讨论技术">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/header/Access-Control.jpg">
+
+
+
+  <meta name="twitter:site" content="@liloli">
+  <meta name="twitter:title" content="Linux 基础 - 13. SELinux">
+  <meta name="twitter:description" content="用简洁清晰的语言讨论技术">
+  <meta name="twitter:url" content="http://localhost:4000/linux/linux.selinux/">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="http://localhost:4000/assets/images/header/Access-Control.jpg">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2015-01-13T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/linux/linux.selinux/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "Hawk Zhang",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- <link rel="stylesheet" href="/assets/css/vim.css"> -->
+
+
+
+  
+
+
+
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('http://localhost:4000/assets/images/header/Access-Control.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Linux 基础 - 13. SELinux
+
+        
+      </h1>
+      
+        <p class="page__lead">
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:liloli@gmail.com">
+            <meta itemprop="email" content="liloli@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Linux 基础 - 13. SELinux">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="January 13, 2015">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-code-branch"></i> 13. SELinux</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#131-安全访问控制机制">13.1 安全访问控制机制</a>
+    <ul>
+      <li><a href="#1311-dac">13.1.1 DAC</a></li>
+      <li><a href="#1312-mac">13.1.2 MAC</a></li>
+    </ul>
+  </li>
+  <li><a href="#132-selinux-简介">13.2 SELinux 简介</a>
+    <ul>
+      <li><a href="#1321-selinux-的优点">13.2.1 SELinux 的优点</a></li>
+      <li><a href="#1322-selinux-架构">13.2.2 SELinux 架构</a></li>
+      <li><a href="#1323-selinux-核心要素">13.2.3 SELinux 核心要素</a></li>
+      <li><a href="#1324-selinux-策略">13.2.4 SELinux 策略</a></li>
+      <li><a href="#1325-selinux-决策流程">13.2.5 SELinux 决策流程</a></li>
+    </ul>
+  </li>
+  <li><a href="#133-selinux-上下文">13.3 SELinux 上下文</a>
+    <ul>
+      <li><a href="#1331-上下文的内容">13.3.1 上下文的内容</a></li>
+      <li><a href="#1332-域的转换">13.3.2 域的转换</a></li>
+      <li><a href="#1333-进程的上下文">13.3.3 进程的上下文</a></li>
+      <li><a href="#1334-用户的上下文">13.3.4 用户的上下文</a></li>
+    </ul>
+  </li>
+  <li><a href="#134-targeted-策略">13.4 Targeted 策略</a>
+    <ul>
+      <li><a href="#1341-受限进程">13.4.1 受限进程</a></li>
+      <li><a href="#1342-非受限进程">13.4.2 非受限进程</a></li>
+      <li><a href="#1343-受限及非受限用户">13.4.3 受限及非受限用户</a></li>
+    </ul>
+  </li>
+  <li><a href="#135-对用户的限制">13.5 对用户的限制</a>
+    <ul>
+      <li><a href="#1351-linux-和-sl-用户映射">13.5.1 Linux 和 SL 用户映射</a></li>
+      <li><a href="#1352-限制-linux-新用户useradd">13.5.2 限制 Linux 新用户：useradd</a></li>
+      <li><a href="#1353-限制现有-l-用户semanage-login">13.5.3 限制现有 L 用户：semanage login</a></li>
+      <li><a href="#1354-修改默认映射">13.5.4 修改默认映射</a></li>
+      <li><a href="#1355-xguestkiosk-模式">13.5.5 xguest：kiosk 模式</a></li>
+      <li><a href="#1356-用户执行程序的布尔值">13.5.6 用户执行程序的布尔值</a></li>
+    </ul>
+  </li>
+  <li><a href="#136-使用-selinux">13.6 使用 SELinux</a>
+    <ul>
+      <li><a href="#1361-日志">13.6.1 日志</a></li>
+      <li><a href="#1362-配置文件">13.6.2 配置文件</a></li>
+      <li><a href="#1363-状态与模式">13.6.3 状态与模式</a></li>
+      <li><a href="#1364-布尔值">13.6.4 布尔值</a></li>
+      <li><a href="#1365-给文件打标签">13.6.5 给文件打标签</a></li>
+      <li><a href="#1366-file_t-及-default_t类型">13.6.6 file_t 及 default_t类型</a></li>
+      <li><a href="#1367-挂载文件系统">13.6.7 挂载文件系统</a></li>
+      <li><a href="#1368-标签的维护">13.6.8 标签的维护</a></li>
+      <li><a href="#1369-信息分析">13.6.9 信息分析</a></li>
+      <li><a href="#13610-禁用-ptrace">13.6.10 禁用 ptrace()</a></li>
+      <li><a href="#13611-缩略图保护">13.6.11 缩略图保护</a></li>
+    </ul>
+  </li>
+  <li><a href="#137-selinux-排错">13.7 SELinux 排错</a>
+    <ul>
+      <li><a href="#1371-拒绝访问时都发生了什么">13.7.1 拒绝访问时都发生了什么？</a></li>
+      <li><a href="#1372-常见问题">13.7.2 常见问题</a></li>
+      <li><a href="#1373-解决问题">13.7.3 解决问题</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="131-安全访问控制机制">13.1 安全访问控制机制</h2>
+
+<p>在安全访问中，访问的发起者称为 <strong>主体</strong>，被访问的资源称为 <strong>客体</strong>。</p>
+
+<p class="notice">😈 为了减少输入时中英文切换的次数，偷懒一下，下文中，用 <code class="highlighter-rouge">SL</code> 表示 SELinux，用 <code class="highlighter-rouge">L 用户</code> 表示 Linux 用户，用 <code class="highlighter-rouge">SL 用户</code> 表示 SELinux 用户。</p>
+
+<h3 id="1311-dac">13.1.1 DAC</h3>
+
+<p>DAC，Discretionary Access Control，<strong>自主访问控制</strong>，Linux 传统的访问控制属于这样的机制。</p>
+
+<p>DAC <strong>控制的主体为用户</strong>。</p>
+
+<ul>
+  <li><strong>自主</strong>：访问控制由文件或进程的 <strong>所有者决定</strong></li>
+  <li>只使用 UID、GID 来控制</li>
+</ul>
+
+<p>传统文件权限中，帐号分为系统管理员与普通用户，对文件件资源的访问权限决定于 rwx 的设置。根据对象所属的分组来限制对对象的访问。</p>
+
+<p class="notice--warning">DAC 最大的缺点是它 <strong>无法分离用户和进程</strong>，进程能够继承用户的访问控制，<strong>授权用户的所有进程会自动获得授权</strong>，包括侵入该用户名下的恶意程序。</p>
+
+<p>root 为默认的超级用户，属于它的进程一旦被攻破会极度危险。</p>
+
+<h3 id="1312-mac">13.1.2 MAC</h3>
+
+<p>MAC，Mandatory Access Control，<strong>强制访问控制</strong>，操作系统会限制进程对客体的访问或操作，SELinux 属于这样的控制机制。</p>
+
+<p>主体和客体都有一组安全属性，操作系统会检查这些标签，以决定请求的操作是否允许进行。</p>
+
+<p>MAC <strong>控制的主体为进程</strong>，不再是用户。</p>
+
+<h4 id="mac-的特性">MAC 的特性</h4>
+
+<ul>
+  <li><strong>系统级别</strong> 的访问控制，强制实施
+    <ul>
+      <li><strong>用户无法超越策略的限制</strong></li>
+      <li><strong>颗粒级别</strong> 的控制</li>
+      <li><strong>最小权限原则</strong>：仅授予足够完成具体任务的权限</li>
+    </ul>
+  </li>
+  <li><strong>客体为系统资源</strong>，如文件、目录、共享内存、套接字、网络主机等</li>
+  <li><strong>任何主体</strong> 对 <strong>任何客体</strong> 实施的 <strong>任何操作</strong> 都会被规则检查，以确定是否有权进行该操作</li>
+  <li>MAC 是近年的主流访问控制方式</li>
+  <li>通过 <strong>对比各自身上的标签</strong>，决定主体是否有权访问客体。</li>
+  <li><strong>决定访问权限的</strong> 不再是主体和客体，而 <strong>是访问控制策略</strong>。</li>
+  <li>SELinux 中 <strong>没有默认的超级用户</strong>。</li>
+</ul>
+
+<p>对于 SELinux 来说，安全属性即安全上下文。内核中的安全服务器使用安全策略为访问授权。</p>
+
+<h4 id="selinux-支持两种形式的-mac">SELinux 支持两种形式的 MAC：</h4>
+
+<ul>
+  <li><strong>类型强制</strong>，Type Enforcement，TE：运行在域中的进程及其对客体的行为受策略的控制。与基于角色的访问控制 RBAC 一起作为一般用途使用。</li>
+  <li><strong>多级安全</strong>，Multi-Level Security，MLS：基于 Bell-La Padula，BLP 模型，用于特别需要用多级别来控制敏感信息的场景。把多级别加入上下文以后，可以实现策略中对 “向下不能写” 及 “向上不能读” 的高级别控制。</li>
+</ul>
+
+<h4 id="mls--mcs">MLS / MCS</h4>
+
+<p>MLS：Multi-Level Security，多级别安全策略。</p>
+
+<p>MCS：Multi-Category Security，多类型安全策略。</p>
+
+<p>SELinux 同时支持 MLS 和 MCS，只需在上下文中增加一个字段即可。</p>
+
+<p><img src="/assets/images/security-levels.png" alt="image-center" class="align-center" /></p>
+
+<p>上图显示的是一个文件服务器中，不同文件的安全级别。安全级别是严格地按层次划分的，并形成一个 BLP 模型，进程只能对同级别的文件进行读取；对更高级别的文件，它只能写入；对更低级别的，它只能读取。即 <strong>向下不能写，向上不能读</strong>。确保了进程可以向上复制文件，但之后不可从上面读取，除非上到那一级。进程也无法向低级别写入文件，以避免机密信息向下泄漏。</p>
+
+<p>MLS 和 MCS 的特别之处：</p>
+
+<ul>
+  <li>可以为进程和客体分配一个 <code class="highlighter-rouge">最低级别 - 最高级别</code> 的范围</li>
+  <li>安全级别可以做的更复杂，即 <code class="highlighter-rouge">分级的敏感度 + 不分级的类别</code>，其中类别可省略</li>
+  <li>允许进程访问客体由应用于安全级别的 “显性” 规则管理</li>
+  <li>信任的进程可被授予特权，允许它们绕过 BLP 规则做策略允许的任何操作</li>
+  <li>有些客体不支持单独的读/写功能，因为它们需要在网络等情况下读取/响应</li>
+</ul>
+
+<p>目前，MLS/MCS 服务更多地用于维护应用程序的隔离，如：</p>
+
+<ul>
+  <li>虚拟机使用 MCS，可以允许每个虚拟机都在自己的域中运行，让它们彼此隔离</li>
+  <li>安卓设备使用动态生成的 MCS，这样，代表一个用户运行的应用无法读写另一个用户在同一个应用创建的文件。</li>
+</ul>
+
+<h5 id="mlsmcs-安全范围的表示方法">MLS/MCS 安全范围的表示方法</h5>
+
+<p>敏感度是分级的，类别是不分级的。不连续的类别之间可以用逗号分隔，连续的类别可以用句点分隔。</p>
+
+<h6 id="单个级别的表示">单个级别的表示</h6>
+
+<p>每个级别可以用 <strong><code class="highlighter-rouge">敏感度:类别</code></strong> 格式来描述，如 <code class="highlighter-rouge">s0:c0</code>。其中 “类别” 是可选的，如果 <strong>没有类别</strong>，可以单独用 <strong><code class="highlighter-rouge">敏感度</code></strong> 来表示某个级别，如 <code class="highlighter-rouge">s0</code>。</p>
+
+<h6 id="级别范围">级别范围</h6>
+
+<p>级别范围是用一对级别来描述的，如果是 <strong>多级</strong>，格式为 <strong><code class="highlighter-rouge">最低级-最高级</code></strong>，如 <code class="highlighter-rouge">s0:c1,c5-s5:c1,c5</code> 或 <code class="highlighter-rouge">s0:c1.c100-s5:c1.c100</code>；如果是 <strong>单级</strong>，格式为 <strong><code class="highlighter-rouge">最低级</code></strong>，如 <code class="highlighter-rouge">s0:c1,c5</code>。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user:role:type:sensitivity[:category,...]  -  sensitivity [:category,...]
+---------------▼------------------------▼-----▼-------------------------▼
+               |         level          |  -  |        level            |
+               |                                                        |
+                                        |range|
+</code></pre></div></div>
+
+<h2 id="132-selinux-简介">13.2 SELinux 简介</h2>
+
+<p>Security Enhanced Linux</p>
+
+<p>SELinux 是内建在 Linux 中的主要的 MAC 机制。</p>
+
+<p>SELinux 是对 <strong>进程、文件、用户</strong> 的权限进行详细设置的 <strong>内核模块</strong>。</p>
+
+<p>SELinux 是通过 MAC 方式来管控进程，控制的 <strong>主体是进程</strong>，<strong>客体是文件资源</strong>。</p>
+
+<p>SELinux 允许使用不同类型的策略：</p>
+
+<ul>
+  <li><strong>基于角色</strong> 的访问控制，Role-Based Access Control (<strong>RBAC</strong>)</li>
+  <li><strong>基于类型匹配</strong> 的访问控制，类型强制，Type Enforcement (<strong>TE</strong>)</li>
+  <li>最细致的 <strong>多级别</strong> 访问控制，Multi-Level Security (<strong>MLS</strong>)</li>
+</ul>
+
+<h3 id="1321-selinux-的优点">13.2.1 SELinux 的优点</h3>
+
+<h4 id="所有的进程和文件都有类型标签">所有的进程和文件都有类型标签</h4>
+
+<p><strong>类型</strong> 为进程定义了一个 <strong>域</strong>，为文件定义了一个 <strong>类型</strong>。不同的进程分别运行于各自的域中，SELinux 策略规则定义了进程应如何与文件进行交互，进程间如何交互。只有当 SELinux 规则中有允许放行的条目时，访问才能放行。</p>
+
+<h4 id="颗粒化的访问控制">颗粒化的访问控制</h4>
+
+<p>传统的 Linux 权限控制是基于 UID 和 GID，用户自己有裁量权，而 SELinux 访问的决策是基于所有的可用信息，如 SL 用户、角色、类型、级别等。</p>
+
+<h4 id="selinux-策略是全局强制性的">SELinux 策略是全局强制性的</h4>
+
+<p>策略在系统全局强制实施，不是由用户自行决定的。</p>
+
+<h4 id="减少特权升级攻击的漏洞">减少特权升级攻击的漏洞</h4>
+
+<p>因为进程运行于域中，因此彼此隔离，因为 SELinux 策略规则定义了进程应如何访问文件及其它进程，如果某个进程被攻破，攻击者仅能访问该进程的普通功能，仅能访问该进程有权访问的文件。例如，如果 Apache HTTP Server 被攻破，攻击者无法用该进程来读取用户家目录的文件，除非加入专门的规则来放行。</p>
+
+<h4 id="selinux-可用来强化数据机密性和完整性">SELinux 可用来强化数据机密性和完整性</h4>
+
+<p>SELinux 可用来强化数据机密性和完整性，也可以避免进程接受不可信的输入。</p>
+
+<p>虽然有以上优点，SELinux 并非杀毒软件，无法替代密码、防火墙或其它的安全系统，它并非大而全的安全解决方案。</p>
+
+<p>SELinux 被设计 <strong>用来强化现有的安全解决方案</strong>，而不是替代它们。</p>
+
+<h3 id="1322-selinux-架构">13.2.2 SELinux 架构</h3>
+
+<p>SELinux 是 Linux 内核中的一个 <strong>安全模块</strong>，由 <strong>可加载的策略规则</strong> 驱动。当发生与安全相关的访问时，如进程尝试打开文件，<strong>操作会被 SELinux 在内核中截获</strong>。如果 SELinux 的策略规则允许该操作，则继续，否则，会返回给系统一个 <strong>权限被拒绝</strong>（Permission Denied）的错误，然后给审计子系统（audit subsystem）发送一个拒绝消息。这样，管理员可以研究日志中的拒绝消息，以确认安全规则不会被攻破。</p>
+
+<p>SELinux 的 <strong>决策</strong>，如放行还是拒绝访问，是 <strong>会被缓存</strong> 的。该缓存即访问向量缓存 <strong>AVC</strong>，有了这些缓存的决策，就无需频繁地检查 SELinux 策略规则，提升了性能。</p>
+
+<p class="notice--info"><strong>SELinux 的规则是在 DAC 规则之后检查的</strong>。因此，如果 DAC 规则首先拒绝了访问，则无需再使用 SELinux 策略规则来检查了。</p>
+
+<h3 id="1323-selinux-核心要素">13.2.3 SELinux 核心要素</h3>
+
+<h4 id="-selinux-顶层核心要素">🍬 SELinux 顶层核心要素：</h4>
+
+<figure class="">
+  <img src="http://localhost:4000/assets/images/selinux-core.png" alt="SELinux 顶层核心要素" />
+  
+</figure>
+
+<ul>
+  <li><strong>主体</strong>：Subject，对客体实施操作，如读取文件</li>
+  <li><strong>客体管理器</strong>：Object Manager，根据规则 <strong>强制实施</strong> 对客体的具体操作。他们可以存在于内核空间或用户空间，决定于软件是 Linux 内置的还是第三方的。</li>
+  <li><strong>安全服务器</strong>： Security Server，它基于规则，对主体是否有权对客体操作 <strong>做出决策</strong>。嵌于内核中。</li>
+  <li><strong>安全策略</strong>：Security Policy，使用策略语言来描述 <strong>具体的规则</strong>。</li>
+  <li><strong>访问向量缓存</strong>：Access Vector Cache，AVC，<strong>缓存</strong> 所有的安全服务器做出的 <strong>决策</strong>，以此提升对请求的响应速度。</li>
+</ul>
+
+<h4 id="-selinux-顶层架构">🍬 SELinux 顶层架构：</h4>
+
+<p><img src="/assets/images/2-high-level-arch.png" alt="image-center" class="align-center" /></p>
+
+<p>从下往上分析：</p>
+
+<ul>
+  <li>
+    <p><strong>安全服务器</strong> 内嵌于内核中，策略会从用户空间借助一系列函数被加载。</p>
+
+    <p><strong>客体管理器</strong> 和 <strong>访问向量缓存</strong> 可以存在于：</p>
+
+    <ul>
+      <li><strong>内核空间</strong>：存在于内核空间的客体管理器用于控制内核的服务，如文件、目录、套接字、进程间通信等，是由一些勾子提供的，这些勾子通过 Linux 安全模块框架挂接到 SELinux 子系统中。内核的 AVC 服务用于缓存安全服务器对基于内核的对象管理器的响应，从而加快未来访问决策的速度。</li>
+      <li><strong>用户空间</strong>：存在于用户空间的客体管理器是与需要支持 MAC 的应用程序或服务一起提供的，这些客体管理器使用内建于 SELinux 函数库的 AVC 服务，然而，如果需要的话，它们也可以提供自己的 AVC，甚至可以不使用 AVC。</li>
+    </ul>
+  </li>
+  <li>
+    <p>SELinux <strong>安全策略及其配置文件</strong> 位于 <code class="highlighter-rouge">/etc/selinux</code> 目录，该目录包含主配置文件 <code class="highlighter-rouge">/etc/selinux/config</code>，其中指定了要加载的策略名称（SELINUXTYPE 条目）以及加载时策略初始的强制模式（SELINUX 条目）。<code class="highlighter-rouge">/etc/selinux/&lt;SELINUXTYPE&gt;</code> 目录包含可激活的策略，以及它们的配置文件。</p>
+  </li>
+  <li>
+    <p>SELinux 支持模块化的策略。<strong>模块化的策略</strong> 由一个 <strong>基本的策略</strong> 及零或多个 <strong>策略模块</strong> 组成，基本的策略中包含客体类别、权限等强制信息，<strong>不同的策略模块用于支持不同的程序或服务</strong>。这些模块被编译、链接以后，保存在一个 “<strong>策略仓库</strong>” 中，在这里它们可以被集成进一个 <strong>二进制格式</strong> 文件，然后被加载到 <strong>安全服务器</strong>。</p>
+
+    <blockquote>
+      <p>一个策略仓库包含策略包和系统管理员所做的修改，二者被合并到一个单独的逻辑实体中。系统中可以同时存在多个策略仓库，每个仓库的策略完全隔离，可以由管理员切换来部署。切换完毕有时需要重启。仓库位于 <code class="highlighter-rouge">/etc/selinux</code> 目录中，以各自仓库的名字命名，如系统默认的 <code class="highlighter-rouge">/etc/selinux/targeted</code> 仓库。</p>
+    </blockquote>
+  </li>
+  <li>
+    <p>要想制定策略就需要 <strong>策略的源码</strong>。简单的策略可以用内核策略语言编写的源码，而更常用的方法则是使用具有高级别宏的 “参考策略（Reference Policy）” 来定义策略规则。</p>
+  </li>
+  <li>
+    <p>策略源码的编译、链接和加载需要一些工具的帮助。</p>
+  </li>
+  <li>
+    <p>要想允许系统管理员来管理策略，需要 SELinux 环境、标签文件系统、工具软件以及修改过的 GNU / Linux 命令。</p>
+  </li>
+  <li>
+    <p>要想确保安全事件都被记录下来，Linux 使用审计服务来捕获触碰策略的事件。</p>
+  </li>
+</ul>
+
+<h3 id="1324-selinux-策略">13.2.4 SELinux 策略</h3>
+
+<p>SELinux 安全子系统会通过策略来检查任何的访问企图，它使用 <strong>默认拒绝</strong> 的设置，因此它寻找针对 SELinux 类型的 <strong>显示允许语句</strong>。</p>
+
+<p>SELinux 策略定义了 SELinux 子系统的行为，不同的策略会导致不同的行为。策略与 SELinux 子系统是分开的，策略的更新不需要重新编译内核，也不需要更新程序，<strong>策略内置于可以动态加载的二进制策略包中</strong>，与内核模块可以被加载很类似。</p>
+
+<p>SELinux 支持 <strong>模块化</strong> 的策略。策略可以分解为具体的规则。</p>
+
+<p><strong>策略</strong> = 一个 <strong>基础策略</strong> + 零或若干个 <strong>策略模块</strong></p>
+
+<p><strong>基础策略</strong> 包含客体类型、权限等 <strong>强制信息</strong>，而每个 <strong>策略模块用于控制特定的程序或服务</strong>。这些模块经过编译、链接后，被统一放置在一个 “策略仓库（Policy Store）” 里，他们可以从这里被转换为二进制格式，然后载入安全服务器。</p>
+
+<p>SELinux 默认由 RBAC 和 TE 组成，MLS 为可选项。</p>
+
+<p>SELinux 预置策略：</p>
+
+<ul>
+  <li>Targeted：针对特定的系统进程进行控制</li>
+  <li>Minimum： Targeted 的修改版，只保留一少部分</li>
+  <li>MLS: 多级别安全保护</li>
+</ul>
+
+<p>CentOS 使用的 <strong>默认策略</strong> 是 <strong>targeted</strong> ，专门针对 <strong>特定的系统进程</strong> 进行控制。targeted 策略在设计时考虑尽量保护最多的主要进程，同时又不会影响用户的体验。</p>
+
+<p>系统内其它一切系统进程、用户程序和所有自制应用程序都在 <strong>unconfined</strong> 域运行，并且不纳入 SELinux 的保护范围内。</p>
+
+<h3 id="1325-selinux-决策流程">13.2.5 SELinux 决策流程</h3>
+
+<figure class="">
+  <img src="http://localhost:4000/assets/images/selinux.process.png" alt="SELinux 决策流程" />
+  
+</figure>
+
+<ul>
+  <li>主体发出访问客体的请求</li>
+  <li>内核中的客体管理器查看 AVC
+    <ul>
+      <li>如果缓存中有该主体与客体的 AVC 规则，按规则执行，放行或拒绝。</li>
+      <li>如果没有，该请求继续传递到安全服务器</li>
+    </ul>
+  </li>
+  <li>安全服务器在策略中查找主体和客体的上下文，找到后在 AVC 中缓存，从而决定是否有权访问。
+    <ul>
+      <li>规则允许，放行</li>
+      <li>规则拒绝或不存在，拒绝。拒绝的消息保存在 /var/log/mesages，</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="133-selinux-上下文">13.3 SELinux 上下文</h2>
+
+<p>SELinux Contexts，或 Security Context，为陈述方便以下简称上下文。</p>
+
+<p>SELinux 要求每个主体和每个客体都要有关联的上下文，以便安全服务器（security server）</p>
+
+<p><strong>进程和文件</strong> 都用 SELinux 上下文打上了 <strong>标签</strong>，其中包含多个附加信息，如 SL 用户、角色、类型、级别（可选）。在使用 SELinux 期间，所有的这些信息都被 <strong>用来进行访问控制的决策</strong>。CentOS 提供的是基于角色访问控制、类型强制、多级别安全的组合。</p>
+
+<p>SELinux 上下文在 <strong>进程、L 用户和文件</strong> 中使用。</p>
+
+<p><code class="highlighter-rouge">ls -Z</code> 可以查看文件和目录的上下文。</p>
+
+<p>同 rwx 一样，文件的 SELinux 上下文保存在文件的 <strong>inode</strong> 中。</p>
+
+<h3 id="1331-上下文的内容">13.3.1 上下文的内容</h3>
+
+<p>SELinux <code class="highlighter-rouge">User : Role : Type : Level</code></p>
+
+<p>SELinux <code class="highlighter-rouge">用户：角色：类型：级别</code></p>
+
+<p class="notice--success">每个字段都用来决定访问控制，但实际上大多数规则是针对上下文中的 <strong>SELinux 类型</strong> 来制定的，因此上下文经常简化成只有类型。</p>
+
+<figure class="">
+  <img src="http://localhost:4000/assets/images/SELinux_context.png" alt="SELinux 上下文" />
+  
+</figure>
+
+<p>在命令后加 <code class="highlighter-rouge">-Z</code> 参数可以查看上下文：</p>
+
+<ul>
+  <li>针对文件：	<code class="highlighter-rouge">ls -Z</code></li>
+  <li>针对进程：	<code class="highlighter-rouge">ps -Z</code></li>
+  <li>针对用户：	<code class="highlighter-rouge">id -Z</code></li>
+</ul>
+
+<h4 id="sl-用户">SL 用户</h4>
+
+<p>Linux 中的用户通常是与人类用户相关联的，如 Alice，Bob，或是系统功能，如 admin。而 SELinux 的用户通常是一组或一类用户，比如，所有的标准系统用户都可能都会被分配给 SL 用户名  <code class="highlighter-rouge">user_u</code>，而行政人员可能都分配给 <code class="highlighter-rouge">staff_u</code>。</p>
+
+<p>在参考策略（Reference Policy）中，有一个特殊的 SL 用户永远不会与 L 用户关联，因为它的身份对于系统进程和客体来说太特殊了，这个用户就是 <code class="highlighter-rouge">system_u</code>。</p>
+
+<p>按照习惯，SL 用户名后面都会加后缀 <code class="highlighter-rouge">_u</code>，非强制的。</p>
+
+<p>SL 用户标识对于策略来说，它是 <strong>被特定的规则集合授权</strong> 的，<strong>应用于特定的 MLS/MCS 范围</strong>。每个 <strong>L 用户</strong> 都通过 SELinux 策略被 <strong>映射到一个 SL 用户</strong>，使得 L 用户得以 <strong>继承</strong> 施加在 SL 用户身上的 <strong>限制</strong>。被映射的 SL 用户标识被使用于会话中各进程的 SELinux 上下文中，从而定义这些 SL 用户能够进入什么角色和什么级别。</p>
+
+<p>对于进程来说，SL 用户限制了其角色和可访问的级别。</p>
+
+<h4 id="selinux-角色">SELinux 角色</h4>
+
+<p>为了能对 TE 域能做进一步的控制，SELinux 也会使用 RBAC，它允许 SL 用户关联到一个或多个角色中，每个角色于是被关联到一个或多个域类型中。</p>
+
+<p>SELinux 角色习惯加后缀 <code class="highlighter-rouge">_r</code>，非强制。</p>
+
+<p>SL 用户被授权担任角色，而角色又授权给域，<strong>角色做为媒介服务于域和 SL 用户之间</strong>。<strong>可进入的角色决定了可进入的域</strong>，最终，<strong>决定了允许访问哪种客体类型</strong>。这有助于减少特权升级攻击的漏洞。</p>
+
+<h4 id="selinux-类型">SELinux 类型</h4>
+
+<p>是 <strong>TE</strong> 的属性之一。</p>
+
+<p>对于 <strong>进程</strong> 来说，类型用于定义 <strong>域</strong>，对于 <strong>文件</strong> 来说，用于定义 <strong>类型</strong>。策略的规则中会定义类型之间可以如何互访，是域访问类型（进程访问文件），还是域访问另一个域（进程间沟通）。</p>
+
+<p>只有 <strong>特定的显示放行的 SELinux 策略规则存在</strong> 时，才会允许访问。</p>
+
+<p>SELinux 使用一种特别风格的 TE 来强制实施访问控制。它意味着所有的主体和客体都有一个与它们相关联的类型标签，可以用来执行策略规定的规则。</p>
+
+<h4 id="selinux--级别">SELinux  级别</h4>
+
+<p>级别是 <strong>MLS</strong> 及 <strong>MCS</strong> 的属性之一。</p>
+
+<p>该内容为可选，SELinux 支持 MLS 及 MCS，如果使用其中的一种，则在上下文中第四个位置增加 <strong>级别</strong> 或 <strong>级别范围</strong>。</p>
+
+<p>CentOS 中，<strong>targeted 策略强制实施的是 MCS</strong>，其中只有一级敏感度 <strong><code class="highlighter-rouge">S0</code></strong>，支持 1024 个不同类别（c0.c1023），因此所有类别可以表示为 <code class="highlighter-rouge">s0-s0:c0.c1023</code>。</p>
+
+<h3 id="1332-域的转换">13.3.2 域的转换</h3>
+
+<p>对于进程来说，SL <strong>类型就是域</strong>。</p>
+
+<p>域的转换是指：<strong>进程在另一个域中启动一个新进程</strong>。</p>
+
+<p>要想发生域的转换，策略必须满足：</p>
+
+<ol>
+  <li>源域有权限转换到目标域</li>
+  <li>程序的二进制文件在源域中有执行权限</li>
+  <li>程序的二进制文件有到目标域的入口点</li>
+</ol>
+
+<p>通过执行具有新域的入口点类型的应用程序，一个域中的进程可以转换到另一个域。SELinux 策略中会使用 <strong>入口点权限</strong>，该权限 <strong>可控制哪些程序可用来进入一个域</strong>。</p>
+
+<p>例如：</p>
+
+<ol>
+  <li>一位用户想修改自己的密码，他运行 <code class="highlighter-rouge">passwd</code> 程序，<code class="highlighter-rouge">/usr/bin/passwd</code> 可执行文件标签中的类型为 <code class="highlighter-rouge">passwd_exec_t</code>，<code class="highlighter-rouge">passwd</code> 程序会访问 <code class="highlighter-rouge">/etc/shadow</code>，其类型为 <code class="highlighter-rouge">shadow_t</code></li>
+  <li>有一条 SELinux 策略规则写道：<strong>运行于 <code class="highlighter-rouge">passwd_t</code> 域的进程可以读写 <code class="highlighter-rouge">shadow_t</code> 类型的文件</strong>。而 <code class="highlighter-rouge">shadow_t</code> 类型只会应用于密码修改时需要访问的文件上，包括 <code class="highlighter-rouge">/etc/gshadow</code>，<code class="highlighter-rouge">/etc/shadow</code>，及它们的备份文件。</li>
+  <li>有一条 SELinux 策略规则写道：<strong><code class="highlighter-rouge">passwd_exec_t</code> 域有到 <code class="highlighter-rouge">passwd_t</code> 哉的入口点权限</strong>。</li>
+  <li>用户执行 <code class="highlighter-rouge">passwd</code> 时，用户的 shell 进程转换到 <code class="highlighter-rouge">passwd_t</code> 域，因为有规则允许运行于 <code class="highlighter-rouge">passwd_t</code> 域的进程访问 <code class="highlighter-rouge">shadow_t</code> 类型的文件，所以允许 <code class="highlighter-rouge">passwd</code> 程序访问 <code class="highlighter-rouge">/etc/shadow</code> 来更新密码。</li>
+</ol>
+
+<p>此例中，类型强制确保了：</p>
+
+<ul>
+  <li><code class="highlighter-rouge">passwd_t</code> 域只能通过执行 <code class="highlighter-rouge">passwd_exec_t</code> 类型的程序来进入，只能从授权的共享库来执行，如 <code class="highlighter-rouge">lib_t</code> 类型，不能执行任何其它的程序。</li>
+  <li>只有授权的域，如 <code class="highlighter-rouge">passwd_t</code> 才能写入 <code class="highlighter-rouge">shadow_t</code> 类型的文件，即便其它进程是用超级用户权限来运行的，那些进程也无法写入 <code class="highlighter-rouge">shadow_t</code> 类型的文件，因为它们没有在 <code class="highlighter-rouge">passwd_t</code> 域中运行。</li>
+  <li>只有授权的域才能转换到 <code class="highlighter-rouge">passwd_t</code> 域。</li>
+  <li>在 <code class="highlighter-rouge">passwd_t</code> 域运行的进程只能读取授权的类型，如含有 <code class="highlighter-rouge">etc_t</code> 或 <code class="highlighter-rouge">shadow_t</code> 标签的文件。</li>
+</ul>
+
+<h3 id="1333-进程的上下文">13.3.3 进程的上下文</h3>
+
+<p><strong>类型对于进程来说就是域</strong>，对文件来说才是类型。</p>
+
+<h3 id="1334-用户的上下文">13.3.4 用户的上下文</h3>
+
+<p><code class="highlighter-rouge">id -Z</code> 可以查看当前 L 用户的上下文</p>
+
+<p><code class="highlighter-rouge">unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023</code></p>
+
+<p>CentOS 中，<strong>Linux 用户默认是不受限的</strong>（unconfined）。</p>
+
+<h2 id="134-targeted-策略">13.4 Targeted 策略</h2>
+
+<p>Targeted Policy 是 CentOS 中默认的 SELinux 策略。使用该策略时，<strong>被针对的进程会在一个受限的域中运行</strong>，未被针对的进程会运行于未受限的域。如，默认情况下，登陆进来的用户运行于非受限域 <code class="highlighter-rouge">unconfined_t</code>，而被 <code class="highlighter-rouge">init</code> 启动的系统进程则会运行于 <code class="highlighter-rouge">initrc_t</code> 域，所有这些域都是不受限的。</p>
+
+<p>可执行和可写内存检查适用于受限和非受限域。但是，默认情况下，运行在非限制域中的主体不能分配可写内存并执行它。这减少了缓冲区溢出攻击的隐患。这些内存检查可以通过设置布尔值来禁用，这允许在运行时修改 SELinux 策略。</p>
+
+<p>类型强制是 SELinux Targeted 策略中主要使用的权限控制手段。大部分时间，SL 用户和角色都可以被忽略。</p>
+
+<h3 id="1341-受限进程">13.4.1 受限进程</h3>
+
+<p>几乎所有的 <strong>在网络上倾听的服务</strong>，如 <code class="highlighter-rouge">sshd</code> 或 <code class="highlighter-rouge">httpd</code> 都 <strong>是受限的</strong>。同时，<strong>大部分作为超级用户运行，为用户执行任务的进程</strong>，如 <code class="highlighter-rouge">passwd</code> 也都 <strong>是受限的</strong>。</p>
+
+<p>当一个进程受限时，它会 <strong>在自己的域中运行</strong>，如 <code class="highlighter-rouge">httpd</code> 进程运行于 <code class="highlighter-rouge">httpd_t</code> 域。如果某个受限进程被攻破，取决于 SELinux 策略的配置，攻击者对资源的访问及可能造成的损失是有限的。</p>
+
+<h4 id="范例如何确认-selinux-状态">范例：如何确认 SELinux 状态</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# sestatus
+SELinux status:                 enabled
+SELinuxfs mount:                /sys/fs/selinux
+SELinux root directory:         /etc/selinux
+Loaded policy name:             targeted
+Current mode:                   enforcing
+Mode from config file:          enforcing
+Policy MLS status:              enabled
+Policy deny_unknown status:     allowed
+Max kernel policy version:      28
+
+~]# <span class="nb">touch</span> /var/www/html/testfile
+<span class="c"># 创建测试文件 testfile</span>
+~]# <span class="nb">ls</span> <span class="nt">-Z</span> /var/www/html/testfile
+<span class="nt">-rw-r--r--</span><span class="nb">.</span> root root unconfined_u:object_r:httpd_sys_content_t:s0 /var/www/html/testfile
+<span class="c">#      SELinux        |    用户   | 角色   |        类型       |级别</span>
+</code></pre></div></div>
+
+<ul>
+  <li>用户：默认情况下，<strong>L 用户是非受限的</strong>，因此文件 <code class="highlighter-rouge">testfile</code> 的用户是 <code class="highlighter-rouge">unconfined_u</code>。</li>
+  <li>角色：RBAC 是用于进程的，而非文件，因此 <strong>文件的角色没什么意义</strong>，<code class="highlighter-rouge">object_r</code> 对文件来说是一个普通的角色（在持续存储和网络文件系统中）。在 <code class="highlighter-rouge">/proc/</code> 目录中，与进程相关的文件会使用 <code class="highlighter-rouge">system_r</code> 角色。</li>
+  <li>类型：<code class="highlighter-rouge">httpd_sys_content_t</code> 类型允许 <code class="highlighter-rouge">httpd</code> 进程访问该文件。</li>
+</ul>
+
+<h4 id="范例受限的进程">范例：受限的进程</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# systemctl start httpd  <span class="c"># 启动 Apache HTTP Server</span>
+~]# wget http://localhost/testfile  <span class="c"># 下载刚生成的文件</span>
+......
+2018-03-21 16:05:47 <span class="o">(</span>0.00 B/s<span class="o">)</span> - ‘testfile’ saved <span class="o">[</span>0/0]
+<span class="c"># 可以正常下载</span>
+~]# <span class="nb">chcon</span> <span class="nt">-t</span> samba_share_t /var/www/html/testfile
+<span class="c"># 修改测试文件的类型为   ^^^^^^^^^^^^</span>
+~]# <span class="nb">ls</span> <span class="nt">-Z</span> /var/www/html/testfile
+<span class="nt">-rw-r--r--</span><span class="nb">.</span> root root unconfined_u:object_r:samba_share_t:s0 /var/www/html/testfile
+<span class="c"># 确认修改类型成功                           ^^^^^^^^^^^^</span>
+~]# wget http://localhost/testfile  <span class="c"># 再次尝试下载</span>
+......
+2018-03-21 16:09:44 ERROR 403: Forbidden.  <span class="c"># 失败，被拒绝</span>
+</code></pre></div></div>
+
+<p>即便在 DAC 规则允许 <code class="highlighter-rouge">httpd</code> 进程访问测试文件时，因为文件的类型标签决定了 <code class="highlighter-rouge">httpd</code> 进程无法访问该文件，于是 SELinux 拒绝了访问，即使是超级用户也无权下载文件文件。</p>
+
+<p>如果 <code class="highlighter-rouge">auditd</code> 服务在运行，错误会记录到 <code class="highlighter-rouge">/var/log/audit/audit.log</code> 日志中：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type=AVC msg=audit(1521620178.016:565): avc:  denied  { getattr } for  pid=6086 comm="httpd" path="/var/www/html/testfile" dev="dm-0" ino=10492580 scontext=system_u:system_r:httpd_t:s0 tcontext=unconfined_u:object_r:samba_share_t:s0 tclass=file
+</code></pre></div></div>
+
+<p>同时也会有错误记录到 <code class="highlighter-rouge">/var/log/httpd/error_log</code> 日志中:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Wed Mar 21 16:16:18.017784 2018] [core:error] [pid 6086] (13)Permission denied: [client ::1:56072] AH00035: access to /testfile denied (filesystem path '/var/www/html/testfile') because search permissions are missing on a component of the path
+</code></pre></div></div>
+
+<h3 id="1342-非受限进程">13.4.2 非受限进程</h3>
+
+<p>非受限进程运行于非受限域中，如 <code class="highlighter-rouge">init</code> 程序运行于非受限域 <code class="highlighter-rouge">initrc_t</code> 中，非受限内核进程运行于 <code class="highlighter-rouge">kernel_t</code> 域中，非受限 L 用户运行于 <code class="highlighter-rouge">unconfined_t</code> 域中。对于非受限进程来说，其实是应用了 SELinux 的策略的，只不过策略规则说 “允许运行于非受限域的进程访问几乎所有资源”。在效果上，这些非受限进程相当于只使用 DAC 规则。如果非受限进程被攻破，SELinux 无法避免攻击者获取系统资源和数据，不过当然，DAC 规则仍有效。SELinux 毕竟是覆盖在 DAC 规则之上的一个安全强化措施，它无法代替 DAC 规则。</p>
+
+<h4 id="范例非受限进程">范例：非受限进程</h4>
+
+<ol>
+  <li>
+    <p><code class="highlighter-rouge">chcon</code> 命令会修改文件的标签，然而，在文件系统标签被 <code class="highlighter-rouge">restorecon</code> 修复时，这种修改就会丢失。</p>
+
+    <p>修改文件类型为 Samba 使用的类型：</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ~]# <span class="nb">chcon</span> <span class="nt">-t</span> samba_share_t /var/www/html/testfile
+</code></pre></div>    </div>
+
+    <p>确认修改成功：</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ~]<span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-Z</span> /var/www/html/testfile
+ <span class="nt">-rw-r--r--</span>  root root unconfined_u:object_r:samba_share_t:s0 /var/www/html/testfile
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>暂停 <code class="highlighter-rouge">httpd</code></p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ~]# systemctl stop httpd.service
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>修改 <code class="highlighter-rouge">httpd</code> 程序的类型为不会产生域转换的类型</p>
+
+    <p><code class="highlighter-rouge">httpd</code> 的初始类型为 <code class="highlighter-rouge">httpd_exec_t</code>，修改为 <code class="highlighter-rouge">bin_t</code></p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ~]# <span class="nb">chcon</span> <span class="nt">-t</span> bin_t /usr/sbin/httpd
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>确认修改成功：</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ~]# <span class="nb">ls</span> <span class="nt">-Z</span> /usr/sbin/httpd
+ <span class="nt">-rwxr-xr-x</span><span class="nb">.</span> root root system_u:object_r:bin_t:s0       /usr/sbin/httpd
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>启动 <code class="highlighter-rouge">httpd</code> 服务</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ~]# systemctl start httpd.service
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>查看 <code class="highlighter-rouge">httpd</code> 进程的类型</p>
+
+    <p>修改之前，<code class="highlighter-rouge">httpd</code> 进程的域为 <code class="highlighter-rouge">httpd_t</code>，修改之后变为 <code class="highlighter-rouge">unconfined_service_t</code></p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ~]# ps <span class="nt">-eZ</span> | <span class="nb">grep </span>httpd
+ system_u:system_r:unconfined_service_t:s0 5680 ? 00:00:00 httpd
+ system_u:system_r:unconfined_service_t:s0 5681 ? 00:00:00 httpd
+ system_u:system_r:unconfined_service_t:s0 5682 ? 00:00:00 httpd
+ system_u:system_r:unconfined_service_t:s0 5684 ? 00:00:00 httpd
+ system_u:system_r:unconfined_service_t:s0 5686 ? 00:00:00 httpd
+ system_u:system_r:unconfined_service_t:s0 5687 ? 00:00:00 httpd
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>以普通用户身份在家目录下载测试文件：</p>
+
+    <p>在范例二中下载失败的情况，此时消失了，普通用户可以顺利下载。</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ~]<span class="nv">$ </span>wget http://localhost/testfile
+ ......
+ 2018-03-22 17:56:52 <span class="o">(</span>0.00 B/s<span class="o">)</span> - ‘testfile’ saved <span class="o">[</span>0/0]
+</code></pre></div>    </div>
+
+    <p>虽然 <code class="highlighter-rouge">httpd</code> 进程无权访问类型标签为 <code class="highlighter-rouge">samba_share_t</code> 的文件，但 <code class="highlighter-rouge">httpd</code> 进程运行于非限制域中，因此又落回了 DAC 的规则，于是 <code class="highlighter-rouge">wget</code> 命令成功执行。如果 <code class="highlighter-rouge">httpd</code> 运行于受限域 <code class="highlighter-rouge">httpd_t</code> 中，<code class="highlighter-rouge">wget</code> 就会失败。</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">restorecon</code> 命令会为文件恢复默认的上下文</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ~]# restorecon <span class="nt">-v</span> /usr/sbin/httpd
+ restorecon reset /usr/sbin/httpd context system_u:object_r:bin_t:s0-&gt;system_u:object_r:httpd_exec_t:s0
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>确认修改成功后，重启 <code class="highlighter-rouge">httpd</code> 服务</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ~]# systemctl restart httpd.service
+
+ ~]# ps <span class="nt">-eZ</span> | <span class="nb">grep </span>httpd
+ system_u:system_r:httpd_t:s0      6001 ?        00:00:00 httpd
+ system_u:system_r:httpd_t:s0      6002 ?        00:00:00 httpd
+ system_u:system_r:httpd_t:s0      6003 ?        00:00:00 httpd
+ system_u:system_r:httpd_t:s0      6004 ?        00:00:00 httpd
+ system_u:system_r:httpd_t:s0      6005 ?        00:00:00 httpd
+ system_u:system_r:httpd_t:s0      6006 ?        00:00:00 httpd
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<p>进程域成功恢复到 <code class="highlighter-rouge">httpd_t</code>。</p>
+
+<h3 id="1343-受限及非受限用户">13.4.3 受限及非受限用户</h3>
+
+<p>每个 L 用户都会用 SELinux 策略被映射到一个 SL 用户，这允许 L 用户继承对 SL 用户的限制。</p>
+
+<p>CentOS 中，<strong>L 用户默认全部被映射到 <code class="highlighter-rouge">unconfined_u</code></strong>。</p>
+
+<p>用 <code class="highlighter-rouge">seinfo -u</code> 可以查看当前 SL 用户列表。</p>
+
+<p>受限和非受限的 L 用户是可执行、可写内存检测的主体，他们也会受到 MLS 或 MCS 的限制。</p>
+
+<h4 id="对新建-l-用户的限制">对新建 L 用户的限制</h4>
+
+<p>当 Linux 中新用户第一次登陆时，<code class="highlighter-rouge">pam_selinux</code> 这个 PAM 模块会自动把该用户映射到 SELinux <code class="highlighter-rouge">unconfined_u</code> 用户上，并设置其上下文，该用户的 shell 就会用该上下文启动。</p>
+
+<h4 id="非受限用户运行程序也能保证安全">非受限用户运行程序也能保证安全</h4>
+
+<p>当 L 用户运行于 <code class="highlighter-rouge">unconfined_t</code> 时，SL 策略是生效的，只不过是策略的规则说，允许运行于 <code class="highlighter-rouge">unconfined_t</code> 域的 L 用户几乎可以访问任何资源。如果一个非受限的 L 用户执行一个程序，SELinux 策略说该程序可以从 <code class="highlighter-rouge">unconfined_t</code> 域转换到它自己的受限域，则该非受限的 L 用户仍然是该受限域限制的主体。这样做带来的好处是，即使 L 用户是非受限的，而程序依然保持受限，从而，要想利用应用程序的缺陷就会受到策略的限制。</p>
+
+<h4 id="对受限用户运行程序的限制">对受限用户运行程序的限制</h4>
+
+<p>类似的，我们也可以对受限用户进行这些检查。每个受限的 L 用户被限制在自己的域中，SL 策略也可以定义一个 “从一个受限用户的域到其目标受限域” 的转换，此时，受限的 L 用户是目标受限域所限制的主体。根据其角色的定义，特殊权限是与受限用户相关联的。</p>
+
+<h4 id="sl-用户限制域及能力限制">SL 用户限制域及能力限制</h4>
+
+<p>下表仅举例说明不同的 SL 用户可以如何被限制具体的能力：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>用户</th>
+      <th>角色</th>
+      <th>域</th>
+      <th style="text-align: center">X Window</th>
+      <th style="text-align: center">su 或 sudo</th>
+      <th style="text-align: center">在家目录及 /tmp 执行（默认）</th>
+      <th style="text-align: center">网络</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>sysadm_u</td>
+      <td>sysadm_r</td>
+      <td>sysadm_t</td>
+      <td style="text-align: center">是</td>
+      <td style="text-align: center"><strong>su</strong> 及 <strong>sudo</strong></td>
+      <td style="text-align: center">是</td>
+      <td style="text-align: center">是</td>
+    </tr>
+    <tr>
+      <td>staff_u</td>
+      <td>staff_r</td>
+      <td>staff_t</td>
+      <td style="text-align: center">是</td>
+      <td style="text-align: center">仅 <strong>sudo</strong></td>
+      <td style="text-align: center">是</td>
+      <td style="text-align: center">是</td>
+    </tr>
+    <tr>
+      <td>user_u</td>
+      <td>user_r</td>
+      <td>user_t</td>
+      <td style="text-align: center">是</td>
+      <td style="text-align: center">否</td>
+      <td style="text-align: center">是</td>
+      <td style="text-align: center">是</td>
+    </tr>
+    <tr>
+      <td>guest_u</td>
+      <td>guest_r</td>
+      <td>guest_t</td>
+      <td style="text-align: center">否</td>
+      <td style="text-align: center">否</td>
+      <td style="text-align: center">否</td>
+      <td style="text-align: center">否</td>
+    </tr>
+    <tr>
+      <td>xguest_u</td>
+      <td>xguest_r</td>
+      <td>xguest_t</td>
+      <td style="text-align: center">是</td>
+      <td style="text-align: center">否</td>
+      <td style="text-align: center">否</td>
+      <td style="text-align: center">仅 Firefox</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>如果 SELinux 规则允许，<code class="highlighter-rouge">user_t</code>、<code class="highlighter-rouge">guest_t</code>、<code class="highlighter-rouge">xguest_t</code> 域中的 L 用户只能运行 SUID 程序，如 <code class="highlighter-rouge">passwd</code>。这些用户无法运行 <code class="highlighter-rouge">su</code>、<code class="highlighter-rouge">sudo</code>，因此无法借助它们变身为超级用户。</li>
+  <li><code class="highlighter-rouge">sysadm_t</code>、<code class="highlighter-rouge">staff_t</code>、<code class="highlighter-rouge">user_t</code>、<code class="highlighter-rouge">xguest_t</code> 域中的 L 用户可以用 X Window 登陆，也可以从终端登陆</li>
+  <li>默认情况下，<code class="highlighter-rouge">guest_t</code> 和 <code class="highlighter-rouge">xguest_t</code> 域中的 L 用户无法在家目录或 <code class="highlighter-rouge">tmp</code> 目录执行程序，即使他们对目录有写权限。可以避免恶意程序修改用户的文件。</li>
+  <li>默认情况下，<code class="highlighter-rouge">staff_t</code> 和 <code class="highlighter-rouge">user_t</code> 域中的 L 用户可以在其家目录及 <code class="highlighter-rouge">/tmp</code> 目录执行程序</li>
+  <li><code class="highlighter-rouge">xguest_t</code> 域中的 L 用户唯一拥有的网络访问权限是用 Firefox 连接到网页</li>
+</ul>
+
+<p>注意，对于系统进程和客体来说，<strong><code class="highlighter-rouge">system_u</code> 是一个特殊的用户标识，它永远不可以与 L 用户关联</strong>。同样的，<strong><code class="highlighter-rouge">unconfined_u</code> 和 <code class="highlighter-rouge">root</code> 是非受限用户</strong>。</p>
+
+<h4 id="特殊-sl-角色">特殊 SL 角色</h4>
+
+<p>以下举例说明一些特殊的 SL 角色，这些角色决定了用户能做什么：</p>
+
+<ul>
+  <li><code class="highlighter-rouge">webadm_r</code>：只能管理与 Apache HTTP Server 相关的 SL 类型</li>
+  <li><code class="highlighter-rouge">dbadm_r</code>：只能管理与 MariaDB 数据库、PostgreSQL 数据库相关的 SL 类型</li>
+  <li><code class="highlighter-rouge">logadm_r</code>：只能管理与 <code class="highlighter-rouge">syslog</code> 和 <code class="highlighter-rouge">auditlog</code> 相关的 SL 类型</li>
+  <li><code class="highlighter-rouge">secadm_r</code>：只能管理 SELinux</li>
+  <li><code class="highlighter-rouge">auditadm_r</code>：只能管理与 <code class="highlighter-rouge">audit</code> 子系统相关的进程</li>
+</ul>
+
+<p>用 <code class="highlighter-rouge">seinfo -r</code> 查看所有角色。</p>
+
+<h4 id="sudo-转换和-sl-角色"><code class="highlighter-rouge">sudo</code> 转换和 SL 角色</h4>
+
+<p>某些时候，受限用户可能会需要完成一个需要超级用户权限的管理任务，他必须用 <code class="highlighter-rouge">sudo</code> 命令来获得一个受限的管理员角色。当受限用户用 <code class="highlighter-rouge">sudo</code> 执行命令时，他们的角色会发生改变，空间如何改变则取决于 <code class="highlighter-rouge">/etc/sudoers</code> 中的规则或 <code class="highlighter-rouge">/etc/sudoers.d/</code> 目录中的某个文件。</p>
+
+<h5 id="范例为现有-sl-用户配置受限的管理员角色">范例：为现有 SL 用户配置受限的管理员角色</h5>
+
+<ol>
+  <li>
+    <p>创建一个新的 SL 用户，并指定其默认角色及附加的受限管理员角色</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ~]# semanage user <span class="nt">-a</span> <span class="nt">-r</span> s0-s0:c0.c1023 <span class="nt">-R</span> <span class="s2">"staff_r webadm_r"</span> neo_u
+ <span class="c">#                                         默认角色| 附加角色 | 新 SL 用户名</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>新建用户的上下文直接参照原 SL 用户 <code class="highlighter-rouge">staff_u</code> 的上下文，所以直接复制其上下文文件。</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ~]# <span class="nb">cp</span> /etc/selinux/targeted/contexts/users/staff_u /etc/selinux/targeted/contexts/users/neo_u
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>把新建 SL 用户映射给现有 L 用户 <code class="highlighter-rouge">neo</code></p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> semanage login <span class="nt">-a</span> <span class="nt">-s</span> neo_u <span class="nt">-rs0</span>:c0.c1023 neo
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>在 <code class="highlighter-rouge">/etc/sudoers.d/</code> 目录中创建一个与 <code class="highlighter-rouge">neo</code> 同名的配置文件：</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ~]# <span class="nb">echo</span> <span class="s2">"linux_user ALL=(ALL) TYPE=webadm_t ROLE=webadm_r /bin/sh "</span> <span class="o">&gt;</span> /etc/sudoers.d/neo
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>用 <code class="highlighter-rouge">rstorecon</code> 修复 L 用户家目录</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ~]# restorecon <span class="nt">-FR</span> <span class="nt">-v</span> /home/neo
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>重新登陆 <code class="highlighter-rouge">neo</code>，用户的标签被更新为其默认的 SL 角色，即 <code class="highlighter-rouge">staff_r</code></p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ~]# <span class="nb">id</span> <span class="nt">-Z</span>
+ neo_u:staff_r:staff_t:s0:c0.c1023
+ <span class="c">#             ^^^^^^^</span>
+</code></pre></div>    </div>
+
+    <p>而当该 L 用户运行完 <code class="highlighter-rouge">sudo</code> 以后，其 SL 上下文会变成 <code class="highlighter-rouge">/etc/sudoers.d/neo</code> 中指定的附加角色：</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ~]<span class="nv">$ </span><span class="nb">sudo</span> <span class="nt">-i</span>
+ ~]# <span class="nb">id</span> <span class="nt">-Z</span>
+ SELinux_user_u:webadm_r:webadm_t:s0-s0:c0.c1023
+ <span class="c">#              ^^^^^^^^</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="135-对用户的限制">13.5 对用户的限制</h2>
+
+<p>L 用户被默认映射到 <code class="highlighter-rouge">unconfined_u</code> 用户，所有由 <code class="highlighter-rouge">unconfined_u</code> 启动的进程都处于 <code class="highlighter-rouge">unconfined_t</code> 域中，这意味着在 DAC 策略的控制之下，用户可以在系统内任意访问。然而，也存在一些受限的用户，他们就会被限制能力。借助策略，每个 L 用户被映射到一个 SL 用户，实现了 L 用户可以继承 SL 用户的限制。这些限制可能是：</p>
+
+<ul>
+  <li>运行 X 窗口</li>
+  <li>使用网络</li>
+  <li>运行 SUID 程序</li>
+  <li>运行 <code class="highlighter-rouge">su</code> 和 <code class="highlighter-rouge">sudo</code> 命令</li>
+</ul>
+
+<p>例如，由 SL 用户 <code class="highlighter-rouge">user_u</code> 启动的进程运行于 <code class="highlighter-rouge">user_t</code> 域中，这类进程可以连网，但无法使用 <code class="highlighter-rouge">su</code> 和 <code class="highlighter-rouge">sudo</code> 命令，这有助于保护系统免于用户的恶意操作（被劫持）带来的危险。</p>
+
+<h3 id="1351-linux-和-sl-用户映射">13.5.1 Linux 和 SL 用户映射</h3>
+
+<p>可以使用 <code class="highlighter-rouge">semanage login -l</code>  查看 L 用户和 SL 用户的映射：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>root@zion ~]# semanage login <span class="nt">-l</span>
+
+Login Name           SELinux User         MLS/MCS Range        Service
+
+__default__          unconfined_u         s0-s0:c0.c1023       <span class="k">*</span>
+root                 unconfined_u         s0-s0:c0.c1023       <span class="k">*</span>
+system_u             system_u             s0-s0:c0.c1023       <span class="k">*</span>
+</code></pre></div></div>
+
+<p>所有的 L 用户先是被映射到 L 用户 <code class="highlighter-rouge">__default__</code> ，然后再统一被映射到 <code class="highlighter-rouge">unconfined_u</code> 用户。</p>
+
+<h3 id="1352-限制-linux-新用户useradd">13.5.2 限制 Linux 新用户：<code class="highlighter-rouge">useradd</code></h3>
+
+<p>当使用 <code class="highlighter-rouge">useradd</code> 创建用户时，如果不指定参数，该用户会被映射到 <code class="highlighter-rouge">unconfined_u</code> 用户，使用的是如下的默认映射：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>__default__          unconfined_u         s0-s0:c0.c1023       *
+</code></pre></div></div>
+
+<p>如果用 <code class="highlighter-rouge">useradd</code> 创建用户时，用 <code class="highlighter-rouge">-Z</code> 参数可以指定该用户要映射要被映射到哪个 SL 用户身上。</p>
+
+<p><code class="highlighter-rouge">useradd -Z user_u user</code></p>
+
+<h3 id="1353-限制现有-l-用户semanage-login">13.5.3 限制现有 L 用户：<code class="highlighter-rouge">semanage login</code></h3>
+
+<p>新建 L 用户默认被映射到 <code class="highlighter-rouge">unconfined_u</code> 上，如果你想改变映射，使用 <code class="highlighter-rouge">semanage login</code> 命令。</p>
+
+<p><code class="highlighter-rouge">semange login -a -s neo_u neo</code></p>
+
+<h3 id="1354-修改默认映射">13.5.4 修改默认映射</h3>
+
+<p>默认 L 用户都会先被映射给 <code class="highlighter-rouge">__default__</code> 用户，然后再把该用户映射到 <code class="highlighter-rouge">unconfined_u</code>，如果希望修改这个默认映射，如希望把 L 用户默认映射给 <code class="highlighter-rouge">user_u</code>，可以这样做：</p>
+
+<p><code class="highlighter-rouge">semanage login -m -S targeted -s "user_u" -r s0 __default__</code></p>
+
+<h3 id="1355-xguestkiosk-模式">13.5.5 <code class="highlighter-rouge">xguest</code>：kiosk 模式</h3>
+
+<p>kiosk，报刊厅，意指公共场所，信息不安全地带。kiosk user account，访客用户。随来随用，用完就走。</p>
+
+<p>在安装过 xguest 包以后就会产生 <code class="highlighter-rouge">xguest</code> 这个访客用户，它的权限非常有限：登陆、用 firefox 浏览网页。</p>
+
+<p>所有的访客用户都分配给 <code class="highlighter-rouge">xguest_u</code>，该用户登陆后发生的所有改变在他退出后都会丢失，如登陆期间创建的文件，或其它设置的修改等。</p>
+
+<p>为了照顾各类使用人群，该用户不用密码保护，因此，它只能由 SELinux 来强制保护。而且该用户只能用 GDM 登陆系统。</p>
+
+<h3 id="1356-用户执行程序的布尔值">13.5.6 用户执行程序的布尔值</h3>
+
+<p>应用程序会继承用户的权限，因此，在家目录及 <code class="highlighter-rouge">/tmp</code> 等用户有写权限的目录中，禁止 L 用户执行程序可以避免有缺陷或恶意程序修改用户文件。</p>
+
+<p>使用 <code class="highlighter-rouge">setsebool</code> 命令来配置布尔值，可以改变用户的行为，<code class="highlighter-rouge">setsebool -P</code> 做出的改变会持续生效，因此如果不希望在重启后还有效，就不要使用 <code class="highlighter-rouge">-P</code> 参数。</p>
+
+<p><code class="highlighter-rouge">setsebool -P guest_exec_content off</code>  禁止 <code class="highlighter-rouge">guest_t</code> 域中的 L 用户在其家目录及 <code class="highlighter-rouge">/tmp</code> 运行程序</p>
+
+<h2 id="136-使用-selinux">13.6 使用 SELinux</h2>
+
+<h3 id="1361-日志">13.6.1 日志</h3>
+
+<p>CentOS 中，dbus 和 audit 包是默认安装的，setroubleshoot-server 需要手动安装。</p>
+
+<p>在 audit 服务运行的情况下，SELinux 拒绝消息会被写入 <code class="highlighter-rouge">/var/log/audit/audit.log</code>，消息内容类似下面：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type=AVC msg=audit(1223024155.684:49): avc:  denied  { getattr } for  pid=2000 comm="httpd" path="/var/www/html/file1" dev=dm-0 ino=399185 scontext=unconfined_u:system_r:httpd_t:s0 tcontext=system_u:object_r:samba_share_t:s0 tclass=file
+</code></pre></div></div>
+
+<p>另外还会有一条消息被写入 <code class="highlighter-rouge">/var/log/message</code> ：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>May 7 18:55:56 localhost setroubleshoot: SELinux is preventing httpd (httpd_t) "getattr" to /var/www/html/file1 (samba_share_t). For complete SELinux messages. run sealert -l de7e30d6-5488-466d-a606-92c9f40d316d
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">setroubleshootd</code> 过去经常被用于分析 AVC 消息，但现在它不再以服务的形式运行了。有两个新的程序可以在需要的时候间接启动 <code class="highlighter-rouge">setroubleshoot</code>：</p>
+
+<ul>
+  <li><code class="highlighter-rouge">sedispatch</code> 作为 <code class="highlighter-rouge">audit</code> 子系统的一分部运行，当返回一条 AVC 拒绝消息时，<code class="highlighter-rouge">sedispatch</code> 会使用 <code class="highlighter-rouge">dbus</code> 发送一条消息，如果 <code class="highlighter-rouge">setroubleshootd</code> 此时在运行，消息会直接发送给它，如果没有运行，<code class="highlighter-rouge">sedispatch</code> 会自动启动它。</li>
+  <li><code class="highlighter-rouge">seapplet</code> 运行于系统工具栏，在 <code class="highlighter-rouge">setroubleshootd</code> 中等待 <code class="highlighter-rouge">dbus</code> 传来的消息，它会开启通知气泡，把 AVC 消息传递给用户查看。</li>
+</ul>
+
+<h3 id="1362-配置文件">13.6.2 配置文件</h3>
+
+<p><code class="highlighter-rouge">/etc/selinux/config</code> 是 SELinux 的主要配置文件，它控制着 SELinux 启动还是禁用，以及当前使用哪个 SELinux 模式、哪个策略。</p>
+
+<h3 id="1363-状态与模式">13.6.3 状态与模式</h3>
+
+<h4 id="selinux-状态">SELinux 状态</h4>
+
+<p>SELinux 的状态要么是 <strong>启用</strong>（Enabled），要么是 <strong>禁用</strong>（Disabled），这两种状态 <strong>不能在线热切换</strong>，切换之后 <strong>必须重启</strong> 系统。</p>
+
+<p>通过编辑 <code class="highlighter-rouge">/etc/selinux/config</code> 配置文件，来切换 SELinux 状态或模式。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELINUX=enforcing/permissive/disabled
+</code></pre></div></div>
+
+<h4 id="selinux-工作模式">SELinux 工作模式</h4>
+
+<p>在开启状态下，SELinux 有两种工作模式：</p>
+
+<ul>
+  <li>
+    <p><strong>强制模式</strong>：enforcing，默认值。会在系统上强制实施，SELinux 根据安全策略来拒绝访问。</p>
+  </li>
+  <li>
+    <p><strong>宽容模式</strong>：permissive。不强制实施，不会拒绝访问，但会把强制模式下会生成的拒绝访问的信息记录到日志。</p>
+  </li>
+</ul>
+
+<p>这两种工作模式可以使用 <code class="highlighter-rouge">setenforce</code> 命令随时在线切换，但该命令造成的变化，在重启后会自己消失。</p>
+
+<figure class="">
+  <img src="http://localhost:4000/assets/images/selinux.modes.png" alt="SELinux 工作模式" />
+  
+</figure>
+
+<h5 id="常用命令">常用命令</h5>
+
+<p><code class="highlighter-rouge">getenforce</code>  查看 SELinux 当前工作模式</p>
+
+<p><code class="highlighter-rouge">setenforce 0</code>  切换到宽容模式</p>
+
+<p><code class="highlighter-rouge">setenforce 1</code>  切换到强制模式</p>
+
+<p class="notice--warning">当系统运行于宽容模式时，允许用户给文件打错误的标签。当 SELinux 禁用时创建的文件是不会被打标签的，如果此时切换到强制模式就会造成问题，因为文件标签是错的，或是根本没标签。为了避免错误标签及无标签文件造成问题，<strong>从禁用状态切换到启用状态时</strong>，文件系统会 <strong>自动重新打标签</strong>。</p>
+
+<h5 id="启动时修改-selinux-模式">启动时修改 SELinux 模式</h5>
+
+<p>系统启动时，可以设置几个内核参数来改变 SELinux 的运行方式：</p>
+
+<p><code class="highlighter-rouge">enforcing=0</code></p>
+
+<p>该参数会让系统 <strong>以宽容模式启动</strong>，便于排查问题。</p>
+
+<p>如果文件系统被严重干扰，使用该模式可能是唯一的排查办法了。而且，该模式下，系统会继续正确地创建标签。在该模式下产生的 AVC 消息会与强制模式略有不同。在宽容模式中，只有第一次拒绝会被报告，然而在强制模式中，每当读取一次目录或程序暂停时都会收到一次拒绝。在宽容模式中，你收到的是相同的 AVC 消息，但实际上当程序继续读取目录中的各个文件时，你会额外收到不同的拒绝。</p>
+
+<p><code class="highlighter-rouge">selinux=0</code></p>
+
+<p>该参数会使内核在启动时不加载 SELinux 架构的任何部分，即 <strong>禁用 SELinux</strong>。当 <code class="highlighter-rouge">init</code> 脚本发现系统是携带 <code class="highlighter-rouge">selinux=0</code> 参数启动时，它会 <strong>创建 <code class="highlighter-rouge">/.autorelabel</code> 文件</strong>，在下次系统启动并启用 SELinux 时，这会促使系统 <strong>自动重新打标签</strong>。</p>
+
+<p>不推荐使用该模式来排查问题。</p>
+
+<p><code class="highlighter-rouge">autorelabel=1</code></p>
+
+<p>该参数会促使系统先创建 <code class="highlighter-rouge">/.autorelabel</code> 文件，然后重启。即相当于连续运行以下命令：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# touch /.autorelabel
+~]# reboot
+</code></pre></div></div>
+
+<h3 id="1364-布尔值">13.6.4 布尔值</h3>
+
+<p>为了在运行时（runtime）能够灵活地启用、禁用某些 SELinux 策略，系统创建了布尔值这个概念。</p>
+
+<p>在实际使用中，有时会发现一些活动被拒绝了，然而明明在逻辑上有充分的理由放行的。当这些理由信赖于特定的因素或选择时，SELinux 策略的编写者就会被鼓励 <strong>将这些策略变为可选</strong>。在 SELinux 世界里，可选就意味着可以 <strong>通过 SELinux 布尔值来开、关特定的访问控制</strong>。</p>
+
+<h4 id="查看布尔值列表">查看布尔值列表</h4>
+
+<p><code class="highlighter-rouge">semanage boolean -l</code>  查看布尔值名称、描述、开关状态</p>
+
+<p><code class="highlighter-rouge">getsebool -a</code>  查看布尔值名称、开关状态</p>
+
+<p><code class="highlighter-rouge">getsebool boolean-name1 boolean-name2</code>  查看指定名称的布尔值状态</p>
+
+<h4 id="修改布尔值">修改布尔值</h4>
+
+<p>通过设置布尔值来 <strong>开启或关闭某项规则</strong>。</p>
+
+<p><code class="highlighter-rouge">setsebool  [-P]  boolean_name on/off</code></p>
+
+<p><code class="highlighter-rouge">-P</code>  持续生效，重启后不会丢失</p>
+
+<p><code class="highlighter-rouge">on/off</code>  开关状态，可以用 1/0 或 true/false 来替换</p>
+
+<p>如果不加 -P 参数，只在当前有效，系统重启后失效。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# getsebool httpd_enable_homedirs
+httpd_enable_homedirs --&gt; off  # 当前是为关闭状态
+~]# setsebool -P httpd_enable_homedirs 1  # 打开
+~]# getsebool httpd_enable_homedirs
+httpd_enable_homedirs --&gt; on
+</code></pre></div></div>
+
+<h3 id="1365-给文件打标签">13.6.5 给文件打标签</h3>
+
+<p>在使用 SELinux 的系统中，所有的进程和文件都会被打上标签，以此来标示安全相关的信息，即 SELinux 上下文，以此来制定决策。在 DAC 系统中，访问控制是基于 L 的 UID 与 GID。SELinux 的策略规则检查是在 DAC 规则检查之后进行的，如果 DAC 规则已经拒绝了访问，则 SELinux 策略规则就无需使用。</p>
+
+<p>默认情况下，新创建的文件和目录会 <strong>继承父目录的 SL 类型</strong>。</p>
+
+<h4 id="临时修改标签">临时修改标签</h4>
+
+<p><code class="highlighter-rouge">chcon</code> 命令用于 <strong>临时修改</strong> 文件的上下文，但它造成的变化会在 <strong>文件系统重打标签时被覆盖</strong>，也会 <strong>被 <code class="highlighter-rouge">restorecon</code> 命令的执行给覆盖</strong>。</p>
+
+<p>SELinux 策略决定了是否允许用户修改给定文件的上下文。经常发生的事情是，类型标签打错了，导致拒绝访问。</p>
+
+<h5 id="chcon-手动修改文件的上下文"><code class="highlighter-rouge">chcon</code> 手动修改文件的上下文</h5>
+
+<p><code class="highlighter-rouge">chcon [-R] [-t type] [-u user] [-r role] 文件</code></p>
+
+<p><code class="highlighter-rouge">chcon [-R] --reference=参考文件</code></p>
+
+<p><code class="highlighter-rouge">-v</code>  显示对每个文件的操作过程，必须放在 <strong>所有参数之前</strong> 🌟</p>
+
+<p><code class="highlighter-rouge">-R</code>  遍历子目录及其文件</p>
+
+<p><code class="highlighter-rouge">-t</code>  修改类型</p>
+
+<p><code class="highlighter-rouge">-u</code>  修改用户</p>
+
+<p><code class="highlighter-rouge">-r</code>  修改角色</p>
+
+<p><code class="highlighter-rouge">--reference=</code>	参考指定文件</p>
+
+<p>【 范例 】修改指定文件的类型</p>
+
+<p>先查看 <code class="highlighter-rouge">/etc/hosts</code> 的类型，将之用于 <code class="highlighter-rouge">/etc/cron.d/checktime</code> 文件上。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# ll <span class="nt">-Z</span> /etc/hosts
+<span class="nt">-rw-r--r--</span><span class="nb">.</span> root root system_u:object_r:net_conf_t:s0  /etc/hosts
+<span class="c">#              参考文件的类型           ^^^^^^^^^^</span>
+
+~]# <span class="nb">chcon</span> <span class="nt">-v</span> <span class="nt">-t</span> net_conf_t /etc/cron.d/checktime
+<span class="c">#               ^^^^^^^^^^  </span>
+changing security context of ‘/etc/cron.d/checktime’
+
+~]# ll <span class="nt">-Z</span> /etc/cron.d/checktime
+<span class="nt">-rw-r--r--</span><span class="nb">.</span> root root unconfined_u:object_r:net_conf_t:s0 /etc/cron.d/checktime
+<span class="c">#                                           ^^^^^^^^^^ 修改成功</span>
+</code></pre></div></div>
+
+<p>【 范例 】指定参考文件，自动修改文件标签</p>
+
+<p>参考文件 <code class="highlighter-rouge">/etc/shadow</code>，自动修改文件 <code class="highlighter-rouge">/etc/cron.d/checktime</code> 的上下文，修改之后该文件的所有标签与参考文件完全一致。</p>
+
+<p>用 <code class="highlighter-rouge">--reference</code> 参数来 <strong>指定参考文件</strong>。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# chcon -v --reference=/etc/shadow /etc/cron.d/checktime
+~]# ll -Z /etc/shadow /etc/cron.d/checktime
+-rw-r--r--. root root system_u:object_r:shadow_t:s0    /etc/cron.d/checktime
+----------. root root system_u:object_r:shadow_t:s0    /etc/shadow
+</code></pre></div></div>
+
+<h4 id="持久修改">持久修改</h4>
+
+<p><code class="highlighter-rouge">semanage fcontext</code> 命令用于 <strong>持久修改文件的上下文</strong>，不会受文件系统重打标签（Relabel）的影响，即文件系统被重打标签之后，之前用 <code class="highlighter-rouge">semanage fcontext</code> 修改的标签依然会保持原标签不变。</p>
+
+<blockquote>
+  <p>Relabel 即指文件系统重新打标签的过程。</p>
+</blockquote>
+
+<h5 id="如何免于-relabel">如何免于 RELABEL</h5>
+
+<p>要想让 SL 上下文的修改能够避免于 relabel，需要在使用 <code class="highlighter-rouge">semanage</code> 修改完标签之后，再用 <code class="highlighter-rouge">restorecon</code> 来实际应用该修改才行。</p>
+
+<p class="notice--warning">注意：<code class="highlighter-rouge">semanage fcontext</code> 后面必须接 <strong>文件的绝对路径</strong>，否则不会生效。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# semanage fcontext <span class="nt">-a</span> options file-name|directory-name
+~]# restorecon <span class="nt">-v</span> file-name|directory-name
+</code></pre></div></div>
+
+<p class="notice--primary">😈 为什么在 <code class="highlighter-rouge">semanage fcontext</code> 之后还要再多做一步 <code class="highlighter-rouge">restorecon</code> 呢？</p>
+
+<p>事情是这样婶儿的：</p>
+
+<p>在使用 targeted 策略时，<code class="highlighter-rouge">semanage fcontext</code> 所做的修改会保存到 <code class="highlighter-rouge">/etc/selinux/targeted/contexts/files/</code> 目录中的两个文件中：</p>
+
+<ul>
+  <li><code class="highlighter-rouge">file_contexts</code>：<code class="highlighter-rouge">semanage fcontext</code> 所做的修改首先会检查该文件，如果在该文件中找到了要修改上下文的文件或目录的名称，则在此文件更新。</li>
+  <li><code class="highlighter-rouge">file_contexts.local</code>：如果上一步中，没有找到目标文件或目录的名称，则把修改记录添加到此文件中。</li>
+</ul>
+
+<p>这两个文件生成、更新之后，会有两个工具来读它们：</p>
+
+<ul>
+  <li><code class="highlighter-rouge">setfiles</code>：当文件系统要重打标签（relabel）时，会用该工具来执行打标签的任务。它打的时候会先读取上面的文件，以将其排除在外，因此，这样一来，<code class="highlighter-rouge">semanage fcontext</code> 所做的修改才能免于重打标签的毒手。</li>
+  <li><code class="highlighter-rouge">restorecon</code>：它可以随时拿来修复默认上下文</li>
+</ul>
+
+<h4 id="修复上下文">修复上下文</h4>
+
+<p><code class="highlighter-rouge">restorecon</code> 命令会根据当前所在目录查找对应的规则，以确定其默认的上下文。如果当前文件的上下文与所在目录默认上下文不匹配，则将其纠正。有了这个命令，便无需用 <code class="highlighter-rouge">chcon</code> 手动修改了。</p>
+
+<p>文件被移动后，往往会携带原目录的上下文，因此在存取中会造成上下文不匹配，用该命令来予以纠正。</p>
+
+<p><code class="highlighter-rouge">restorecon [-Rv] 文件或目录</code></p>
+
+<p><code class="highlighter-rouge">-R</code>  遍历子目录</p>
+
+<p><code class="highlighter-rouge">-v</code>  显示过程</p>
+
+<p><code class="highlighter-rouge">restorecon -Rv /etc/cron.d</code>  修复指定目录中所有文件的 SL 类型</p>
+
+<h3 id="1366-file_t-及-default_t类型">13.6.6 <code class="highlighter-rouge">file_t</code> 及 <code class="highlighter-rouge">default_t</code>类型</h3>
+
+<p>当使用支持 <strong>扩展属性</strong> 的文件系统时，如果一个文件尚未分配扩展属性，其默认 SL 类型为 <code class="highlighter-rouge">file_t</code>，该类型仅仅是做这个用的，并不会存在于正确打标签的文件系统中，因为在使用 SELinux 的系统中，所有文件都应该有正确的上下文，而 <code class="highlighter-rouge">fiel_t</code> 类型是永远不会在上下文的配置中使用的。</p>
+
+<p>在文件上下文配置过程中，那些不匹配任何特征的文件，会被分配 <code class="highlighter-rouge">default_t</code> 类型，以便能与没有标签的文件区别开来，通常这些文件在受限域中是拒绝访问的。</p>
+
+<h3 id="1367-挂载文件系统">13.6.7 挂载文件系统</h3>
+
+<p>默认情况下，当一个 <strong>支持扩展属性的文件系统</strong> 被挂载时，每个文件的上下文是 <strong>从文件的扩展属性 <code class="highlighter-rouge">security.selinux</code> 获得</strong> 的。使用 <code class="highlighter-rouge">mount -o context</code> 命令可以覆盖现有的扩展属性。</p>
+
+<p>而在 <strong>不支持扩展属性的文件系统</strong> 中，会按照文件系统的类型，依照策略为文件分配 <strong>单一的、默认的上下文</strong>。使用 <code class="highlighter-rouge">mount -o context</code> 命令可以指定一个不同的默认上下文。</p>
+
+<p><code class="highlighter-rouge">mount -o context</code> 的使用场景：</p>
+
+<ul>
+  <li>不信任某个文件系统能提供正确的属性，如在多个系统中使用的可移动磁盘，通常用 <code class="highlighter-rouge">context="system_u:object_r:removable_t"</code></li>
+  <li>在不支持扩展属性的文件系统中支持文件打标签，如 FAT 或 NFS 驱动器。</li>
+</ul>
+
+<p>用 <code class="highlighter-rouge">context</code> 参数指定的上下文不会被写到磁盘中，原始的上下文还是被保留的，当你不用 <code class="highlighter-rouge">context</code> 挂载磁盘时就会看到了，前提是支持扩展属性的文件系统。</p>
+
+<h4 id="挂载文件系统时使用上下文参数">挂载文件系统时使用上下文参数</h4>
+
+<p class="notice--success">在挂载文件系统时，通过特定的 <strong>挂载参数</strong>，实现特定的访问控制。</p>
+
+<p>要想以指定的上下文挂载文件系统，<strong>覆盖现有的上下文</strong> 的话，或是为不支持扩展属性的文件系统 <strong>指定默认上下文</strong>：</p>
+
+<p><code class="highlighter-rouge">mount -o context=SELinux_user:role:type:level</code></p>
+
+<p>挂载驱动器时对文件系统上下文的改变 <strong>不会被写入磁盘</strong>。</p>
+
+<h5 id="范例用挂载参数控制服务对-nfs-的访问">范例：用挂载参数控制服务对 NFS 的访问</h5>
+
+<p>NFS 驱动器在客户端挂载时，使用的是针对 NFS 的策略定义的默认标签。在一般的策略中，该默认上下文使用的是 <code class="highlighter-rouge">nfs_t</code> 类型。</p>
+
+<ul>
+  <li>希望 <strong>禁止</strong> 其它服务访问挂载的 NFS：挂载时 <strong>不附带额外参数</strong></li>
+  <li>希望 <strong>允许</strong> 网页服务访问挂载的 NFS，可以为其 <strong>指定网页服务专用的类型</strong>：</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# mount server:/export /local/mount/point -o \
+context="system_u:object_r:httpd_sys_content_t:s0"
+</code></pre></div></div>
+
+<p>这样，在挂载的文件系统中新创建的文件和目录 <strong>看上去</strong> 就有了 <code class="highlighter-rouge">-o context</code> 指定的上下文了，因为这些改变不会保存到磁盘中，所以为了维持这个上下文，<strong>每次挂载</strong> 该文件系统时必须使用 <strong>相同的上下文参数</strong> 才行。</p>
+
+<p><strong>类型强制是 SELinux Targeted 策略中主要的权限控制手段</strong>。大部分时间，SL 用户和角色都可以被忽略。因此，当使用 <code class="highlighter-rouge">-o context</code> 覆盖原上下文时，会使用 <code class="highlighter-rouge">system_u</code> 用户和 <code class="highlighter-rouge">object_r</code> 角色，再配合类型使用。如果没有使用 MLS 或 MCS，可使用 <code class="highlighter-rouge">s0</code> 级别。</p>
+
+<p class="notice--warning">当文件系统 <strong>挂载时使用了 <code class="highlighter-rouge">context</code> 参数</strong> 时，系统会 <strong>禁止用户和进程修改上下文</strong>，<code class="highlighter-rouge">chcon</code> 会返回 <code class="highlighter-rouge">Operation not supported</code> 错误。</p>
+
+<h4 id="修改默认上下文">修改默认上下文</h4>
+
+<p>在支持扩展属性的文件系统中，磁盘中缺少上下文的文件会被看作它有策略指定的默认的上下文。在普通的策略中，这个默认的上下文使用 <code class="highlighter-rouge">file_t</code> 类型。如果想使用不同的默认上下文，挂载文件系统时可以使用 <code class="highlighter-rouge">defcontext</code> 参数。</p>
+
+<p>下面范例为在 <code class="highlighter-rouge">/test/</code> 目录上挂载一个新建的文件系统 <code class="highlighter-rouge">/dev/sda2</code>，假设在 <code class="highlighter-rouge">/etc/selinux/targeted/contexts/files/</code> 目录中不存在为 <code class="highlighter-rouge">/test/</code> 定义的上下文：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# mount /dev/sda2 /test/ -o defcontext="system_u:object_r:samba_share_t:s0"
+</code></pre></div></div>
+
+<p>本例中：</p>
+
+<ul>
+  <li><code class="highlighter-rouge">defcontext</code> 参数为未打标签的文件指定了默认上下文</li>
+  <li>挂载时，文件系统的根目录 <code class="highlighter-rouge">/test/</code> 被视为有 <code class="highlighter-rouge">defcontext</code> 指定的上下文（标签不会保存在磁盘上），这会影响为 <code class="highlighter-rouge">/test/</code> 目录中创建的文件打标签：新文件会继承 <code class="highlighter-rouge">samba_share_t</code> 类型，这些标签是会保存在磁盘上的。</li>
+  <li>在 <code class="highlighter-rouge">/test/</code> 目录中创建的文件会保存其标签</li>
+</ul>
+
+<h4 id="同一-nfs-的多次挂载">同一 NFS 的多次挂载</h4>
+
+<p>NFS 的导出目录的同一子目录，虽然支持多次被挂载，但会导致叠加挂载，文件在两个不同的上下文中都能被访问，会造成混乱。</p>
+
+<p>而同一 NFS 导出目录的不同子目录，可以同时用不同的上下文分别挂载，使用的是 <code class="highlighter-rouge">-o nosharecache,context</code> 参数：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# mount server:/export/web /local/web \
+-o nosharecache,context="system_u:object_r:httpd_sys_content_t:s0"
+#                                          ^^^^^^^^^^^^^^^^^^^
+
+~]# mount server:/export/database /local/database \
+-o nosharecache,context="system_u:object_r:mysqld_db_t:s0"
+#                                          ^^^^^^^^^^^
+</code></pre></div></div>
+
+<h4 id="etcfstab-中指定挂载参数"><code class="highlighter-rouge">/etc/fstab</code> 中指定挂载参数</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server:/export /local/mount/ nfs context="system_u:object_r:httpd_sys_content_t:s0" 0 0
+</code></pre></div></div>
+
+<h3 id="1368-标签的维护">13.6.8 标签的维护</h3>
+
+<p>当复制、移动、归档文件和目录时，上下文发生了什么？如何在复制和归档时保留上下文？</p>
+
+<h4 id="复制文件和目录">复制文件和目录</h4>
+
+<p><strong>复制文件和目录时</strong>，如果不指定参数，<strong>不会保留原上下文</strong>。产生的新文件和目录的上下文是基于默认标签规则的，而不是原文件和目录的上下文。</p>
+
+<ul>
+  <li>如果向另一目录复制文件，不加参数复制，则目标文件的上下文会根据目标目录的默认上下文创建</li>
+  <li>如果目标文件已存在，不加参数复制，覆盖后，已存在文件的上下文会保留</li>
+  <li>使用 <code class="highlighter-rouge">--preserve=context</code> 参数来保留原上下文</li>
+  <li>使用 <code class="highlighter-rouge">cp --context=system_u:object_r:samba_share_t:s0</code> 来指定目标文件的上下文</li>
+</ul>
+
+<p>根据以上特性，建议尽量用复制替代移动，这样能更好地保证标签的正确性。</p>
+
+<h4 id="移动文件和目录">移动文件和目录</h4>
+
+<p>文件和目录被 <strong>移动时会保留原始的上下文</strong>，但在许多情况下，目标目录的上下文往往与其不同。</p>
+
+<h4 id="检查上下文">检查上下文</h4>
+
+<p><code class="highlighter-rouge">matchpathcon</code> 可以用来 <strong>检查文件和目录的上下文是否正确</strong>，所谓正确的标准就是系统策略中该路径的默认上下文。</p>
+
+<p><code class="highlighter-rouge">matchpathcon -V /var/www/html/*</code>  检查该目录中所有文件的上下文是否正确</p>
+
+<p>检查出来的错误可以用 <code class="highlighter-rouge">restorecon</code> 来修正。</p>
+
+<h4 id="用-tar-归档文件">用 <code class="highlighter-rouge">tar</code> 归档文件</h4>
+
+<p><code class="highlighter-rouge">tar</code> 默认不会保留扩展属性，而因为 SL 上下文是保存在扩展属性中的，所以归档时文件上下文会丢失。</p>
+
+<p>可以使用 <code class="highlighter-rouge">tar --selinux</code> 参数来保留上下文。</p>
+
+<ul>
+  <li>打包时使用该参数，包里的文件上下文保留原始标签</li>
+  <li>解包时使用该参数，解开的文件会保留原始上下文</li>
+  <li>解包时不使用该参数，则解开的文件会继承当前目录的上下文</li>
+</ul>
+
+<h3 id="1369-信息分析">13.6.9 信息分析</h3>
+
+<h4 id="avcstat-查看-avc-统计"><code class="highlighter-rouge">avcstat</code> 查看 AVC 统计</h4>
+
+<p>该命令会显示 <strong>本次开机以来 AVC 的简要统计</strong> 信息，可以指定实时显示时刷新的频率。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# avcstat
+   lookups       hits     misses     allocs   reclaims      frees
+  47517410   47504630      12780      12780      12176      12275
+</code></pre></div></div>
+
+<h4 id="sestatus-查询系统状态"><code class="highlighter-rouge">sestatus</code> 查询系统状态</h4>
+
+<p><code class="highlighter-rouge">sestatus</code> 可 <strong>查询 SELinux 当前状态信息</strong>：</p>
+
+<ul>
+  <li>SELinux 当前状态，启动或关闭</li>
+  <li>SELinux 关键目录的位置，/etc/selinux</li>
+  <li>当前已载入的策略名称</li>
+  <li>SELinux 的挂载点</li>
+  <li>当前工作模式</li>
+  <li>配置文件中指定的工作模式</li>
+  <li>MLS 状态</li>
+  <li>对于未定义操作，是否默认采取拒绝</li>
+</ul>
+
+<p><code class="highlighter-rouge">sestatus [-vb]</code></p>
+
+<p><code class="highlighter-rouge">-v</code>   查看 /etc/sestatus.conf 中记录的文件与进程的安全上下文</p>
+
+<p><code class="highlighter-rouge">-b</code>   查看布尔值列表，左侧为布尔值，右侧为开关状态</p>
+
+<h4 id="seinfo-查询策略中要素"><code class="highlighter-rouge">seinfo</code> 查询策略中要素</h4>
+
+<p><code class="highlighter-rouge">seinfo</code> 用于 <strong>查询 SELinux 策略中的各要素</strong>，身份、角色、类型、规则。它使用 <code class="highlighter-rouge">policy.conf</code>、二进制策略文件、策略包的模块化列表或一个策略列表文件做为输入。其输出也会根据不同的输入而有所区别。</p>
+
+<p><code class="highlighter-rouge">seinfo [-trub]</code></p>
+
+<p><code class="highlighter-rouge">--all</code>   查看所有要素：SELinux 状态、规则、身份、角色、类型</p>
+
+<p><code class="highlighter-rouge">-u</code>		查看所有身份</p>
+
+<p><code class="highlighter-rouge">-r</code>		查看所有角色</p>
+
+<p><code class="highlighter-rouge">-t</code>		查看所有类型</p>
+
+<p><code class="highlighter-rouge">-b</code>		查看所有规则</p>
+
+<h4 id="sesearch-查找特定的规则"><code class="highlighter-rouge">sesearch</code> 查找特定的规则</h4>
+
+<p><code class="highlighter-rouge">sesearch</code> 用于在策略中 <strong>查找特定的规则</strong>。可以在策略源文件中查找，也可以在二进制文件中查找。</p>
+
+<p><code class="highlighter-rouge">sesearch [-A] [-s 主体类型] [-t 客体类型] [-b 规则名称]</code></p>
+
+<p><code class="highlighter-rouge">-A</code>  仅查看放行的规则</p>
+
+<p><code class="highlighter-rouge">-C</code>  显示条件表达式及状态</p>
+
+<blockquote>
+  <p><code class="highlighter-rouge">sesearch -C</code> 会在返回结果的开头加上两个字母，第一个字母表示 <strong>本条规则当前状态</strong>，第二个字母表示 <strong>布尔值的哪个状态会启用本条规则</strong>。
+E D T F 分别为 Enabled, Disabled, True, False 的首字母。</p>
+  <ul>
+    <li>ET：本规则当前启用，布尔值打开时会启用本规则</li>
+    <li>EF：本规则当前启用，布尔值关闭时会启用本规则</li>
+    <li>DT：本规则当前禁用，布尔值打开时会启用本规则</li>
+    <li>DF：本规则当前禁用，布尔值关闭时会启用本规则</li>
+  </ul>
+</blockquote>
+
+<p><code class="highlighter-rouge">-s</code>  指定主体类型，域</p>
+
+<p><code class="highlighter-rouge">-t</code>  指定客体类型，文件类型</p>
+
+<p><code class="highlighter-rouge">-b</code>  指定规则名称</p>
+
+<p><code class="highlighter-rouge">sesearch</code> 返回的格式是这样的：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  allow crond_t setfiles_exec_t : file { read getattr execute open } ;
+# 控制 |   域  |     类型       | 客体  |           操作
+</code></pre></div></div>
+
+<p><a href="/handbook/handbook-permission/#sesearch">【 更多… 】</a></p>
+
+<h3 id="13610-禁用-ptrace">13.6.10 禁用 <code class="highlighter-rouge">ptrace()</code></h3>
+
+<p><code class="highlighter-rouge">ptrace()</code> 系统调用允许一个进程观察并控制另一个进程的执行，可以修改它的内存和寄存器。该调用主要用于策略开发人员做调试。日常使用中应该禁用该调用，以提升系统安全。可以通过启用 <code class="highlighter-rouge">deny_ptrace</code> 布尔值来完成：</p>
+
+<p><code class="highlighter-rouge">setsebool -P deny_ptrace on</code></p>
+
+<h3 id="13611-缩略图保护">13.6.11 缩略图保护</h3>
+
+<p>缩略图可能会允许攻击者使用移动介质攻破一个锁定的机器，如 U 盘或光盘。当系统检测到移动介质时，Nautilus 文件管理器会执行缩略图驱动程序代码，在文件资源管理器中显示缩略图，不管主机是否被锁定。这个行为非常危险，因为如果执行缩略图的程序有漏洞的话，很有可能被攻击者利用来绕过锁屏而无需输入密码。</p>
+
+<p>因此，有一个新的策略用来防止这些攻击的发生，该策略能保证锁屏时也同时锁定所有的缩略图驱动程序。</p>
+
+<h2 id="137-selinux-排错">13.7 SELinux 排错</h2>
+
+<h3 id="1371-拒绝访问时都发生了什么">13.7.1 拒绝访问时都发生了什么？</h3>
+
+<p>诸如拒绝访问、允许访问这样的 SELinux 的决策会被缓存，即 AVC。发生拒绝访问时，拒绝消息会记录到日志，这些消息也称为 AVC 拒绝。根据当前运行的日志服务，可以把日志保存到以下位置：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>服务</th>
+      <th>日志位置</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>auditd 开启</td>
+      <td><code class="highlighter-rouge">/var/log/audit/audit.log</code></td>
+    </tr>
+    <tr>
+      <td>auditd 关闭，rsyslogd 开启</td>
+      <td><code class="highlighter-rouge">/var/log/messages</code></td>
+    </tr>
+    <tr>
+      <td>setroubleshootd, rsyslogd, auditd 开启</td>
+      <td><code class="highlighter-rouge">/var/log/audit/audit.log</code>，更易读的拒绝也被另存到 <code class="highlighter-rouge">/var/log/messages</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# grep "SELinux is preventing" /var/log/messages
+~]# grep "denied" /var/log/audit/audit.log
+</code></pre></div></div>
+
+<h3 id="1372-常见问题">13.7.2 常见问题</h3>
+
+<h4 id="标签问题">标签问题</h4>
+
+<p>使用 SELinux 的系统中，所有的进程和文件都有上下文，标签要是错了，就可能造成访问被拒绝。如果程序的标签错了，就会造成其进程标签也是错的，也会造成拒绝访问，进程又会生成标签错误的文件。</p>
+
+<p>一个常见的打错标签的原因是，为服务使用非标准目录。例如，本应该为网站使用 <code class="highlighter-rouge">/var/www/html/</code> 目录，结果管理员使用了 <code class="highlighter-rouge">/srv/myweb/</code>。在 CentOS 中，<code class="highlighter-rouge">/srv</code> 目录的类型为 <code class="highlighter-rouge">var_t</code>，在该目录中创建的文件和目录也会继承该标签。新建的一级目录（如 <code class="highlighter-rouge">myserver/</code>）会默认使用 <code class="highlighter-rouge">default_t</code> 标签，SELinux 会阻止 <code class="highlighter-rouge">httpd</code> 访问这两种标签。要想允许访问，SELinux 必须知道 <code class="highlighter-rouge">/srv/myweb/</code> 中的文件是可以被 <code class="highlighter-rouge">httpd</code> 访问的。</p>
+
+<p><code class="highlighter-rouge">semanage fcontext -a -t httpd_sys_content_t "/srv/myweb(/.*)?"</code>  为 <code class="highlighter-rouge">/srv/myweb/</code> 指定新的上下文</p>
+
+<p><code class="highlighter-rouge">restorecon -R -v /srv/myweb</code>  应用上面的改变</p>
+
+<p>如果用 <code class="highlighter-rouge">matchpathcon -V /var/www/html/*</code> 检查出错误的上下文，可以用 <code class="highlighter-rouge">restorecon -R -v /var/www/html/</code> 来修复。</p>
+
+<h4 id="受限服务如何运行">受限服务如何运行</h4>
+
+<p>要想控制服务之间的互访，可以通过布尔值的开关来实现。例如，要允许 Apache HTTP Server 与 MariaDB 通信，可以启用布尔值 <code class="highlighter-rouge">httpd_can_netwrok_connect_db</code>。</p>
+
+<p>要想查询某个服务相关的访问，可以用 <code class="highlighter-rouge">getsebool -a | grep ftp</code> 实现。</p>
+
+<h5 id="端口号">端口号</h5>
+
+<p>根据策略的配置，可以限制服务只能运行于特定的端口号，如果尝试在策略之外修改服务运行的端口号，会导致服务启动失败。</p>
+
+<p><code class="highlighter-rouge">semanage port -l | grep http</code>  查询 http 相关的端口号</p>
+
+<p><code class="highlighter-rouge">http_port_t</code> 端口类型定义了 Apache 可以监听的端口。</p>
+
+<p>要想增加 <code class="highlighter-rouge">httpd</code> 可以监听的端口，必须使用 <code class="highlighter-rouge">semanage port -a http_port_t -p tcp 9876</code>。</p>
+
+<h4 id="规则的进化与崩溃的程序">规则的进化与崩溃的程序</h4>
+
+<p>程序有可能会崩溃，造成 SELinux 的拒绝访问，同时 SELinux 的规则也在进化，SELinux 有可能在某种程度上没有检测到程序的运行，造成了拒绝访问，即便程序是正常运行的。例如一个新版 的PostgreSQL 发布后，它的一些操作可能当前的策略从未见过，导致拒绝访问，可这些访问应该被放行。</p>
+
+<p>这种情况下，可以使用 <code class="highlighter-rouge">audit2allow</code> 来创建自定义策略模块，以放行访问。</p>
+
+<h3 id="1373-解决问题">13.7.3 解决问题</h3>
+
+<h4 id="linux-权限">Linux 权限</h4>
+
+<p>拒绝访问发生时，应该检查标准的 L 权限，毕竟 SL 的策略是在 DAC 规则之后使用的，如果 DAC 规则已经拒绝了，就不会再使用 SL 策略了。</p>
+
+<p>如果访问拒绝，而日志中没有发现拒绝，应该查看 L 权限是否导致拒绝的原因。如需要可用 <code class="highlighter-rouge">chown</code> 命令修改文件的拥有者和属组。</p>
+
+<h4 id="不记录拒绝的可能原因">不记录拒绝的可能原因</h4>
+
+<p>在某些情况下，AVC 拒绝消息可能不会被记录，程序和系统库函数经常会过多的检测，有些检测对于任务的完成是不必要的。为了在维持最少特权时，还能尽量减小日志中对无害程序的检测产生的 AVC 拒绝的数量，通过使用 <code class="highlighter-rouge">dontaudit</code> 规则，策略无需开放权限就可以减少 AVC 拒绝。这些规则在标准策略中是很常见的。使用 <code class="highlighter-rouge">dontaudit</code> 的缺点是，虽然 SELinux 拒绝了访问，日志中却没有拒绝消息，给排错增加了难度。</p>
+
+<p><code class="highlighter-rouge">semodule -DB</code>  可以临时禁用 <code class="highlighter-rouge">dontaudit</code> 规则，以允许日志记录所有拒绝</p>
+
+<p>其中的参数 <code class="highlighter-rouge">-D</code> 会导致禁用 <code class="highlighter-rouge">dontaudit</code> 规则，<code class="highlighter-rouge">-B</code> 会重建策略。运行该命令以后，再尝试运行之前产生问题的程序，根据日志来排查问题。</p>
+
+<p><code class="highlighter-rouge">semodule -B</code>  重新启用 <code class="highlighter-rouge">dontaudit</code> 并重建策略</p>
+
+<p><code class="highlighter-rouge">sesearch --dontaudit</code>  查看所有 <code class="highlighter-rouge">dontaudit</code> 规则</p>
+
+<p><code class="highlighter-rouge">sesearch --dontaudit -s smbd_t | grep squid</code>  在 <code class="highlighter-rouge">smbd_t</code> 域中筛选 squid 相关的规则</p>
+
+<h4 id="服务的说明文档">服务的说明文档</h4>
+
+<p>服务的说明文档（man page）包含很多有价值的信息，比如在给定的情况下应该使用什么文件类型，影响服务对客体访问的布尔值有哪些等等。这些信息有的在标准的说明文档中，有的可以从 SELinux 策略中，针对每个服务域，使用 <code class="highlighter-rouge">sepolicy manpage</code> 来自动生成，这类的说明文档的名称为 <code class="highlighter-rouge">service-name-selinux</code> 格式，通常安装了 <code class="highlighter-rouge">selinux-policy-doc</code> 包就会有。</p>
+
+<p>例如，<code class="highlighter-rouge">httpd_selinux(8)</code> 的说明文档中包含：在不同情况下应使用哪种文件类型，在家目录要想运行脚本、共享文件、访问目录的话需要哪些布尔值，等等。</p>
+
+<h4 id="宽容域">宽容域</h4>
+
+<p>当 SELinux 运行于宽容模式时，不会拒绝访问，但对违反规则的访问仍然会记录日志。</p>
+
+<p>宽容域允许 <strong>某个进程单独以宽容模式运行</strong>，主要用处：</p>
+
+<ul>
+  <li>排错</li>
+  <li>管理员为新程序创建策略</li>
+</ul>
+
+<h5 id="启用宽容域">启用宽容域</h5>
+
+<p><code class="highlighter-rouge">semanage permissive -a domain</code>  把一个域切换到宽容模式</p>
+
+<p><code class="highlighter-rouge">semodule -l | grep permissive</code>  查询当前所有宽容域</p>
+
+<p><code class="highlighter-rouge">semanage permissive -d domain</code>  取消宽容域</p>
+
+<h5 id="禁用宽容域">禁用宽容域</h5>
+
+<p><code class="highlighter-rouge">semodule -d permissivedomains</code>  禁用所有的宽容域</p>
+
+<p>一旦使用了该命令，策略模块就不会出现在 <code class="highlighter-rouge">semodule -l</code> 的结果中，要想查看包含被禁用模块在内的所有策略，可以用：</p>
+
+<p><code class="highlighter-rouge">semodule --list-modules=full</code></p>
+
+<h5 id="宽容域的拒绝">宽容域的拒绝</h5>
+
+<p>在日志中，强制模式下的 AVC 拒绝所产生的 <code class="highlighter-rouge">SYSCALL</code> 消息中 <code class="highlighter-rouge">success=no</code>，因为访问被拒绝；而在宽容模式下的 AVC 拒绝所产生的 <code class="highlighter-rouge">SYSCALL</code>  消息中 <code class="highlighter-rouge">success=yes</code>，因为访问被放行。</p>
+
+<p>而 AVC 消息在两种模式下均为 <code class="highlighter-rouge">avc:  denied</code>。</p>
+
+<h4 id="查找查看拒绝">查找、查看拒绝</h4>
+
+<p>假设系统已经安装了 setroubleshoot、setroubleshoot-server、dbus、audit，并正在运行。</p>
+
+<h5 id="ausearch"><code class="highlighter-rouge">ausearch</code></h5>
+
+<p><code class="highlighter-rouge">audit</code> 安装包提供了 <code class="highlighter-rouge">ausearch</code> 工具，基于不同的搜索规范，可用来 <strong>在 <code class="highlighter-rouge">audit</code> 服务的日志中查询事件</strong>，它会访问 <code class="highlighter-rouge">/var/log/audit/audit.log</code> 日志，因此必须用超级用户运行。</p>
+
+<p><code class="highlighter-rouge">ausearch -m avc,user_avc,selinux_err,user_selinux_err</code>  查找所有拒绝</p>
+
+<p><code class="highlighter-rouge">ausearch -m avc -ts today</code>  查找今天发生的拒绝</p>
+
+<p><code class="highlighter-rouge">ausearch -m avc -ts recent</code>  查找 10 分钟内发生的拒绝</p>
+
+<p><code class="highlighter-rouge">ausearch -m avc -c httpd</code>  查找 httpd 服务产生的拒绝</p>
+
+<h5 id="aureport"><code class="highlighter-rouge">aureport</code></h5>
+
+<p><code class="highlighter-rouge">audit</code> 安装包提供了 <code class="highlighter-rouge">aureport</code> 工具，它可以 <strong>生成审计系统日志的总结报告</strong>，它会访问 <code class="highlighter-rouge">/var/log/audit/audit/log</code> 日志，因此必须用超级用户运行。</p>
+
+<p><code class="highlighter-rouge">aureport -a</code>  查看 AVC 拒绝列表</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# aureport -a
+
+AVC Report
+========================================================
+# date time comm subj syscall class permission obj event
+========================================================
+1. 05/01/2009 21:41:39 httpd unconfined_u:system_r:httpd_t:s0 195 file getattr system_u:object_r:samba_share_t:s0 denied 2
+2. 05/03/2009 22:00:25 vsftpd unconfined_u:system_r:ftpd_t:s0 5 file read unconfined_u:object_r:cifs_t:s0 denied 4
+</code></pre></div></div>
+
+<h5 id="sealert"><code class="highlighter-rouge">sealert</code></h5>
+
+<p><code class="highlighter-rouge">setroubleshoot-server</code> 安装包提供了 <code class="highlighter-rouge">sealert</code> 工具，它可以读取由 <code class="highlighter-rouge">setroubleshoot-server</code> 翻译过的拒绝消息。每一个拒绝都被分配一个 ID，具体的拒绝保存在 <code class="highlighter-rouge">/var/log/messages</code>，如：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>setroubleshoot: SELinux is preventing /usr/sbin/httpd from name_bind access on the tcp_socket. For complete SELinux messages. run sealert -l 8c123656-5dda-4e5d-8791-9e3bd03786b7
+#                                         ^^^^^^^^  拒绝消息的 ID  ^^^^^^^^^^^
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">sealert -l 8c123656-5dda-4e5d-8791-9e3bd03786b7</code>  查看该拒绝的详细分析，为什么拒绝，如何解决</p>
+
+<p>如果你使用了 X 窗口系统，并且安装了 <code class="highlighter-rouge">setroubleshoot</code> 及 <code class="highlighter-rouge">setroubleshoot-server</code> 安装包，而且 <code class="highlighter-rouge">dbus</code> 和 <code class="highlighter-rouge">auditd</code> 服务都在运行。当发生拒绝时，系统会弹出一个信息框：</p>
+
+<p><img src="/assets/images/x.denial.png" alt="image-center" class="align-center" /></p>
+
+<p>点击 Show 会显示详细信息：</p>
+
+<p><img src="/assets/images/sealertgui.png" alt="image-center" class="align-center" /></p>
+
+<h4 id="audit-原始消息">audit 原始消息</h4>
+
+<p>原始的 audit 消息记录在 <code class="highlighter-rouge">/var/log/audit/audit.log</code> 日志中，以下是 AVC 拒绝消息及相关的 SYSCALL 的例子：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type=AVC msg=audit(1226874073.147:96): avc:  denied  { getattr } for  pid=2465 comm="httpd" path="/var/www/html/file1" dev=dm-0 ino=284133 scontext=unconfined_u:system_r:httpd_t:s0 tcontext=unconfined_u:object_r:samba_share_t:s0 tclass=file
+
+type=SYSCALL msg=audit(1226874073.147:96): arch=40000003 syscall=196 success=no exit=-13 a0=b98df198 a1=bfec85dc a2=54dff4 a3=2008171 items=0 ppid=2463 pid=2465 auid=502 uid=48 gid=48 euid=48 suid=48 fsuid=48 egid=48 sgid=48 fsgid=48 tty=(none) ses=6 comm="httpd" exe="/usr/sbin/httpd" subj=unconfined_u:system_r:httpd_t:s0 key=(null)
+</code></pre></div></div>
+
+<p>该条消息记录的是 Apache HTTP Server 尝试访问 <code class="highlighter-rouge">/var/www/html/files</code> 时产生的拒绝消息。下面拆开来看看：</p>
+
+<h5 id="avc-消息">AVC 消息</h5>
+
+<p><code class="highlighter-rouge">{ getattr }</code></p>
+
+<p>花括号中的项目表明了被拒绝的权限。<code class="highlighter-rouge">getattr</code> 条目表明源进程在 <strong>尝试读取目标文件的状态信息</strong>，该行为发生于读取文件之前，由于文件的标签错误导致该行为被拒绝。常见的权限包括 <code class="highlighter-rouge">getattr</code>、<code class="highlighter-rouge">read</code>、<code class="highlighter-rouge">write</code>。</p>
+
+<p><code class="highlighter-rouge">comm="httpd"</code></p>
+
+<p>启动该进程的可执行文件，其完整路径可在 SYSCALL 消息中 <code class="highlighter-rouge">exe=</code> 部分找到，本例为 <code class="highlighter-rouge">exec="/usr/sbin/httpd"</code></p>
+
+<p><code class="highlighter-rouge">path="/var/www/html/file1"</code></p>
+
+<p>进程尝试访问的 <strong>客体的路径</strong></p>
+
+<p><code class="highlighter-rouge">scontext="unconfined_u:system_r:httpd_t:s0"</code></p>
+
+<p>主体（进程）的上下文，source context</p>
+
+<p><code class="highlighter-rouge">tcontext="unconfined_u:object_r:samba_share_t:s0"</code></p>
+
+<p>客体的上下文，target context</p>
+
+<h5 id="syscall-消息">SYSCALL 消息</h5>
+
+<p><code class="highlighter-rouge">success=no</code></p>
+
+<p>表明 AVC 为强制模式，SYSCALL 不成功，被拒绝了。反之如果为 <code class="highlighter-rouge">success=yes</code> 为宽容模式，成功，被放行。</p>
+
+<p><code class="highlighter-rouge">exe="/usr/sbin/httpd"</code></p>
+
+<p>启动该进程的可执行文件的完整路径</p>
+
+<p>错误的文件类型是最常见的导致拒绝的原因，要想排错，先比较源上下文 scontext 与目标上下文 tcontext，进程应该允许访问客体吗？</p>
+
+<h4 id="sealert-消息">sealert 消息</h4>
+
+<p><code class="highlighter-rouge">/var/log/messages</code> 中的拒绝被分配了 ID，运行 <code class="highlighter-rouge">sealert -l ID</code> 即可查看完整消息。</p>
+
+<p>这是 <code class="highlighter-rouge">/var/log/messages</code> 中的消息：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hostname setroubleshoot: SELinux is preventing httpd (httpd_t) "getattr" to /var/www/html/file1 (samba_share_t). For complete SELinux messages. run sealert -l 32eee32b-21ca-4846-a22f-0ba050206786
+</code></pre></div></div>
+
+<p>查看完整消息：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]$ sealert -l 32eee32b-21ca-4846-a22f-0ba050206786
+SELinux is preventing httpd from getattr access on the file /var/www/html/file1.
+
+*****  Plugin restorecon (92.2 confidence) suggests   ************************
+
+If you want to fix the label.
+/var/www/html/file1 default label should be httpd_sys_content_t.
+Then you can run restorecon.
+Do
+# /sbin/restorecon -v /var/www/html/file1
+
+*****  Plugin public_content (7.83 confidence) suggests   ********************
+
+If you want to treat file1 as public content
+Then you need to change the label on file1 to public_content_t or public_content_rw_t.
+Do
+# semanage fcontext -a -t public_content_t '/var/www/html/file1'
+# restorecon -v '/var/www/html/file1'
+
+*****  Plugin catchall (1.41 confidence) suggests   **************************
+
+If you believe that httpd should be allowed getattr access on the file1 file by default.
+Then you should report this as a bug.
+You can generate a local policy module to allow this access.
+Do
+allow this access for now by executing:
+# ausearch -c 'httpd' --raw | audit2allow -M my-httpd
+# semodule -i my-httpd.pp
+
+
+Additional Information:
+Source Context                system_u:system_r:httpd_t:s0
+Target Context                unconfined_u:object_r:samba_share_t:s0
+Target Objects                /var/www/html/file1 [ file ]
+Source                        httpd
+Source Path                   httpd
+Port                          &lt;Unknown&gt;
+Host                          hostname.redhat.com
+Source RPM Packages           
+Target RPM Packages           
+Policy RPM                    selinux-policy-3.13.1-166.el7.noarch
+Selinux Enabled               True
+Policy Type                   targeted
+Enforcing Mode                Enforcing
+Host Name                     hostname.redhat.com
+Platform                      Linux hostname.redhat.com
+                              3.10.0-693.el7.x86_64 #1 SMP Thu Jul 6 19:56:57
+                              EDT 2017 x86_64 x86_64
+Alert Count                   2
+First Seen                    2017-07-20 02:52:11 EDT
+Last Seen                     2017-07-20 02:52:11 EDT
+Local ID                      32eee32b-21ca-4846-a22f-0ba050206786
+
+Raw Audit Messages
+type=AVC msg=audit(1500533531.140:295): avc:  denied  { getattr } for  pid=24934 comm="httpd" path="/var/www/html/file1" dev="vda1" ino=31457414 scontext=system_u:system_r:httpd_t:s0 tcontext=unconfined_u:object_r:samba_share_t:s0 tclass=file
+
+
+Hash: httpd,httpd_t,samba_share_t,file,getattr
+</code></pre></div></div>
+
+<h4 id="audit2allow-允许访问"><code class="highlighter-rouge">audit2allow</code> 允许访问</h4>
+
+<p><code class="highlighter-rouge">audit2allow</code> 工具会从日志中搜集拒绝的信息，然后 <strong>生成 SL 策略的放行规则</strong>。</p>
+
+<p>在分析完拒绝消息之后，如果修改标签和布尔值都不能实现放行，可以使用 <code class="highlighter-rouge">audit2allow</code> 来生成一个本地策略模块，它可以生成类型强制规则，用来放行之前的拒绝。</p>
+
+<p><code class="highlighter-rouge">audit2allow -w -a</code> 会读取 <code class="highlighter-rouge">/var/log/audit/audit.log</code>，然后把所有的拒绝消息生成人类易读的描述：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# audit2allow -w -a
+type=AVC msg=audit(1226270358.848:238): avc:  denied  { write } for  pid=13349 comm="certwatch" name="cache" dev=dm-0 ino=218171 scontext=system_u:system_r:certwatch_t:s0 tcontext=system_u:object_r:var_t:s0 tclass=dir
+	Was caused by:
+		Missing type enforcement (TE) allow rule.
+
+	You can use audit2allow to generate a loadable module to allow this access.
+......
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">-a</code> 参数用来读取所有的审核日志，<code class="highlighter-rouge">-w</code> 参数用来生成人类易读的描述。</p>
+
+<p><code class="highlighter-rouge">audit2allow -a</code> 查看放行的类型强制规则：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# audit2allow -a   
+
+
+#============= gssproxy_t ==============
+
+#!!!! This avc is allowed in the current policy
+allow gssproxy_t fs_t:filesystem getattr;
+
+#============= httpd_t ==============
+
+#!!!! The file '/var/www/html/testfile' is mislabeled on your system.  
+#!!!! Fix with $ restorecon -R -v /var/www/html/testfile
+allow httpd_t samba_share_t:file getattr;
+
+......
+</code></pre></div></div>
+
+<p>要想使用上面命令所显示的规则，可以运行 <code class="highlighter-rouge">audit2allow -a -M TEfilename</code> <strong>创建自定义模块</strong>。<code class="highlighter-rouge">-M</code> 参数用来在当前工作目录创建类型强制文件 <code class="highlighter-rouge">*.te</code>，后面跟的就是文件名。</p>
+
+<p>用 grep 把拒绝消息中需要的部分筛选出来，确认没有问题，再用管道交给 <code class="highlighter-rouge">audit2allow</code> 来处理。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# grep certwatch /var/log/audit/audit.log | audit2allow -R -M mycertwatch2
+******************** IMPORTANT ***********************
+To make this policy package active, execute:
+
+semodule -i mycertwatch2.pp
+</code></pre></div></div>
+
+<p>运行完毕之后，会生成两个文件：<code class="highlighter-rouge">*.te</code> 和 <code class="highlighter-rouge">*.pp</code>，前者为类型强制文件，后者为前者被编译后生成的策略包文件（模块）。</p>
+
+<p><code class="highlighter-rouge">semodule -i mycertwatch.pp</code>  安装生成的策略包</p>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/selinux" class="page__taxonomy-item" rel="tag">selinux</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/linux" class="page__taxonomy-item" rel="tag">linux</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#linux" class="page__taxonomy-item" rel="tag">linux</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2015-01-13T00:00:00+08:00">January 13, 2015</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">分享</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=liloli&text=Linux+%E5%9F%BA%E7%A1%80+-+13.+SELinux%20http%3A%2F%2Flocalhost%3A4000%2Flinux%2Flinux.selinux%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Flinux%2Flinux.selinux%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Flinux%2Flinux.selinux%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Flinux%2Flinux.selinux%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/linux/linux.signal/" class="pagination--pager" title="Linux 基础 - 12. 信号
+">向前</a>
+    
+    
+      <a href="http://localhost:4000/linux/linux.systemd/" class="pagination--pager" title="Linux 基础 - 14. Systemd
+">向后</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">猜您还喜欢</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/time/" rel="permalink">Bash 脚本 - 时间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/storage/" rel="permalink">Bash 脚本 - 存储空间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/numbers/" rel="permalink">Bash 脚本 - 数字
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/input/" rel="permalink">Bash 脚本 - 输入
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+      <li><a href="https://twitter.com/liloli"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+      <li><a href="https://www.facebook.com/lilolibj"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+    
+    
+      <li><a href="https://github.com/liloli"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+  
+  
+  <script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/linux/linux.selinux/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/linux/linux.selinux"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://liloli.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+  </body>
+</html>

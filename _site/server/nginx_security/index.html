@@ -1,0 +1,1812 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Nginx 安全控制 - LINOTES</title>
+<meta name="description" content="用简洁清晰的语言讨论技术">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Nginx 安全控制">
+<meta property="og:url" content="http://localhost:4000/server/nginx_security/">
+
+
+  <meta property="og:description" content="用简洁清晰的语言讨论技术">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/header/nginx.jpeg">
+
+
+
+  <meta name="twitter:site" content="@liloli">
+  <meta name="twitter:title" content="Nginx 安全控制">
+  <meta name="twitter:description" content="用简洁清晰的语言讨论技术">
+  <meta name="twitter:url" content="http://localhost:4000/server/nginx_security/">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="http://localhost:4000/assets/images/header/nginx.jpeg">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2016-01-03T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/server/nginx_security/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "Hawk Zhang",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- <link rel="stylesheet" href="/assets/css/vim.css"> -->
+
+
+
+  
+
+
+
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('http://localhost:4000/assets/images/header/nginx.jpeg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Nginx 安全控制
+
+        
+      </h1>
+      
+        <p class="page__lead">
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:liloli@gmail.com">
+            <meta itemprop="email" content="liloli@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Nginx 安全控制">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="January 03, 2016">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-copy"></i> Nginx 安全控制</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#nginx-用作-https-服务器">nginx 用作 HTTPS 服务器</a>
+    <ul>
+      <li><a href="#配置-https-服务器">配置 HTTPS 服务器</a></li>
+      <li><a href="#https-服务器的优化">HTTPS 服务器的优化</a></li>
+      <li><a href="#ssl-证书链">SSL 证书链</a></li>
+      <li><a href="#httphttps-二合一服务器">HTTP/HTTPS 二合一服务器</a></li>
+      <li><a href="#基于域名的-https-服务器">基于域名的 HTTPS 服务器</a></li>
+    </ul>
+  </li>
+  <li><a href="#通过-http-基本认证来限制访问">通过 HTTP 基本认证来限制访问</a>
+    <ul>
+      <li><a href="#先决条件">先决条件</a></li>
+      <li><a href="#创建密码文件">创建密码文件</a></li>
+      <li><a href="#配置--nginx-进行-http-基本验证">配置  nginx 进行 HTTP 基本验证</a></li>
+      <li><a href="#合并基本验证与-ip-地址限制">合并基本验证与 IP 地址限制</a></li>
+      <li><a href="#范例">范例</a></li>
+    </ul>
+  </li>
+  <li><a href="#基于子请求结果的身份验证">基于子请求结果的身份验证</a>
+    <ul>
+      <li><a href="#先决条件-1">先决条件</a></li>
+      <li><a href="#配置-nginx">配置 nginx</a></li>
+      <li><a href="#范例-1">范例</a></li>
+    </ul>
+  </li>
+  <li><a href="#限制对被代理的-http-资源的访问">限制对被代理的 HTTP 资源的访问</a>
+    <ul>
+      <li><a href="#限制连接数">限制连接数</a></li>
+      <li><a href="#限制请求频率">限制请求频率</a></li>
+      <li><a href="#限制带宽">限制带宽</a></li>
+    </ul>
+  </li>
+  <li><a href="#限制对被代理的-tcp-资源的访问">限制对被代理的 TCP 资源的访问</a>
+    <ul>
+      <li><a href="#通过-ip-地址限制访问">通过 IP 地址限制访问</a></li>
+      <li><a href="#限制-tcp-连接数">限制 TCP 连接数</a></li>
+      <li><a href="#限制带宽-1">限制带宽</a></li>
+    </ul>
+  </li>
+  <li><a href="#通过地理位置限制访问">通过地理位置限制访问</a>
+    <ul>
+      <li><a href="#先决条件-2">先决条件</a></li>
+      <li><a href="#配置-geoip">配置 GeoIP</a></li>
+      <li><a href="#范例-3">范例</a></li>
+    </ul>
+  </li>
+  <li><a href="#保证去往后端服务器的-http-流量的安全">保证去往后端服务器的 HTTP 流量的安全</a>
+    <ul>
+      <li><a href="#先决条件-3">先决条件</a></li>
+      <li><a href="#获取-ssl-服务器证书">获取 SSL 服务器证书</a></li>
+      <li><a href="#获取-ssl-客户端证书">获取 SSL 客户端证书</a></li>
+      <li><a href="#配置--nginx">配置  nginx</a></li>
+      <li><a href="#配置后端服务器">配置后端服务器</a></li>
+      <li><a href="#完整范例">完整范例</a></li>
+    </ul>
+  </li>
+  <li><a href="#保证去往后端服务器的-tcp-流量的安全">保证去往后端服务器的 TCP 流量的安全</a>
+    <ul>
+      <li><a href="#先决条件-4">先决条件</a></li>
+      <li><a href="#获取-ssl-服务器证书-1">获取 SSL 服务器证书</a></li>
+      <li><a href="#获取-ssl-客户端证书-1">获取 SSL 客户端证书</a></li>
+      <li><a href="#配置-nginx-1">配置 nginx</a></li>
+      <li><a href="#完整范例-1">完整范例</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="nginx-用作-https-服务器">nginx 用作 HTTPS 服务器</h2>
+
+<h3 id="配置-https-服务器">配置 HTTPS 服务器</h3>
+
+<p>要想配置一台 HTTPS 服务器，在 <code class="highlighter-rouge">nginx.conf</code> 文件中的 <code class="highlighter-rouge">server</code> 块中，需要添加 <code class="highlighter-rouge">listen</code> 指令，为其使用 <code class="highlighter-rouge">ssl</code> 参数，然后指定服务器证书和私钥文件的位置：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">server</span> {
+    <span class="n">listen</span>              <span class="m">443</span> <span class="n">ssl</span>;
+    <span class="n">server_name</span>         <span class="n">www</span>.<span class="n">example</span>.<span class="n">com</span>;
+    <span class="n">ssl_certificate</span>     <span class="n">www</span>.<span class="n">example</span>.<span class="n">com</span>.<span class="n">crt</span>;
+    <span class="n">ssl_certificate_key</span> <span class="n">www</span>.<span class="n">example</span>.<span class="n">com</span>.<span class="n">key</span>;
+    <span class="n">ssl_protocols</span>       <span class="n">TLSv1</span> <span class="n">TLSv1</span>.<span class="m">1</span> <span class="n">TLSv1</span>.<span class="m">2</span>;
+    <span class="n">ssl_ciphers</span>         <span class="n">HIGH</span>:!<span class="n">aNULL</span>:!<span class="n">MD5</span>;
+    <span class="c">#...
+</span>}
+</code></pre></div></div>
+
+<p>服务器的证书是一个公共的实体，它被发送给每一个连接到 nginx 服务器的客户端。</p>
+
+<p>私钥是一个安全实体，应该保存在文件中，对其访问需加以限制。nginx 的主进程必须有权读取该文件。</p>
+
+<p>另外，私钥也可以和证书保存在同一个文件中：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ssl_certificate</span>     <span class="n">www</span>.<span class="n">example</span>.<span class="n">com</span>.<span class="n">cert</span>;
+<span class="n">ssl_certificate_key</span> <span class="n">www</span>.<span class="n">example</span>.<span class="n">com</span>.<span class="n">cert</span>;
+</code></pre></div></div>
+
+<p>这种情况下，就必须限制对该文件的访问。虽然二者在同一个文件中，但只有证书会发送给客户端。</p>
+
+<p><code class="highlighter-rouge">ssl_protocols</code> 和 <code class="highlighter-rouge">ssl_ciphers</code> 指令可用来要求客户端，在建立连接时，只能使用 SSL/TLS 的强版本及秘钥算法。</p>
+
+<p>在 nginx 1.0.5 之后的版本，使用以下默认值：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ssl_protocols</span> <span class="n">SSLv3</span> <span class="n">TLSv1</span>;
+<span class="n">ssl_ciphers</span> <span class="n">HIGH</span>:!<span class="n">aNULL</span>:!<span class="n">MD5</span>
+</code></pre></div></div>
+
+<p>1.1.13 和 1.0.12 之后的版本，<code class="highlighter-rouge">ssl_protocols</code> 的默认值更新为：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ssl_protocols</span> <span class="n">SSLv3</span> <span class="n">TLSv1</span> <span class="n">TLSv1</span>.<span class="m">1</span> <span class="n">TLSv1</span>.<span class="m">2</span>;
+</code></pre></div></div>
+
+<p>在旧秘钥算法的设计中有时会发现漏洞，建议在现代 nginx 配置中禁用它们。不幸的是，默认的配置不容易修改，因为要照顾到对低版本的兼容性。</p>
+
+<p>注意：CBC 模式的秘钥算法在大量攻击下会比较脆弱，建议不要使用 SSLv3，除非需要对旧客户端提供支持。</p>
+
+<h3 id="https-服务器的优化">HTTPS 服务器的优化</h3>
+
+<p>SSL 的操作会消耗额外的 CPU 资源，最占用 CPU 的操作是 SSL 握手。有两种方式来减少每个客户端进行该操作的次数：</p>
+
+<ul>
+  <li>启用保活连接来发送一些请求</li>
+  <li>重用 SSL 会话参数，以避免并行和后续连接的 SSL 握手</li>
+</ul>
+
+<p>会话保存在 SSL 会话缓存中，对所有工人进程共享，用 <code class="highlighter-rouge">ssl_session_cache</code> 指令设定。1 MB 的缓存大约包含 4000 个会话，默认的缓存超时为 5 分钟，可以用 <code class="highlighter-rouge">ssl_session_timeout</code> 来修改。</p>
+
+<p>以下是为一个使用 10 MB 共享会话缓存的多核系统进行的优化配置：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">worker_processes</span> <span class="n">auto</span>;
+
+<span class="n">http</span> {
+    <span class="n">ssl_session_cache</span>   <span class="n">shared</span>:<span class="n">SSL</span>:<span class="m">10</span><span class="n">m</span>;
+    <span class="n">ssl_session_timeout</span> <span class="m">10</span><span class="n">m</span>;
+
+    <span class="n">server</span> {
+        <span class="n">listen</span>              <span class="m">443</span> <span class="n">ssl</span>;
+        <span class="n">server_name</span>         <span class="n">www</span>.<span class="n">example</span>.<span class="n">com</span>;
+        <span class="n">keepalive_timeout</span>   <span class="m">70</span>;
+
+        <span class="n">ssl_certificate</span>     <span class="n">www</span>.<span class="n">example</span>.<span class="n">com</span>.<span class="n">crt</span>;
+        <span class="n">ssl_certificate_key</span> <span class="n">www</span>.<span class="n">example</span>.<span class="n">com</span>.<span class="n">key</span>;
+        <span class="n">ssl_protocols</span>       <span class="n">TLSv1</span> <span class="n">TLSv1</span>.<span class="m">1</span> <span class="n">TLSv1</span>.<span class="m">2</span>;
+        <span class="n">ssl_ciphers</span>         <span class="n">HIGH</span>:!<span class="n">aNULL</span>:!<span class="n">MD5</span>;
+        <span class="c">#...
+</span>    }
+}
+</code></pre></div></div>
+
+<h3 id="ssl-证书链">SSL 证书链</h3>
+
+<p>有些浏览器会对知名的证书颁发机构有抱怨，而其它的浏览器就可以正常接受。这种局面的产生是因为颁发机构颁发证书时所使用的中间证书，不是由当前可信的机构颁发的，只有某些浏览器使用了它们。这种情况下，颁发机构提供一捆链式证书，该证书应该与颁发的服务器证书合并在一起。在合并后的文件中，服务器证书应排在那捆证书前面。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>www.example.com.crt bundle.crt <span class="o">&gt;</span> www.example.com.chained.crt
+</code></pre></div></div>
+
+<p>生成的合并文件应该用在 <code class="highlighter-rouge">ssl_certificate</code> 指令中：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">server</span> {
+    <span class="n">listen</span>              <span class="m">443</span> <span class="n">ssl</span>;
+    <span class="n">server_name</span>         <span class="n">www</span>.<span class="n">example</span>.<span class="n">com</span>;
+    <span class="n">ssl_certificate</span>     <span class="n">www</span>.<span class="n">example</span>.<span class="n">com</span>.<span class="n">chained</span>.<span class="n">crt</span>;
+    <span class="n">ssl_certificate_key</span> <span class="n">www</span>.<span class="n">example</span>.<span class="n">com</span>.<span class="n">key</span>;
+    ...
+}
+</code></pre></div></div>
+
+<p>如果服务器证书和那捆证书合并时排序错误，nginx 会启动失败，找返回以下错误消息：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SSL_CTX_use_PrivateKey_file(" ... /www.example.com.key") failed
+   (SSL: error:0B080074:x509 certificate routines:
+    X509_check_private_key:key values mismatch)
+</code></pre></div></div>
+
+<p>之所以会提示这样的内容，是因为 nginx 启动时尝试把那捆证书做为私钥来使用了。</p>
+
+<p>浏览器通常会保存中间证书，这些证书是由可信机构颁发的。因此，热衷于使用中间证书的浏览器应该已经拥有了这些中间证书，不太会抱怨哪个证书不是成捆来的。为了确保服务器会发送完整的证书链，可以使用 openssl 命令行工具：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>openssl s_client <span class="nt">-connect</span> www.godaddy.com:443
+...
+Certificate chain
+ 0 s:/C<span class="o">=</span>US/ST<span class="o">=</span>Arizona/L<span class="o">=</span>Scottsdale/1.3.6.1.4.1.311.60.2.1.3<span class="o">=</span>US
+     /1.3.6.1.4.1.311.60.2.1.2<span class="o">=</span>AZ/O<span class="o">=</span>GoDaddy.com, Inc
+     /OU<span class="o">=</span>MIS Department/CN<span class="o">=</span>www.GoDaddy.com
+     /serialNumber<span class="o">=</span>0796928-7/2.5.4.15<span class="o">=</span>V1.0, Clause 5.<span class="o">(</span>b<span class="o">)</span>
+   i:/C<span class="o">=</span>US/ST<span class="o">=</span>Arizona/L<span class="o">=</span>Scottsdale/O<span class="o">=</span>GoDaddy.com, Inc.
+     /OU<span class="o">=</span>http://certificates.godaddy.com/repository
+     /CN<span class="o">=</span>Go Daddy Secure Certification Authority
+     /serialNumber<span class="o">=</span>07969287
+ 1 s:/C<span class="o">=</span>US/ST<span class="o">=</span>Arizona/L<span class="o">=</span>Scottsdale/O<span class="o">=</span>GoDaddy.com, Inc.
+     /OU<span class="o">=</span>http://certificates.godaddy.com/repository
+     /CN<span class="o">=</span>Go Daddy Secure Certification Authority
+     /serialNumber<span class="o">=</span>07969287
+   i:/C<span class="o">=</span>US/O<span class="o">=</span>The Go Daddy Group, Inc.
+     /OU<span class="o">=</span>Go Daddy Class 2 Certification Authority
+ 2 s:/C<span class="o">=</span>US/O<span class="o">=</span>The Go Daddy Group, Inc.
+     /OU<span class="o">=</span>Go Daddy Class 2 Certification Authority
+   i:/L<span class="o">=</span>ValiCert Validation Network/O<span class="o">=</span>ValiCert, Inc.
+     /OU<span class="o">=</span>ValiCert Class 2 Policy Validation Authority
+     /CN<span class="o">=</span>http://www.valicert.com//emailAddress<span class="o">=</span>info@valicert.com
+...
+</code></pre></div></div>
+
+<p>本例中，证书链中的 <code class="highlighter-rouge">s</code> 代表 subject，即证书的主体；<code class="highlighter-rouge">i</code> 代表 issuer，即颁发机构，它也是其下一个证书的主体。这样一层一层直到最后一层，即 2 号证书，这里可以看到其最原始的颁发机构为 <code class="highlighter-rouge">ValiCert, Inc.</code>，这是一个知名的机构，其证书保存在浏览器自身。</p>
+
+<p>如果不是添加了整个证书链，只会显示第一层，即 0 号证书。</p>
+
+<h3 id="httphttps-二合一服务器">HTTP/HTTPS 二合一服务器</h3>
+
+<p>可以通过配置一台服务器，让其同时处理 HTTP 和 HTTPS 请求，只需在同一个虚拟服务器中同时设置两个 <code class="highlighter-rouge">listen</code> 指令，一个使用 <code class="highlighter-rouge">ssl</code> 参数，另一个不使用：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">server</span> {
+    <span class="n">listen</span>              <span class="m">80</span>;
+    <span class="n">listen</span>              <span class="m">443</span> <span class="n">ssl</span>;
+    <span class="n">server_name</span>         <span class="n">www</span>.<span class="n">example</span>.<span class="n">com</span>;
+    <span class="n">ssl_certificate</span>     <span class="n">www</span>.<span class="n">example</span>.<span class="n">com</span>.<span class="n">crt</span>;
+    <span class="n">ssl_certificate_key</span> <span class="n">www</span>.<span class="n">example</span>.<span class="n">com</span>.<span class="n">key</span>;
+    <span class="c">#...
+</span>}
+</code></pre></div></div>
+
+<p>在 0.7.13 及以前的版本中，无法为单个侦听套接字选择启用 SSL。SSL 只能为全体服务器启用，因此无法配置一个 HTTP/HTTPS 二合一的服务器。而在 <code class="highlighter-rouge">listen</code> 指令中添加 <code class="highlighter-rouge">ssl</code> 参数解决了这个问题。</p>
+
+<h3 id="基于域名的-https-服务器">基于域名的 HTTPS 服务器</h3>
+
+<p>一个比较常见的错误是，把两个或多个 HTTPS 服务器配置为侦听同一个 IP 地址：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">server</span> {
+    <span class="n">listen</span>          <span class="m">443</span> <span class="n">ssl</span>;
+    <span class="n">server_name</span>     <span class="n">www</span>.<span class="n">example</span>.<span class="n">com</span>;
+    <span class="n">ssl_certificate</span> <span class="n">www</span>.<span class="n">example</span>.<span class="n">com</span>.<span class="n">crt</span>;
+    <span class="c">#...
+</span>}
+
+<span class="n">server</span> {
+    <span class="n">listen</span>          <span class="m">443</span> <span class="n">ssl</span>;
+    <span class="n">server_name</span>     <span class="n">www</span>.<span class="n">example</span>.<span class="n">org</span>;
+    <span class="n">ssl_certificate</span> <span class="n">www</span>.<span class="n">example</span>.<span class="n">org</span>.<span class="n">crt</span>;
+    <span class="c">#...
+</span>}
+</code></pre></div></div>
+
+<p>如果这样配置，浏览器会收到默认服务器的证书。本例中是 <code class="highlighter-rouge">www.example.com</code>，不管请求的服务器域名是什么。这是由于 SSL 协议自身行为造成的。先是要建立 SSL 连接，然后浏览器才能发送 HTTP 请求，而 nginx 不知道请求的服务器的域名，所以只能提供自己默认的服务器证书。</p>
+
+<p>解决这个问题最好的办法就是为每个 HTTPS 服务器分配一个 <strong>独立的 IP 地址</strong>：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">server</span> {
+    <span class="n">listen</span>          <span class="m">192</span>.<span class="m">168</span>.<span class="m">1</span>.<span class="m">1</span>:<span class="m">443</span> <span class="n">ssl</span>;
+    <span class="n">server_name</span>     <span class="n">www</span>.<span class="n">example</span>.<span class="n">com</span>;
+    <span class="n">ssl_certificate</span> <span class="n">www</span>.<span class="n">example</span>.<span class="n">com</span>.<span class="n">crt</span>;
+    <span class="c">#...
+</span>}
+
+<span class="n">server</span> {
+    <span class="n">listen</span>          <span class="m">192</span>.<span class="m">168</span>.<span class="m">1</span>.<span class="m">2</span>:<span class="m">443</span> <span class="n">ssl</span>;
+    <span class="n">server_name</span>     <span class="n">www</span>.<span class="n">example</span>.<span class="n">org</span>;
+    <span class="n">ssl_certificate</span> <span class="n">www</span>.<span class="n">example</span>.<span class="n">org</span>.<span class="n">crt</span>;
+    <span class="c">#...
+</span>}
+</code></pre></div></div>
+
+<h4 id="一个-ssl-证书对应多个域名">一个 SSL 证书对应多个域名</h4>
+
+<p>虽然有一些方法可以在多个 HTTPS 服务器间共享同一个 IP 地址，但它们都有缺陷。</p>
+
+<p>有一个方法是在一个证书的 <code class="highlighter-rouge">SubjectAltName</code> 证书字段中用使用多个域名，但该字段的长度是有限制的。</p>
+
+<p>另一个方法是在证书中使用通配符，如 <code class="highlighter-rouge">*.example.org</code>。这种通配符证书一下子可以为所有子域名提供安全认证，但只限一级。即适用于 <code class="highlighter-rouge">www.example.org</code>，但不匹配 <code class="highlighter-rouge">example.org</code> 或 <code class="highlighter-rouge">www.sub.example.org</code>。</p>
+
+<p>这两种方法可以合并，一个证书可以同时包含具体域名和通配符域名，如 <code class="highlighter-rouge">example.org</code> 与 <code class="highlighter-rouge">*.example.org</code>。</p>
+
+<p>最好将具有多个域名及其私钥文件的证书文件放在配置文件中的 <code class="highlighter-rouge">http</code> 这一级，以便它们在所有服务器上继承单个内存副本：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ssl_certificate</span>     <span class="n">common</span>.<span class="n">crt</span>;
+<span class="n">ssl_certificate_key</span> <span class="n">common</span>.<span class="n">key</span>;
+
+<span class="n">server</span> {
+    <span class="n">listen</span>          <span class="m">443</span> <span class="n">ssl</span>;
+    <span class="n">server_name</span>     <span class="n">www</span>.<span class="n">example</span>.<span class="n">com</span>;
+    <span class="c">#...
+</span>}
+
+<span class="n">server</span> {
+    <span class="n">listen</span>          <span class="m">443</span> <span class="n">ssl</span>;
+    <span class="n">server_name</span>     <span class="n">www</span>.<span class="n">example</span>.<span class="n">org</span>;
+    <span class="c">#...
+</span>}
+</code></pre></div></div>
+
+<h4 id="服务器">服务器</h4>
+
+<p>要在一个 IP 地址上同时运行多个 HTTPS 服务器，更普遍的解决办法是使用 TLS 服务器名称指示扩展，即 TLS Server Name Indication，SNI，它让浏览器可以在 SSL 握手期间可以传递请求的服务器域名。有了这个办法，服务器就会清楚该为这个连接使用哪个证书了。然而，SNI 只得到少数浏览器的支持，包括：</p>
+
+<ul>
+  <li>Opera 8.0</li>
+  <li>MSIE 7.0</li>
+  <li>Firefox 2.0</li>
+  <li>Safari 3.2.1</li>
+  <li>Chrome</li>
+</ul>
+
+<p>在 SNI 中只能传递域名，但是，如果请求中直接包含的就是 IP 地址，一些浏览器也可以传递服务器的 IP 地址。最好不要过分依赖这个。</p>
+
+<p>要想在 nginx 中使用 SNI，OpenSSL 运行库必须支持，nginx 二进制文件就是用它构建的；以及 nginx 在运行时动态链接的运行库也可支持。</p>
+
+<p>自从版本 0.9.8f 以来，OpenSSL 就开始支持 SNI，只要构建时的配置是 <code class="highlighter-rouge">option --enable-tlsext</code>。在版本 0.9.8j 以后，该选项默认是开启的。如果 nginx 构建时是支持 SNI 的，<code class="highlighter-rouge">nginx -V</code> 会返回以下信息：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>nginx <span class="nt">-V</span>
+...
+TLS SNI support enabled
+...
+</code></pre></div></div>
+
+<p>然而，如果启用 SNI 的 nginx 动态链接到 OpenSSL 运行库时，没有使用 SNI 的支持，nginx 会显示警示消息：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NGINX was built with SNI support, however, now it is linked
+dynamically to an OpenSSL library which has no tlsext support,
+therefore SNI is not available
+</code></pre></div></div>
+
+<h2 id="通过-http-基本认证来限制访问">通过 HTTP 基本认证来限制访问</h2>
+
+<p>可以通过用户名、密码的身份验证来限制对网站全部或局部的访问。用户名和密码取自一个文件，该文件由密码文件生成工具生成并创建，如 <code class="highlighter-rouge">apache2-utils</code>。</p>
+
+<p>HTTP 基本的身份验证也可以与其它的限制访问的方法结合在一起使用，比如通过 IP 地址或地理位置来限制访问。</p>
+
+<h3 id="先决条件">先决条件</h3>
+
+<ul>
+  <li>nginx</li>
+  <li>密码文件生成工具，如 <code class="highlighter-rouge">apche2-utils</code></li>
+</ul>
+
+<h3 id="创建密码文件">创建密码文件</h3>
+
+<p>要创建用户名、密码，需要使用密码文件创建工具，如 <code class="highlighter-rouge">apache2-utils</code>。</p>
+
+<p>1. 确认已安装 <code class="highlighter-rouge">apache2-utils</code></p>
+
+<p>2. 创建密码文件及第一个用户。运行 <code class="highlighter-rouge">htpasswd -c</code> 来创建新文件，文件路径做为第一个参数，用户名做为第二个参数：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>htpasswd <span class="nt">-c</span> /etc/apache2/.htpasswd user1
+</code></pre></div></div>
+
+<p>3. 创建其它用户名、密码，再次运行时无需 <code class="highlighter-rouge">-c</code> 选项，因为文件已经创建了：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>htpasswd /etc/apache2/.htpasswd user2
+</code></pre></div></div>
+
+<h3 id="配置--nginx-进行-http-基本验证">配置  nginx 进行 HTTP 基本验证</h3>
+
+<p>1. 选择一个需要保护的 location 块，在其中使用 <code class="highlighter-rouge">auth_basic</code> 指令为这个受密码保护的区域命名，这个命名会在提示输出用户名和密码的窗口中显示。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">location</span> /<span class="n">status</span> {                                       
+    <span class="n">auth_basic</span> “<span class="n">Administrator</span>’<span class="n">s</span> <span class="n">Area</span>”;
+    ....
+}
+</code></pre></div></div>
+
+<p>2. 用 <code class="highlighter-rouge">auth_basic_user_file</code> 指令指定生成的密码文件的路径：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">location</span> /<span class="n">status</span> {                                       
+    <span class="n">auth_basic</span>           “<span class="n">Administrator</span>’<span class="n">s</span> <span class="n">Area</span>”;
+    <span class="n">auth_basic_user_file</span> /<span class="n">etc</span>/<span class="n">apache2</span>/.<span class="n">htpasswd</span>;
+}
+</code></pre></div></div>
+
+<p>…</p>
+
+<p>或者，如果希望全站都用基本验证，但保留部分区域公开。此时可以在特定 location 块中为 <code class="highlighter-rouge">auth_basic</code> 指令指定 <code class="highlighter-rouge">off</code> 参数：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">server</span> {
+    ...
+    <span class="n">auth_basic</span>           <span class="s2">"Administrator’s Area"</span>;
+    <span class="n">auth_basic_user_file</span> <span class="n">conf</span>/<span class="n">htpasswd</span>;
+
+    <span class="n">location</span> /<span class="n">public</span>/ {
+        <span class="n">auth_basic</span> <span class="n">off</span>;
+    }
+}
+</code></pre></div></div>
+
+<h3 id="合并基本验证与-ip-地址限制">合并基本验证与 IP 地址限制</h3>
+
+<p>HTTP 基本身份验证可以有效地与 IP 地址的限制组合在一起来使用，主要用于两种情景：</p>
+
+<ul>
+  <li>用户在通过验证的同时，其 IP 地址也必须满足要求</li>
+  <li>用户要么通过身份验证，要么其 IP 地址满足要求</li>
+</ul>
+
+<p>1. 用 <code class="highlighter-rouge">allow</code> 和 <code class="highlighter-rouge">deny</code> 指令来限定 IP 地址：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">location</span> /<span class="n">status</span> {
+    ...
+    <span class="n">deny</span> <span class="m">192</span>.<span class="m">168</span>.<span class="m">1</span>.<span class="m">2</span>;
+    <span class="n">allow</span> <span class="m">192</span>.<span class="m">168</span>.<span class="m">1</span>.<span class="m">1</span>/<span class="m">24</span>;
+    <span class="n">allow</span> <span class="m">127</span>.<span class="m">0</span>.<span class="m">0</span>.<span class="m">1</span>;
+    <span class="n">deny</span> <span class="n">all</span>;
+}
+</code></pre></div></div>
+
+<p>允许和拒绝的指令在应用时也是按照配置文件中定义的顺序进行的。</p>
+
+<p>2. 用 <code class="highlighter-rouge">satisfy</code> 指令来组合 IP 地址限制与 HTTP 身份验证。如果设定为 <code class="highlighter-rouge">all</code>，代表两个条件需同时满足；如果设定为 <code class="highlighter-rouge">any</code>，代表至少要满足一个条件：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">location</span> /<span class="n">status</span> {
+    ...
+    <span class="n">satisfy</span> <span class="n">all</span>;    
+
+    <span class="n">deny</span>  <span class="m">192</span>.<span class="m">168</span>.<span class="m">1</span>.<span class="m">2</span>;
+    <span class="n">allow</span> <span class="m">192</span>.<span class="m">168</span>.<span class="m">1</span>.<span class="m">1</span>/<span class="m">24</span>;
+    <span class="n">allow</span> <span class="m">127</span>.<span class="m">0</span>.<span class="m">0</span>.<span class="m">1</span>;
+    <span class="n">deny</span>  <span class="n">all</span>;
+
+    <span class="n">auth_basic</span>           <span class="s2">"Administrator’s Area"</span>;
+    <span class="n">auth_basic_user_file</span> <span class="n">conf</span>/<span class="n">htpasswd</span>;
+}
+</code></pre></div></div>
+
+<h3 id="范例">范例</h3>
+
+<p>本例演示如何同时用两种方法保护 status 区域：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">http</span> {
+    <span class="n">server</span> {
+        <span class="n">listen</span> <span class="m">192</span>.<span class="m">168</span>.<span class="m">1</span>.<span class="m">23</span>:<span class="m">8080</span>;
+        <span class="n">root</span>   /<span class="n">usr</span>/<span class="n">share</span>/<span class="n">nginx</span>/<span class="n">html</span>;
+
+        <span class="n">location</span> /<span class="n">status</span> {
+            <span class="n">status</span>;
+            <span class="n">satisfy</span> <span class="n">all</span>;
+
+            <span class="n">deny</span>  <span class="m">192</span>.<span class="m">168</span>.<span class="m">1</span>.<span class="m">2</span>;
+            <span class="n">allow</span> <span class="m">192</span>.<span class="m">168</span>.<span class="m">1</span>.<span class="m">1</span>/<span class="m">24</span>;
+            <span class="n">allow</span> <span class="m">127</span>.<span class="m">0</span>.<span class="m">0</span>.<span class="m">1</span>;
+            <span class="n">deny</span>  <span class="n">all</span>;
+
+            <span class="n">auth_basic</span>           “<span class="n">Administrator</span>’<span class="n">s</span> <span class="n">area</span>;
+            <span class="n">auth_basic_user_file</span> /<span class="n">etc</span>/<span class="n">apache2</span>/.<span class="n">htpasswd</span>;
+        }
+
+        <span class="n">location</span> = /<span class="n">status</span>.<span class="n">html</span> {
+        }
+    }
+}
+</code></pre></div></div>
+
+<p>当用户访问 status 页面时，会弹出验证窗口：</p>
+
+<p><img src="/assets/images/nginx_auth_required.png" alt="image-center" class="align-center" /></p>
+
+<p>如果用户名和密码不匹配，会返回 401 错误，即 Authorization Required。</p>
+
+<h2 id="基于子请求结果的身份验证">基于子请求结果的身份验证</h2>
+
+<p>nginx 可以使用外部服务器或服务来验证访问网站的请求。</p>
+
+<p>为了进行验证，nginx 会生成一个子请求发给外部服务器，由子请求在外部服务器上完成身份验证。如果子请求返回 <code class="highlighter-rouge">2xx</code> 的响应代码，表示允许访问，返回 <code class="highlighter-rouge">401</code> 或 <code class="highlighter-rouge">403</code> ，表示拒绝访问。</p>
+
+<p>借助这种验证，可以实现不同的验证机制，比如多因素验证，或实施 LDAP、OAuth 验证。</p>
+
+<h3 id="先决条件-1">先决条件</h3>
+
+<ul>
+  <li>nginx</li>
+  <li>外部身份验证服务器或服务</li>
+</ul>
+
+<h3 id="配置-nginx">配置 nginx</h3>
+
+<p>1. 确保 nginx 编译时使用了 <code class="highlighter-rouge">http_auth_request_module</code> 这个选项：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>nginx <span class="nt">-V</span> 2&gt;&amp;1 | <span class="nb">grep</span> <span class="nt">--</span> <span class="s1">'http_auth_request_module'</span>
+</code></pre></div></div>
+
+<p>2. 在需要对请求加以验证的 location 块中，使用 <code class="highlighter-rouge">auth_request</code> 指令，用来指定验证子请求要被转发到的内部位置：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">location</span> /<span class="n">private</span>/ {
+    <span class="n">auth_request</span> /<span class="n">auth</span>;
+    <span class="c">#...
+</span>}
+</code></pre></div></div>
+
+<p>本例中，指向 <code class="highlighter-rouge">/private</code> 的每个请求，都会在内部产生一个指向内部路径 <code class="highlighter-rouge">/auth</code> 的子请求。</p>
+
+<p>3. 在这个内部路径的 location 块中，使用 <code class="highlighter-rouge">proxy_pass</code> 指令，把验证的子请求 <strong>代理给</strong> 验证服务器或服务：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">location</span> = /<span class="n">auth</span> {
+    <span class="n">internal</span>;
+    <span class="n">proxy_pass</span> <span class="n">http</span>://<span class="n">auth</span>-<span class="n">server</span>;
+    <span class="c">#...
+</span>}
+</code></pre></div></div>
+
+<p>4. 因为验证子请求会忽略请求的主体，因此有必要把 <code class="highlighter-rouge">proxy_pass_request_body</code> 设置为 <code class="highlighter-rouge">off</code>，把 <code class="highlighter-rouge">Content-Length</code> 标头设置为空：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">location</span> = /<span class="n">auth</span> {
+    <span class="n">internal</span>;
+    <span class="n">proxy_pass</span>              <span class="n">http</span>://<span class="n">auth</span>-<span class="n">server</span>;
+    <span class="n">proxy_pass_request_body</span> <span class="n">off</span>;
+    <span class="n">proxy_set_header</span>        <span class="n">Content</span>-<span class="n">Length</span> <span class="s2">""</span>;
+    <span class="c">#...
+</span>}
+</code></pre></div></div>
+
+<p>5. 用 <code class="highlighter-rouge">proxy_set_header</code> 指令来传递源请求的完整 URI 以及参数：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">location</span> = /<span class="n">auth</span> {
+    <span class="n">internal</span>;
+    <span class="n">proxy_pass</span>              <span class="n">http</span>://<span class="n">auth</span>-<span class="n">server</span>;
+    <span class="n">proxy_pass_request_body</span> <span class="n">off</span>;
+    <span class="n">proxy_set_header</span>        <span class="n">Content</span>-<span class="n">Length</span> <span class="s2">""</span>;
+    <span class="n">proxy_set_header</span>        <span class="n">X</span>-<span class="n">Original</span>-<span class="n">URI</span> $<span class="n">request_uri</span>;
+}
+</code></pre></div></div>
+
+<p>6. 如果需要，可以基于请求的结果为某些变量赋值，用 <code class="highlighter-rouge">auth_request_set</code> 指令：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">location</span> /<span class="n">private</span>/ {
+    <span class="n">auth_request</span>        /<span class="n">auth</span>;
+    <span class="n">auth_request_set</span> $<span class="n">auth_status</span> $<span class="n">upstream_status</span>;
+}
+</code></pre></div></div>
+
+<h3 id="范例-1">范例</h3>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">http</span> {
+    <span class="c">#...
+</span>    <span class="n">server</span> {
+    <span class="c">#...
+</span>        <span class="n">location</span> /<span class="n">private</span>/ {
+            <span class="n">auth_request</span>     /<span class="n">auth</span>;
+            <span class="n">auth_request_set</span> $<span class="n">auth_status</span> $<span class="n">upstream_status</span>;
+        }
+
+        <span class="n">location</span> = /<span class="n">auth</span> {
+            <span class="n">internal</span>;
+            <span class="n">proxy_pass</span>              <span class="n">http</span>://<span class="n">auth</span>-<span class="n">server</span>;
+            <span class="n">proxy_pass_request_body</span> <span class="n">off</span>;
+            <span class="n">proxy_set_header</span>        <span class="n">Content</span>-<span class="n">Length</span> <span class="s2">""</span>;
+            <span class="n">proxy_set_header</span>        <span class="n">X</span>-<span class="n">Original</span>-<span class="n">URI</span> $<span class="n">request_uri</span>;
+        }
+    }
+}
+</code></pre></div></div>
+
+<h2 id="限制对被代理的-http-资源的访问">限制对被代理的 HTTP 资源的访问</h2>
+
+<p>使用 nginx 时，可以限制：</p>
+
+<ul>
+  <li>针对每个关键值，如 IP 地址，限制连接数</li>
+  <li>针对每个关键值限制请求频率</li>
+  <li>连接的下载速度</li>
+</ul>
+
+<p>因为 IP 地址在 NAT 设备后面可能是共享的，所以在对 IP 地址限制之前要仔细考量一下。</p>
+
+<h3 id="限制连接数">限制连接数</h3>
+
+<h4 id="limit_conn_zone"><code class="highlighter-rouge">limit_conn_zone</code></h4>
+
+<p>想要限制连接的数量，首先，要用 <code class="highlighter-rouge">limit_conn_zone</code> 指令来定义键，并设定共享内存区的参数，工人进程会用这个内存区来共享键值的计数器。第一个参数指定的是键的表达式，第二个参数是内存区，指定内存区的名称和大小。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">limit_conn_zone</span> $<span class="n">binary_remote_address</span> <span class="n">zone</span>=<span class="n">addr</span>:<span class="m">10</span><span class="n">m</span>;
+</code></pre></div></div>
+
+<p>这里，连接数的限制是基于 IP 地址的，因为把变量 <code class="highlighter-rouge">$binary_remote_address</code> 在这里做为键来使用。</p>
+
+<h4 id="limit_conn"><code class="highlighter-rouge">limit_conn</code></h4>
+
+<p>然后，使用 <code class="highlighter-rouge">limit_conn</code> 指令来进行限制，可以在 <code class="highlighter-rouge">location</code>、虚拟服务器或 <code class="highlighter-rouge">http</code> 中使用。共享内存区的名称做为第一个参数，每一个键允许的连接数做为第二个参数。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">location</span> /<span class="n">download</span>/ {
+    <span class="n">limit_conn</span> <span class="n">addr</span> <span class="m">1</span>;
+}
+</code></pre></div></div>
+
+<p>若要对特定服务器限制连接数，可以使用 <code class="highlighter-rouge">$server_name</code> 变量：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">http</span> {
+    <span class="n">limit_conn_zone</span> $<span class="n">server_name</span> <span class="n">zone</span>=<span class="n">servers</span>:<span class="m">10</span><span class="n">m</span>;
+
+    <span class="n">server</span> {
+        <span class="n">limit_conn</span> <span class="n">servers</span> <span class="m">1000</span>;
+    }
+}
+</code></pre></div></div>
+
+<h3 id="限制请求频率">限制请求频率</h3>
+
+<h4 id="limit_req_zone"><code class="highlighter-rouge">limit_req_zone</code></h4>
+
+<p>要想限制请求的频率，需要配置键和共享内存区以保存计数器，通过 <code class="highlighter-rouge">limit_req_zone</code> 指令来设定：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">limit_req_zone</span> $<span class="n">binary_remote_addr</span> <span class="n">zone</span>=<span class="n">one</span>:<span class="m">10</span><span class="n">m</span> <span class="n">rate</span>=<span class="m">1</span><span class="n">r</span>/<span class="n">s</span>;
+</code></pre></div></div>
+
+<p>设定键的方式与 <code class="highlighter-rouge">limit_conn_zone</code> 中一样，<code class="highlighter-rouge">rate</code> 参数的单位为 r/s，即每秒请求数，或 r/m，每分钟请求数。</p>
+
+<h4 id="limit_req"><code class="highlighter-rouge">limit_req</code></h4>
+
+<p>定义好共享内存区以后，在虚拟服务器或 location 块中使用 <code class="highlighter-rouge">limit_req</code> 指令：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">location</span> /<span class="n">search</span>/ {
+    <span class="n">limit_req</span> <span class="n">zone</span>=<span class="n">one</span> <span class="n">burst</span>=<span class="m">5</span>;
+}
+</code></pre></div></div>
+
+<p>本例中，nginx 每秒处理不超过 1 个请求。如果超过这个频率，该限制之外的请求会被放进队列里，在保证整体的频率不超过限制值的情况下延迟处理。</p>
+
+<p>参数 <code class="highlighter-rouge">burst</code> 用于设定队列中可以存放的最大请求数，超过的请求会产生 503 错误。</p>
+
+<p>如果在请求过多时不希望进行延迟处理，可以加入 <code class="highlighter-rouge">nodelay</code> 参数：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">limit_req</span> <span class="n">zone</span>=<span class="n">one</span> <span class="n">burst</span>=<span class="m">5</span> <span class="n">nodelay</span>;
+</code></pre></div></div>
+
+<h3 id="限制带宽">限制带宽</h3>
+
+<h4 id="限制每连接带宽">限制每连接带宽</h4>
+
+<p>若要限制每个连接的带宽，需使用 <code class="highlighter-rouge">limit_rate</code> 指令：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">location</span> /<span class="n">download</span>/ {
+    <span class="n">limit_rate</span> <span class="m">50</span><span class="n">k</span>;
+}
+</code></pre></div></div>
+
+<p>这样配置以后，客户端通过一个连接下载网站内容时，其速度被限制在 50 KB/s。</p>
+
+<h4 id="限制连接数-1">限制连接数</h4>
+
+<p>然而，客户端可以打开多个连接同时进行下载。因此，如果希望限制下载速度，还需要对连接数加以限制。例如，可以额外再限制每 IP 地址一个连接：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">location</span> /<span class="n">download</span>/ {
+    <span class="n">limit_conn</span> <span class="n">addr</span> <span class="m">1</span>;
+    <span class="n">limit_rate</span> <span class="m">50</span><span class="n">k</span>;
+}
+</code></pre></div></div>
+
+<h4 id="在下载一定数据后开始限制">在下载一定数据后开始限制</h4>
+
+<p>希望在客户端下载了一定数量的数据以后再实施带宽限制，这样也比较合理。使用 <code class="highlighter-rouge">limit_rate_after</code> 指令：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">limit_rate_after</span> <span class="m">500</span><span class="n">k</span>;
+<span class="n">limit_rate</span> <span class="m">20</span><span class="n">k</span>;
+</code></pre></div></div>
+
+<h4 id="范例-2">范例</h4>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">http</span> {
+    <span class="n">limit_conn_zone</span> $<span class="n">binary_remote_address</span> <span class="n">zone</span>=<span class="n">addr</span>:<span class="m">10</span><span class="n">m</span>
+
+    <span class="n">server</span> {
+        <span class="n">root</span> /<span class="n">www</span>/<span class="n">data</span>;
+        <span class="n">limit_conn</span> <span class="n">addr</span> <span class="m">5</span>;
+
+        <span class="n">location</span> / {
+        }
+
+        <span class="n">location</span> /<span class="n">download</span>/ {
+            <span class="n">limit_conn</span> <span class="n">addr</span> <span class="m">1</span>;
+            <span class="n">limit_rate</span> <span class="m">1</span><span class="n">m</span>;
+            <span class="n">limit_rate</span> <span class="m">50</span><span class="n">k</span>;
+        }
+    }
+}
+</code></pre></div></div>
+
+<p>本例中，每客户端 IP 地址最多可使用 5 个连接，基本上满足当前大多数浏览器的需求，通常浏览器最多使用不超过 3 个连接。同时，可用于下载的连接限制为 1 个。</p>
+
+<h2 id="限制对被代理的-tcp-资源的访问">限制对被代理的 TCP 资源的访问</h2>
+
+<h3 id="通过-ip-地址限制访问">通过 IP 地址限制访问</h3>
+
+<p>nginx 可以基于客户端特定的 IP 地址或地址范围实施访问的限制。在 <code class="highlighter-rouge">stream</code> 或 <code class="highlighter-rouge">server</code> 块中使用 <code class="highlighter-rouge">allow</code> 和 <code class="highlighter-rouge">deny</code> 指令。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">stream</span> {
+    ...
+    <span class="n">server</span> {
+        <span class="n">listen</span> <span class="m">12345</span>;
+        <span class="n">deny</span>   <span class="m">192</span>.<span class="m">168</span>.<span class="m">1</span>.<span class="m">2</span>;
+        <span class="n">allow</span>  <span class="m">192</span>.<span class="m">168</span>.<span class="m">1</span>.<span class="m">1</span>/<span class="m">24</span>;
+        <span class="n">allow</span>  <span class="m">2001</span>:<span class="m">0</span><span class="n">db8</span>::/<span class="m">32</span>;
+        <span class="n">deny</span>   <span class="n">all</span>;
+    }
+}
+</code></pre></div></div>
+
+<p>由 <code class="highlighter-rouge">allow</code> 和 <code class="highlighter-rouge">deny</code> 构成的这些规则是按照顺序从上到下逐行处理的：如果第一条指令为 <code class="highlighter-rouge">deny all</code>，则下面所有的 <code class="highlighter-rouge">allow</code> 都无效。</p>
+
+<h3 id="限制-tcp-连接数">限制 TCP 连接数</h3>
+
+<p>可以限制来自同一个 IP  地址的并发 TCP 连接数，这一点有利于防止 DoS 攻击。</p>
+
+<h4 id="定义内存区键">定义内存区、键</h4>
+
+<p>首先要定义一个内存区，用来保存某服务器的最大并发连接数，以及一个键，用于标识连接。</p>
+
+<p>通过在 <code class="highlighter-rouge">stream</code> 块中使用 <code class="highlighter-rouge">limit_conn_zone</code> 指令来实现：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">stream</span> {
+    ...
+    <span class="n">limit_conn_zone</span> $<span class="n">binary_remote_addr</span> <span class="n">zone</span>=<span class="n">ip_addr</span>:<span class="m">10</span><span class="n">m</span>;
+    ...
+}
+</code></pre></div></div>
+
+<p>用来标识连接的键为 <code class="highlighter-rouge">$binary_remote_addr</code>，它用二进制的格式表示客户端的 IP  地址。</p>
+
+<p>共享的内存区其名称为 <code class="highlighter-rouge">ip_addr</code>，内存区大小为 10 MB。</p>
+
+<h4 id="指定最大连接数">指定最大连接数</h4>
+
+<p>定义了内存区以后，用 <code class="highlighter-rouge">limit_conn</code> 指令来限制连接，可以在 <code class="highlighter-rouge">stream</code> 或 <code class="highlighter-rouge">server</code> 块中指定。</p>
+
+<p>第一个参数用于指定之前定义的内存区的名称。</p>
+
+<p>第二个参数用于指定每 IP 地址允许的最大连接数。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">stream</span> {
+    ...
+    <span class="n">limit_conn_zone</span> $<span class="n">binary_remote_addr</span> <span class="n">zone</span>=<span class="n">ip_addr</span>:<span class="m">10</span><span class="n">m</span>;
+
+    <span class="n">server</span> {
+        ...
+        <span class="n">limit_conn</span> <span class="n">ip_addr</span> <span class="m">1</span>;
+    }
+}
+</code></pre></div></div>
+
+<h3 id="限制带宽-1">限制带宽</h3>
+
+<h4 id="限制单连接带宽">限制单连接带宽</h4>
+
+<p>可以为 TCP 连接配置最大的下载和上传速度。使用 <code class="highlighter-rouge">proxy_download_rate</code> 和 <code class="highlighter-rouge">proxy_upload_rate</code> 指令。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">server</span> {
+    ...
+    <span class="n">proxy_download_rate</span> <span class="m">100</span><span class="n">k</span>;
+    <span class="n">proxy_upload_rate</span>   <span class="m">50</span><span class="n">k</span>;
+}
+</code></pre></div></div>
+
+<p>本例中，客户端通过一个连接下载速度限制为 100 KB/s，上传限制为 50 KB/s。</p>
+
+<h4 id="限制连接数-2">限制连接数</h4>
+
+<p>但客户端可以多开向个连接，如果要限制总的带宽，还要限制连接数：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">stream</span> {
+    ...
+    <span class="n">limit_conn_zone</span> $<span class="n">binary_remote_addr</span> <span class="n">zone</span>=<span class="n">ip_addr</span>:<span class="m">10</span><span class="n">m</span>;
+
+    <span class="n">server</span> {
+        ...
+        <span class="n">limit_conn</span> <span class="n">ip_addr</span> <span class="m">1</span>;
+        <span class="n">proxy_download_rate</span> <span class="m">100</span><span class="n">k</span>;
+        <span class="n">proxy_upload_rate</span>   <span class="m">50</span><span class="n">k</span>;
+    }
+}
+</code></pre></div></div>
+
+<p>连接数限制为 1。</p>
+
+<h2 id="通过地理位置限制访问">通过地理位置限制访问</h2>
+
+<p>nginx 可以基于地理位置区分不同的用户。可以根据不同的国家为用户提供不同的网站内容，或限制向某些国家或城市发布某些内容。</p>
+
+<p>nginx 使用第三方 MaxMind 数据库来匹配用户及其位置。获取地理位置以后，就可以使用 <code class="highlighter-rouge">map</code> 或 <code class="highlighter-rouge">split_clients</code> 模块中基于地理位置的变量了。</p>
+
+<p>基于地理位置的限制对于 HTTP 和 TCP/UDP 协议都有效。</p>
+
+<h3 id="先决条件-2">先决条件</h3>
+
+<ul>
+  <li>nginx，需包含 http、geoip、stream geoip 模块</li>
+  <li>MaxMind 提供的 Geolite 免费数据库</li>
+</ul>
+
+<h3 id="配置-geoip">配置 GeoIP</h3>
+
+<p>1. 确保 nginx 编译时使用了 <code class="highlighter-rouge">--with-http_geoip_module</code> 和/或 <code class="highlighter-rouge">--with-stream_geoip_module</code> 配置标签：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>nginx <span class="nt">-V</span> 2&gt;&amp;1 | <span class="nb">grep</span> <span class="nt">--</span> <span class="s1">'http_geoip_module'</span>
+<span class="nv">$ </span>nginx <span class="nt">-V</span> 2&gt;&amp;1 | <span class="nb">grep</span> <span class="nt">--</span> <span class="s1">'stream_geoip_module'</span>
+</code></pre></div></div>
+
+<p>或者确保这些模块可以动态链接。</p>
+
+<p>2. 从 MaxMind <a href="http://dev.maxmind.com/geoip/legacy/geolite/">下载页面</a>下载并解压 Geo 国家与城市数据库：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz
+<span class="nv">$ </span>wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
+<span class="nv">$ </span><span class="nb">gunzip </span>GeoIP.dat.gz
+<span class="nv">$ </span><span class="nb">gunzip </span>GeoLiteCity.dat.gz
+</code></pre></div></div>
+
+<p>3. 针对 HTTP、TCP/UDP，用 <code class="highlighter-rouge">geoip_country</code> 和 <code class="highlighter-rouge">geoip_city</code> 指令指定数据库的路径。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">http</span> {
+    <span class="c">#...
+</span>    <span class="n">geoip_country</span> <span class="n">GeoIP</span>/<span class="n">GeoIP</span>.<span class="n">dat</span>;
+    <span class="n">geoip_city</span>    <span class="n">GeoIP</span>/<span class="n">GeoLiteCity</span>.<span class="n">dat</span>;
+    <span class="c">#...
+</span> }
+
+<span class="n">stream</span> {
+    <span class="c">#...
+</span>    <span class="n">geoip_country</span> <span class="n">GeoIP</span>/<span class="n">GeoIP</span>.<span class="n">dat</span>;
+    <span class="n">geoip_city</span>    <span class="n">GeoIP</span>/<span class="n">GeoLiteCity</span>.<span class="n">dat</span>;
+    <span class="c">#...
+</span>}
+</code></pre></div></div>
+
+<p>4. 用 GeoIP 模块的标准变量把数据传递给 <code class="highlighter-rouge">map</code> 或 <code class="highlighter-rouge">split_clients</code> 指令：</p>
+
+<p>例如，使用 <code class="highlighter-rouge">geoip_city</code> 指令的 <code class="highlighter-rouge">$geoip_city_continent_code</code> 变量，以及 <code class="highlighter-rouge">map</code> 模块，可以创建另一个变量，用来保存基于位置最近的服务器：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#...
+</span><span class="n">map</span> $<span class="n">geoip_city_continent_code</span> $<span class="n">nearest_server</span> {
+    <span class="n">default</span> <span class="n">default</span> {};
+    <span class="n">EU</span>      <span class="n">eu</span>;
+    <span class="n">NA</span>      <span class="n">na</span>;
+    <span class="n">AS</span>      <span class="n">as</span>;
+    <span class="n">AF</span>      <span class="n">af</span>;
+<span class="c">#...
+</span></code></pre></div></div>
+
+<p>然后，可以基于变量 <code class="highlighter-rouge">$nearest_server</code> 传递的值，选择一个后端服务器：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#...
+</span><span class="n">server</span> {
+    <span class="n">listen</span> <span class="m">12346</span>;
+    <span class="n">proxy_pass</span> $<span class="n">nearest_server</span>;
+}
+ <span class="n">upstream</span> <span class="n">eu</span> {
+    <span class="n">server</span> <span class="n">eu1</span>.<span class="n">example</span>.<span class="n">com</span>:<span class="m">12345</span>;
+    <span class="n">server</span> <span class="n">eu2</span>.<span class="n">example</span>.<span class="n">com</span>:<span class="m">12345</span>;
+}
+<span class="n">upstream</span> <span class="n">na</span> {
+    <span class="n">server</span> <span class="n">na1</span>.<span class="n">example</span>.<span class="n">com</span>:<span class="m">12345</span>;
+    <span class="n">server</span> <span class="n">na2</span>.<span class="n">example</span>.<span class="n">com</span>:<span class="m">12345</span>;
+}
+<span class="c">#...
+</span></code></pre></div></div>
+
+<p>如果洲际是欧洲，则变量 <code class="highlighter-rouge">$nearest_server</code> 的值为 <code class="highlighter-rouge">eu</code>，该连接将通过 <code class="highlighter-rouge">proxy_pass</code> 指令被传递给后端 <code class="highlighter-rouge">eu</code>。</p>
+
+<h3 id="范例-3">范例</h3>
+
+<p>本例可以应用于 <code class="highlighter-rouge">http</code> 或 <code class="highlighter-rouge">stream</code> 中：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># can be either "http {" or "stream {"
+</span>    <span class="c">#...
+</span>    <span class="n">geoip_country</span> <span class="n">GeoIP</span>/<span class="n">GeoIP</span>.<span class="n">dat</span>;
+    <span class="n">geoip_city</span>    <span class="n">GeoIP</span>/<span class="n">GeoLiteCity</span>.<span class="n">dat</span>;
+    <span class="n">map</span> $<span class="n">geoip_city_continent_code</span> $<span class="n">nearest_server</span> {
+        <span class="n">default</span> <span class="n">default</span> {};
+        <span class="n">EU</span>      <span class="n">eu</span>;
+        <span class="n">NA</span>      <span class="n">na</span>;
+        <span class="n">AS</span>      <span class="n">as</span>;
+        <span class="n">AF</span>      <span class="n">af</span>;
+    <span class="n">server</span> {
+        <span class="n">listen</span> <span class="m">12346</span>;
+        <span class="n">proxy_pass</span> $<span class="n">nearest_server</span>;
+    }
+     <span class="n">upstream</span> <span class="n">eu</span> {
+        <span class="n">server</span> <span class="n">eu1</span>.<span class="n">example</span>.<span class="n">com</span>:<span class="m">12345</span>;
+        <span class="n">server</span> <span class="n">eu2</span>.<span class="n">example</span>.<span class="n">com</span>:<span class="m">12345</span>;
+    }
+    <span class="n">upstream</span> <span class="n">na</span> {
+        <span class="n">server</span> <span class="n">na1</span>.<span class="n">example</span>.<span class="n">com</span>:<span class="m">12345</span>;
+        <span class="n">server</span> <span class="n">na2</span>.<span class="n">example</span>.<span class="n">com</span>:<span class="m">12345</span>;
+    }
+}
+</code></pre></div></div>
+
+<p>本例中，会从 <code class="highlighter-rouge">GeoLiteCity.dat</code> 数据库中检查客户端的 IP 地址，把结果写入变量 <code class="highlighter-rouge">$geoip_city_continent_code</code>，nginx 会将该变量值与 <code class="highlighter-rouge">map</code> 指令中的值进行匹配，在自定义变量 <code class="highlighter-rouge">$nearest_server</code> 中把结果修改成小写的，然后，<code class="highlighter-rouge">proxy_pass</code> 指令会选择一个对应的后端服务器。</p>
+
+<h2 id="保证去往后端服务器的-http-流量的安全">保证去往后端服务器的 HTTP 流量的安全</h2>
+
+<h3 id="先决条件-3">先决条件</h3>
+
+<ul>
+  <li>nginx</li>
+  <li>一个后端服务器或一个后端组</li>
+  <li>SSL 证书及私钥</li>
+</ul>
+
+<h3 id="获取-ssl-服务器证书">获取 SSL 服务器证书</h3>
+
+<p>可以从可信的证书颁发机构（CA）来购买服务器证书，或者，也可以用 OpenSSL 运行库创建自己的内部 CA，并生成自己的证书。在每个后端服务器中，服务器证书和私钥必须放在一起。</p>
+
+<h3 id="获取-ssl-客户端证书">获取 SSL 客户端证书</h3>
+
+<p>nginx 会使用一个 SSL 客户端证书向后端服务器来标识自己。该客户端证书必须是由可信 CA 颁发的，必须与对应的私钥一起在 nginx 中配置妥当。</p>
+
+<p>还需要配置后端服务器，令其对所有传入的 SSL 连接都索取客户端证书，并信任为 nginx 颁发客户端证书的 CA。这样，当 nginx 连接到后端时，它提供的客户端证书就能被服务器接受了。</p>
+
+<h3 id="配置--nginx">配置  nginx</h3>
+
+<h4 id="修改-url">修改 URL</h4>
+
+<p>首先，把 URL 修改为后端服务器组以支持 SSL 连接。在 nginx 配置文件中，在代理服务器或后端组中为 <code class="highlighter-rouge">proxy_pass</code> 指令设定 <code class="highlighter-rouge">https</code> 协议：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">location</span> /<span class="n">upstream</span> {
+    <span class="n">proxy_pass</span> <span class="n">https</span>://<span class="n">backend</span>.<span class="n">example</span>.<span class="n">com</span>;
+}
+</code></pre></div></div>
+
+<h4 id="配置客户端证书和私钥">配置客户端证书和私钥</h4>
+
+<p>然后，配置客户端证书和私钥，用于在每个后端服务器中验证 nginx，使用 <code class="highlighter-rouge">proxy_ssl_certificate</code> 和 <code class="highlighter-rouge">proxy_ssl_certificate_key</code> 指令：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">location</span> /<span class="n">upstream</span> {
+    <span class="n">proxy_pass</span>                <span class="n">https</span>://<span class="n">backend</span>.<span class="n">example</span>.<span class="n">com</span>;
+    <span class="n">proxy_ssl_certificate</span>     /<span class="n">etc</span>/<span class="n">nginx</span>/<span class="n">client</span>.<span class="n">pem</span>;
+    <span class="n">proxy_ssl_certificate_key</span> /<span class="n">etc</span>/<span class="n">nginx</span>/<span class="n">client</span>.<span class="n">key</span>
+}
+</code></pre></div></div>
+
+<p>如果后端使用的是自已生成的证书，或自己的 CA 颁发的证书，还需要用 <code class="highlighter-rouge">proxy_ssl_trusted_certificate</code> 来指定证书的路径，证书文件必须是 PEM 格式的。还可以考虑使用 <code class="highlighter-rouge">proxy_ssl_verify</code> 和 <code class="highlighter-rouge">proxy_ssl_verify_depth</code> 指令，让 nginx 可以检查安全证书的有效性：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">location</span> /<span class="n">upstream</span> {
+    ...
+    <span class="n">proxy_ssl_trusted_certificate</span> /<span class="n">etc</span>/<span class="n">nginx</span>/<span class="n">trusted_ca_cert</span>.<span class="n">crt</span>;
+    <span class="n">proxy_ssl_verify</span>       <span class="n">on</span>;
+    <span class="n">proxy_ssl_verify_depth</span> <span class="m">2</span>;
+    ...
+}
+</code></pre></div></div>
+
+<p>每个新的 SSL 连接都需要在客户端与服务端之间进行一次完整的握手，非常占用 CPU。使用 <code class="highlighter-rouge">proxy_ssl_session_reuse</code> 指令，可以让 nginx 代理预先协商连接参数，使用一种简略的握手过程。即使用代理服务器时，可以重用 SSL 会话以简化客户端与服务端的通信。</p>
+
+<p>如果需要，还可以指定使用哪种 SSL 协议和哪种密钥算法：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">location</span> /<span class="n">upstream</span> {
+        ...
+        <span class="n">proxy_ssl_protocols</span> <span class="n">TLSv1</span> <span class="n">TLSv1</span>.<span class="m">1</span> <span class="n">TLSv1</span>.<span class="m">2</span>;
+        <span class="n">proxy_ssl_ciphers</span>   <span class="n">HIGH</span>:!<span class="n">aNULL</span>:!<span class="n">MD5</span>;
+}
+</code></pre></div></div>
+
+<h3 id="配置后端服务器">配置后端服务器</h3>
+
+<p>每个后端服务器都应该配置为可接受 HTTPS 连接。针对每个后端服务器，用 <code class="highlighter-rouge">ssl_certificate</code> 和 <code class="highlighter-rouge">ssl_certificate_key</code> 指令来指定服务器证书和私钥的路径：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">server</span> {
+    <span class="n">listen</span>              <span class="m">443</span> <span class="n">ssl</span>;
+    <span class="n">server_name</span>         <span class="n">backend1</span>.<span class="n">example</span>.<span class="n">com</span>;
+
+    <span class="n">ssl_certificate</span>     /<span class="n">etc</span>/<span class="n">ssl</span>/<span class="n">certs</span>/<span class="n">server</span>.<span class="n">crt</span>;
+    <span class="n">ssl_certificate_key</span> /<span class="n">etc</span>/<span class="n">ssl</span>/<span class="n">certs</span>/<span class="n">server</span>.<span class="n">key</span>;
+    ...
+    <span class="n">location</span> /<span class="n">yourapp</span> {
+        <span class="n">proxy_pass</span> <span class="n">http</span>://<span class="n">url_to_app</span>.<span class="n">com</span>;
+        ...
+    }
+}
+</code></pre></div></div>
+
+<p>用 <code class="highlighter-rouge">ssl_client_certificate</code> 指令来指定客户端证书的路径：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">server</span> {
+    ...
+    <span class="n">ssl_client_certificate</span> /<span class="n">etc</span>/<span class="n">ssl</span>/<span class="n">certs</span>/<span class="n">ca</span>.<span class="n">crt</span>;
+    <span class="n">ssl_verify_client</span>      <span class="n">off</span>;
+    ...
+}
+</code></pre></div></div>
+
+<h3 id="完整范例">完整范例</h3>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">http</span> {
+    ...
+    <span class="n">upstream</span> <span class="n">backend</span>.<span class="n">example</span>.<span class="n">com</span> {
+        <span class="n">server</span> <span class="n">backend1</span>.<span class="n">example</span>.<span class="n">com</span>:<span class="m">443</span>;
+        <span class="n">server</span> <span class="n">backend2</span>.<span class="n">example</span>.<span class="n">com</span>:<span class="m">443</span>;
+   }
+
+    <span class="n">server</span> {
+        <span class="n">listen</span>      <span class="m">80</span>;
+        <span class="n">server_name</span> <span class="n">www</span>.<span class="n">example</span>.<span class="n">com</span>;
+        ...
+
+        <span class="n">location</span> /<span class="n">upstream</span> {
+            <span class="n">proxy_pass</span>                    <span class="n">https</span>://<span class="n">backend</span>.<span class="n">example</span>.<span class="n">com</span>;
+            <span class="n">proxy_ssl_certificate</span>         /<span class="n">etc</span>/<span class="n">nginx</span>/<span class="n">client</span>.<span class="n">pem</span>;
+            <span class="n">proxy_ssl_certificate_key</span>     /<span class="n">etc</span>/<span class="n">nginx</span>/<span class="n">client</span>.<span class="n">key</span>
+            <span class="n">proxy_ssl_protocols</span>           <span class="n">TLSv1</span> <span class="n">TLSv1</span>.<span class="m">1</span> <span class="n">TLSv1</span>.<span class="m">2</span>;
+            <span class="n">proxy_ssl_ciphers</span>             <span class="n">HIGH</span>:!<span class="n">aNULL</span>:!<span class="n">MD5</span>;
+            <span class="n">proxy_ssl_trusted_certificate</span> /<span class="n">etc</span>/<span class="n">nginx</span>/<span class="n">trusted_ca_cert</span>.<span class="n">crt</span>;
+
+            <span class="n">proxy_ssl_verify</span>        <span class="n">on</span>;
+            <span class="n">proxy_ssl_verify_depth</span>  <span class="m">2</span>;
+            <span class="n">proxy_ssl_session_reuse</span> <span class="n">on</span>;
+        }
+    }
+
+    <span class="n">server</span> {
+        <span class="n">listen</span>      <span class="m">443</span> <span class="n">ssl</span>;
+        <span class="n">server_name</span> <span class="n">backend1</span>.<span class="n">example</span>.<span class="n">com</span>;
+
+        <span class="n">ssl_certificate</span>        /<span class="n">etc</span>/<span class="n">ssl</span>/<span class="n">certs</span>/<span class="n">server</span>.<span class="n">crt</span>;
+        <span class="n">ssl_certificate_key</span>    /<span class="n">etc</span>/<span class="n">ssl</span>/<span class="n">certs</span>/<span class="n">server</span>.<span class="n">key</span>;
+        <span class="n">ssl_client_certificate</span> /<span class="n">etc</span>/<span class="n">ssl</span>/<span class="n">certs</span>/<span class="n">ca</span>.<span class="n">crt</span>;
+        <span class="n">ssl_verify_client</span>      <span class="n">off</span>;
+
+        <span class="n">location</span> /<span class="n">yourapp</span> {
+            <span class="n">proxy_pass</span> <span class="n">http</span>://<span class="n">url_to_app</span>.<span class="n">com</span>;
+        ...
+        }
+
+    <span class="n">server</span> {
+        <span class="n">listen</span>      <span class="m">443</span> <span class="n">ssl</span>;
+        <span class="n">server_name</span> <span class="n">backend2</span>.<span class="n">example</span>.<span class="n">com</span>;
+
+        <span class="n">ssl_certificate</span>        /<span class="n">etc</span>/<span class="n">ssl</span>/<span class="n">certs</span>/<span class="n">server</span>.<span class="n">crt</span>;
+        <span class="n">ssl_certificate_key</span>    /<span class="n">etc</span>/<span class="n">ssl</span>/<span class="n">certs</span>/<span class="n">server</span>.<span class="n">key</span>;
+        <span class="n">ssl_client_certificate</span> /<span class="n">etc</span>/<span class="n">ssl</span>/<span class="n">certs</span>/<span class="n">ca</span>.<span class="n">crt</span>;
+        <span class="n">ssl_verify_client</span>      <span class="n">off</span>;
+
+        <span class="n">location</span> /<span class="n">yourapp</span> {
+            <span class="n">proxy_pass</span> <span class="n">http</span>://<span class="n">url_to_app</span>.<span class="n">com</span>;
+        ...
+        }
+    }
+}
+</code></pre></div></div>
+
+<p>本例中，<code class="highlighter-rouge">proxy_pass</code> 指令中的 <code class="highlighter-rouge">https</code> 协议保证了从 nginx 转发到后端服务器的流量是安全的。</p>
+
+<p>当一个安全连接首次从 nginx 传递给后端服务器时，会进行完整的握手。<code class="highlighter-rouge">proxy_ssl_certificate</code> 指令指定了后端服务器所需的 PEM 格式的证书的路径，<code class="highlighter-rouge">proxy_ssl_certificate_key</code> 指令则指定了证书私钥的路径，<code class="highlighter-rouge">proxy_ssl_protocols</code> 和 <code class="highlighter-rouge">proxy_ssl_ciphers</code> 指令用来控制使用哪种协议和密钥算法。</p>
+
+<p>当 nginx 下一次给后端服务器传递连接时，会话的参数会被重用，这是因为 <code class="highlighter-rouge">proxy_ssl_session_reuse</code> 指令，如此一来，安全的连接会更快速地建立起来。</p>
+
+<p>由 <code class="highlighter-rouge">proxy_ssl_trusted_certificate</code> 指令指定的可信的 CA 证书，是用来验证后端服务器中的证书的。<code class="highlighter-rouge">proxy_ssl_verify_depth</code> 指令指定了需要检查证书链的深度，此处为两个证书，<code class="highlighter-rouge">proxy_ssl_verify</code> 指令表明会对证书的有效性进行检验。</p>
+
+<h2 id="保证去往后端服务器的-tcp-流量的安全">保证去往后端服务器的 TCP 流量的安全</h2>
+
+<h3 id="先决条件-4">先决条件</h3>
+
+<ul>
+  <li>使用 <code class="highlighter-rouge">--with-stream</code> 和 <code class="highlighter-rouge">with-stream_ssl_module</code> 配置参数编译的 nginx</li>
+  <li>一个被代理的 TCP 服务器，或一个 TCP 后端服务器组</li>
+  <li>SSL 证书及一个私钥</li>
+</ul>
+
+<h3 id="获取-ssl-服务器证书-1">获取 SSL 服务器证书</h3>
+
+<p>首先，需要得到服务器证书和一个私钥，并把它们放到后端服务器中，或后端组的每个服务器中。证书可以从可信 CA 获取，或使用 OpenSSL 这样的 SSL 运行库生成。</p>
+
+<p>如果是想用来加密 nginx 和后端服务器的连接，可以使用自己颁发的服务器证书。然而，这些连接对于 “中间人攻击” 就比较脆弱：骗子可以模仿后端服务器，nginx 无从知道它正和一个假冒的服务器通讯。你可以用 OpenSSL 建立自己的内部 CA，这样就可以获得可信 CA 颁发的服务器证书了，然后再配置 nginx 只信任由该 CA 颁发的证书就行了。如此一来，骗子就很难再冒充后端服务器了。</p>
+
+<h3 id="获取-ssl-客户端证书-1">获取 SSL 客户端证书</h3>
+
+<p>nginx 可以用一个 SSL 客户端证书来标识自己，该证书必须由可信 CA 颁发，必须与对应的私钥一同保存在 nginx 中。</p>
+
+<p>有必要配置后端服务器，令其对所有传入连接都索取客户端证书，并信任给 nginx 颁发客户端证书的特定的 CA。这样，当 nginx 连接到后端服务器时，它会提供自己的客户端证书，后端服务器自然会接受。</p>
+
+<h3 id="配置-nginx-1">配置 nginx</h3>
+
+<h4 id="为连接到后端服务器的连接启用-ssltls-协议">为连接到后端服务器的连接启用 SSL/TLS 协议</h4>
+
+<p>在 nginx 配置文件中，在 <code class="highlighter-rouge">stream &gt; server</code> 块中使用 <code class="highlighter-rouge">proxy_ssl</code> 指令：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">stream</span> {
+    <span class="n">server</span> {
+        ...
+        <span class="n">proxy_pass</span> <span class="n">backend</span>;
+        <span class="n">proxy_ssl</span>  <span class="n">on</span>;
+    }
+}
+</code></pre></div></div>
+
+<h4 id="指定客户端证书私钥">指定客户端证书、私钥</h4>
+
+<p>然后，指定 SSL 客户端证书及私钥的路径：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">server</span> {
+        ...
+        <span class="n">proxy_ssl_certificate</span>     /<span class="n">etc</span>/<span class="n">ssl</span>/<span class="n">certs</span>/<span class="n">backend</span>.<span class="n">crt</span>;
+        <span class="n">proxy_ssl_certificate_key</span> /<span class="n">etc</span>/<span class="n">ssl</span>/<span class="n">certs</span>/<span class="n">backend</span>.<span class="n">key</span>;
+}
+</code></pre></div></div>
+
+<h4 id="指定-ssl-协议和密钥算法">指定 SSL 协议和密钥算法</h4>
+
+<p>可以考虑设定具体的 SSL 协议和密钥算法：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">server</span> {
+        ...
+        <span class="n">proxy_ssl_protocols</span> <span class="n">TLSv1</span> <span class="n">TLSv1</span>.<span class="m">1</span> <span class="n">TLSv1</span>.<span class="m">2</span>;
+        <span class="n">proxy_ssl_ciphers</span>   <span class="n">HIGH</span>:!<span class="n">aNULL</span>:!<span class="n">MD5</span>;
+}
+</code></pre></div></div>
+
+<h4 id="指定可信-ca-证书路径">指定可信 CA 证书路径</h4>
+
+<p>如果使用的是由 CA 颁发的证书，还需要使用 <code class="highlighter-rouge">proxy_ssl_trusted_certificate</code> 指令来指定证书的路径，用来 <strong>验证后端服务器</strong> 的安全证书。该证书文件必须是 PEM 格式。</p>
+
+<p>如果需要，还可以加入 <code class="highlighter-rouge">proxy_ssl_verify</code> 和 <code class="highlighter-rouge">proxy_ssl_verify_depth</code> 指令，让 nginx 检验安全证书的有效性。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">server</span> {
+    ...
+    <span class="n">proxy_ssl_trusted_certificate</span> /<span class="n">etc</span>/<span class="n">ssl</span>/<span class="n">certs</span>/<span class="n">trusted_ca_cert</span>.<span class="n">crt</span>;
+    <span class="n">proxy_ssl_verify</span>       <span class="n">on</span>;
+    <span class="n">proxy_ssl_verify_depth</span> <span class="m">2</span>;
+}
+</code></pre></div></div>
+
+<h4 id="重用-ssl-会话">重用 SSL 会话</h4>
+
+<p>每个新的 SSL 连接都需要在客户端与服务端之间进行一次完整的握手，非常占用 CPU。使用 <code class="highlighter-rouge">proxy_ssl_session_reuse</code> 指令，可以让 nginx 代理预先协商连接参数，使用一种简略的握手过程。即使用代理服务器时，可以重用 SSL 会话以简化客户端与服务端的通信。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">proxy_ssl_session_reuse</span> <span class="n">on</span>;
+</code></pre></div></div>
+
+<h3 id="完整范例-1">完整范例</h3>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">stream</span> {
+
+    <span class="n">upstream</span> <span class="n">backend</span> {
+        <span class="n">server</span> <span class="n">backend1</span>.<span class="n">example</span>.<span class="n">com</span>:<span class="m">12345</span>;
+        <span class="n">server</span> <span class="n">backend2</span>.<span class="n">example</span>.<span class="n">com</span>:<span class="m">12345</span>;
+        <span class="n">server</span> <span class="n">backend3</span>.<span class="n">example</span>.<span class="n">com</span>:<span class="m">12345</span>;
+   }
+
+    <span class="n">server</span> {
+        <span class="n">listen</span>     <span class="m">12345</span>;
+        <span class="n">proxy_pass</span> <span class="n">backend</span>;
+        <span class="n">proxy_ssl</span>  <span class="n">on</span>;
+
+        <span class="n">proxy_ssl_certificate</span>         /<span class="n">etc</span>/<span class="n">ssl</span>/<span class="n">certs</span>/<span class="n">backend</span>.<span class="n">crt</span>;
+        <span class="n">proxy_ssl_certificate_key</span>     /<span class="n">etc</span>/<span class="n">ssl</span>/<span class="n">certs</span>/<span class="n">backend</span>.<span class="n">key</span>;
+        <span class="n">proxy_ssl_protocols</span>           <span class="n">TLSv1</span> <span class="n">TLSv1</span>.<span class="m">1</span> <span class="n">TLSv1</span>.<span class="m">2</span>;
+        <span class="n">proxy_ssl_ciphers</span>             <span class="n">HIGH</span>:!<span class="n">aNULL</span>:!<span class="n">MD5</span>;
+        <span class="n">proxy_ssl_trusted_certificate</span> /<span class="n">etc</span>/<span class="n">ssl</span>/<span class="n">certs</span>/<span class="n">trusted_ca_cert</span>.<span class="n">crt</span>;
+
+        <span class="n">proxy_ssl_verify</span>        <span class="n">on</span>;
+        <span class="n">proxy_ssl_verify_depth</span>  <span class="m">2</span>;
+        <span class="n">proxy_ssl_session_reuse</span> <span class="n">on</span>;
+    }
+}
+</code></pre></div></div>
+
+<p>本例中，<code class="highlighter-rouge">proxy_ssl</code>  指令保证了 nginx 向后端服务器转发的 TCP 流量都是安全的，因为它开启了 SSL 协议的使用。</p>
+
+<p>当 nginx 把一个安全的 TCP 连接首次传递给后端服务器时，会进行完整的握手。后端服务器要求 nginx 亮出由 <code class="highlighter-rouge">proxy_ssl_certificate</code> 指令指定的安全证书。<code class="highlighter-rouge">proxy_ssl_protocols</code> 和 <code class="highlighter-rouge">proxy_ssl_ciphers</code> 指令用来控制使用哪种协议和密钥算法。</p>
+
+<p>当 nginx 下一次给后端服务器传递连接时，会话的参数会被重用，这是因为 <code class="highlighter-rouge">proxy_ssl_session_reuse</code> 指令，如此一来，安全的 TCP 连接会更快速地建立起来。</p>
+
+<p>由 <code class="highlighter-rouge">proxy_ssl_trusted_certificate</code> 指令指定的可信的 CA 证书，是用来验证后端服务器中的证书的。<code class="highlighter-rouge">proxy_ssl_verify_depth</code> 指令指定了需要检查证书链的深度，此处为两个证书，<code class="highlighter-rouge">proxy_ssl_verify</code> 指令表明会对证书的有效性进行检验。</p>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/nginx" class="page__taxonomy-item" rel="tag">nginx</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/安全" class="page__taxonomy-item" rel="tag">安全</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#server" class="page__taxonomy-item" rel="tag">server</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2016-01-03T00:00:00+08:00">January 03, 2016</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">分享</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=liloli&text=Nginx+%E5%AE%89%E5%85%A8%E6%8E%A7%E5%88%B6%20http%3A%2F%2Flocalhost%3A4000%2Fserver%2Fnginx_security%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fserver%2Fnginx_security%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fserver%2Fnginx_security%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fserver%2Fnginx_security%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/server/nginx_loadbalancer/" class="pagination--pager" title="Nginx 的负载均衡
+">向前</a>
+    
+    
+      <a href="http://localhost:4000/server/nginx_webserver/" class="pagination--pager" title="Nginx Web Server
+">向后</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">猜您还喜欢</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/time/" rel="permalink">Bash 脚本 - 时间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/storage/" rel="permalink">Bash 脚本 - 存储空间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/numbers/" rel="permalink">Bash 脚本 - 数字
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/input/" rel="permalink">Bash 脚本 - 输入
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+      <li><a href="https://twitter.com/liloli"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+      <li><a href="https://www.facebook.com/lilolibj"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+    
+    
+      <li><a href="https://github.com/liloli"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+  
+  
+  <script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/server/nginx_security/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/server/nginx_security"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://liloli.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+  </body>
+</html>

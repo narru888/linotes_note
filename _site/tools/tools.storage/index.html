@@ -1,0 +1,1151 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Linux 的使用 - 存储 - LINOTES</title>
+<meta name="description" content="用简洁清晰的语言讨论技术">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Linux 的使用 - 存储">
+<meta property="og:url" content="http://localhost:4000/tools/tools.storage/">
+
+
+  <meta property="og:description" content="用简洁清晰的语言讨论技术">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/header/linux.jpg">
+
+
+
+  <meta name="twitter:site" content="@liloli">
+  <meta name="twitter:title" content="Linux 的使用 - 存储">
+  <meta name="twitter:description" content="用简洁清晰的语言讨论技术">
+  <meta name="twitter:url" content="http://localhost:4000/tools/tools.storage/">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="http://localhost:4000/assets/images/header/linux.jpg">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2015-02-01T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/tools/tools.storage/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "Hawk Zhang",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- <link rel="stylesheet" href="/assets/css/vim.css"> -->
+
+
+
+  
+
+
+
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('http://localhost:4000/assets/images/header/linux.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Linux 的使用 - 存储
+
+        
+      </h1>
+      
+        <p class="page__lead">
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:liloli@gmail.com">
+            <meta itemprop="email" content="liloli@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Linux 的使用 - 存储">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="February 01, 2015">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-audible"></i> Linux 的使用 - 存储</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#存储设备">存储设备</a>
+    <ul>
+      <li><a href="#设备文件名">设备文件名</a></li>
+      <li><a href="#查看设备信息">查看设备信息</a></li>
+    </ul>
+  </li>
+  <li><a href="#分区">分区</a>
+    <ul>
+      <li><a href="#查看分区">查看分区</a></li>
+      <li><a href="#分区管理">分区管理</a></li>
+      <li><a href="#查看分区表">查看分区表</a></li>
+    </ul>
+  </li>
+  <li><a href="#lvm">LVM</a>
+    <ul>
+      <li><a href="#物理卷">物理卷</a></li>
+      <li><a href="#卷组">卷组</a></li>
+      <li><a href="#逻辑卷">逻辑卷</a></li>
+      <li><a href="#关闭-lvm-的流程">关闭 LVM 的流程</a></li>
+      <li><a href="#lvm-命令汇总">LVM 命令汇总</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="存储设备">存储设备</h2>
+
+<h3 id="设备文件名">设备文件名</h3>
+
+<p>系统按照检测到的磁盘顺序来决定设备文件名，与插槽号无关。</p>
+
+<p>USB 磁盘：<code class="highlighter-rouge">/dev/sdc</code></p>
+
+<p>实体磁盘	<code class="highlighter-rouge">/dev/sd[a-p]</code></p>
+
+<p>分区	<code class="highlighter-rouge">/dev/sda[1-128]</code></p>
+
+<p>虚拟机	<code class="highlighter-rouge">/dev/vd[a-p]</code></p>
+
+<p>软 RAID	<code class="highlighter-rouge">/dev/md[0-128]</code></p>
+
+<p>LVM	<code class="highlighter-rouge">/dev/VGNAME/LVNAME</code></p>
+
+<h3 id="查看设备信息">查看设备信息</h3>
+
+<h4 id="查看-scsi-设备信息">查看 SCSI 设备信息</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]$ lsscsi     
+[0:0:0:0]    disk    VMware,  VMware Virtual S 1.0   /dev/sda
+[2:0:0:0]    cd/dvd  NECVMWar VMware IDE CDR10 1.00  /dev/sr0
+</code></pre></div></div>
+
+<h4 id="smartctl"><code class="highlighter-rouge">smartctl</code></h4>
+
+<p>Self-Monitoring，Analysis and Reporting Technology System，SMART</p>
+
+<p>用于监测 ATA 和 SCSI 接口的磁盘，被监测的磁盘必须支持 <strong>SMART 协议</strong>。</p>
+
+<p><code class="highlighter-rouge">smartd</code> 是 SMART 的守护进程，它使用 <code class="highlighter-rouge">smartctl</code> 命令来监测磁盘。</p>
+
+<h4 id="查看完整磁盘信息">查看完整磁盘信息</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ smartctl -a /dev/sda
+</code></pre></div></div>
+
+<h4 id="scsi-磁盘进行后台检测">SCSI 磁盘进行后台检测</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ smartctl -t short /dev/sda
+</code></pre></div></div>
+
+<h2 id="分区">分区</h2>
+
+<h3 id="查看分区">查看分区</h3>
+
+<h4 id="查看分区简明信息">查看分区简明信息</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># lsblk
+NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+sda      8:0    0 465.8G  0 disk
+├─sda1   8:1    0     1G  0 part /boot
+├─sda2   8:2    0   9.3G  0 part [SWAP]
+├─sda3   8:3    0  74.5G  0 part /
+├─sda4   8:4    0     1K  0 part
+├─sda5   8:5    0 111.8G  0 part /home
+└─sda6   8:6    0 269.2G  0 part
+</code></pre></div></div>
+
+<h4 id="查看磁盘和分区详细信息">查看磁盘和分区详细信息</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># fdisk -l
+
+Disk /dev/sda: 500.1 GB, 500107862016 bytes
+255 heads, 63 sectors/track, 60801 cylinders, total 976773168 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 4096 bytes
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+Disk identifier: 0x00023728
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sda1   *        2048     2148351     1073152   83  Linux
+/dev/sda2         2148352    21680127     9765888   82  Linux swap / Solaris
+/dev/sda3        21680128   177930239    78125056   83  Linux
+/dev/sda4       177932286   976771071   399419393    5  Extended/dev/sda5       177932288   412305407   117186560   83  Linux
+/dev/sda6       412307456   976771071   282231808   83  Linux
+</code></pre></div></div>
+
+<h3 id="分区管理">分区管理</h3>
+
+<h4 id="分区准备工作">分区准备工作</h4>
+
+<ul>
+  <li>查看磁盘的 <strong>设备文件名</strong> ： <code class="highlighter-rouge">lsblk</code></li>
+  <li>查看 <strong>分区表类型</strong> ： <code class="highlighter-rouge">parted</code></li>
+  <li>MBR 分区表使用 <strong>fdisk</strong>，GPT 分区表使用 <strong>gdisk</strong></li>
+</ul>
+
+<h4 id="gdisk"><code class="highlighter-rouge">gdisk</code></h4>
+
+<p>在 <code class="highlighter-rouge">gdisk</code> 分区后不会即时生效，按 <code class="highlighter-rouge">q</code> 键，取消所有操作；按 <code class="highlighter-rouge">w</code> 键，立即应用操作。</p>
+
+<p>gdisk 要接 <strong>磁盘名</strong>，而不是分区名。</p>
+
+<h5 id="新增分区">新增分区</h5>
+
+<ol>
+  <li>按 <code class="highlighter-rouge">l</code> 查看分区类型对应的 <strong>Hex code</strong> 并记录</li>
+  <li>按 <code class="highlighter-rouge">n</code> 新增分区</li>
+  <li>Partition number，分区号，默认</li>
+  <li>First sector，起始扇区，默认</li>
+  <li>Last sector，结束扇区：+1G、+500M、+100K</li>
+  <li>Hex code or GUID：Linux <strong>8300</strong>，Linux LVM <strong>8e00</strong>，Windows <strong>0700</strong></li>
+  <li>按 <code class="highlighter-rouge">p</code> 查看当前计划的所有操作，仔细检查 <strong>分区大小</strong> 及 <strong>文件系统类型</strong></li>
+  <li>确认无误后，按 <code class="highlighter-rouge">w</code> 确认执行分区操作</li>
+  <li>退出 gdisk</li>
+</ol>
+
+<h5 id="更新分区表">更新分区表</h5>
+
+<p>刚刚创建完分区，<code class="highlighter-rouge">cat /proc/partitions</code> 会看到系统并未立即更新分区表。</p>
+
+<p>手动更新分区表：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ partprobe -s
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">/dev/vda: gpt partitions 1 2 3 4 5 6</code></p>
+
+<h5 id="删除分区">删除分区</h5>
+
+<p>如果要删除正在使用中的分区， 必须先将其卸载。</p>
+
+<h4 id="fdisk"><code class="highlighter-rouge">fdisk</code></h4>
+
+<p><code class="highlighter-rouge">fdisk</code> 跟 <code class="highlighter-rouge">gdisk</code> 使用的方式几乎一样。</p>
+
+<p><code class="highlighter-rouge">fdisk</code> 与 <code class="highlighter-rouge">gdisk</code> 区别：</p>
+
+<ul>
+  <li>有时会使用 <strong>柱面</strong> 作为分区的最小单位</li>
+  <li>分区是有限制的：主分区、扩展分区、逻辑分区</li>
+</ul>
+
+<h4 id="parted"><code class="highlighter-rouge">parted</code></h4>
+
+<p><code class="highlighter-rouge">parted</code> 可以用 <strong>一行命令完成分区</strong>，无需用户干预，因此特别适合在脚本中使用。</p>
+
+<p>语法：</p>
+
+<p><code class="highlighter-rouge">parted [设备] [命令 [参数]]</code></p>
+
+<p><code class="highlighter-rouge">parted mkpart [primary|logical|extended] [ext4|vfat|xfs] 开始块 结束块</code></p>
+
+<h5 id="新增分区-1">新增分区</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>parted mkpart xfs 开始块 结束块
+</code></pre></div></div>
+
+<h5 id="查看分区起始块大小文件系统">查看分区，起始块、大小、文件系统</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>parted print
+</code></pre></div></div>
+
+<h5 id="删除分区-1">删除分区</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>parted rm /dev/sda6
+</code></pre></div></div>
+
+<h3 id="查看分区表">查看分区表</h3>
+
+<h4 id="lsblk"><code class="highlighter-rouge">lsblk</code></h4>
+
+<p>查看块设备的 <strong>文件名</strong>、加载点、磁盘大小、<strong>文件系统</strong> 等信息</p>
+
+<p><code class="highlighter-rouge">lsblk [option] [device]</code></p>
+
+<p><code class="highlighter-rouge">-d</code>		只查看磁盘，不显示分区</p>
+
+<p><code class="highlighter-rouge">-f</code>		显示 <strong>文件系统</strong> 类型</p>
+
+<p><code class="highlighter-rouge">-i</code>		用 ASCII 输出，防止乱码</p>
+
+<p><code class="highlighter-rouge">-m</code>		显示设备文件权限</p>
+
+<p><code class="highlighter-rouge">-p</code>		查看完整设备文件名</p>
+
+<p><code class="highlighter-rouge">-t</code>		显示块设备的详细数据，包括磁盘队列机制、预读写的数据量大小等</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ lsblk
+NAME          MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda             8:0    0   40G  0 disk
+├─sda1          8:1    0    2M  0 part
+├─sda2          8:2    0    1G  0 part /boot
+└─sda3          8:3    0   30G  0 part
+  ├─zion-root 253:0    0   10G  0 lvm  /
+  ├─zion-swap 253:1    0    1G  0 lvm  [SWAP]
+  └─zion-home 253:2    0    5G  0 lvm  /home
+sr0            11:0    1  7.7G  0 rom  
+</code></pre></div></div>
+
+<h4 id="blkid"><code class="highlighter-rouge">blkid</code></h4>
+
+<p>blkid 命令可以查看所有块设备的 <strong>文件名</strong>、 <strong>卷标</strong>、<strong>UUID</strong> 及 <strong>文件系统类型</strong>。</p>
+
+<p>UUID，Universally Unique IDentifier，全域单一识别码，Linux 将系统内所有设备分配一个独一无二的识别码。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo blkid
+[sudo] password for neo:
+/dev/sda1: PARTUUID="aace072a-e421-4c28-b48e-f5507e451bb9"
+/dev/sda2: UUID="84f7aabf-238f-4561-808d-8414f522c62b" TYPE="xfs" PARTUUID="ca1bfda4-d121-4895-b2a4-4e77e7de760a"
+/dev/sda3: UUID="Cd0hLH-ckdz-hYKc-KFyn-ZCcv-B3ER-JzgijA" TYPE="LVM2_member" PARTUUID="8b19b9cb-2fdc-4b7a-8390-d8eb72015546"
+/dev/sr0: UUID="2016-12-05-13-52-39-00" LABEL="CentOS 7 x86_64" TYPE="iso9660" PTTYPE="dos"
+/dev/mapper/zion-root: UUID="c5be0073-8ee5-45f9-9adb-86c2d6bf7f43" TYPE="xfs"
+/dev/mapper/zion-swap: UUID="39404b8c-d2e3-4a1e-97de-945d4434e5ab" TYPE="swap"
+/dev/mapper/zion-home: UUID="d44606bf-f1bc-4efa-9d3e-fd6f5e96f604" TYPE="xfs"
+</code></pre></div></div>
+
+<h4 id="parted-1"><code class="highlighter-rouge">parted</code></h4>
+
+<p>parted 是一款功能强大的磁盘分区工具，与 <code class="highlighter-rouge">fdisk</code> 不同，它 <strong>支持调整分区的大小</strong>。</p>
+
+<p>也可以用于查看磁盘的 <strong>分区表类型</strong> 与 <strong>分区</strong> 信息。</p>
+
+<p><code class="highlighter-rouge">parted device_name print</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ parted /dev/vda print
+
+Model: Virtio Block Device （virtblk）　　# 磁盘的模块名称（厂商）
+Disk /dev/vda: 42.9GB　　　# 磁盘的总容量
+Sector size （logical/physical）: 512B/512B　　# 磁盘的单个逻辑/物理扇区容量
+Partition Table: gpt　　　　# 分区表的格式 （MBR/GPT）
+Disk Flags: pmbr_boot
+Number Start End Size File system Name Flags 　　# 以下三行为分区数据
+1 1049kB 3146kB 2097kB bios_grub
+2 3146kB 1077MB 1074MB xfs
+3 1077MB 33.3GB 32.2GB lvm
+</code></pre></div></div>
+
+<h2 id="lvm">LVM</h2>
+
+<p>Logical Volume Manager</p>
+
+<h3 id="物理卷">物理卷</h3>
+
+<h4 id="查看当前系统物理卷">查看当前系统物理卷</h4>
+
+<p><code class="highlighter-rouge">pvscan</code></p>
+
+<h4 id="创建物理卷">创建物理卷</h4>
+
+<p><code class="highlighter-rouge">pvcreate /dev/vda{5,6,7,8}</code></p>
+
+<h4 id="查看物理卷详细信息">查看物理卷详细信息</h4>
+
+<p><code class="highlighter-rouge">pvdisplay /dev/vda5</code></p>
+
+<h3 id="卷组">卷组</h3>
+
+<h4 id="创建卷组">创建卷组</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vgcreate -s 16M matrixvg /dev/vda{5,6,7}
+</code></pre></div></div>
+
+<h4 id="扫描系统现有卷组">扫描系统现有卷组</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vgscan
+</code></pre></div></div>
+
+<h4 id="查看指定卷组详细信息">查看指定卷组详细信息</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vgdisplay matrixvg
+</code></pre></div></div>
+
+<h4 id="扩展卷组">扩展卷组</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vgextend matrixvg /dev/vda8
+</code></pre></div></div>
+
+<h4 id="缩小卷组">缩小卷组</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vgreduce
+</code></pre></div></div>
+
+<h4 id="修改卷组的属性">修改卷组的属性</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vgchange
+</code></pre></div></div>
+
+<h4 id="删除卷组">删除卷组</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vgremove
+</code></pre></div></div>
+
+<h3 id="逻辑卷">逻辑卷</h3>
+
+<h4 id="创建逻辑卷">创建逻辑卷</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lvcreate -L 2G -n matrixlv matrixvg
+</code></pre></div></div>
+
+<h4 id="创建存储池">创建存储池</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lvcreate -L 1G -T matrixvg/matrixtpool
+</code></pre></div></div>
+
+<h4 id="创建瘦逻辑卷">创建瘦逻辑卷</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lvcreate -V 10G -T matrixvg/matrixtpool -n matrixthin1
+</code></pre></div></div>
+
+<h4 id="创建快照">创建快照</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lvcreate -s -l 26 -n matrixsnap1 /dev/matrixvg/matrixlv
+</code></pre></div></div>
+
+<h4 id="扫描系统中的逻辑卷">扫描系统中的逻辑卷</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lvscan
+</code></pre></div></div>
+
+<h4 id="查看指定逻辑卷详细信息">查看指定逻辑卷详细信息</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lvdisplay /dev/matrixvg/matrixlv
+</code></pre></div></div>
+
+<h4 id="扩展逻辑卷">扩展逻辑卷</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lvextend
+</code></pre></div></div>
+
+<h4 id="缩小逻辑卷">缩小逻辑卷</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lvreduce
+</code></pre></div></div>
+
+<h4 id="删除逻辑卷">删除逻辑卷</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lvremove
+</code></pre></div></div>
+
+<h4 id="调整逻辑卷容量">调整逻辑卷容量</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lvresize
+</code></pre></div></div>
+
+<h4 id="查看逻辑卷信息">查看逻辑卷信息</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lvs matrixvg
+</code></pre></div></div>
+
+<h3 id="关闭-lvm-的流程">关闭 LVM 的流程</h3>
+
+<h4 id="卸载-lvm-文件系统快照逻辑卷">卸载 LVM 文件系统（快照、逻辑卷）</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>umount
+</code></pre></div></div>
+
+<h4 id="删除逻辑卷-1">删除逻辑卷</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lvremove
+</code></pre></div></div>
+
+<h4 id="禁用卷组">禁用卷组</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vgchange -an
+</code></pre></div></div>
+
+<h4 id="删除卷组-1">删除卷组</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vgremove
+</code></pre></div></div>
+
+<h4 id="删除物理卷">删除物理卷</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pvremove
+</code></pre></div></div>
+
+<h4 id="格式化">格式化</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gdisk
+</code></pre></div></div>
+
+<h3 id="lvm-命令汇总">LVM 命令汇总</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">任务</th>
+      <th style="text-align: left">PV</th>
+      <th style="text-align: left">VG</th>
+      <th style="text-align: left">LV</th>
+      <th style="text-align: left">XFS</th>
+      <th style="text-align: left">EXT4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">scan</td>
+      <td style="text-align: left">pvscan</td>
+      <td style="text-align: left">vgscan</td>
+      <td style="text-align: left">lvscan</td>
+      <td style="text-align: left">lsblk, blkid</td>
+      <td style="text-align: left">lsblk, blkid</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">create</td>
+      <td style="text-align: left">pvcreate</td>
+      <td style="text-align: left">vgcreate</td>
+      <td style="text-align: left">lvcreate</td>
+      <td style="text-align: left">mkfs.xfs</td>
+      <td style="text-align: left">mkfs.ext4</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">display</td>
+      <td style="text-align: left">pvdisplay</td>
+      <td style="text-align: left">vgdisplay</td>
+      <td style="text-align: left">lvdisplay</td>
+      <td style="text-align: left">df, mount</td>
+      <td style="text-align: left">df, mount</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">extend</td>
+      <td style="text-align: left"> </td>
+      <td style="text-align: left">vgextend</td>
+      <td style="text-align: left">lvextend （lvresize）</td>
+      <td style="text-align: left">xfs_growfs</td>
+      <td style="text-align: left">resize2fs</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">reduce</td>
+      <td style="text-align: left"> </td>
+      <td style="text-align: left">vgreduce</td>
+      <td style="text-align: left">lvreduce （lvresize）</td>
+      <td style="text-align: left">N/A</td>
+      <td style="text-align: left">resize2fs</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">remove</td>
+      <td style="text-align: left">pvremove</td>
+      <td style="text-align: left">vgremove</td>
+      <td style="text-align: left">lvremove</td>
+      <td style="text-align: left">umount,mkfs</td>
+      <td style="text-align: left">umount,mkfs</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">resize</td>
+      <td style="text-align: left"> </td>
+      <td style="text-align: left"> </td>
+      <td style="text-align: left">lvresize</td>
+      <td style="text-align: left">xfs_growfs</td>
+      <td style="text-align: left">resize2fs</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">attribute</td>
+      <td style="text-align: left">pvchange</td>
+      <td style="text-align: left">vgchange</td>
+      <td style="text-align: left">lvchange</td>
+      <td style="text-align: left">/etc/fstab, remount</td>
+      <td style="text-align: left">/etc/fstab, remount</td>
+    </tr>
+  </tbody>
+</table>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/分区" class="page__taxonomy-item" rel="tag">分区</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/分区表" class="page__taxonomy-item" rel="tag">分区表</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/linux" class="page__taxonomy-item" rel="tag">linux</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/fdisk" class="page__taxonomy-item" rel="tag">fdisk</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/gdisk" class="page__taxonomy-item" rel="tag">gdisk</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/raid" class="page__taxonomy-item" rel="tag">raid</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#tools" class="page__taxonomy-item" rel="tag">tools</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2015-02-01T00:00:00+08:00">February 01, 2015</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">分享</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=liloli&text=Linux+%E7%9A%84%E4%BD%BF%E7%94%A8+-+%E5%AD%98%E5%82%A8%20http%3A%2F%2Flocalhost%3A4000%2Ftools%2Ftools.storage%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Ftools%2Ftools.storage%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Ftools%2Ftools.storage%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Ftools%2Ftools.storage%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/tools/tools.shell/" class="pagination--pager" title="Linux 的使用 - Shell
+">向前</a>
+    
+    
+      <a href="http://localhost:4000/tools/tools.system/" class="pagination--pager" title="Linux 的使用 - 系统维护
+">向后</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">猜您还喜欢</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/time/" rel="permalink">Bash 脚本 - 时间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/storage/" rel="permalink">Bash 脚本 - 存储空间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/numbers/" rel="permalink">Bash 脚本 - 数字
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/input/" rel="permalink">Bash 脚本 - 输入
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+      <li><a href="https://twitter.com/liloli"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+      <li><a href="https://www.facebook.com/lilolibj"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+    
+    
+      <li><a href="https://github.com/liloli"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+  
+  
+  <script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/tools/tools.storage/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/tools/tools.storage"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://liloli.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+  </body>
+</html>

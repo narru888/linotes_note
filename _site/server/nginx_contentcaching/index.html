@@ -1,0 +1,906 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Nginx 的内容缓存 - LINOTES</title>
+<meta name="description" content="用简洁清晰的语言讨论技术">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Nginx 的内容缓存">
+<meta property="og:url" content="http://localhost:4000/server/nginx_contentcaching/">
+
+
+  <meta property="og:description" content="用简洁清晰的语言讨论技术">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/header/nginx.jpeg">
+
+
+
+  <meta name="twitter:site" content="@liloli">
+  <meta name="twitter:title" content="Nginx 的内容缓存">
+  <meta name="twitter:description" content="用简洁清晰的语言讨论技术">
+  <meta name="twitter:url" content="http://localhost:4000/server/nginx_contentcaching/">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="http://localhost:4000/assets/images/header/nginx.jpeg">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2016-01-03T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/server/nginx_contentcaching/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "Hawk Zhang",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- <link rel="stylesheet" href="/assets/css/vim.css"> -->
+
+
+
+  
+
+
+
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('http://localhost:4000/assets/images/header/nginx.jpeg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Nginx 的内容缓存
+
+        
+      </h1>
+      
+        <p class="page__lead">
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:liloli@gmail.com">
+            <meta itemprop="email" content="liloli@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Nginx 的内容缓存">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="January 03, 2016">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-copy"></i> Nginx 的内容缓存</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#启用响应缓存">启用响应缓存</a></li>
+  <li><a href="#nginx-缓存所涉及的进程">nginx 缓存所涉及的进程</a></li>
+  <li><a href="#从缓存中清除内容">从缓存中清除内容</a></li>
+  <li><a href="#局部缓存">局部缓存</a></li>
+  <li><a href="#合并的配置文件范例">合并的配置文件范例</a></li>
+</ul>
+            </nav>
+          </aside>
+        
+        <p>本节内容：如何启用并配置缓存，用于缓存从代理服务器接收的响应。</p>
+
+<h2 id="启用响应缓存">启用响应缓存</h2>
+
+<p>若想启用缓存，需在 <code class="highlighter-rouge">http</code> 中使用 <code class="highlighter-rouge">proxy_cache_path</code> 指令。其第一个强制参数为用于缓存内容的本地文件系统路径，第二个强制参数为 <code class="highlighter-rouge">keys_zone</code>，定义 <strong>共享内存区</strong>（shared memory zone）的名称和大小，该共享内存用于保存缓存项目的元数据：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">http</span> {
+    ...
+    <span class="n">proxy_cache_path</span> /<span class="n">data</span>/<span class="n">nginx</span>/<span class="n">cache</span> <span class="n">keys_zone</span>=<span class="n">one</span>:<span class="m">10</span><span class="n">m</span>;
+}
+</code></pre></div></div>
+
+<p>然后，想为哪些 context 来缓存服务器的响应，就在其中使用 <code class="highlighter-rouge">proxy_cache</code> 指令，用来指定内存区的名称，即 <code class="highlighter-rouge">proxy_cache_path</code> 指令中的 <code class="highlighter-rouge">keys_zone</code> 参数中的名称，此处为 <code class="highlighter-rouge">one</code>：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">http</span> {
+    ...
+    <span class="n">proxy_cache_path</span> /<span class="n">data</span>/<span class="n">nginx</span>/<span class="n">cache</span> <span class="n">keys_zone</span>=<span class="n">one</span>:<span class="m">10</span><span class="n">m</span>;
+    <span class="n">server</span> {
+        <span class="n">proxy_cache</span> <span class="n">one</span>;
+        <span class="n">location</span> / {
+            <span class="n">proxy_pass</span> <span class="n">http</span>://<span class="n">localhost</span>:<span class="m">8000</span>;
+        }
+    }
+}
+</code></pre></div></div>
+
+<p>注意，由 <code class="highlighter-rouge">keys_zone</code> 参数指定的大小，不会限制被缓存下来的响应数据的总量。被缓存的响应和其元数据的副本一同保存在文件系统中特定的文件中，若想限制被缓存的响应数据的总量，可以在 <code class="highlighter-rouge">proxy_cache_path</code> 指令中使用 <code class="highlighter-rouge">max_size</code> 参数。</p>
+
+<h2 id="nginx-缓存所涉及的进程">nginx 缓存所涉及的进程</h2>
+
+<p>有两种特殊的 nginx 进程与缓存相关：</p>
+
+<h4 id="缓存管理器">缓存管理器</h4>
+
+<p>cache manager，缓存管理器会阶段性地激活，来检查缓存的状态。如果缓存大小超过了 <code class="highlighter-rouge">max_size</code> 参数的限制，缓存管理器会清除最早的数据。在两次缓存管理器激活期间，缓存的数据可以临时超过限制。</p>
+
+<h4 id="缓存加载器">缓存加载器</h4>
+
+<p>cache loader，缓存加载器只在 nginx 启动之后运行一次。它会把之前缓存数据的元信息加载到共享内存区。nginx 启动之后，如果一次性加载全部缓存，会消耗有效的资源，降低 nginx 的性能。为了避免这种情况，可以在 <code class="highlighter-rouge">proxy_cache_path</code> 指令中使用以下指令，来迭代加载缓存：</p>
+
+<ul>
+  <li><code class="highlighter-rouge">loader_threshold</code> ： 迭代的时长，以毫秒计，默认为 200 ms。</li>
+  <li><code class="highlighter-rouge">loader_files</code> ：每次迭代期间可加载的最大文件数，默认为 100 个。</li>
+  <li><code class="highlighter-rouge">loader_sleeps</code>  ：迭代之间的延迟，以毫秒计，默认为 50 ms。</li>
+</ul>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">proxy_cache_path</span> /<span class="n">data</span>/<span class="n">nginx</span>/<span class="n">cache</span> <span class="n">keys_zone</span>=<span class="n">one</span>:<span class="m">10</span><span class="n">m</span> <span class="n">loader_threshold</span>=<span class="m">300</span> <span class="n">loader_files</span>=<span class="m">200</span>;
+</code></pre></div></div>
+
+<p>上例中，每次迭代持续 300 毫秒，或直到加载满 200 个项目为止。</p>
+
+<h2 id="从缓存中清除内容">从缓存中清除内容</h2>
+
+<p>nginx 可以从缓存中清除过期的缓存文件，这对于防止同时提供网页内容的新版和旧版非常有必要。nginx 在收到一个特殊的 “清除” 请求时，会进行缓存的清理，该请求可能包含一个自定义的 HTTP 标头，也可能是 HTTP <code class="highlighter-rouge">PURGE</code> 方法。</p>
+
+<h4 id="如何配置以清除缓存">如何配置以清除缓存</h4>
+
+<p>现在，设定一个配置，把使用 HTTP <code class="highlighter-rouge">PURGE</code> 方法的请求标识出来，并删除匹配的网址。</p>
+
+<p>1. 在 <code class="highlighter-rouge">http {}</code> 中，创建一个新变量，如 <code class="highlighter-rouge">$purge_method</code> ，该变量依赖于 <code class="highlighter-rouge">$request_method</code> 变量：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">http</span> {
+    ...
+    <span class="n">map</span> $<span class="n">request_method</span> $<span class="n">purge_method</span> {
+        <span class="n">PURGE</span> <span class="m">1</span>;
+        <span class="n">default</span> <span class="m">0</span>;
+    }
+}
+</code></pre></div></div>
+
+<p>2. 在配置了缓存的 <code class="highlighter-rouge">location {}</code> 块中，使用 <code class="highlighter-rouge">proxy_cache_purge</code> 指令来指定一个清除缓存请求的条件。本例中是上一步中配置的 <code class="highlighter-rouge">$purge_method</code>。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">server</span> {
+    <span class="n">listen</span>      <span class="m">80</span>;
+    <span class="n">server_name</span> <span class="n">www</span>.<span class="n">example</span>.<span class="n">com</span>;
+
+    <span class="n">location</span> / {
+        <span class="n">proxy_pass</span>  <span class="n">https</span>://<span class="n">localhost</span>:<span class="m">8002</span>;
+        <span class="n">proxy_cache</span> <span class="n">mycache</span>;
+
+        <span class="n">proxy_cache_purge</span> $<span class="n">purge_method</span>;
+    }
+}
+</code></pre></div></div>
+
+<h4 id="发送清除命令">发送清除命令</h4>
+
+<p>配置了 <code class="highlighter-rouge">proxy_cache_purge</code> 以后，需要发送一个特殊的请求来清除缓存。可以使用多个工具，包括 <code class="highlighter-rouge">curl</code> 命令：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl <span class="nt">-X</span> PURGE <span class="nt">-D</span> – <span class="s2">"https://www.example.com/*"</span>
+HTTP/1.1 204 No Content
+Server: nginx/1.15.0
+Date: Sat, 19 May 2018 16:33:04 GMT
+Connection: keep-alive
+</code></pre></div></div>
+
+<p>本例中，那些匹配该网址的资源会被清除，然而，这些缓存条目没有被完全清除：它们仍会呆在磁盘中，直到它们被删除。删除的原因可能是长时间不活跃（由 <code class="highlighter-rouge">proxy_cache_path</code> 指令中的 <code class="highlighter-rouge">inactive</code> 参数决定），可能是被缓存清理器清理掉了（由 <code class="highlighter-rouge">proxy_cache_path</code> 中的 <code class="highlighter-rouge">purger</code> 参数决定），也有可能是因为客户端尝试访问它们。</p>
+
+<h4 id="限制对清除命令的访问">限制对清除命令的访问</h4>
+
+<p>强烈建议要限制 “那些有权发送清除缓存请求的 IP 地址” 的数量：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">geo</span> $<span class="n">purge_allowed</span> {
+   <span class="n">default</span>         <span class="m">0</span>;  <span class="c"># 拒绝其它主机
+</span>   <span class="m">10</span>.<span class="m">0</span>.<span class="m">0</span>.<span class="m">1</span>        <span class="m">1</span>;  <span class="c"># 允许从 localhost 发送
+</span>   <span class="m">192</span>.<span class="m">168</span>.<span class="m">0</span>.<span class="m">0</span>/<span class="m">24</span>  <span class="m">1</span>;  <span class="c"># 允许从 10.0.0.0/24 发送
+</span>}
+
+<span class="n">map</span> $<span class="n">request_method</span> $<span class="n">purge_method</span> {
+   <span class="n">PURGE</span>   $<span class="n">purge_allowed</span>;
+   <span class="n">default</span> <span class="m">0</span>;
+}
+</code></pre></div></div>
+
+<p>本例中，nginx 会检查请求中是否含有 <code class="highlighter-rouge">PURGE</code> 方法，如果有，则分析客户端 IP  地址。如果地址在白名单里，则把 <code class="highlighter-rouge">$purge_method</code> 设置为 <code class="highlighter-rouge">$purge_allowed</code>，如果是 1 则允许清除缓存，如果是 0 则拒绝。</p>
+
+<h4 id="从缓存中彻底清除文件">从缓存中彻底清除文件</h4>
+
+<p>若想移除匹配的缓存文件，需要要激活一个特殊的 <code class="highlighter-rouge">cache purger</code> 进程，该进程会在所有缓存条目中迭代，然后把匹配的条目永久删除。</p>
+
+<p>需要在 <code class="highlighter-rouge">http {}</code> 中，给 <code class="highlighter-rouge">proxy_cache_path</code> 指令一个 <code class="highlighter-rouge">purger</code> 参数：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">proxy_cache_path</span> /<span class="n">data</span>/<span class="n">nginx</span>/<span class="n">cache</span> <span class="n">levels</span>=<span class="m">1</span>:<span class="m">2</span> <span class="n">keys_zone</span>=<span class="n">mycache</span>:<span class="m">10</span><span class="n">m</span> <span class="n">purger</span>=<span class="n">on</span>;
+</code></pre></div></div>
+
+<h4 id="清除缓存配置范例">清除缓存配置范例</h4>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">http</span> {
+    ...
+    <span class="n">proxy_cache_path</span> /<span class="n">data</span>/<span class="n">nginx</span>/<span class="n">cache</span> <span class="n">levels</span>=<span class="m">1</span>:<span class="m">2</span> <span class="n">keys_zone</span>=<span class="n">mycache</span>:<span class="m">10</span><span class="n">m</span> <span class="n">purger</span>=<span class="n">on</span>;
+
+    <span class="n">map</span> $<span class="n">request_method</span> $<span class="n">purge_method</span> {
+        <span class="n">PURGE</span> <span class="m">1</span>;
+        <span class="n">default</span> <span class="m">0</span>;
+    }
+
+    <span class="n">server</span> {
+        <span class="n">listen</span>      <span class="m">80</span>;
+        <span class="n">server_name</span> <span class="n">www</span>.<span class="n">example</span>.<span class="n">com</span>;
+
+        <span class="n">location</span> / {
+            <span class="n">proxy_pass</span>        <span class="n">https</span>://<span class="n">localhost</span>:<span class="m">8002</span>;
+            <span class="n">proxy_cache</span>       <span class="n">mycache</span>;
+            <span class="n">proxy_cache_purge</span> $<span class="n">purge_method</span>;
+        }
+    }
+
+    <span class="n">geo</span> $<span class="n">purge_allowed</span> {
+       <span class="n">default</span>         <span class="m">0</span>;
+       <span class="m">10</span>.<span class="m">0</span>.<span class="m">0</span>.<span class="m">1</span>        <span class="m">1</span>;
+       <span class="m">192</span>.<span class="m">168</span>.<span class="m">0</span>.<span class="m">0</span>/<span class="m">24</span>  <span class="m">1</span>;
+    }
+
+    <span class="n">map</span> $<span class="n">request_method</span> $<span class="n">purge_method</span> {
+       <span class="n">PURGE</span>   $<span class="n">purge_allowed</span>;
+       <span class="n">default</span> <span class="m">0</span>;
+    }
+}
+</code></pre></div></div>
+
+<h2 id="局部缓存">局部缓存</h2>
+
+<p>Byte-Range Caching，有人翻译为字节范围缓存，个人觉得不准确，局部缓存更贴切一些。</p>
+
+<p>初始填充缓存的操作有时候会花费很长时间，尤其对于大文件来说。比如，要想完成一个视频文件初始化某一部分的请求，开始下载该文件时，随后的请求都要等待整个文件下载完成，再放进缓存。</p>
+
+<p>nginx 使得 <strong>缓存局部请求</strong> 成为可能，它的缓存切片模块可以把文件分割成切片，然后用切片逐渐地填充进缓存。每个局部请求都会选择特定的切片，如果请求的这部分还没有被缓存，就马上放进去。所有其他对该部分的请求都从缓存读取数据。</p>
+
+<h4 id="如何启用局部缓存">如何启用局部缓存</h4>
+
+<p>1. 确保 nginx 编译时包含了缓存切片模块 Cache Slice。</p>
+
+<p>2. 用 <code class="highlighter-rouge">slice</code> 指令来指定切片大小。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">location</span> / {
+    <span class="n">slice</span>  <span class="m">1</span><span class="n">m</span>;
+}
+</code></pre></div></div>
+
+<p>选择的大小要能使切片可以快速地下载。如果过小，会过多地使用内存，处理请求时会有大量的文件描述符被打开；如果过大，会造成延迟。</p>
+
+<p>3. 把 <code class="highlighter-rouge">$slice_range</code> 变量添加到 <code class="highlighter-rouge">proxy_cache_key</code> 指令中。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">proxy_cache_key</span> $<span class="n">uri</span>$<span class="n">is_args</span>$<span class="n">args</span>$<span class="n">slice_range</span>;
+</code></pre></div></div>
+
+<p>4. 为缓存代码 206 设定缓存时间。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">proxy_cache_valid</span> <span class="m">200</span> <span class="m">206</span> <span class="m">1</span><span class="n">h</span>;
+</code></pre></div></div>
+
+<p>5. 在 <code class="highlighter-rouge">Ranger</code> 标头字段中指定 <code class="highlighter-rouge">$slice_range</code> 变量，以允许向代理服务器传递局部请求。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">proxy_set_header</span>  <span class="n">Range</span> $<span class="n">slice_range</span>;
+</code></pre></div></div>
+
+<h5 id="完整配置">完整配置：</h5>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">location</span> / {
+    <span class="n">slice</span>             <span class="m">1</span><span class="n">m</span>;
+    <span class="n">proxy_cache</span>       <span class="n">cache</span>;
+    <span class="n">proxy_cache_key</span>   $<span class="n">uri</span>$<span class="n">is_args</span>$<span class="n">args</span>$<span class="n">slice_range</span>;
+    <span class="n">proxy_set_header</span>  <span class="n">Range</span> $<span class="n">slice_range</span>;
+    <span class="n">proxy_cache_valid</span> <span class="m">200</span> <span class="m">206</span> <span class="m">1</span><span class="n">h</span>;
+    <span class="n">proxy_pass</span>        <span class="n">http</span>://<span class="n">localhost</span>:<span class="m">8000</span>;
+}
+</code></pre></div></div>
+
+<p>注意，如果启用了缓存切片，初始化的文件就不允许修改。</p>
+
+<h2 id="合并的配置文件范例">合并的配置文件范例</h2>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">http</span> {
+    ...
+    <span class="n">proxy_cache_path</span> /<span class="n">data</span>/<span class="n">nginx</span>/<span class="n">cache</span> <span class="n">keys_zone</span>=<span class="n">one</span>:<span class="m">10</span><span class="n">m</span> <span class="n">loader_threshold</span>=<span class="m">300</span>
+                     <span class="n">loader_files</span>=<span class="m">200</span> <span class="n">max_size</span>=<span class="m">200</span><span class="n">m</span>;
+
+    <span class="n">server</span> {
+        <span class="n">listen</span> <span class="m">8080</span>;
+        <span class="n">proxy_cache</span> <span class="n">mycache</span>;
+
+        <span class="n">location</span> / {
+            <span class="n">proxy_pass</span> <span class="n">http</span>://<span class="n">backend1</span>;
+        }
+
+        <span class="n">location</span> /<span class="n">some</span>/<span class="n">path</span> {
+            <span class="n">proxy_pass</span> <span class="n">http</span>://<span class="n">backend2</span>;
+            <span class="n">proxy_cache_valid</span> <span class="n">any</span> <span class="m">1</span><span class="n">m</span>;
+            <span class="n">proxy_cache_min_uses</span> <span class="m">3</span>;
+            <span class="n">proxy_cache_bypass</span> $<span class="n">cookie_nocache</span> $<span class="n">arg_nocache</span>$<span class="n">arg_comment</span>;
+        }
+    }
+}
+</code></pre></div></div>
+
+<p>本例中，两个 location 使用了相同的缓存，却是以不同的方式。</p>
+
+<p>因为来自 backend1 的响应很少会变化，所以没有使用缓存控制的指令。第一个请求产生后，响应就被缓存，无限期保持有效。</p>
+
+<p>对比之下，那些针对 backend2 请求的响应会频繁地变化，因此，它们的有效期只持续 1 分钟，同样的请求必须超过 3 次，才会被缓存。</p>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/nginx" class="page__taxonomy-item" rel="tag">nginx</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/缓存" class="page__taxonomy-item" rel="tag">缓存</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#server" class="page__taxonomy-item" rel="tag">server</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2016-01-03T00:00:00+08:00">January 03, 2016</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">分享</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=liloli&text=Nginx+%E7%9A%84%E5%86%85%E5%AE%B9%E7%BC%93%E5%AD%98%20http%3A%2F%2Flocalhost%3A4000%2Fserver%2Fnginx_contentcaching%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fserver%2Fnginx_contentcaching%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fserver%2Fnginx_contentcaching%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fserver%2Fnginx_contentcaching%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/server/nginx_basic/" class="pagination--pager" title="Nginx 基本功能
+">向前</a>
+    
+    
+      <a href="http://localhost:4000/server/nginx_intro/" class="pagination--pager" title="Nginx 入门
+">向后</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">猜您还喜欢</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/time/" rel="permalink">Bash 脚本 - 时间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/storage/" rel="permalink">Bash 脚本 - 存储空间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/numbers/" rel="permalink">Bash 脚本 - 数字
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/input/" rel="permalink">Bash 脚本 - 输入
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+      <li><a href="https://twitter.com/liloli"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+      <li><a href="https://www.facebook.com/lilolibj"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+    
+    
+      <li><a href="https://github.com/liloli"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+  
+  
+  <script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/server/nginx_contentcaching/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/server/nginx_contentcaching"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://liloli.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+  </body>
+</html>

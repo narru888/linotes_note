@@ -1,0 +1,2182 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Linux 基础 - 10. 进程 - LINOTES</title>
+<meta name="description" content="用简洁清晰的语言讨论技术">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Linux 基础 - 10. 进程">
+<meta property="og:url" content="http://localhost:4000/linux/linux.process/">
+
+
+  <meta property="og:description" content="用简洁清晰的语言讨论技术">
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/header/linux.jpg">
+
+
+
+  <meta name="twitter:site" content="@liloli">
+  <meta name="twitter:title" content="Linux 基础 - 10. 进程">
+  <meta name="twitter:description" content="用简洁清晰的语言讨论技术">
+  <meta name="twitter:url" content="http://localhost:4000/linux/linux.process/">
+
+  
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="http://localhost:4000/assets/images/header/linux.jpg">
+  
+
+  
+
+
+
+  <meta property="article:published_time" content="2015-01-10T00:00:00+08:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/linux/linux.process/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "Hawk Zhang",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- <link rel="stylesheet" href="/assets/css/vim.css"> -->
+
+
+
+  
+
+
+
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('http://localhost:4000/assets/images/header/linux.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Linux 基础 - 10. 进程
+
+        
+      </h1>
+      
+        <p class="page__lead">
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:liloli@gmail.com">
+            <meta itemprop="email" content="liloli@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/liloli" itemprop="sameAs">
+            <i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Linux 基础 - 10. 进程">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="January 10, 2015">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-upload"></i> 10. 进程</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#101-进程的概念">10.1 进程的概念</a>
+    <ul>
+      <li><a href="#1011-进程使用的资源">10.1.1 进程使用的资源</a></li>
+      <li><a href="#1012-进程的类型">10.1.2 进程的类型</a></li>
+    </ul>
+  </li>
+  <li><a href="#102-进程的创建">10.2 进程的创建</a>
+    <ul>
+      <li><a href="#1021-init-进程">10.2.1 init 进程</a></li>
+      <li><a href="#1022-fork--exec">10.2.2 Fork &amp; Exec</a></li>
+      <li><a href="#1023-进程是如何创建的">10.2.3 进程是如何创建的</a></li>
+    </ul>
+  </li>
+  <li><a href="#103-进程的调度">10.3 进程的调度</a>
+    <ul>
+      <li><a href="#1031-抢占与协作">10.3.1 抢占与协作</a></li>
+      <li><a href="#1032-实时">10.3.2 实时</a></li>
+      <li><a href="#1033-优先级">10.3.3 优先级</a></li>
+    </ul>
+  </li>
+  <li><a href="#104-程序与进程">10.4 程序与进程</a>
+    <ul>
+      <li><a href="#1041-程序">10.4.1 程序</a></li>
+      <li><a href="#1042-进程">10.4.2 进程</a></li>
+      <li><a href="#1043-关系">10.4.3 关系</a></li>
+    </ul>
+  </li>
+  <li><a href="#105-进程的基本元素">10.5 进程的基本元素</a>
+    <ul>
+      <li><a href="#1051-pid">10.5.1 PID</a></li>
+      <li><a href="#1052-内存">10.5.2 内存</a></li>
+      <li><a href="#1053-代码和数据">10.5.3 代码和数据</a></li>
+      <li><a href="#1054-栈区">10.5.4 栈区</a></li>
+      <li><a href="#1055-堆">10.5.5 堆</a></li>
+      <li><a href="#1056-文件描述符">10.5.6 文件描述符</a></li>
+      <li><a href="#1057-寄存器">10.5.7 寄存器</a></li>
+      <li><a href="#1058-内核状态">10.5.8 内核状态</a></li>
+      <li><a href="#1059-进程状态">10.5.9 进程状态</a></li>
+      <li><a href="#10510-优先级">10.5.10 优先级</a></li>
+      <li><a href="#10511-统计数据">10.5.11 统计数据</a></li>
+    </ul>
+  </li>
+  <li><a href="#106-进程管理">10.6 进程管理</a>
+    <ul>
+      <li><a href="#1061-与进程有关的系统调用">10.6.1 与进程有关的系统调用</a></li>
+      <li><a href="#1062-进程的数据结构">10.6.2 进程的数据结构</a></li>
+      <li><a href="#1063-进程的查看">10.6.3 进程的查看</a></li>
+      <li><a href="#lsof">lsof</a></li>
+      <li><a href="#pidof">pidof</a></li>
+      <li><a href="#1064-进程的工作目录">10.6.4 进程的工作目录</a></li>
+    </ul>
+  </li>
+  <li><a href="#107-进程的角色">10.7 进程的角色</a></li>
+  <li><a href="#108-进程间通信机制">10.8 进程间通信机制</a></li>
+  <li><a href="#109-作业控制">10.9 作业控制</a>
+    <ul>
+      <li><a href="#1091-会话与进程组">10.9.1 会话与进程组</a></li>
+      <li><a href="#1092-作业控制的基本概念">10.9.2 作业控制的基本概念</a></li>
+      <li><a href="#1093-作业控制的方式">10.9.3 作业控制的方式</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <p>对于操作系统而言，进程是核心之核心，整个现代操作系统的根本，就是以进程为单位在执行任务。</p>
+
+<h2 id="101-进程的概念">10.1 进程的概念</h2>
+
+<p class="notice--info">进程，是具有一定独立功能的程序关于某个数据集合上的一次运行活动，是系统进行资源分配和调度的一个独立单位，是操作系统结构的基础。它的执行需要系统分配资源、创建实体之后，才能进行。</p>
+
+<ul>
+  <li>进程是程序的一个执行实例</li>
+  <li>进程是正在执行的程序</li>
+  <li>进程是能分配处理器并由处理器执行的实体</li>
+</ul>
+
+<p>对于操作系统而言，进程是核心之核心，整个现代操作系统的根本，就是以进程为单位在执行任务。系统的管理架构也是基于进程层面的。</p>
+
+<p>进程是独立的任务，每个任务都有自己的权利和责任。</p>
+
+<p>每个单独的进程都运行在 <strong>自己的虚拟地址空间</strong> 中，除了通过安全的、内核管理的机制外，不能够与另一个进程交互。如果一个进程崩溃，它不会导致系统中的另一个进程崩溃。每个进程只能 <strong>执行自己的代码</strong> 和 <strong>访问自己的数据及栈区</strong>。</p>
+
+<h3 id="1011-进程使用的资源">10.1.1 进程使用的资源</h3>
+
+<p>在进程的生命周期中，它将使用许多系统资源：</p>
+
+<ul>
+  <li>使用系统中的 <strong>CPU</strong> 来运行其指令，使用 <strong>物理内存</strong> 来保存进程及其数据</li>
+  <li>在 <strong>文件系统</strong> 中打开并使用文件</li>
+  <li>直接或间接地使用 <strong>物理设备</strong></li>
+</ul>
+
+<p>Linux 必须跟踪进程本身和它拥有的系统资源，以便能够公平地管理所有进程。</p>
+
+<p>每一个任务（进程）被创建时，系统会为它分配存储空间等必要资源，然后在内核管理区为该进程创建管理节点，以便后来控制和调度该任务的执行。</p>
+
+<p>进程真正进入执行阶段，还需要获得 CPU 的使用权，这一切都是操作系统掌管着，也就是所谓的调度，在各种条件满足（资源与 CPU 使用权均获得）的情况下，启动进程的执行过程。</p>
+
+<p>除 CPU 而外，一个很重要的资源就是存储器了，系统会为每个进程分配独有的存储空间，当然包括它特别需要的其它资源，比如写入时外部设备是可使用状态等等。</p>
+
+<h3 id="1012-进程的类型">10.1.2 进程的类型</h3>
+
+<p>有些进程是与终端关联的，而有些不是。</p>
+
+<h4 id="用户进程">用户进程</h4>
+
+<p>User Process</p>
+
+<p>系统中的大部分进程都是用户进程，这类进程是由普通用户初始化的，<strong>运行于用户空间</strong>。除非进程运行时被授予特殊权限，普通用户进程对 “处理器或系统中不属于启动进程的用户的文件” 没有特殊访问权限。</p>
+
+<h4 id="守护进程">守护进程</h4>
+
+<p><strong>Daemon</strong> Process</p>
+
+<p>守护进程被设计于 <strong>后台运行</strong>，通常用于管理一些 <strong>持续运行的服务</strong>。与终端无关。</p>
+
+<p>在 <code class="highlighter-rouge">ps -e -f</code> 返回信息中，<code class="highlighter-rouge">tty</code> 字段中，用 <strong>?</strong> 表示的就是守护进程。</p>
+
+<p>守护进程可用于监听访问某服务的传入请求。如，<code class="highlighter-rouge">httpd</code> 服务用于监听访问网页的请求；也可用于基于时间完成某些任务，如 <code class="highlighter-rouge">crond</code>。</p>
+
+<p>但守护进程通常被超级用户做为服务来管理，一般使用专用的 <strong>系统帐号</strong> 来运行，通过限制这些帐号的权限来保护系统安全。</p>
+
+<p>要想修改守护进程的行为，需要修改对应的配置文件，并重启服务。</p>
+
+<h4 id="内核进程">内核进程</h4>
+
+<p>内核进程只在 <strong>内核空间</strong> 运行。</p>
+
+<p>内核进程对内核的数据结构有 <strong>完全的访问权限</strong>，因此它们更比守护进程更强大。</p>
+
+<p>要想修改内核进程的行为，必须重新编译内核。</p>
+
+<h2 id="102-进程的创建">10.2 进程的创建</h2>
+
+<h3 id="1021-init-进程">10.2.1 init 进程</h3>
+
+<h4 id="init_task"><code class="highlighter-rouge">init_task</code></h4>
+
+<p>系统启动时，运行于内核态，某种意义上说，只有一个进程，即初始化进程。与其它进程一样，初始化进程也有其栈、寄存器等，在其他进程被创建并运行之后，这些都被保存于初始化进程的进程描述符中。在系统初始化的最后阶段，初始化进程会启动一个内核线程 <strong><code class="highlighter-rouge">init</code></strong>，然后自己呆在一个空闲的循环中（idle loop）无所事事。每当没什么任务需要执行时，调度程序都会运行这个空闲进程。该空闲进程的进程描述符是唯一一个无需动态更新的，它是在内核编译时就静态定义好的，称为 <strong><code class="highlighter-rouge">init_task</code></strong>。</p>
+
+<h4 id="init"><code class="highlighter-rouge">init</code></h4>
+
+<p>这个 <code class="highlighter-rouge">init</code> 内核线程或进程的 PID 为 <strong>1</strong>，它是系统第一个真正意义上的进程。它会进行一系列的初始化设置（如加载根文件系统），然后使用 <code class="highlighter-rouge">fork</code> 和 <code class="highlighter-rouge">exec</code> 执行系统启动脚本，这些脚本又可以创建新进程，直到创建登陆进程。</p>
+
+<p>新进程是通过复制其它进程获得的。系统会在物理内存中，为复制出来的进程栈区分配一个新的进程描述符，占用一个或多个物理页。同时也创建新的 PID，并更新其 PPID，新的进程描述符会被添加到进程表中，由进程表中原进程的条目复制得来。</p>
+
+<p><code class="highlighter-rouge">init</code> 进程的另一个任务是 “<strong>收割</strong>”，即清除僵尸进程。在发现不正常的僵尸进程时，<code class="highlighter-rouge">init</code> 进程会模拟父进程来 <strong>调用 <code class="highlighter-rouge">wait</code> 来收割</strong>。</p>
+
+<blockquote>
+  <p><strong>【 收割 】</strong></p>
+
+  <p>进程通过执行 <code class="highlighter-rouge">exit</code> 系统调用可以主动终止运行，但此时在进程表中仍然有其条目，它此时需要其父进程来检查其退出状态。一旦父进程通过 <code class="highlighter-rouge">wait</code> 系统调用成功读取了这个退出状态，僵尸进程的条目就从进程表中清除了。这个过程称为 <strong>收割</strong>，形像地说更像收尸。</p>
+
+  <p>子进程总是要先成为一个僵尸，然后才能被从进程表清除掉。大多数情况下，系统正常运行时，僵尸进程会立即被其父进程调用 <code class="highlighter-rouge">wait</code> 来收割，否则如果进程长时间持续停留在僵尸状态，有可能会造成资源泄露。</p>
+</blockquote>
+
+<h3 id="1022-fork--exec">10.2.2 Fork &amp; Exec</h3>
+
+<p>新进程的创建是靠 <code class="highlighter-rouge">fork</code> 和 <code class="highlighter-rouge">exec</code> 这两个系统调用实现的。</p>
+
+<h4 id="fork">Fork</h4>
+
+<p>运行 <code class="highlighter-rouge">fork</code> 之后，操作系统会 <strong>创建一个新进程，与其父进程完全相同</strong>，包括进程状态、打开的文件、寄存器状态、内存分配（包含程序代码）等。</p>
+
+<p>系统调用返回值是唯一用来判断哪一个是父进程，哪一个是新进程的方法：</p>
+
+<p>父进程的返回值应该是子进程的 PID，而子进程的返回值应该是 0。</p>
+
+<p>此时，可以说进程已经 <code class="highlighter-rouge">fork</code> 完毕，我们有了父子两个进程。</p>
+
+<p>在复制进程时，Linux 也允许这两个进程 <strong>共享资源</strong>，如 <strong>文件、信号处理器、虚拟内存</strong> 等。当共享这些资源时，它们相对应的 <code class="highlighter-rouge">count</code> 字段会增加，以便系统不会随意释放这些资源，直到两个进程都不再使用它们。</p>
+
+<h4 id="exec">Exec</h4>
+
+<p>fork 是从现有进程创建新进程的手段，如果要 <strong>从原进程创建出一个与之无关的进程</strong> 的话就要使用 <code class="highlighter-rouge">exec</code>。</p>
+
+<p><code class="highlighter-rouge">exec</code> 会用一个程序二进制的信息替换当前正在运行的进程的内容，即 <strong>用新程序直接覆盖</strong> （overlay）所有的内存。</p>
+
+<h3 id="1023-进程是如何创建的">10.2.3 进程是如何创建的</h3>
+
+<h4 id="clone">clone</h4>
+
+<p>在内核中，<code class="highlighter-rouge">fork</code> 实际上是由系统调用 <code class="highlighter-rouge">clone</code> 完成的，通过 <code class="highlighter-rouge">clone</code> 可以准确地 <strong>指定</strong> 需要把 <strong>哪些</strong> 部分 <strong>复制</strong> 到新进程中，<strong>哪些</strong> 部分可以两个进程 <strong>共享</strong>。</p>
+
+<h4 id="线程">线程</h4>
+
+<p>当 <code class="highlighter-rouge">fork</code> 复制进程的属性时，如果没有复制内存，将意味着 <strong>父进程和子进程要共享相同的内存</strong>，内存中包含程序码和数据。此时，该子进程就可以称之为 <strong>线程</strong> 了。</p>
+
+<p><img src="/assets/images/threads.png" alt="image-center" class="align-center" /></p>
+
+<h4 id="copy-on-write">Copy On Write</h4>
+
+<p>写时复制，COW 😈</p>
+
+<p>调用 <code class="highlighter-rouge">fork</code> 复制进程的全部内存是一个很耗时的操作。针对该操作的一个优化方案就是写时复制，与线程的概念类似，一开始时不复制内存，<strong>两进程先共享内存</strong>。如果一个进程 <strong>需要写入内存时</strong>（有不同数据产生），它此时才需要独立的内存空间，此时 <strong>才复制</strong> 内存。</p>
+
+<p>写时复制对于 <code class="highlighter-rouge">exec</code> 也有一个好处，因为 <code class="highlighter-rouge">exec</code> 是用新程序直接覆盖所有的内存，复制原内存就完全没必要了。</p>
+
+<h4 id="父子进程的区别">父子进程的区别</h4>
+
+<p>虽然是副本，但子进程与父进程还是有一定区别：</p>
+
+<ul>
+  <li>子进程有自己的 PID</li>
+  <li>子进程的父进程的 ID 为父进程的 PID</li>
+  <li>子进程不继承内存锁</li>
+  <li>子进程的资源占用和 CPU 时间计数器被清零</li>
+  <li>子进程的挂起的信号初始是空的</li>
+  <li>子进程不继承计时器</li>
+  <li>子进程不继承异步 I/O 操作</li>
+</ul>
+
+<h2 id="103-进程的调度">10.3 进程的调度</h2>
+
+<p>内核中用来跟踪所有进程的部分叫调度程序（scheduler），是它来调度下一个要执行哪个进程，为就绪态的进程分配处理器时间。</p>
+
+<p>调度程序形成了 Linux <strong>多任务的核心</strong>，使用 <strong>基于优先级调度机制</strong> 来选择进程来运行。</p>
+
+<p>调度机制有很多，各不相同。不同的调度机制是为了实现不同的工作目的。</p>
+
+<h3 id="1031-抢占与协作">10.3.1 抢占与协作</h3>
+
+<p>调度机制宽泛地可以分为两类：</p>
+
+<h4 id="协作">协作</h4>
+
+<p>Co-operative，协作调度。<strong>当前运行的进程自愿地放弃执行</strong>，以允许另一个进程来运行。</p>
+
+<p>最明显的缺点是：某个进程要是耍赖，不愿意放弃执行的话，当然主要可能因为程序设计的 bug，会形成无限循环，其它进程都无法运行了。</p>
+
+<h4 id="抢占">抢占</h4>
+
+<p>Preemptive，抢占调度。<strong>进程被迫中断</strong>，停止运行，以允许另一进程运行。</p>
+
+<p>每个进程都获得一个 <strong>时间片</strong>（time-slice）来使用，时间一到，<strong>计时器就被重置</strong>，转给下一个进程运行。</p>
+
+<h3 id="1032-实时">10.3.2 实时</h3>
+
+<p>系统为每个进程分配一个 <code class="highlighter-rouge">nice</code> 值，调度程序会根据该址来调整进程的优先级 PR，<code class="highlighter-rouge">nice</code> 值越高，通常越能获得高的优先级。</p>
+
+<h3 id="1033-优先级">10.3.3 优先级</h3>
+
+<p>Linux 内核的调度程序会根据优先级对进程进行动态调度。</p>
+
+<p>在 <code class="highlighter-rouge">top</code> 命令返回的信息中，一个字段为 <strong><code class="highlighter-rouge">NI</code></strong>，代表 nice value，即 <strong>nice 值</strong>。另一字段为 <strong><code class="highlighter-rouge">PR</code></strong>，代表 priority，即 <strong>优先级</strong>。</p>
+
+<h4 id="pr-值">PR 值</h4>
+
+<p>PR 是 <strong>内核使用</strong> 的进程的 <strong>真正优先级</strong>，<strong>用户无法直接调整</strong>。</p>
+
+<p>PR 级别为 1 ~ 139。</p>
+
+<p>1 ~ 99 分配给 <strong>实时进程</strong>，缩写为 <code class="highlighter-rouge">RT</code>，即 real time。</p>
+
+<p>100 ~ 139 分配给 <strong>普通进程</strong>。</p>
+
+<h5 id="普通进程">普通进程</h5>
+
+<p>普通进程拥有 <strong>静态优先级</strong> 和 <strong>动态优先级</strong>：</p>
+
+<p>对于普通进程来说，在某些运行时段，其优先级是不变的。此时，可以说它拥有静态优先级。</p>
+
+<p>而在分配给 CPU 运行时，其优先级变高，从 CPU 撤下时，优先级又变低。</p>
+
+<h5 id="实时进程">实时进程</h5>
+
+<p>对于实时进程来说，<strong>优先级是不变的</strong>。因为实时进程应该 <strong>总是有权在 CPU 运行</strong>。</p>
+
+<h5 id="修改-pr">修改 PR</h5>
+
+<p>要想修改优先级，有两个主要的机制：</p>
+
+<ul>
+  <li><strong>直接修改 PR 值</strong>，适用于 <strong>实时进程</strong></li>
+  <li><strong>使用 NI 值间接修改优先级</strong>，只适合 <strong>普通进程</strong></li>
+</ul>
+
+<h4 id="ni-值">NI 值</h4>
+
+<p>NI 是一个另一个衡量进程优先级的概念，它是一个 <strong>用户空间</strong> 的概念。</p>
+
+<p>取值范围为 -20 ~ 19。-20 为最高，默认为 0，19 为最低。</p>
+
+<ul>
+  <li>一般用户仅可调整自己进程的 NI 值，0 ~ 19</li>
+  <li>一般用户仅可将 NI 值越调越高</li>
+</ul>
+
+<h4 id="pr-与-ni-的关系">PR 与 NI 的关系</h4>
+
+<p>通常情况下，可以使用公式 <code class="highlighter-rouge">PR = 20 + NI</code> 来计算优先级。</p>
+
+<p>因此，对于 <code class="highlighter-rouge">-20</code> 到 <code class="highlighter-rouge">19</code> 的范围，它被映射到 <code class="highlighter-rouge">100</code> 到 <code class="highlighter-rouge">139</code>，这是普通进程的优先级。</p>
+
+<p>理论上说，<strong>内核自己可以修改 PR 值</strong>，但无法修改 NI 值。如果某个进程消耗了过多的 CPU，它会降低其优先级；或者发现某个进程长时间因为优先级低于别人，它会提高其优先级。这些情况下，PR 值会被内核修改，而 NI 值保持不变，公式此时并不适用。因此，<strong>内核把 NI 值只做为参考</strong>，究竟要给进程分配什么优先级，最终还是要由内核根据实际情况自己决定。</p>
+
+<p>内核修改进程优先级的具体原则还不太清楚，但我们了解的是，修改 NI 值的效果，在不同的进程调度机制下是不同的。</p>
+
+<h4 id="修改实时进程优先级">修改实时进程优先级</h4>
+
+<h5 id="chrt-命令"><code class="highlighter-rouge">CHRT</code> 命令</h5>
+
+<p>可以使用 shell 命令 <code class="highlighter-rouge">chrt</code> 来修改实时进程的优先级。其默认动作为运行一个新命令。</p>
+
+<p>语法：	<code class="highlighter-rouge">chrt priority command [arguments]</code></p>
+
+<p><code class="highlighter-rouge">priority</code> 为运行命令时想要使用的优先级（PR 值），取值范围 1 ~ 99.</p>
+
+<p>范例：</p>
+
+<p><code class="highlighter-rouge">chrt 20 my_code</code>	以实时优先级 20 运行 my_code</p>
+
+<p><code class="highlighter-rouge">chrt -r -p priority pid</code>	为现存的进程设置新的优先级</p>
+
+<p><code class="highlighter-rouge">chrt -p pid</code>	查看现存进程的实时属性，包括调度策略及调度优先级</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# chrt <span class="nt">-p</span> 1294
+pid 1294<span class="s1">'s current scheduling policy: SCHED_OTHER
+pid 1294'</span>s current scheduling priority: 0
+</code></pre></div></div>
+
+<h5 id="使用-schedh-库">使用 <code class="highlighter-rouge">sched.h</code> 库</h5>
+
+<p>也可以使用 Linux 函数库 <code class="highlighter-rouge">sched.h</code> 来直接修改 PR 值。函数库有些函数可以用来修改运行中的进程的优先级。</p>
+
+<h4 id="修改普通进程优先级">修改普通进程优先级</h4>
+
+<h6 id="nice-命令"><code class="highlighter-rouge">NICE</code> 命令</h6>
+
+<p>使用 <code class="highlighter-rouge">nice</code> 命令可以修改 NI 值。</p>
+
+<p><code class="highlighter-rouge">nice -NI [COMMAND]</code>	以指定 NI 值运行普通进程</p>
+
+<p><code class="highlighter-rouge">nice -NI PID</code>	修改现有进程的 NI 值</p>
+
+<p><code class="highlighter-rouge">nice –35 2423</code>	如果指定的 NI 值超出有效范围，会自动使用最接近的值，本例将使用 <code class="highlighter-rouge">-20</code></p>
+
+<h6 id="使用-resourceh-库">使用 <code class="highlighter-rouge">resource.h</code> 库</h6>
+
+<p>也可以使用 <code class="highlighter-rouge">resource.h</code> 函数库来修改。</p>
+
+<h4 id="查看运行进程的优先级">查看运行进程的优先级</h4>
+
+<p>使用 <code class="highlighter-rouge">top</code> 命令来查看正在运行的进程的优先级。可以得到进程的 nice 值，字段名为 <strong>NI</strong>。</p>
+
+<p>另一个可以查看 nice 值的命令是 <code class="highlighter-rouge">ps</code>，如 <code class="highlighter-rouge">ps -o pid,comm,nice -p 594</code>。</p>
+
+<h4 id="为新进程设置优先级">为新进程设置优先级</h4>
+
+<p>使用 <code class="highlighter-rouge">nice</code> 命令以特定的优先级来执行程序或脚本，这样创建的进程就具有了指定的优先级。</p>
+
+<p><code class="highlighter-rouge">nice [-n 数字] command</code></p>
+
+<p><code class="highlighter-rouge">-n</code>   指定 nice 值</p>
+
+<p><code class="highlighter-rouge">nice -n -5 vim &amp;</code>	以较高优先级执行 vim</p>
+
+<p><code class="highlighter-rouge">nice -n 19 tar cvzf archive.tgz largefile</code>	以较低优先级打包</p>
+
+<h4 id="为现有进程修改优先级">为现有进程修改优先级</h4>
+
+<p>使用 <code class="highlighter-rouge">renice</code> 命令来修改现有进程的优先级。</p>
+
+<p><code class="highlighter-rouge">renice [number] PID</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>renice -5 14836
+14836 （process ID） old priority 10, new priority -5
+</code></pre></div></div>
+
+<p>被调整 nice 值的进程，其子进程会继承该 nice 值。</p>
+
+<h4 id="为特定用户指定永久优先级">为特定用户指定永久优先级</h4>
+
+<p>要想让特定用户的所有进程都使用固定的优先级，可以通过修改 <code class="highlighter-rouge">/etc/security/limits.conf</code> 文件实现。</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>语法： [username] [hard</td>
+      <td>soft] priority [nice value]</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>如 <code class="highlighter-rouge">backupuser hard priority 1</code></p>
+
+<h2 id="104-程序与进程">10.4 程序与进程</h2>
+
+<p><img src="/assets/images/program2process.png" alt="image-center" class="align-center" /></p>
+
+<h3 id="1041-程序">10.4.1 程序</h3>
+
+<p>程序只是一组指令的有序集合，它本身没有任何运行的含义，只是一个 <strong>静态实体</strong>。</p>
+
+<p>程序通常为 <strong>二进制文件</strong>，保存在储存介质中（硬盘、光盘、软盘、磁带等），以 <strong>实体文件</strong> 的形态存在。</p>
+
+<p>可执行程序以 <strong>镜像</strong> 形式存在。镜像是一个 <strong>执行环境</strong>，其中包含程序、相关数据、打开文件的状态以及默认路径。有些镜像的属性如 UID，可以直接查看，而其它属性如子进程列表等，只能通过系统调用来查看。</p>
+
+<h3 id="1042-进程">10.4.2 进程</h3>
+
+<p>进程是 <strong>程序在计算机上的一次执行活动</strong>。当你运行一个程序，你就启动了一个进程。</p>
+
+<p>进程是程序在某个数据集上的执行，是一个 <strong>动态实体</strong>。</p>
+
+<p>它因创建而产生，因调度而运行，因等待资源或事件而被处于等待状态，因完成任务而被撤消，反映了一个程序在一定的数据集上运行的全部动态过程。</p>
+
+<h3 id="1043-关系">10.4.3 关系</h3>
+
+<p>用户的执行触发磁盘中的程序，触发后加载到内存中成为一个实体，即进程。</p>
+
+<p>进程是一个动态的实体，随着处理器执行的机器代码指令不断变化。</p>
+
+<h2 id="105-进程的基本元素">10.5 进程的基本元素</h2>
+
+<p><img src="/assets/images/process.elements.png" alt="image-center" class="align-center" /></p>
+
+<h3 id="1051-pid">10.5.1 PID</h3>
+
+<p>进程 ID，PID 是由操作系统分配的，对于每个运行的进程来说都是独一无二的。</p>
+
+<h3 id="1052-内存">10.5.2 内存</h3>
+
+<p>在进程的内存中，保存着所有的程序代码、变量、其它。</p>
+
+<p>其中部分内存可在进程间共享，即共享内存。</p>
+
+<p>为了避免频繁地使用 <code class="highlighter-rouge">read()</code>、<code class="highlighter-rouge">write()</code> 这样的命令来打开文件，系统使用更有效率的办法，通过 <code class="highlighter-rouge">mmaping</code> 把磁盘上的文件映射到内存中，映射的这个内存区块有读、写、执行的权限，需要内核持续跟踪，以保证系统安全。</p>
+
+<h3 id="1053-代码和数据">10.5.3 代码和数据</h3>
+
+<p>进程可以进一步划分为 <strong>程序代码</strong> 和 <strong>数据</strong>，它们应该 <strong>分开保存</strong>，因为它们需要来自操作系统的 <strong>不同权限</strong>，并且分离有助于共享代码。</p>
+
+<ul>
+  <li><strong>程序代码</strong> 需要的权限：<strong>读、执行</strong>，通常不写</li>
+  <li><strong>数据</strong>（变量）需要的权限：<strong>读、写</strong>，禁止执行</li>
+</ul>
+
+<h3 id="1054-栈区">10.5.4 栈区</h3>
+
+<h3 id="1055-堆">10.5.5 堆</h3>
+
+<h3 id="1056-文件描述符">10.5.6 文件描述符</h3>
+
+<p>内核为每个进程保存 <strong>各自的文件描述符</strong>。</p>
+
+<p>文件描述符也有权限。如，有些文件只能读不能写，当文件被打开时，操作系统会在文件描述符中保留对该文件的进程权限记录，并且不允许进程执行任何它不应该执行的操作。</p>
+
+<h3 id="1057-寄存器">10.5.7 寄存器</h3>
+
+<h3 id="1058-内核状态">10.5.8 内核状态</h3>
+
+<h3 id="1059-进程状态">10.5.9 进程状态</h3>
+
+<h3 id="10510-优先级">10.5.10 优先级</h3>
+
+<h3 id="10511-统计数据">10.5.11 统计数据</h3>
+
+<p>内核会跟踪每个进程的行为，以举会帮助其决策，如何控制进程的行为。</p>
+
+<h2 id="106-进程管理">10.6 进程管理</h2>
+
+<p>在 Linux 中，<code class="highlighter-rouge">task</code> 和 <code class="highlighter-rouge">process</code> 这两个名词是可以互换的。即 <strong>任务和进程是一回事</strong>。</p>
+
+<h3 id="1061-与进程有关的系统调用">10.6.1 与进程有关的系统调用</h3>
+
+<p>内核的进程管理子系统在管理进程时，常用到的系统调用为：</p>
+
+<ul>
+  <li><strong><code class="highlighter-rouge">fork</code></strong>：为镜像 <strong>生成两个副本</strong>，父进程和子进程</li>
+  <li><strong><code class="highlighter-rouge">wait</code></strong>：允许 <strong>父进程暂停，直到子进程完成</strong></li>
+  <li><strong><code class="highlighter-rouge">exec</code></strong>：<strong>用新的进程代替原来的进程</strong>，但进程的 <strong>PID 保持不变</strong>。可以认为该调用并未创建新的进程，只是替换了（overlay）原来进程上下文的内容。原进程的代码段、数据段、栈段被新进程的所取替。</li>
+  <li><strong><code class="highlighter-rouge">exit</code></strong>：<strong>主动终止进程</strong>。进程会停止余下的所有操作，清除包括进程描述符在内的各种数据结构，终止本进程的运行。</li>
+</ul>
+
+<h3 id="1062-进程的数据结构">10.6.2 进程的数据结构</h3>
+
+<p>Linux 中，<strong>每个进程用一个进程描述符来表示</strong>，用来管理系统中的进程。</p>
+
+<h4 id="进程描述符">进程描述符</h4>
+
+<p>Process Descriptor，PD</p>
+
+<p>它是操作系统的概念，又称 <strong>进程控制块</strong>，Process Control Block，PCB。都是一回事，都是代表一种 <strong>数据结构</strong>。</p>
+
+<p>这个概念在 Linux 中称为任务数据结构，即 <strong><code class="highlighter-rouge">task_struct</code></strong>，是 Task Structure 的缩写，也就是指进程数据结构（Linux 早期 task 和 process 可混用）。</p>
+
+<p class="notice--success">为了陈述简便、准确，个人喜欢使用 <strong>进程描述符</strong> 这个叫法。😈</p>
+
+<p>进程描述符中包含与单个进程有关的 <strong>所有信息</strong>，会被 <strong>加载到内存中</strong>，内核用来 <strong>控制和管理进程</strong>，追踪其执行状态。</p>
+
+<p>进程描述符定义在头文件 <code class="highlighter-rouge">include/linux/sched.h</code> 中。</p>
+
+<p>因为存放了很多信息，它 <strong>非常复杂</strong>，当进程状态发生变化时，操作系统必须 <strong>更新</strong> 这些信息。</p>
+
+<h5 id="进程描述符中常见内容">进程描述符中常见内容</h5>
+
+<ul>
+  <li>栈指针：进程状态切换时需更新</li>
+  <li>进程状态</li>
+  <li>PID</li>
+  <li>程序计数器：计数器中包含下一个要执行的指令的地址</li>
+  <li>虚拟内存：多数进程有虚拟内存（内核线程及守护进程没有），内核需要跟踪虚拟内存如果映射到物理内存</li>
+  <li>文件系统：指向每个进程打开的文件的指针，以及两个指向 VFS inodes 的指针（进程根目录、当前工作目录）</li>
+  <li>各种统计数据：任务号码、进程号码等。</li>
+  <li>调度信息：调度程序据此信息来判断应该运行哪个进程</li>
+  <li>IPC：Inter-Process Communication，进程间通信，主要方法有信号、管道、socket、共享内存</li>
+  <li>链接：指向父进程的指针，指向兄弟进程的指针，指向子进程的指针</li>
+  <li>各种时间统计：内核跟踪进程创建时间以及在其生命周期中消耗的 CPU 时间，内核态花费时间，用户态花费时间</li>
+  <li>各种定时器：一次性定时器，或间隔定时器。进程可以用系统调用来设置定时器，时间一到就给自己发信号</li>
+  <li>进程上下文：进程的寄存器、栈等</li>
+</ul>
+
+<h4 id="进程表">进程表</h4>
+
+<p>Process Table</p>
+
+<p>同样是操作系统的概念。进程表是操作系统在 <strong>内存中</strong> 维护的一个数据结构，其中保存了操作系统管理的 <strong>所有进程</strong>，每个进程为一个条目。</p>
+
+<p>进程表中通常包含每个进程的以下信息：</p>
+
+<ul>
+  <li>PID</li>
+  <li>进程拥有者</li>
+  <li>进程优先级</li>
+  <li>每个进程的环境变量</li>
+  <li>PPID</li>
+  <li>指向进程中可执行机器码的指针</li>
+</ul>
+
+<p><code class="highlighter-rouge">ps -e -f</code> 会查看进程表的所有数据。</p>
+
+<h4 id="进程上下文">进程上下文</h4>
+
+<p>当一个 <strong>进程在执行时</strong>，CPU 的 <strong>所有寄存器中的值</strong>，进程的状态以及栈中的内容被称为该进程的上下文。</p>
+
+<p>当内核需要切换至另一个进程时，需要保存当前进程的所有状态，即保存当前进程的上下文，以便再次执行该进程时，能够恢复到切换时的状态，重新执行下去。</p>
+
+<p>进程的上下文信息包括：</p>
+
+<ul>
+  <li>进程id</li>
+  <li>指向可执行文件的指针</li>
+  <li>栈</li>
+  <li>静态和动态分配的变量的内存</li>
+  <li>处理器寄存器</li>
+</ul>
+
+<p>进程上下文的多数信息都与 <strong>地址空间的描述</strong> 有关。</p>
+
+<p>进程的上下文 <strong>使用很多系统资源</strong>，而且会 <strong>花费一些时间来</strong> 从一个进程的 <strong>上下文切换</strong> 到另一个进程的上下文。</p>
+
+<h4 id="进程的状态">进程的状态</h4>
+
+<p>一个进程在其生存期内，可处于一组不同的状态下，称为进程状态。</p>
+
+<figure class="">
+  <img src="http://localhost:4000/assets/images/process.states.png" alt="进程状态" />
+  
+</figure>
+
+<p>进程状态保存在进程描述符的 <strong><code class="highlighter-rouge">state</code></strong> 字段中。</p>
+
+<p>查询当前版本支持的进程状态：</p>
+
+<p><code class="highlighter-rouge">grep TASK_ /usr/src/kernels/&lt;VERSION&gt;/include/linux/sched.h</code></p>
+
+<p><code class="highlighter-rouge">grep EXIT_ /usr/src/kernels/&lt;VERSION&gt;/include/linux/sched.h</code></p>
+
+<p class="notice--info">关于对进程状态的称呼，<code class="highlighter-rouge">ps</code> 的输出与源码中的定义并不完全一致。</p>
+
+<h5 id="运行状态">运行状态</h5>
+
+<p>在 <code class="highlighter-rouge">ps</code> 和 <code class="highlighter-rouge">top</code> 等命令的返回信息中，用标签 <strong>R</strong> 表示。</p>
+
+<p class="notice--info">标签 <strong>R</strong> 同时代表了 <strong>Running</strong> 和 <strong>Runnable</strong> 两个状态。</p>
+
+<h6 id="running">Running</h6>
+
+<p>进程 <strong>正在被 CPU 执行</strong>，可能在内核态或用户态运行。</p>
+
+<h6 id="runnable">Runnable</h6>
+
+<p>也叫 <strong>就绪态</strong>。</p>
+
+<p>进程需要的所有 <strong>系统资源全部就位</strong>，因此进程已经 <strong>准备就绪</strong>，只是此时 CPU 不可用，一旦可用，随时可以被调度程序拿去执行。</p>
+
+<p>进程描述符中的 <code class="highlighter-rouge">state</code> 字段描述了进程当前状态：</p>
+
+<p><code class="highlighter-rouge">p-&gt;state = TASK_RUNNING</code></p>
+
+<p><code class="highlighter-rouge">p</code> 代表进程，<code class="highlighter-rouge">state</code> 是状态标签，<code class="highlighter-rouge">TASK_RUNNING</code> 为标签的值。</p>
+
+<h5 id="睡眠状态">睡眠状态</h5>
+
+<p>当 <strong>进程需要的资源现在尚不可用</strong> 时，它便进入睡眠状态。</p>
+
+<p>可以是 <strong>自主进入</strong>，也可以 <strong>由内核控制进入</strong>。</p>
+
+<p>进入睡眠状态意味着 <strong>进程立即放弃对 CPU 的访问</strong>。</p>
+
+<p>一旦其请求的资源变得可用，CPU 会收到一个信号，调度程序就会把进程置于运行或就绪状态。</p>
+
+<p>一个登陆 shell 可以如下地进入、退出睡眠状态：</p>
+
+<ul>
+  <li>键入一个命令，shell 进入睡眠状态，等待事件的发生</li>
+  <li>shell 进程在一个特殊的 <strong>等待通道</strong>（WCHAN）睡眠</li>
+  <li>事件发生时，如来自键盘的中断，等待通道中的所有进程苏醒</li>
+</ul>
+
+<p>可以通过 <code class="highlighter-rouge">ps -l</code> 可以 <strong>只查看等待通道中的进程</strong>，<code class="highlighter-rouge">ps -el</code> 查看所有进程。如果进程处于睡眠状态，返回结果中的 <strong>WCHAN</strong> 字段会显示 <strong>进程在等待哪个系统调用</strong>。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# ps <span class="nt">-l</span>
+F S   UID    PID   PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
+4 S     0   1444   1239  0  80   0 - 29197 do_wai pts/1    00:00:00 bash
+                                           ^^^^^^
+</code></pre></div></div>
+
+<p>【 睡多久 】</p>
+
+<p>有时进程进入睡眠状态后会 <strong>持续一段时间</strong>，Linux 内核使用 <strong><code class="highlighter-rouge">sleep()</code></strong> 函数，该函数用一个时间值（秒数）做参数，用来设定睡眠的最小时间，这会导致 CPU 暂停执行该进程，转而继续执行其它进程，直到睡眠周期完成。睡眠周期结束后，调度程序把进程置于就绪状态，只要 CPU 空闲下来，进程即可进入运行状态。</p>
+
+<p>有些进程在生命周期开始时，它们总是先进入睡眠状态，等待着触发某些事件。一旦事件发生，这些进程就进入运行或就绪状态，然后，再返回睡眠状态。</p>
+
+<p>通过 <strong><code class="highlighter-rouge">fork</code> 生成进程以后</strong>，如果当前内存满足其需求，进程会进入就绪状态。但如果此时进程 <strong>需要的资源不可用</strong>，调度程序会将其 <strong>置于睡眠状态</strong>。如果是内存不足，<code class="highlighter-rouge">swapper</code> 进程会将其交换到磁盘上，在内存中将其清除掉。此时在内存中，该进程是处于睡眠状态的。</p>
+
+<h6 id="可中断睡眠">可中断睡眠</h6>
+
+<p>进程描述符中为 <code class="highlighter-rouge">TASK_INTERRUPTIBLE</code>，用标签 <strong>S</strong> 表示。</p>
+
+<p>进程处于等待队列中，当资源有效时，<strong>可由操作系统唤醒，也可由其他进程的信号唤醒</strong>。</p>
+
+<p>产生硬件中断、释放系统资源、发送信号均可以唤醒进程，进入运行状态。</p>
+
+<h6 id="不可中断睡眠">不可中断睡眠</h6>
+
+<p>进程描述符中为 <code class="highlighter-rouge">TASK_UNINTERRUPTIBLE</code>，用标签 <strong>D</strong> 表示。</p>
+
+<p>收到信号不会唤醒。</p>
+
+<p>适用场景：<strong>进程必需等待某个事件发生，期间不允许被中断</strong>。</p>
+
+<p class="notice--info">绝大多数情况下，进程处在睡眠状态时，总是应该能够响应异步信号的。但是该状态的进程不接受外来的任何信号，因此 <strong>无法用 <code class="highlighter-rouge">kill</code> 杀掉这些进程</strong>，这种情况下，一个可选的方法就是重启系统。</p>
+
+<p>处于该状态的进程 <strong>通常是在等待 I/O</strong>，比如磁盘 I/O、网络 I/O、其他外设 I/O，如果等待的 I/O 在长时间内都没响应，那么就可以被 <code class="highlighter-rouge">ps</code> 看到了，同时也就意味着很有可能有 I/O 出了问题，可能是外设本身出了故障，也可能是比如挂载的远程文件系统已经不可访问了。</p>
+
+<p class="notice--success">该状态存在的 <strong>意义</strong> 在于：<strong>内核的某些处理流程是不能被打断的</strong>。如果响应异步信号，程序的执行流程中就会被插入一段用于处理异步信号的流程（这个插入的流程可能只存在于内核态，也可能延伸到用户态），于是原有的流程就被中断了。</p>
+
+<p>在进程对某些硬件进行操作时（比如进程调用 <code class="highlighter-rouge">read</code> 系统调用，对某个设备文件进行读操作，而 <code class="highlighter-rouge">read</code> 最终执行到对应设备驱动的代码，并与对应的物理设备进行交互），可能需要使用该状态 <strong>对进程进行保护</strong>，以避免进程与设备交互的过程被打断，造成设备陷入不可控的状态。这种情况下的该状态总是非常短暂的，通过 <code class="highlighter-rouge">ps</code> 命令基本上不可能捕捉到。</p>
+
+<p><strong>不可中断</strong>，指的并不是 CPU 不响应外部硬件的中断，而是 <strong>指进程不响应异步信号</strong>。</p>
+
+<p>进程只有被使用 <code class="highlighter-rouge">wake_up()</code> 函数显示唤醒时才能被转换到可运行就绪状态。</p>
+
+<h5 id="暂停状态">暂停状态</h5>
+
+<p>进程描述符中为 <code class="highlighter-rouge">TASK_STOPPED</code> 或 <code class="highlighter-rouge">TASK_TRACED</code>，用标签 <strong>T</strong> 表示。</p>
+
+<p>当进程 <strong>收到信号</strong> <code class="highlighter-rouge">SIGSTOP</code>，<code class="highlighter-rouge">SIGTSTP</code>（终端 ^Z），<code class="highlighter-rouge">SIGTTIN</code>（终端输入，由后台进程请求），<code class="highlighter-rouge">SIGTTOU</code>（终端输出，由后台进程请求） 时就会进入暂停状态。进程在 <strong>调试时</strong> 也会进入此状态。</p>
+
+<p>暂停期间，如果 <strong>收到 <code class="highlighter-rouge">SIGCONT</code> 信号</strong>，进程会 <strong>转到就绪状态</strong>。</p>
+
+<p>进入暂停状态以后，进程会 <strong>放弃所有其占据的资源</strong>，但 <strong>不会释放进程表中的条目</strong>。它会 <strong>给父进程发信号</strong>，告诉他自己已经终止。一旦父进程收到 <strong><code class="highlighter-rouge">SIGCHLD</code></strong> 信号，他会采取行动，释放进程表中子进程的条目。</p>
+
+<p><img src="/assets/images/stopped.state.png" alt="image-center" class="align-center" /></p>
+
+<blockquote>
+  <p>只要子进程改变了状态，无论是 <strong>暂停</strong>、<strong>继续</strong> 还是 <strong>退出</strong> 状态，有两件事发生在父进程身上：</p>
+  <ul>
+    <li>父进程收到 <code class="highlighter-rouge">SIGCHLD</code> 信号</li>
+    <li>一个被阻塞的 <code class="highlighter-rouge">waitpid(2)</code> 或  <code class="highlighter-rouge">wait</code> 调用可能会返回
+默认情况下，<code class="highlighter-rouge">waitpid</code> 调用会持续阻塞，直到某个子进程退出，不过，通过设置特定的标签，我们也可以做到子进程切换到 <strong>暂停状态</strong>（<code class="highlighter-rouge">WUNTRACED</code> 标签） 或 <strong>继续状态</strong>（<code class="highlighter-rouge">WCONTINED</code> 标签）时，发出通知消息。
+父进程通常不会为 <code class="highlighter-rouge">SIGCHLD</code> 信号安装处理器，该信号默认被忽略。</li>
+  </ul>
+</blockquote>
+
+<h6 id="被跟踪状态">被跟踪状态</h6>
+
+<p>当进程正在被跟踪时，它处于该状态。“正在被跟踪” 指的是进程 <strong>暂停下来，等待跟踪它的进程对它进行操作</strong>。比如在 gdb 中对被跟踪的进程下一个断点，进程在断点处停下来的时候就处于 <code class="highlighter-rouge">task_traced</code> 状态。而在其他时候，被跟踪的进程还是处于其他状态。</p>
+
+<p>对于进程本身来说，<code class="highlighter-rouge">task_stopped</code> 和 <code class="highlighter-rouge">task_traced</code> 状态很类似，都是表示进程暂停下来。</p>
+
+<p>而 <code class="highlighter-rouge">task_traced</code> 状态相当于在 <code class="highlighter-rouge">task_stopped</code> 之上 <strong>多了一层保护</strong>，处于 <code class="highlighter-rouge">task_traced</code> 状态的进程 <strong>不会响应 <code class="highlighter-rouge">sigcont</code> 信号而被唤醒</strong>。只能等到调试进程通过 <code class="highlighter-rouge">ptrace</code> 系统调用执行 <code class="highlighter-rouge">ptrace_cont</code>、<code class="highlighter-rouge">ptrace_detach</code> 等操作（通过 <code class="highlighter-rouge">ptrace</code> 系统调用的参数指定操作），或调试进程退出，被调试的进程才能恢复 <code class="highlighter-rouge">task_running</code> 状态。</p>
+
+<h5 id="僵尸状态">僵尸状态</h5>
+
+<p>僵尸进程是成功退出的进程，但其状态的改变还没有被父进程知晓。也就是说，父进程还没有调用 <code class="highlighter-rouge">wait()</code> 或 <code class="highlighter-rouge">waitpid()</code> 函数。</p>
+
+<p>进程描述符中为 <code class="highlighter-rouge">TASK_DEAD</code> - <code class="highlighter-rouge">EXIT_ZOMBIE</code>，用标签 <strong>Z</strong> 表示。</p>
+
+<p>僵尸进程除了叫 zombie process，也叫 defunct process。</p>
+
+<p>该状态既可保存在进程描述符的 <code class="highlighter-rouge">state</code> 字段，也可保存在 <code class="highlighter-rouge">exit_state</code> 字段。</p>
+
+<h6 id="僵尸进程的产生">僵尸进程的产生</h6>
+
+<p>当进程已停止运行，在给父进程发送 <code class="highlighter-rouge">SIGCHLD</code> 信号以后，父进程清除进程表中子进程条目之前，这 <strong>期间</strong>，该进程处于僵尸状态。如果父进程在此期间死掉了，进程会持续停留在僵尸状态。</p>
+
+<p>僵尸进程是非常特殊的一种，它是 <strong>已经结束了的进程</strong>，但是 <strong>没有从进程表中移除</strong>。太多的僵尸进程会导致进程表里面条目变满，进而导致系统崩溃。</p>
+
+<p>僵尸进程不占用其他系统资源。</p>
+
+<p>它已经 <strong>放弃了几乎所有内存空间，没有任何可执行代码，也不能被调度，仅仅在进程列表中保留一个位置</strong>，记载该进程的退出状态等信息供其他进程收集，除此之外，僵尸进程不再占有任何内存空间。</p>
+
+<p>进程在退出的过程中，处于 <code class="highlighter-rouge">TASK_DEAD</code> 状态。在这个退出过程中，进程占有的所有资源将被回收，除了进程描述符及少数资源。于是进程就 <strong>只剩下进程描述符这么个空壳</strong>，故称为僵尸。</p>
+
+<h6 id="为什么保留进程描述符">为什么保留进程描述符</h6>
+
+<p>之所以保留进程描述符，是因为 <strong>里面保存了进程的退出码、以及一些统计信息</strong>。而其 <strong>父进程很可能会关心这些信息</strong>。比如在 shell 中，<code class="highlighter-rouge">$?</code> 变量就保存了最后一个退出的前台进程的退出码，而这个退出码往往被作为 <code class="highlighter-rouge">if</code> 语句的判断条件。</p>
+
+<p>当然，内核也可以将这些信息保存在别的地方，而将进程描述符释放掉，以节省一些空间。但是使用进程描述符更为方便，因为在内核中已经建立了从 PID 到进程描述符的对应关系，还有进程间的父子关系。释放掉进程描述符，则需要建立一些新的数据结构，以便让父进程找到它的子进程的退出信息。</p>
+
+<h6 id="为子进程收尸">为子进程收尸</h6>
+
+<p>子进程在退出的过程中，内核会给其父进程发送一个信号，<strong>通知父进程来 “收尸”</strong>。</p>
+
+<p>父进程可以 <strong>通过 <code class="highlighter-rouge">wait</code> 系列的系统调用</strong>（如 <code class="highlighter-rouge">wait4</code>、<code class="highlighter-rouge">waitid</code>）来 <strong>等待某个或某些子进程的退出</strong>，并获取它的退出信息。然后 <code class="highlighter-rouge">wait</code> 系列的系统调用会顺便将子进程的尸体（进程描述符）也释放掉。这个信号默认是 <strong><code class="highlighter-rouge">SIGCHLD</code></strong>，但是在通过 <code class="highlighter-rouge">clone</code> 系统调用创建子进程时，可以设置这个信号。</p>
+
+<p>如果他的父进程没安装 <code class="highlighter-rouge">SIGCHLD</code> 信号处理函数调用 <code class="highlighter-rouge">wait</code> 或 <code class="highlighter-rouge">waitpid()</code> 等待子进程结束，又没有显式忽略该信号，那么它就一直保持僵尸状态，子进程的尸体（进程描述符）也就无法释放掉。</p>
+
+<p>如果这时父进程结束了，那么 <strong><code class="highlighter-rouge">init</code> 进程自动会接手这个子进程，为它收尸，它还是能被清除的</strong>。但是如果如果父进程是一个循环，不会结束，那么子进程就会一直保持僵尸状态，这就是为什么系统中有时会有很多的僵尸进程。</p>
+
+<p><strong>当进程退出的时候，会将它的所有子进程都托管给别的进程</strong>（使之成为别的进程的子进程）。托管的进程可能是退出进程所在进程组的下一个进程（如果存在的话），或者是 1 号进程（init，其 PID 为 1）。所以每个进程、每时每刻都有父进程存在，除非它是 1 号进程。</p>
+
+<h6 id="1-号进程">1 号进程</h6>
+
+<p>Linux 系统启动后，第一个被创建的用户态进程就是 <code class="highlighter-rouge">init</code> 进程。它有两项使命：</p>
+
+<ul>
+  <li>执行系统初始化脚本，创建一系列的进程（它们都是 <code class="highlighter-rouge">init</code> 进程的子孙）</li>
+  <li>在一个死循环中等待其子进程的退出事件，并调用 <code class="highlighter-rouge">waitid</code> 系统调用来完成 “收割” 工作</li>
+</ul>
+
+<p><code class="highlighter-rouge">init</code> 进程不会被暂停、也不会被杀死，这是由内核来保证的。它在等待子进程退出的过程中处于 <code class="highlighter-rouge">task_interruptible</code> 状态，“收割” 过程中则处于 <code class="highlighter-rouge">task_running</code> 状态。</p>
+
+<h6 id="linux-处理僵尸进程的方法">Linux 处理僵尸进程的方法</h6>
+
+<p>找出父进程号，然后 <code class="highlighter-rouge">kill</code> 父进程，之后子进程（僵尸进程）会被托管到其他进程，如 init 进程，然后由 init 进程将子进程的尸体（进程描述符）释放掉。</p>
+
+<p>除了通过 <code class="highlighter-rouge">ps</code> 的状态来查看僵尸进程，还可以用如下命令查看：</p>
+
+<p><code class="highlighter-rouge">ps -ef | grep defun</code></p>
+
+<h6 id="僵尸进程解决办法">僵尸进程解决办法</h6>
+
+<ul>
+  <li>
+    <p>改写父进程，在子进程死后要为它收尸</p>
+
+    <p>具体做法是接管 <code class="highlighter-rouge">SIGCHLD</code> 信号。子进程死后，会发送 <code class="highlighter-rouge">SIGCHLD</code> 信号给父进程，父进程收到此信号后，执行 <code class="highlighter-rouge">waitpid()</code> 函数为子进程收尸。这是基于这样的原理：就算父进程没有调用 <code class="highlighter-rouge">wait</code>，内核也会向它发送 <code class="highlighter-rouge">SIGCHLD</code> 消息，尽管对的默认处理是忽略，如果想响应这个消息，可以设置一个处理函数。</p>
+  </li>
+  <li>
+    <p>把父进程杀掉</p>
+
+    <p>父进程死后，僵尸进程成为 “孤儿进程”，过继给 1 号进程 <code class="highlighter-rouge">init</code>，<code class="highlighter-rouge">init</code> 始终会负责清理僵尸进程．它产生的所有僵尸进程也跟着消失。如：</p>
+  </li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nb">kill</span> <span class="nt">-9</span> <span class="sb">`</span>ps <span class="nt">-ef</span> | <span class="nb">grep</span> <span class="s2">"Process Name"</span> | <span class="nb">awk</span> <span class="s1">'{ print $3 }'</span><span class="sb">`</span>
+</code></pre></div></div>
+<p>其中，“Process Name” 为僵尸状态的进程名称。</p>
+
+<ul>
+  <li>
+    <p>杀父进程不行的话，就尝试用 <code class="highlighter-rouge">skill -t TTY</code> 关闭相应终端，TTY 是进程相应的终端号。但是，<code class="highlighter-rouge">ps</code> 可能会查不到特定进程的 tty 号，这时就需要自己判断了。</p>
+  </li>
+  <li>
+    <p>重启系统，这也是最常用到方法之一。</p>
+  </li>
+</ul>
+
+<h5 id="退出状态">退出状态</h5>
+
+<p>进程描述符中为 <code class="highlighter-rouge">TASK_DEAD</code> - <code class="highlighter-rouge">EXIT_DEAD</code>，用标签 <strong>X</strong> 表示。</p>
+
+<p>该状态既可保存在进程描述符的 <code class="highlighter-rouge">state</code> 字段，也可保存在 <code class="highlighter-rouge">exit_state</code> 字段。</p>
+
+<p>进程最终的状态，进程正在被系统清除，因为父进程刚刚为其发起了 <code class="highlighter-rouge">wait4</code> 或 <code class="highlighter-rouge">waitpid()</code> 系统调用，将其状态从 <code class="highlighter-rouge">EXIT_ZOMBIE</code> 改为 <code class="highlighter-rouge">EXIT_DEAD</code> ，可以防止同一进程中的其他线程（由于也执行类似的调用而）产生竞争。</p>
+
+<p>进程在退出过程中也可能不会保留它的进程描述符。比如这个进程是多线程程序中被 <code class="highlighter-rouge">detach</code> 过的进程。或者父进程通过设置 <code class="highlighter-rouge">SIGCHLD</code> 信号的处理器为 <code class="highlighter-rouge">SIG_IGN</code>，显式的忽略了 <code class="highlighter-rouge">SIGCHLD</code> 信号。（这是 POSIX 的规定，尽管子进程的退出信号可以被设置为 <code class="highlighter-rouge">SIGCHLD</code> 以外的其他信号。）</p>
+
+<p>此时，进程将被置于 <code class="highlighter-rouge">EXIT_DEAD</code> 退出状态，这意味着接下来的代码立即就会将该进程彻底释放。所以退出状态是非常短暂的，几乎不可能通过 <code class="highlighter-rouge">ps</code> 命令捕捉到。</p>
+
+<h4 id="进程状态的变化">进程状态的变化</h4>
+
+<h5 id="进程的初始状态">进程的初始状态</h5>
+
+<p>进程是通过 <code class="highlighter-rouge">fork</code> 系列的系统调用（<code class="highlighter-rouge">fork</code>、<code class="highlighter-rouge">clone</code>、<code class="highlighter-rouge">vfork</code>）来创建的，内核（或内核模块）也可以通过 <code class="highlighter-rouge">kernel_thread</code> 函数创建内核进程。这些创建子进程的函数本质上都完成了相同的功能 —— 将调用进程复制一份，得到子进程。（可以通过选项参数来决定各种资源是共享、还是私有。）</p>
+
+<p>既然调用进程处于运行状态（不运行怎么调用？），则子进程默认也处于 <code class="highlighter-rouge">TASK_RUNNING</code> 状态。</p>
+
+<p>另外，系统调用 <code class="highlighter-rouge">clone</code> 和内核函数 <code class="highlighter-rouge">KERNEL_THREAD</code> 也接受 <code class="highlighter-rouge">CLONE_STOPPED</code> 选项，从而将子进程的初始状态置为暂停状态。</p>
+
+<h5 id="进程状态的转换">进程状态的转换</h5>
+
+<p>进程自创建以后，状态可能发生一系列的变化，直到进程退出。</p>
+
+<p>而尽管进程状态有好几种，但是进程状态的转换却只有两个方向：</p>
+
+<p>从运行状态转换变为非运行状态，或者反之。</p>
+
+<p class="notice--warning">也就是说，如果给一个 <strong>可中断睡眠状态</strong> 的进程发送 <strong><code class="highlighter-rouge">SIGKILL</code></strong> 信号，这个进程将 <strong>先被唤醒</strong>（进入运行状态），然后再响应 <code class="highlighter-rouge">SIGKILL</code> 信号而退出（变为 <strong>退出状态</strong>）。并 <strong>不会</strong> 从可中断睡眠状态 <strong>直接退出</strong>。</p>
+
+<h6 id="非运行状态变为运行状态">非运行状态变为运行状态</h6>
+
+<p>进程从非运行状态变为运行状态，是由别的进程（也可能是中断处理程序）执行唤醒操作来实现的。执行的进程将非运行状态的进程转换为运行状态，然后将其进程描述符加入到某个 CPU 的可执行队列中。于是被唤醒的进程将有机会被调度执行。</p>
+
+<h6 id="运行状态变为非运行状态">运行状态变为非运行状态</h6>
+
+<p>有两种途径：</p>
+
+<ul>
+  <li>响应 <strong>信号</strong> 而进入暂停状态、或退出状态；</li>
+  <li>执行 <strong>系统调用</strong>：
+    <ul>
+      <li>主动进入可中断睡眠状态，如 <code class="highlighter-rouge">nanosleep</code> 系统调用</li>
+      <li>进入退出状态，如 <code class="highlighter-rouge">exit</code> 系统调用</li>
+      <li>由于执行系统调用需要的资源得不到满足，而进入可中断睡眠状态或不可中断睡眠状态，如 <code class="highlighter-rouge">select</code> 系统调用</li>
+    </ul>
+  </li>
+</ul>
+
+<p>显然，这两种情况都只能发生在进程正在 CPU 执行的情况下。</p>
+
+<h4 id="进程组">进程组</h4>
+
+<p>Process Group</p>
+
+<p><strong>进程组</strong> 表示一个或多个进程的集合，用于控制信号的分布，当一个信号被引导到一个进程组时，该信号被传送到该组中的每个进程。</p>
+
+<p><strong>会话</strong> 表示一个或多个进程组的集合。</p>
+
+<ul>
+  <li>进程组不允许从一个会话迁移到另一个会话</li>
+  <li>一个进程无法创建出属于另一个会话的进程组</li>
+  <li>一个进程不允许加入属于另一个会话的进程组，即不能跨会话迁移</li>
+</ul>
+
+<p>当一个进程通过 <code class="highlighter-rouge">exec</code> 调用，用一个镜像覆盖另一个镜像时，新映像将代替旧映像，接受相同的进程组（以及会话）成员。</p>
+
+<h3 id="1063-进程的查看">10.6.3 进程的查看</h3>
+
+<h4 id="ps"><code class="highlighter-rouge">ps</code></h4>
+
+<p>查看 <strong>某一时刻的进程</strong>。</p>
+
+<h5 id="用-unix-长格式显示自己的进程">用 unix 长格式显示自己的进程</h5>
+
+<p><code class="highlighter-rouge">ps -l</code>  用 unix 长格式显示当前 shell 的进程</p>
+
+<blockquote>
+  <p><strong>长格式</strong> 的主要字段：
+F		进程标签，该进程的总结权限，常见号码有：
+		4	表示此进程的权限为 root
+		1	表示此子进程仅复制未执行
+S		该进程状态，主要有：
+		R	运行中，或可运行（队列中）
+		S	Sleep，休眠中，可被唤醒，等待某事件完成
+		D	不可被唤醒的休眠状态，通常等待 I/O
+		T	stopped，被作业管理的信号停止，或因其除错（traced）状态
+		Z	僵尸状态，进程已终止但无法被移出内存
+UID		进程拥有者 UID
+PID		进程 PID
+PPID	父进程 PID
+C		CPU 使用率（%）
+PRI		优先级
+NI		Nice 值
+ADDR	内存地址，“ - ” 表示运行中的进程
+SZ		进程用掉多少内存
+WCHAN	等待通道
+TTY		登陆者的终端位置
+TIME	进程耗费 CPU 运行的时间
+CMD		触发此进程的命令</p>
+</blockquote>
+
+<h5 id="用-bsd-样式显示系统所有进程">用 BSD 样式显示系统所有进程</h5>
+
+<p><code class="highlighter-rouge">ps aux</code></p>
+
+<p><code class="highlighter-rouge">a</code>   所有用户的进程</p>
+
+<p><code class="highlighter-rouge">u</code>   显示进程所有者</p>
+
+<p><code class="highlighter-rouge">x</code>   显示所有进程，不区分终端</p>
+
+<blockquote>
+  <p>BSD 样式 <strong>主要字段</strong>
+USER	进程拥有者
+PID 	进程 PID
+%CPU	消耗的 CPU 资源百分比
+%MEM	占用的实体内存百分比
+VSZ 	用掉的虚拟内存量（KBytes）
+RSS 	占用的固定的内存量（KBytes）
+TTY 	进程所属终端号（tty/pts），与终端无关显示 ?
+STAT	进程状态（R/S/T/Z）
+START	被触发启动的时间；
+TIME 	实际使用 CPU 运行的时间。
+COMMAND	进程使用的命令</p>
+</blockquote>
+
+<h5 id="用-unix-长格式显示所有进程">用 unix 长格式显示所有进程</h5>
+
+<p><code class="highlighter-rouge">ps -lA</code></p>
+
+<p><code class="highlighter-rouge">A</code>   显示所有进程</p>
+
+<p>显示格式同 <code class="highlighter-rouge">ps -l</code></p>
+
+<h5 id="用接近进程树的格式显示所有进程">用接近进程树的格式显示所有进程</h5>
+
+<p><code class="highlighter-rouge">ps axjf</code></p>
+
+<p><code class="highlighter-rouge">a</code>   所有用户的进程</p>
+
+<p><code class="highlighter-rouge">x</code>   显示所有进程，不区分终端</p>
+
+<p><code class="highlighter-rouge">j</code>   以 BSD 作业管理格式显示</p>
+
+<p><code class="highlighter-rouge">f</code>   ASCII art 样式进程树</p>
+
+<h5 id="查找指定服务的-pid">查找指定服务的 PID</h5>
+
+<p><code class="highlighter-rouge">ps aux | egrep '（cron|rsyslog）'</code></p>
+
+<h4 id="top"><code class="highlighter-rouge">top</code></h4>
+
+<p>动态查看进程的变化。<code class="highlighter-rouge">top</code> 可以持续 <strong>监测进程运行的状态</strong>。</p>
+
+<p><code class="highlighter-rouge"> top [-d 数字] | top [-bnp] </code></p>
+
+<p><code class="highlighter-rouge">-d</code>   指定监测间隔（秒），默认 5 秒</p>
+
+<p><code class="highlighter-rouge">-b</code>   以批处理方式执行，通常搭配数据流重定向导出文件</p>
+
+<p><code class="highlighter-rouge">-n</code>   与 -b 配合使用，指定输出次数</p>
+
+<p><code class="highlighter-rouge">-p</code>   仅监测指定 PID 进程</p>
+
+<blockquote>
+  <p>top 运行过程中可使用的快捷键：
+    ?  显示快捷键列表
+    P  按 CPU 占用率排序
+    M  按内存占用率排序
+    N  按 PID 排序
+    T  按进程花费 CPU 总时间排序
+    k  给指定 PID 发信号
+    r  为指定 PID 重新分配 nice 值
+    q  退出</p>
+</blockquote>
+
+<p><code class="highlighter-rouge">top -d 2</code>  每两秒钟更新一次，查看整体信息：</p>
+
+<p><code class="highlighter-rouge">top</code> 显示信息说明：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 第一行：运行时间及负载
+
+top - 14:24:45 up  5:00,  2 users,  load average: 0.00, 0.01, 0.04
+#     -------      ----   -------   ------------------------------
+#        |           |       |              |
+#    当前系统时间     |       |              |
+#                 运行时间    |              |
+#                      已登陆系统的人数       |
+#          系统在最近 1分钟、5分钟、15分钟的平均负载
+
+# 第二行：进程状态
+
+Tasks: 176 total,   1 running, 175 sleeping,   0 stopped,   0 zombie
+
+# 第三行：CPU 负载
+
+%Cpu(s):  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+
+wa 表示 I/O wait，系统变慢常常是 I/O 的问题。
+
+如果是多核心的设备，可以按数字键 “1” 切换视图，同时查看多个 CPU 的负载。
+
+# 第四行、第五行：实体内存与虚拟内存
+
+按快捷键 E 可以切换内存显示的单位
+
+# 第六行：top 的状态栏，显示快捷键对应的信息
+
+# 进程列表
+
+PID		进程 PID
+USER	进程所有者
+PR		优先级
+NI		Nice 值
+%CPU	CPU 使用率
+%MEM	内存使用率
+TIME+	CPU 累计使用时间
+</code></pre></div></div>
+
+<p>top 默认按 %CPU 排序，可以用 “<strong>M</strong>” 切换为按 %MEM 排序，“<strong>P</strong>” 切换回按 %CPU 排序。</p>
+
+<p>【 范例 】：</p>
+
+<p><code class="highlighter-rouge">top -b -n 2 &gt; /tmp/top.txt</code>  将 top 迭代 2 次，结果导出文件</p>
+
+<p><code class="highlighter-rouge">top -d 2 -p 14836</code>  查看指定 PID 进程</p>
+
+<p>修改 nice 值:</p>
+
+<p>在 top 界面中按 r ，先指定 PID，回车后可以直接输入新的 nice 值。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PID to renice [default pid = 14836] 14836
+Renice PID 14836 to value 10   
+</code></pre></div></div>
+
+<h4 id="pstree"><code class="highlighter-rouge">pstree</code></h4>
+
+<p>查看 <strong>进程树</strong>。</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>pstree [-A</td>
+      <td>U] [-up]</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><code class="highlighter-rouge">-A</code>   进程树用 ASCII 字符连接</p>
+
+<p><code class="highlighter-rouge">-U</code>   进程树用 Unicode 字符连接，在某些终端下会有错误</p>
+
+<p><code class="highlighter-rouge">-p</code>   显示进程 PID</p>
+
+<p><code class="highlighter-rouge">-u</code>   显示进程的拥有者</p>
+
+<p><code class="highlighter-rouge">pstree -A</code>  用进程树查看所有进程</p>
+
+<p><code class="highlighter-rouge">pstree -Aup</code>  在进程树中显示 PID 与 users</p>
+
+<p>PID 及进程拥有者会在进程右侧括号中显示。如果拥有者与父进程相同，就不显示；如果与父进程不同，则显示。</p>
+
+<h4 id="fuser"><code class="highlighter-rouge">fuser</code></h4>
+
+<p>File User</p>
+
+<p>查看 <strong>哪些进程在使用指定文件、文件系统或套接字</strong>，同时可以查看进程 <strong>拥有者</strong>，及 <strong>进程访问类型</strong>。</p>
+
+<p><code class="highlighter-rouge">fuser [-umv] [-k [i] [-signal]] file/dir</code></p>
+
+<p><code class="highlighter-rouge">-u</code>   查看该程序的拥有者，及 PID、ACCESS</p>
+
+<p><code class="highlighter-rouge">-m</code>   查看哪些进程在使用指定的文件系统或块设备</p>
+
+<p><code class="highlighter-rouge">-v</code>   查看文件及其 USER、PID、ACCESS、COMMAND</p>
+
+<p><code class="highlighter-rouge">-k</code>   杀掉正要访问该文件的进程，默认发送 <code class="highlighter-rouge">SIGKILL</code> 信号</p>
+
+<p><code class="highlighter-rouge">-i</code>   与 -k 配合，删除进程前请用户确认</p>
+
+<p><code class="highlighter-rouge">-signal</code>  指定信号</p>
+
+<p>【 范例 】查看使用 <code class="highlighter-rouge">/proc</code> 目录的进程</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># fuser -muv /proc</span>
+                     USER        PID ACCESS COMMAND
+/proc:               root     kernel mount <span class="o">(</span>root<span class="o">)</span>/proc
+                     root          1 f.... <span class="o">(</span>root<span class="o">)</span>systemd
+                     root          2 ...e. <span class="o">(</span>root<span class="o">)</span>kthreadd
+                     rtkit       720 .rc.. <span class="o">(</span>rtkit<span class="o">)</span>rtkit-daemon
+                     root       1108 F.... <span class="o">(</span>root<span class="o">)</span>libvirtd
+</code></pre></div></div>
+
+<h5 id="access-字段含义">ACCESS 字段含义</h5>
+
+<p><code class="highlighter-rouge">fuser -u</code> 返回信息中，ACCESS 字段的含义：</p>
+
+<p><code class="highlighter-rouge">c</code>  当前目录为该进程的工作目录</p>
+
+<p><code class="highlighter-rouge">r</code>  当前目录为进程的根目录</p>
+
+<p><code class="highlighter-rouge">e</code>  该文件为可执行文件，正运行于进程中</p>
+
+<p><code class="highlighter-rouge">f</code>  该文件当前被打开，被读</p>
+
+<p><code class="highlighter-rouge">F</code>  该文件当前被打开，被写</p>
+
+<p><code class="highlighter-rouge">m</code>  内存映射文件，或共享库</p>
+
+<p>【 范例 】查看使用 <code class="highlighter-rouge">/home</code> 文件系统的进程</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]<span class="nv">$ </span><span class="nb">echo</span> <span class="nv">$$</span>    <span class="c"># 查看当前 bash 的 PID</span>
+4909
+
+~]<span class="nv">$ </span><span class="nb">cd</span> /home
+
+home]<span class="nv">$ </span>fuser <span class="nt">-muv</span> <span class="nb">.</span>      <span class="c"># 查看什么进程在用 /home 目录</span>
+                     USER        PID ACCESS COMMAND
+/home:               root     kernel mount <span class="o">(</span>root<span class="o">)</span>/home
+                     neo        4909 ..c.. <span class="o">(</span>neo<span class="o">)</span>bash
+<span class="c">#                               ^^^^  当前 bash</span>
+
+~]<span class="nv">$ </span><span class="nb">cd</span> ~
+umount /home
+umount: /home: target is busy.
+        （In some cases useful info about processes that use
+         the device is found by lsof（8） or fuser（1））
+
+~]<span class="nv">$ </span>fuser <span class="nt">-mki</span> /home   <span class="c"># 杀掉使用该目录的进程</span>
+/home:               4909c
+Kill process 4909c ? （y/N）
+</code></pre></div></div>
+
+<p>【 范例 】哪些进程在读取 <code class="highlighter-rouge">/run</code> 中的管道文件</p>
+
+<p>通常系统的 FIFO 文件都会放到 <code class="highlighter-rouge">/run</code> 目录。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# find /run <span class="nt">-type</span> p
+/run/systemd/sessions/1.ref
+/run/systemd/sessions/c1.ref   <span class="c"># 测试对象</span>
+
+~]# fuser <span class="nt">-uv</span> /run/systemd/sessions/c1.ref
+                     USER        PID ACCESS COMMAND
+/run/systemd/sessions/c1.ref:
+                     root        763 f.... （root）systemd-logind
+                     root       5450 F.... （root）gdm-session-wor
+</code></pre></div></div>
+
+<p>通过 ACCESS 状态可以看出，该管道文件已被打开，又被写，又被读。</p>
+
+<h3 id="lsof"><code class="highlighter-rouge">lsof</code></h3>
+
+<p>查看 <strong>被进程打开的文件</strong></p>
+
+<p>List Open Files</p>
+
+<p><code class="highlighter-rouge">fuser</code> 能做的，除了杀进程外，<code class="highlighter-rouge">lsof</code> 都能做到。</p>
+
+<p><code class="highlighter-rouge">lsof [-aUu] [+d]</code></p>
+
+<p><code class="highlighter-rouge">-a</code>   与</p>
+
+<p><code class="highlighter-rouge">-U</code>   查看 Unix 域 socket</p>
+
+<p><code class="highlighter-rouge">-u</code>   查看 指定用户 的进程所打开的文件</p>
+
+<p><code class="highlighter-rouge">+d</code>   查看 指定目录 下被打开的文件</p>
+
+<h4 id="范例">范例</h4>
+
+<p><code class="highlighter-rouge">lsof</code>  查看当前所有被打开的文件与设备</p>
+
+<p><code class="highlighter-rouge">lsof -u root -a -U</code>  查看 root 的所有进程打开的套接字文件</p>
+
+<p><code class="highlighter-rouge">lsof +d /dev</code>  查看所有被启动的周边设备</p>
+
+<p><code class="highlighter-rouge">lsof -u root | grep bash</code>  查看 root 的 bash 进程所打开的文件</p>
+
+<h3 id="pidof"><code class="highlighter-rouge">pidof</code></h3>
+
+<p>根据进程的名称查看 PID。</p>
+
+<p><code class="highlighter-rouge">pidof [-sx] program_name</code></p>
+
+<p><code class="highlighter-rouge">-s</code>   只查看一个 PID</p>
+
+<p><code class="highlighter-rouge">-x</code>   同时查看可能的 PPID</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# pidof systemd rsyslogd
+1  742
+</code></pre></div></div>
+
+<h3 id="1064-进程的工作目录">10.6.4 进程的工作目录</h3>
+
+<p>工作目录，Working Directory</p>
+
+<p>进程的工作目录是 FHS 中的一个目录，可以 <strong>动态地</strong> 与每个进程关联，有时也称当前工作目录，Current Working Directory，CWD。当进程使用相对路径来引用一个文件时，该引用是相对于当前进程的工作目录来解释的。</p>
+
+<h4 id="chroot"><code class="highlighter-rouge">chroot</code></h4>
+
+<p>每个进程对于根目录是什么都有自己的理解。对于大部分进程来说，根目录与系统真实的根目录是相同的，但可以通过 <code class="highlighter-rouge">chroot</code> 系统调用来修改。这通常是为了 <strong>创建隐蔽的环境，来运行需要旧版库的软件</strong>，有时还可以简化软件安装和调试。使用 <code class="highlighter-rouge">chroot</code> 并不会提升安全性，因为内部进程可能会暴发（break out）。</p>
+
+<h4 id="chroot-的限制"><code class="highlighter-rouge">chroot</code> 的限制</h4>
+
+<p>运行于这样一个被改动过的环境之下，程序无法定位、访问特定目录树之外的文件。</p>
+
+<p>chroot 机制不是为了抵御特权用户的有意篡改。在多数系统中，chroot 的上下文不能正确堆叠，具有足够权限的 chroot 程序可能会执行第二个 chroot 来暴发。为了减小这种 <strong>安全风险</strong>，程序一旦被 chroot 就应该立即放弃根特权。</p>
+
+<p>如果在普通文件系统上支持设备节点，则在该系统中，一个被 chroot 的超级用户仍然有权创建设备节点，并在上面挂载文件系统。于是，chroot 机制并 <strong>无法阻止特权用户对系统设备的底层访问，也无法限制对 I/O、带宽、磁盘究竟、CPU 时间等资源的使用</strong>。</p>
+
+<p>程序在启动时，通常希望在预设的位置能找到临时空间、配置文件、设备节点、共享函数库等，而对于被 chroot 的程序来说，要想成功启动，其 chroot 目录一定要特别精简，所以这些文件就会很少。这种情况下对程序的正常运行非常不利，因此，<strong>很难把 chroot 做为一个普通的沙盒机制来使用</strong>。</p>
+
+<p>只有超级用户才有权进行 chroot。</p>
+
+<h4 id="虚拟文件系统及配置文件">虚拟文件系统及配置文件</h4>
+
+<p>要想达成一个功能完备的 chroot 环境，内核的虚拟文件系统也必须挂载，配置文件也必须复制到 chroot。</p>
+
+<h2 id="107-进程的角色">10.7 进程的角色</h2>
+
+<p>在任何时候，每个进程都有一个 <strong>有效 UID</strong>（effective user ID），一个 <strong>有效 GID</strong>（effective group ID）和一组 <strong>附加 GID</strong>（supplementary group ID）。这些 ID 决定了进程的权限。它们被统称为 <strong>进程的角色</strong>（persona of the process），因为它们在访问控制中决定了 “它是谁”。</p>
+
+<blockquote>
+  <p>翻译过来总是有点不准确，容易让人误以为是 “进程所扮演的角色”，个人理解，应该是在进程控制中，<strong>UID 和 GID 在访问控制中所扮演的角色</strong>。</p>
+</blockquote>
+
+<p>你的登录 <code class="highlighter-rouge">shell</code> 是带着一套角色启动的，包括你的 UID，默认 GID 和 附加 GID。在正常情况下，你的所有其他进程都会继承这些值。</p>
+
+<p>除此之外，进程还有一个真实 UID，用来标识创建该进程的用户，以及一个真实 GID，用来标识用户的默认组。这些值在访问控制中不起作用，所以我们不把它们看成角色的一部分，但它们也很重要。</p>
+
+<p>在进程的生命周期中，真实 UID 和有效 UID 都可以更改。</p>
+
+<p>进程的有效 UID 还控制着用 <code class="highlighter-rouge">kill</code> 函数发送信号的权限。</p>
+
+<p>有许多操作只能由有效 UID 为零的进程执行。具有该 UID 的进程是一个 <strong>特权进程</strong>。</p>
+
+<h2 id="108-进程间通信机制">10.8 进程间通信机制</h2>
+
+<p>信号是进程间通信机制中唯一的异步通信机制，一个进程不必通过任何操作来等待信号的到达，事实上，进程也不知道信号到底什么时候到达。</p>
+
+<p><strong>进程之间</strong> 可以互相通过系统调用 <code class="highlighter-rouge">kill</code> 发送软中断信号。</p>
+
+<p><strong>内核</strong> 也可以因为内部事件而给 <strong>进程</strong> 发送信号，通知进程发生了某个事件。</p>
+
+<p><strong>进程发给它自己</strong>，或同一进程的 <strong>不同线程之间</strong>。</p>
+
+<p>信号机制除了基本通知功能外，还 <strong>可以传递附加信息</strong>。</p>
+
+<p>收到信号的进程对信号有不同的 <strong>处理方法</strong>：</p>
+
+<ul>
+  <li>类似中断的处理程序，对于需要处理的信号，进程可以 <strong>指定处理函数</strong>，由该函数来处理。</li>
+  <li><strong>忽略</strong> 某个信号，对该信号不做任何处理，就象未发生过一样。</li>
+  <li>对该信号的处理 <strong>保留系统的默认值</strong>，这种缺省操作，对大部分的信号的缺省操作是使得进程终止。进程通过系统调用 <code class="highlighter-rouge">signal</code> 来指定进程对某个信号的处理行为。</li>
+</ul>
+
+<h2 id="109-作业控制">10.9 作业控制</h2>
+
+<p>Job Control</p>
+
+<p>作业控制是对指 <strong>运行在 shell 中的作业</strong> 的控制，尤其是指互动式的控制，在 shell 中，用 <strong>作业</strong> 来 <strong>代表进程组</strong>。因此，作业控制即是 <strong>对 shell 中运行的进程组的控制</strong>。</p>
+
+<ul>
+  <li>基础的作业控制：作业的暂停、恢复、终止</li>
+  <li>高级的作业控制：向作业发送信号</li>
+</ul>
+
+<p>作业控制只对同一 bash 产生的子进程有效。</p>
+
+<h3 id="1091-会话与进程组">10.9.1 会话与进程组</h3>
+
+<h4 id="会话">会话</h4>
+
+<p>当用户退出 Linux 时，内核需要终止该用户运行的所有进程，否则会留下一堆进程呆在那儿，仍然傻乎乎地等待输入呢，但它永远也等不到的。为了简化用户退出的过程，多个进程就被组织成为会话集。</p>
+
+<p class="notice--success">实际上，在会话建立时，有个进程会通过 <code class="highlighter-rouge">setsid()</code> 系统调用来创建会话，该进程的 PID 就成为 <strong>SID</strong>，该进程即成为 <strong>会话领导</strong>。该进程的所有后代都是该 <strong>会话的成员</strong>，除非它们特意把自己清除掉。<strong>会话领导</strong> 包含终端的前台进程组，<strong>通常是一个 shell</strong>。</p>
+
+<h4 id="控制终端">控制终端</h4>
+
+<p>每个会话都被绑定到一个终端上，会话中的所有进程都从该终端获取输入，把输出都发送到该终端。该终端可以是主机的本地 console 接口，可以是通过串口连接的终端，也可以是映射到 X 窗口的模拟终端，或者通过网络连接的模拟终端。与会话关联的这个终端称为会话的 <strong>控制终端</strong>（controlling terminal / controlling tty）。一个终端 <strong>同时只能是一个会话的控制终端</strong>。</p>
+
+<p>尽管可以更改会话的控制终端，但通常只能由管理用户初始登录系统的进程来完成。</p>
+
+<h4 id="进程组-1">进程组</h4>
+
+<p>每个作业对应一个进程组，<strong>进程组由管道的所有成员以及它们的后代组成</strong>。</p>
+
+<p>作业控制允许用户暂停当前任务，在终端上先进行一些其他的操作。如果被暂停的任务是一批协同工作的进程，系统则需要持续跟踪，并决定暂停任务时应该暂停哪些进程。进程组允许系统持续跟踪哪些进程在一起工作，于是它们应该通过作业控制来管理。</p>
+
+<p>可以使用 <code class="highlighter-rouge">setpgid()</code> 把进程加入进程组。该调用有一定的规则：</p>
+
+<ul>
+  <li>一个进程 <strong>只可以设置自己或后代的进程组</strong>，但无法修改其他进程的进程组，即便调用函数的进程有根权限</li>
+  <li>会话领导无法修改其进程组</li>
+  <li>不能把进程移动到另一个会话中的进程组</li>
+</ul>
+
+<p><code class="highlighter-rouge">setpgid()</code> 调用会把发起调用的进程放到它自己的进程组及会话中，这对确保 “两个会话不包含同一进程组的进程” 很有必要。</p>
+
+<p>当到终端的连接丢失时，内核会给会话领导发送一个 <code class="highlighter-rouge">SIGHUP</code> 信号，此举允许 shell 无条件地终止用户的所有进程，把用户已经退出的消息通知给这些进程，或采取一些其它的动作。虽然这个设计看起来有点复杂，但它让 <strong>会话领导有权决定如何处理被关闭的终端</strong>，而无需让内核来决定，而且它允许 <strong>系统管理员对帐户策略能够进行更灵活的控制</strong>。</p>
+
+<h4 id="孤儿进程组">孤儿进程组</h4>
+
+<p>如果父进程已经结束或终止，而其子进程仍然在运行，则子进程称为孤儿进程。</p>
+
+<p>当会话消失时，如何终止（或允许继续）进程的机制非常复杂。</p>
+
+<p>当进程组成为孤儿时，其中的所有进程都会收到一个 <code class="highlighter-rouge">SIGHUP</code>信号，该信号通常会把进程终止掉。但是那些被选择收到 <code class="highlighter-rouge">SIGHUP</code> 不要终止的进程，它们会收到 <code class="highlighter-rouge">SIGCONT</code> 信号，该信号将恢复所有暂停的进程。因此，这个过程会终止大部分进程，同时还要确保留下的进程从暂停状态恢复过来，有能力继续运行下去。</p>
+
+<p>一旦进程成为孤儿，它被强制地与其控制终端取消关联，以允许新用户使用该终端。如果留下来继续运行的程序尝试访问该终端，这些尝试将以错误告终。这些孤儿进程会一直呆在原会话中，SID 不会被分配给新进程，直到该会话中所有进程都退出。</p>
+
+<h5 id="收养">收养</h5>
+
+<p>任何 <strong>孤儿进程会马上被 <code class="highlighter-rouge">init</code> 系统进程收养</strong>：内核会把该进程的父母设定为 <code class="highlighter-rouge">init</code>。该操作称为 <strong>过继</strong>，是 <strong>自动发生的</strong>。不过，虽然这些被收养的进程已经有了新爹 <code class="highlighter-rouge">init</code> ，它仍然被称为孤儿进程，因为最初始创建它的进程已经不在了，也就是它亲爹。</p>
+
+<p class="notice--success">在较新的 Linux 系统中，孤儿进程会被过继给 “<strong>次收割者</strong>”（subreaper），而不是 <code class="highlighter-rouge">init</code> 这个主收割者。</p>
+
+<h5 id="成为孤儿的方式">成为孤儿的方式</h5>
+
+<p>进程可能会 <strong>无意中</strong> 成为孤儿，比如当父进程终止或崩溃时。当 shell 退出时，它会给其所有的进程组发送 <code class="highlighter-rouge">SIGHUP</code> 信号。</p>
+
+<blockquote>
+  <p>当会话领导 shell 退出时，进程组被置于困境之中：如果它们仍然积极地运行，那它们再也无法使用标准输入或标准输出了，因为终端已被关闭；如果它们被暂停，它们可能就永不再运行了，因为该终端的用户无法重启它们，但永不运行意味着它们也永远无法被终止。在这种情况下，每个进程组都是孤儿进程组。</p>
+</blockquote>
+
+<p>有时也需要 <strong>刻意</strong> 将进程变成孤儿，通常是为了允许一个长时间运行的作业在不被用户注意的情况下结束，或者启动一个无限期运行的服务，即守护进程，尤其是如果它们一直运行的话。一个低级的方法是 <code class="highlighter-rouge">fork</code> 两次，在孙子进程身上运行所需的进程，然后立即终止子进程。孙进程现在就成了孤儿，它不会被爷爷进程收养，而是会被 <code class="highlighter-rouge">init</code> 收养。而高级的方法是绕过 shell 的 hangup 处理函数，要么告诉子进程忽略 <code class="highlighter-rouge">SIGHUP</code>（通过使用 <code class="highlighter-rouge">nohup</code>），要么从作业表中移除作业，或者告诉 shell 在会话结束时不要发送 <code class="highlighter-rouge">SIGHUP</code> 信号（使用 <code class="highlighter-rouge">disown</code> 命令）。在哪种情况下，SID 都不会发生改变，而且已经结束的会话的 PID 仍然在使用中，直到所有的孤儿进程要么终止，要么修改了 SID （通过 <code class="highlighter-rouge">setsid(2)</code> 开启一个新会话）。</p>
+
+<h5 id="避免孤儿产生">避免孤儿产生</h5>
+
+<p><strong><code class="highlighter-rouge">disown</code></strong> 命令可用于 <strong>移除作业表中的作业</strong>。当会话结束时，子进程就不会收到 <code class="highlighter-rouge">SIGHUP</code> 信号，shell 也不会等待它们被终止。于是它们成为孤儿进程，有可能会被操作系统终止，不过更有可能的是，故意为之，以 <strong>把它们过继给 <code class="highlighter-rouge">init</code></strong>，让它们 <strong>以服务（daemon）的形式继续执行</strong>。</p>
+
+<p>还可以使用 <code class="highlighter-rouge">nohup</code> 命令来忽略 <code class="highlighter-rouge">SIGHUP</code> 信号。如 <code class="highlighter-rouge">nohup abcd &amp;</code> 将 abcd 置于后台运行，而且用户退出不会影响其继续运行。</p>
+
+<p>为了简化系统管理，通常会使用一个 <strong>服务包裹</strong>（service wrapper），以保证那些并非用于服务的进程，对系统信号能够做出正确的反应。</p>
+
+<p>避免成为孤儿，把进程保留下来继续运行儿的另一个办法，是使用 <strong>终端多路复用器</strong>，在一个已经分离或即将分离的会话中运行进程，于是该会话不会终止，进程就不会成为孤儿了。</p>
+
+<h4 id="会话-id-与-进程-id">会话 ID 与 进程 ID</h4>
+
+<p>在 Linux 中，每个进程都有好几个 ID 与之关联。会话与进程组只是 “把一批相关联进程当作一个单元来对待” 的不同的方式。一个进程组中的所有成员总是属于同一个会话的而一个会话可能包含多个进程组。</p>
+
+<p>通常情况下，shell 是会话的领导，该 shell 执行的每个管道都是一个进程组。这样做的话，杀掉 shell 的后代就变得很容易。</p>
+
+<p><code class="highlighter-rouge">ps xao pid,ppid,pgid,sid,comm</code> 可以同时查看以下所有 ID。</p>
+
+<h5 id="pid">PID</h5>
+
+<p>Process ID，进程 ID</p>
+
+<p>每个进程都有个独立的 ID，但在进程退出、父进程得到其退出状态以后，PID 会被 <strong>释放</strong>，可能会被分配给新进程。</p>
+
+<h5 id="ppid">PPID</h5>
+
+<p>Parent Process ID，父进程 PID</p>
+
+<p>启动子进程的进程的 ID。</p>
+
+<h5 id="pgid">PGID</h5>
+
+<p>Process Group ID，进程组领导的 PID</p>
+
+<p>如果 <code class="highlighter-rouge">PGID == PID</code>，则该进程就是 <strong>进程组领导</strong>。</p>
+
+<h5 id="sid">SID</h5>
+
+<p>Session ID，会话领导的 PID</p>
+
+<p>如果 <code class="highlighter-rouge">SID == PID</code>，则该进程就是 <strong>会话领导</strong>。会话 ID 会被子进程所继承。</p>
+
+<h3 id="1092-作业控制的基本概念">10.9.2 作业控制的基本概念</h3>
+
+<p>通过终端来使用类 Unix 操作系统时，一个用户初始时只有一个单一的进程在运行，即登陆 shell。</p>
+
+<p>通过让程序接管终端控制权，程序运行完毕退出时再归还给终端，大多数的任务（列目录、编辑文件等）能够轻易地完成。严格地讲，这个过程是把标准输入和标准输出绑定到 shell，这样它们就可以从终端读取输入，也可以把输出显示到终端。同时捕捉键盘发出的信号，如 <code class="highlighter-rouge">^C</code> 导致终止信号的发送。</p>
+
+<p>有时用户希望在使用终端做某件事时，同时执行另一个任务。</p>
+
+<h4 id="前台后台">前台、后台</h4>
+
+<p>一个正在运行的任务，但 <strong>不会从终端接收输入</strong>，称之为运行于 <strong>后台</strong>。</p>
+
+<p><strong>从终端接收输入的唯一的任务</strong>，称之为运行于 <strong>前台</strong>。</p>
+
+<h4 id="作业控制">作业控制</h4>
+
+<p>使用作业控制就是为了使前台、后台成为可能，其手段是允许用户在后台启动进程，把正在运行的进程发送到后台，把后台的进程带到前台，以及暂停进程、终止进程。</p>
+
+<p>多进程任务的出现是因为进程可能会创建额外的子进程，并且单个 shell 命令可能由 “多个相互通信的进程的管道” 组成的。</p>
+
+<p>如：<code class="highlighter-rouge">grep title somefile.txt | sort | less</code> 至少创建三个进程，<code class="highlighter-rouge">grep</code> 一个，<code class="highlighter-rouge">sort</code> 一个，<code class="highlighter-rouge">less</code> 一个。</p>
+
+<p>作业控制允许 shell 把这些相关联的进程当作一个实体来控制，当用户按下 <code class="highlighter-rouge">^Z</code> 时，整个组的进程全部暂停。</p>
+
+<h4 id="作业">作业</h4>
+
+<p>操作系统把作业当作一个进程组来管理，而作业是进程组的内部表示。POSIX 中这样定义：</p>
+
+<blockquote>
+  <p>一组进程的集合，包括一个 shell 管道，以及所有进程的后续进程，它们都在同一个进程组中。</p>
+</blockquote>
+
+<h4 id="作业号">作业号</h4>
+
+<p>Job ID。一个作业可以通过作业号来指定，shell 的内部命令会使用作业号来指定作业。</p>
+
+<p>作业号以 <code class="highlighter-rouge">%</code> 开头，<code class="highlighter-rouge">%n</code> 表示第 n 号作业，<code class="highlighter-rouge">%%</code> 表示当前作业。</p>
+
+<p><strong>作业控制和作业号</strong> 通常 <strong>仅在交互模式使用</strong>，代表进程组。在 <strong>脚本中使用</strong> 进程组编号，<strong>PGID</strong>，因为它们更精确、更强大。实际上，在 bash 脚本中，作业控制默认是禁用的。</p>
+
+<h4 id="作业表">作业表</h4>
+
+<p>shell 会把所有作业保存在 <strong>作业表</strong>（job talbe）中，<code class="highlighter-rouge">jobs</code> 命令可以查看作业表中保存的后台作业、作业号及作业状态（暂停、运行）。</p>
+
+<h3 id="1093-作业控制的方式">10.9.3 作业控制的方式</h3>
+
+<p>以下用作业的不同状态为线索，统计一下作业控制的不同方式及相关命令：</p>
+
+<p><code class="highlighter-rouge">jobs -l</code>   查看后台作业的作业号码、命令、PID</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# <span class="nb">jobs</span> <span class="nt">-l</span>
+<span class="o">[</span>1]- 14566 Stopped                 vim ~/.bashrc
+<span class="o">[</span>2]+ 14567 Stopped                 find / <span class="nt">-print</span>
+</code></pre></div></div>
+
+<p><strong>+</strong> 代表最近一个被置于后台的作业号码，<strong>-</strong> 代表最近第二个被置于后台的作业号码。而更早的作业，就没有 +/- 符号。</p>
+
+<h4 id="运行">运行</h4>
+
+<h5 id="jobs"><code class="highlighter-rouge">jobs</code></h5>
+
+<p><code class="highlighter-rouge">jobs -r</code>	查看后台运行的所有作业，会显示作业号</p>
+
+<h5 id="fg"><code class="highlighter-rouge">fg</code></h5>
+
+<p><code class="highlighter-rouge">fg %jobnumber</code>	将后台运行的作业拿到前台运行</p>
+
+<h5 id="-"><code class="highlighter-rouge">... &amp;</code></h5>
+
+<p><code class="highlighter-rouge">command &amp;</code>  将命令置于后台运行</p>
+
+<p>在 bash 中，一个程序可以在命令最后使用 <strong><code class="highlighter-rouge">&amp;</code></strong> 作为后台作业启动，其输出被发送到终端上（很容易和其它程序的输出混在一起），但它无法从终端读取输入。</p>
+
+<p>一个后台的进程，如果尝试针对其控制终端读取，将会收到 <code class="highlighter-rouge">SIGTTIN</code>（针对输入） 或 <code class="highlighter-rouge">SIGTTOU</code>（针对输出）信号，这些信号默认将暂停进程，但也可以其它方式被处理。shell 经常会覆盖 <code class="highlighter-rouge">SIGTTOU</code> 的默认暂停动作，以便后台的进程可以把它们的输出默认传递给控制终端。</p>
+
+<h5 id="--1"><code class="highlighter-rouge">(... &amp;)</code></h5>
+
+<p>将一个或多个命名包含在 “( )” 中，就能让这些命令在 <strong>子 shell</strong> 中运行，如果把 &amp; 放到括号最后，新提交的进程的 PPID 为 1（<code class="highlighter-rouge">init</code> 进程），并不是当前终端的进程。因此并不属于当前终端的子进程，从而也就不会受到当前终端的 HUP 信号的影响了。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# <span class="o">(</span>ping www.ibm.com &amp;<span class="o">)</span>
+~]# ps <span class="nt">-ef</span> |grep www.ibm.com
+root     16270     1  0 14:13 pts/4    00:00:00 ping www.ibm.com
+root     16278 15362  0 14:13 pts/4    00:00:00 <span class="nb">grep </span>www.ibm.com
+~]#
+</code></pre></div></div>
+
+<h5 id="nohup"><code class="highlighter-rouge">nohup</code></h5>
+
+<p>no hangup signal。<code class="highlighter-rouge">nohup</code> 命令允许用户在 <strong>断开连接或退出系统</strong> 后，让作业 <strong>继续进行</strong>。</p>
+
+<blockquote>
+  <p>hangup 名字的由来：
+在 Unix 的早期版本中，每个终端都会通过 modem 和系统通讯。当用户 logout 时，modem 就会挂断（hang up）电话。 同理，当 modem 断开连接时，就会给终端发送 hangup 信号来通知其关闭所有子进程。</p>
+</blockquote>
+
+<p><code class="highlighter-rouge">nohup { -p pid | Command [ Arg ... ] [ &amp; ] }</code></p>
+
+<p><code class="highlighter-rouge">-p pid</code>	指定进程忽略所有的暂停信号。</p>
+
+<p><code class="highlighter-rouge">nohup</code> 不支持 bash 内部命令，<strong>只支持外部命令</strong>。</p>
+
+<p><code class="highlighter-rouge">nohup</code> 命令可以让提交的程序 “<strong>忽略 HUP 信号</strong>” 。</p>
+
+<p>标准输出和标准错误默认会被 <strong>重定向</strong> 到 <strong>nohup.out</strong> 文件中。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# <span class="nb">nohup </span>ping www.ibm.com &amp;
+<span class="o">[</span>1] 3059
+<span class="nb">nohup</span>: appending output to <span class="s1">'nohup.out'</span>
+</code></pre></div></div>
+
+<h5 id="setsid"><code class="highlighter-rouge">setsid</code></h5>
+
+<p>如果调用的进程不是进程组领导，则 <strong>创建一个新会话</strong>。调用的进程会成为新会话的领导，新进程组的领导，而且 <strong>没有控制终端</strong>。</p>
+
+<p><code class="highlighter-rouge">setsid command</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# setsid ping www.ibm.com
+~]# ps <span class="nt">-ef</span> |grep www.ibm.com
+root     31094     1  0 07:28 ?        00:00:00 ping www.ibm.com
+root     31102 29217  0 07:29 pts/4    00:00:00 <span class="nb">grep </span>www.ibm.com
+~]#
+</code></pre></div></div>
+
+<h5 id="disown"><code class="highlighter-rouge">disown</code></h5>
+
+<p>不加参数时，从作业表中移除指定作业。以便终端结束时，该作业不会收到 <code class="highlighter-rouge">SIGHUP</code> 信号，可以继续作为服务来运行。</p>
+
+<p><code class="highlighter-rouge">disown -h jobspec</code> 指定某个作业</p>
+
+<p><code class="highlighter-rouge">disown -ah</code> 所有作业</p>
+
+<p><code class="highlighter-rouge">disown -rh</code> 运行中的作业</p>
+
+<p>使用 <code class="highlighter-rouge">disown</code> 之后，<code class="highlighter-rouge">jobs</code> 返回的结果将不会显示它，但是可以用 <code class="highlighter-rouge">ps -ef</code> 找到它。</p>
+
+<p>如果作业已经在后台正常运行，则直接使用 <code class="highlighter-rouge">disown -h jobspec</code> 即可。否则应把前台的作业用 <code class="highlighter-rouge">ctrl-z</code> 先置于后台，再使用该命令。</p>
+
+<h5 id="screen"><code class="highlighter-rouge">screen</code></h5>
+
+<p>你是不是经常需要 SSH 或者 telent 远程登录到 Linux 服务器？你是不是经常为一些长时间运行的任务而头疼，比如系统备份、ftp 传输等等。通常情况下我们都是为每一个这样的任务开一个远程终端窗口，因为他们执行的时间太长了。必须等待它执行完毕，在此期间可不能关掉窗口或者断开连接，否则这个任务就会被杀掉，一切半途而废了。</p>
+
+<p>当网络断开或终端窗口关闭后，进程领导收到 <code class="highlighter-rouge">SIGHUP</code> 信号退出，会导致该会话期内其他进程退出。</p>
+
+<p>简单来说，Screen 是一个可以 <strong>在多个进程之间多路复用一个物理终端</strong> 的窗口管理器。Screen 中有会话的概念，用户可以在一个 screen 会话中创建多个 screen 窗口，在每一个 screen 窗口中就像操作一个真实的 telnet/SSH 连接窗口那样。</p>
+
+<h4 id="暂停">暂停</h4>
+
+<p>在前台运行的作业会由于 <strong>暂停字符</strong>（^Z）的键入而被暂停，会触发 <code class="highlighter-rouge">SIGTSTP</code> 终端暂停信号，将其发送给进程组。默认会导致进程暂停，把控制权交回 shell。</p>
+
+<p>进程可以注册一个信号处理器来忽略 <code class="highlighter-rouge">SIGTSTP</code>。进程遇到 <code class="highlighter-rouge">SIGSTOP</code> 也会暂停，但该信号无法捕捉或忽略。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">wait</code>	暂停脚本的执行，直到运行于后台的所有作业都被终止，或者直到其指定作业号或 PID 的进程终止。可用于避免 “在后台作业没有执行完的时候脚本的退出”。<code class="highlighter-rouge">wait</code> 后面可以接任务号或 PID 做为参数。</li>
+  <li><code class="highlighter-rouge">jobs -s</code>  查看暂停的作业</li>
+  <li><code class="highlighter-rouge">^Z</code>  在后台暂停</li>
+</ul>
+
+<h4 id="终止">终止</h4>
+
+<p>在前台运行的作业可以被键入的 <strong>中断字符</strong>（^C）中断，会触发中断信号 <code class="highlighter-rouge">SIGINT</code>，其默认动作为终止进程，但可被覆盖。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">kill -signal %jobnumber</code> 强制终止进程</li>
+  <li><code class="highlighter-rouge">^C</code></li>
+</ul>
+
+<blockquote>
+  <p><code class="highlighter-rouge">kill</code> 的参数：
+<code class="highlighter-rouge">-l</code>   查看所有可用信号
+<code class="highlighter-rouge">signal</code>  具体的信号：
+-1  SIGHUP，重新读取一次参数的配置文件 （类似 reload）；
+-2  SIGINT，由键盘输入中断命令
+-9  SIGKILL，强制删除无法正常结束的作业；
+-15 SIGTERM，以正常的程序方式终止作业</p>
+</blockquote>
+
+<h4 id="恢复">恢复</h4>
+
+<p>暂停的作业可以被 <code class="highlighter-rouge">bg</code> 恢复为一个后台作业，也可被 <code class="highlighter-rouge">fg</code> 恢复为前台作业。无论哪种情况，shell 都会正确地重定向 I/O，并给进程发送 <code class="highlighter-rouge">SIGCONT</code> 信号，促使操作系统恢复进程的执行。</p>
+
+<p><code class="highlighter-rouge">bg %jobnumber</code>	恢复暂停的作业，在后台运行</p>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/process" class="page__taxonomy-item" rel="tag">process</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/linux" class="page__taxonomy-item" rel="tag">linux</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#linux" class="page__taxonomy-item" rel="tag">linux</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2015-01-10T00:00:00+08:00">January 10, 2015</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">分享</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?via=liloli&text=Linux+%E5%9F%BA%E7%A1%80+-+10.+%E8%BF%9B%E7%A8%8B%20http%3A%2F%2Flocalhost%3A4000%2Flinux%2Flinux.process%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Flinux%2Flinux.process%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Flinux%2Flinux.process%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Flinux%2Flinux.process%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="分享 LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/linux/linux.kernel/" class="pagination--pager" title="Linux 基础 - 9. 内核简介
+">向前</a>
+    
+    
+      <a href="http://localhost:4000/linux/linux.thread/" class="pagination--pager" title="Linux 基础 - 11. 线程
+">向后</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">猜您还喜欢</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/time/" rel="permalink">Bash 脚本 - 时间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/storage/" rel="permalink">Bash 脚本 - 存储空间
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/numbers/" rel="permalink">Bash 脚本 - 数字
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/bash/input/" rel="permalink">Bash 脚本 - 输入
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+      <li><a href="https://twitter.com/liloli"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+    
+    
+      <li><a href="https://www.facebook.com/lilolibj"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+    
+    
+      <li><a href="https://github.com/liloli"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+  
+  
+  <script src="http://localhost:4000/assets/js/lunr/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-store.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/linux/linux.process/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/linux/linux.process"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://liloli.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+  </body>
+</html>
