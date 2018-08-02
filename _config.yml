@@ -26,9 +26,81 @@ github_username:  jekyll
 
 # Build settings
 markdown: kramdown
-theme: minima
+#theme: minima
+
+
+theme: minimal-mistakes-jekyll
+
+
 plugins:
   - jekyll-feed
+  - jekyll-paginate
+
+whitelist:
+  - jekyll-paginate
+
+
+
+permalink: /:categories/:title/
+paginate: 15 # amount of posts to show
+paginate_path: /page:num/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
