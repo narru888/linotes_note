@@ -15,6 +15,22 @@ github_username:  linotes
 
 
 
+
+
+
+
+
+# comments
+JEKYLL_ENV : production
+comments:
+  provider               : "disqus"
+  disqus:
+    shortname            : "linotes"
+
+
+
+
+
 # Build settings
 markdown: kramdown
 
