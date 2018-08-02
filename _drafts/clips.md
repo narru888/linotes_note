@@ -3,8 +3,8 @@ toc: true
 toc_label: "10. 身份认证"
 toc_icon: "users"
 title: "身份认证"
-tag: [pam, ]
-published: true
+tags: pam
+published: false
 categories: "basic"
 classes: wide
 excerpt: ""
@@ -13,9 +13,7 @@ header:
   overlay_filter: rgba(0, 0, 0, 0.8)
 ---
 
-Authorization 授权
 
-authentication 认证
 
 ## 图标
 
@@ -41,18 +39,26 @@ gallery:
 
 [【 更多... 】](/handbook/handbook-/#)
 
+
 ## Notice
 
+浅灰
+{: .notice}   
 
-{: .notice}          				浅灰
-{: .notice--primary}            	灰
-{: .notice--info}             		浅蓝
+灰       				
+{: .notice--primary}
 
-{: .notice--success}              	浅绿
+浅蓝          	
+{: .notice--info}
 
-{: .notice--warning}            	浅橙
+浅绿            		
+{: .notice--success}  
 
-{: .notice--danger}         		浅红
+浅橙        	
+{: .notice--warning}
+
+浅红            	
+{: .notice--danger}         		
 
 
 
