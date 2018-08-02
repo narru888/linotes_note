@@ -1,8 +1,6 @@
 #!/bin/bash  
-#python tag_generator.py
-#wait
-git add -A
+python tag_generator.py
 wait
+git add .  
 git commit -m "update"
-wait
 git push

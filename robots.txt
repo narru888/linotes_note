@@ -1,0 +1,2 @@
+User-agent: *
+Sitemap: https://liloli.github.io/sitemap.xml
