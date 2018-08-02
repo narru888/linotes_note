@@ -10,7 +10,7 @@ description: >- # this means to ignore newlines until "baseurl:"
 repository              : "linotes.github.io"
 
 baseurl: "" # the subpath of your site, e.g. /blog
-twitter_username: liloli
+
 github_username:  linotes
 
 
@@ -102,9 +102,6 @@ tag_page_dir: tag
 
 
 
-
-include: ["_pages"]
-
 # HTML Compression
 # - http://jch.penibelst.de/
 compress_html:
@@ -152,29 +149,18 @@ author:
   email            : "imhawkz@gmail.com"
   uri              :
   home             : # null (default), "absolute or relative url to link to author home"
-  bitbucket        :
-  codepen          :
-  dribbble         :
   flickr           :
   facebook         :
-  foursquare       :
   github           : ""
-  gitlab           :
-  google_plus      :
-  keybase          :
-  instagram        :
   lastfm           :
   linkedin         : "hawkzhang"
-  pinterest        :
   soundcloud       :
   stackoverflow    : # "123456/username" (the last part of your profile url, e.g. https://stackoverflow.com/users/123456/username)
   steam            : # "steamId" (the last part of your profile url, e.g. https://steamcommunity.com/id/steamId/)
   tumblr           :
   twitter          : ""
-  vine             :
   weibo            :
-  xing             :
-  youtube          : # "https://youtube.com/c/MichaelRoseDesign"
+
 
 
 
@@ -183,22 +169,8 @@ author:
 comments:
   provider               : "disqus"
   disqus:
-    shortname            : hawk_zhang
+    shortname            : liloli
 
-
-
-
-
-
-
-
-
-
-# Social Sharing
-#twitter:
-#  username               : "liloli"
-#facebook:
-#  username               : "lilolibj"
 
 
 
@@ -242,60 +214,3 @@ keep_files:
   - .svn
 encoding: "utf-8"
 markdown_ext: "markdown,mkdown,mkdn,mkd,md"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-comments:
-  provider               : "disqus" # "disqus" , "discourse", "facebook", "google-plus", "staticman", "staticman_v2" "custom"
-  disqus:
-    shortname            : liloli # https://help.disqus.com/customer/portal/articles/466208-what-s-a-shortname-
-  discourse:
-    server               : # https://meta.discourse.org/t/embedding-discourse-comments-via-javascript/31963 , e.g.: meta.discourse.org
-  facebook:
-    # https://developers.facebook.com/docs/plugins/comments
-    appid                :
-    num_posts            : # 5 (default)
-    colorscheme          : # "light" (default), "dark"
-staticman:
-  allowedFields          : ['name', 'email', 'url', 'message']
-  branch                 : "master"
-  commitMessage          : "New comment."
-  filename               : # comment-{@timestamp}
-  format                 : # "yml"
-  moderation             : true
-  path                   : # "/_data/comments/{options.slug}" (default)
-  requiredFields         : ['name', 'email', 'message']
-  transforms:
-    email                : # "md5"
-  generatedFields:
-    date:
-      type               : # "date"
-      options:
-        format           : # "iso8601" (default), "timestamp-seconds", "timestamp-milliseconds"
-reCaptcha:
-  siteKey                :
-  secret                 :
-atom_feed:
-  path                   : # blank (default) uses feed.xml
-search                   : true # false (default)
-search_full_content      : # true, false (default)
-
-
-twitter:
-  username               : "liloli"
-facebook:
-  username               : "lilolibj"
