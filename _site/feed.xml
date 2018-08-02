@@ -1,4 +1,342 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="https://linotes.imliloli.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://linotes.imliloli.com/" rel="alternate" type="text/html" /><updated>2018-08-02T18:46:55+08:00</updated><id>https://linotes.imliloli.com/</id><title type="html">LINOTES</title><subtitle>用简洁清晰的语言讨论技术</subtitle><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><entry><title type="html">Bash 脚本 - 时间</title><link href="https://linotes.imliloli.com/bash/time/" rel="alternate" type="text/html" title="Bash 脚本 - 时间" /><published>2017-07-01T00:00:00+08:00</published><updated>2017-07-01T00:00:00+08:00</updated><id>https://linotes.imliloli.com/bash/time</id><content type="html" xml:base="https://linotes.imliloli.com/bash/time/">&lt;h2 id=&quot;当前时间&quot;&gt;当前时间&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="https://linotes.imliloli.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://linotes.imliloli.com/" rel="alternate" type="text/html" /><updated>2018-08-02T18:50:57+08:00</updated><id>https://linotes.imliloli.com/</id><title type="html">LINOTES</title><subtitle>用简洁清晰的语言讨论技术</subtitle><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><entry><title type="html">lllllllllllllll</title><link href="https://linotes.imliloli.com/tools/system/" rel="alternate" type="text/html" title="lllllllllllllll" /><published>2018-02-01T00:00:00+08:00</published><updated>2018-02-01T00:00:00+08:00</updated><id>https://linotes.imliloli.com/tools/system</id><content type="html" xml:base="https://linotes.imliloli.com/tools/system/">&lt;h2 id=&quot;文件系统&quot;&gt;文件系统&lt;/h2&gt;
+
+&lt;h3 id=&quot;文件系统的挂载&quot;&gt;文件系统的挂载&lt;/h3&gt;
+
+&lt;p&gt;SMB ：Server Message Block。SMB 是文件共享协议，由 IBM 创建。&lt;/p&gt;
+
+&lt;p&gt;CIFS ：Common Internet File System。CIFS 是 SMB 协议的一个特殊的实现，由微软创建。&lt;/p&gt;
+
+&lt;p&gt;确认系统安装了 CIFS 工具：&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /proc/filesystems | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;cifs
+nodev   cifs
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;windows-共享文件夹挂载&quot;&gt;windows 共享文件夹挂载&lt;/h4&gt;
+
+&lt;p&gt;交互式输入密码：&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;mount &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; cifs &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;username&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;neo //192.168.1.124/share /mnt/win
+Password &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;neo@//192.168.1.124/share:  &lt;span class=&quot;k&quot;&gt;******&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;直接键入密码：&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;mount &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; cifs &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;username&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;neo,password&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;matrix //192.168.1.124/share /mnt/win
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;编辑 &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/fstab&lt;/code&gt;：&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;vi /etc/fstab
+//192.168.1.124/share /mnt/win cifs &lt;span class=&quot;nv&quot;&gt;username&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;neo,password&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;matrix,rw 0 0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;这样直接把用户名和密码直接写在多人可见的配置文件中终归不够安全。&lt;/p&gt;
+
+&lt;p&gt;最安全的办法：&lt;/p&gt;
+
+&lt;p&gt;把用户名和密码保存在单独的文件中，然后在 &lt;code class=&quot;highlighter-rouge&quot;&gt;fstab&lt;/code&gt; 中指定其位置。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;vi /root/.smbcred
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo cat&lt;/span&gt; /root/.smbcred
+&lt;span class=&quot;nv&quot;&gt;username&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;neo
+&lt;span class=&quot;nv&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;matrix
+
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo chmod &lt;/span&gt;400 /root/.smbcred
+
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /etc/fstab|grep /mnt
+//192.168.1.124/share /mnt/win cifs &lt;span class=&quot;nv&quot;&gt;credentials&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/root/.smbcred,rw 0 0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;如果挂载失败，有可能是 &lt;code class=&quot;highlighter-rouge&quot;&gt;mount.cifs&lt;/code&gt; 没有安装，可以 &lt;code class=&quot;highlighter-rouge&quot;&gt;yum install -y cifs-utils&lt;/code&gt; 重新安装试一下。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;存储空间占用&quot;&gt;存储空间占用&lt;/h2&gt;
+
+&lt;h3 id=&quot;df--h&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;df -H&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;查看文件系统磁盘空间占用情况。&lt;code class=&quot;highlighter-rouge&quot;&gt;-H&lt;/code&gt; 参数以易于阅读的方式显示，按 1G=1000M 计。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~]$ df -H
+Filesystem             Size  Used Avail Use% Mounted on
+/dev/mapper/zion-root   11G  5.2G  5.6G  48% /
+devtmpfs               496M     0  496M   0% /dev
+tmpfs                  512M     0  512M   0% /dev/shm
+tmpfs                  512M  1.1M  511M   1% /run
+tmpfs                  512M     0  512M   0% /sys/fs/cgroup
+/dev/sda2              1.1G  221M  843M  21% /boot
+/dev/mapper/zion-home  5.4G   40M  5.4G   1% /home
+tmpfs                  103M   13k  103M   1% /run/user/42
+tmpfs                  103M     0  103M   0% /run/user/1004
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;du -sh /tmp/test&lt;/code&gt;  查看 &lt;strong&gt;目录所占磁盘空间&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;mount | column -t&lt;/code&gt;  查看 &lt;strong&gt;已挂载的分区状态&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;swapon -s&lt;/code&gt;  查看 &lt;strong&gt;所有交换分区&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;dmesg | grep IDE&lt;/code&gt;  查看 &lt;strong&gt;启动时 IDE 设备监测状况&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;文件内容&quot;&gt;文件内容&lt;/h2&gt;
+
+&lt;h3 id=&quot;换行符&quot;&gt;换行符&lt;/h3&gt;
+
+&lt;p&gt;换行符 CR 和 LF 均来自于打字机时代。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;CR 表示把打字机的打字部件移动到最左侧，以便准备从 &lt;strong&gt;最左侧&lt;/strong&gt; 开始打字&lt;/li&gt;
+  &lt;li&gt;LF 表示 &lt;strong&gt;向上&lt;/strong&gt; 卷纸，以便准备开始打新的一行&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;最早的软件开发完全模拟打字机的这两个操作，到后来有些人觉得有点麻烦，干脆只留了一个。但由于没有统一的标准，所以结果是有的平台上仍沿用两个控制符来换行，即 CR + LF，有的平台只用一个，即 LF。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;简写&lt;/th&gt;
+      &lt;th&gt;原文&lt;/th&gt;
+      &lt;th&gt;十进制 ASCII 码&lt;/th&gt;
+      &lt;th&gt;转义序列&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;LF&lt;/td&gt;
+      &lt;td&gt;Line-Feed&lt;/td&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;\n&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;CR&lt;/td&gt;
+      &lt;td&gt;Carriage-Return&lt;/td&gt;
+      &lt;td&gt;13&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;\r&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&quot;unix-换行符&quot;&gt;UNIX 换行符&lt;/h4&gt;
+
+&lt;p&gt;UNIX 为 LF，即 &lt;code class=&quot;highlighter-rouge&quot;&gt;\n&lt;/code&gt;。&lt;/p&gt;
+
+&lt;h4 id=&quot;dos-换行符&quot;&gt;DOS 换行符&lt;/h4&gt;
+
+&lt;p&gt;Windows 或 DOS 换行为 CR + LF，即 &lt;code class=&quot;highlighter-rouge&quot;&gt;\r\n&lt;/code&gt;。&lt;/p&gt;
+
+&lt;h2 id=&quot;文件属性&quot;&gt;文件属性&lt;/h2&gt;
+
+&lt;h3 id=&quot;文件名&quot;&gt;文件名&lt;/h3&gt;
+
+&lt;h4 id=&quot;提取路径中的文件名&quot;&gt;提取路径中的文件名&lt;/h4&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;basename&lt;/span&gt; /etc/sysconfig/network
+network
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;提取目录名&quot;&gt;提取目录名&lt;/h4&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;dirname&lt;/span&gt; /etc/sysconfig/network
+/etc/sysconfig
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;文件的比较&quot;&gt;文件的比较&lt;/h2&gt;
+
+&lt;h3 id=&quot;diff&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;diff&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;diff 用于以行为单位，对比两个文件之间 &lt;strong&gt;内容的差异&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;通常用于比较 &lt;strong&gt;同一文件&lt;/strong&gt;（或软件）的新旧 &lt;strong&gt;版本差异&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;如果用 diff 对 &lt;strong&gt;目录&lt;/strong&gt; 进行比较，则会比较该目录中具有 &lt;strong&gt;相同文件名的文件&lt;/strong&gt;，而不会对其子目录文件进行任何比较操作。&lt;/p&gt;
+
+&lt;h4 id=&quot;语法&quot;&gt;语法&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;diff [-bBi] from-file to-file&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;from-file&lt;/code&gt;  原始文件，可用 - 代替&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;to-file&lt;/code&gt;  对比文件，可用 - 代替&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-b&lt;/code&gt;  忽略空格数量的差异&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-B&lt;/code&gt;  忽略空白行的差异&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-i&lt;/code&gt;  忽略大小写&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-u&lt;/code&gt;  以合并的方式显示差异&lt;/p&gt;
+
+&lt;h4 id=&quot;对比文件的差异&quot;&gt;对比文件的差异&lt;/h4&gt;
+
+&lt;p&gt;准备两个练习文件&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cp&lt;/span&gt; /etc/passwd passwd.old
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /etc/passwd | &lt;span class=&quot;nb&quot;&gt;sed&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'4d'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'6c no six line'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; passwd.new
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ diff passwd.old passwd.new
+
+4d3        # 左边第四行被删除了，基准是右边的第三行
+&amp;lt; adm:x:3:4:adm:/var/adm:/sbin/nologin   # 左边文件被删除的那一行
+6c5 # 左边文件的第六行被替换成右边文件的第五行
+&amp;lt; sync:x:5:0:sync:/sbin:/bin/sync  # 左边第六行内容
+---
+&amp;gt; no six line  # 右边第五行内容
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;对比目录的差异&quot;&gt;对比目录的差异&lt;/h4&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;diff /etc/rc0.d/ /etc/rc5.d/
+Only &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; /etc/rc0.d/: K90network
+Only &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; /etc/rc5.d/: S10network
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;cmp&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cmp&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cmp&lt;/code&gt; &lt;strong&gt;逐个字节&lt;/strong&gt; 地对比两文件，也可以对比二进制文件。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cmp [-l] file1 file2&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-l&lt;/code&gt;  将所有的不同点都列出来&lt;/p&gt;
+
+&lt;p&gt;默认仅输出第一处差异。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;范例&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cmp passwd.old passwd.new
+passwd.old passwd.new differ: char 106, line 4
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;patch&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;patch&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;patch 命令需要 &lt;strong&gt;与 diff 配合使用&lt;/strong&gt;，可以把由 diff 生成的文件差异做成 &lt;strong&gt;补丁&lt;/strong&gt; 文件。&lt;/p&gt;
+
+&lt;h4 id=&quot;语法-1&quot;&gt;语法&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;patch [−blNR] [−c|−e|−n|−u] [−d dir] [−D define] [−i patchfile] [−o outfile] [−p num] [−r rejectfile] [file]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h5 id=&quot;给旧文件打补丁&quot;&gt;给旧文件打补丁&lt;/h5&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;patch -pN &amp;lt; patch_file&lt;/code&gt; 更新&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;patch -R -pN &amp;lt; patch_file&lt;/code&gt; 还原&lt;/p&gt;
+
+&lt;p&gt;选项与参数：&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-p&lt;/code&gt;  剥掉几层目录&lt;/p&gt;
+
+&lt;p&gt;…&lt;code class=&quot;highlighter-rouge&quot;&gt;-p0&lt;/code&gt;  不剥目录，/aa/bb/cc/dd/fl.c&lt;/p&gt;
+
+&lt;p&gt;…&lt;code class=&quot;highlighter-rouge&quot;&gt;-p1&lt;/code&gt;  剥掉一层，aa/bb/cc/dd/fl.c&lt;/p&gt;
+
+&lt;p&gt;…&lt;code class=&quot;highlighter-rouge&quot;&gt;-p4&lt;/code&gt;  剥掉4层，dd/fl.c&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-R&lt;/code&gt;  把新文件还原成原来版本&lt;/p&gt;
+
+&lt;h5 id=&quot;更新旧版文件&quot;&gt;更新旧版文件&lt;/h5&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;patch -p0 &amp;lt; passwd.patch&lt;/code&gt;&lt;/p&gt;
+
+&lt;h5 id=&quot;恢复旧文件的内容&quot;&gt;恢复旧文件的内容&lt;/h5&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;patch -R -p0 &amp;lt; passwd.patch&lt;/code&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;用-diff-生成差异文件&quot;&gt;用 &lt;code class=&quot;highlighter-rouge&quot;&gt;diff&lt;/code&gt; 生成差异文件&lt;/h4&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;diff &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; passwd.old passwd.new &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; passwd.patch
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;查看一下差异文件的内容：&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;passwd.patch
+
+&lt;span class=&quot;nt&quot;&gt;---&lt;/span&gt; passwd.old 2015-07-14 22:37:43.322535054 +0800 &lt;span class=&quot;c&quot;&gt;# 新旧文件的信息&lt;/span&gt;
++++ passwd.new 2015-07-14 22:38:03.010535054 +0800
+@@ &lt;span class=&quot;nt&quot;&gt;-1&lt;/span&gt;,9 +1,8 @@
+&lt;span class=&quot;c&quot;&gt;# 新旧文件要修改数据的界定范围，旧文件在 1-9 行，新文件在 1-8 行&lt;/span&gt;
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:/sbin/nologin
+daemon:x:2:2:daemon:/sbin:/sbin/nologin
+&lt;span class=&quot;nt&quot;&gt;-adm&lt;/span&gt;:x:3:4:adm:/var/adm:/sbin/nologin &lt;span class=&quot;c&quot;&gt;# 左侧文件删除&lt;/span&gt;
+lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin
+&lt;span class=&quot;nt&quot;&gt;-sync&lt;/span&gt;:x:5:0:sync:/sbin:/bin/sync &lt;span class=&quot;c&quot;&gt;# 左侧文件删除&lt;/span&gt;
++no six line &lt;span class=&quot;c&quot;&gt;# 右侧新文件加入&lt;/span&gt;
+shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown
+halt:x:7:0:halt:/sbin:/sbin/halt
+mail:x:8:12:mail:/var/spool/mail:/sbin/nologin
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p class=&quot;notice&quot;&gt;一般来说，用 diff 生成的差异文件通常使用扩展名 &lt;code class=&quot;highlighter-rouge&quot;&gt;.patch&lt;/code&gt; 。以行为单位，看到 &lt;code class=&quot;highlighter-rouge&quot;&gt;-&lt;/code&gt; 就删除，看到 &lt;code class=&quot;highlighter-rouge&quot;&gt;+&lt;/code&gt; 就添加。&lt;/p&gt;
+
+&lt;h2 id=&quot;文件的转换&quot;&gt;文件的转换&lt;/h2&gt;
+
+&lt;h3 id=&quot;字符编码转换&quot;&gt;字符编码转换&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;iconv -f big5 -t utf8 vi.big5 -o vi.utf8&lt;/code&gt;	繁体转 UTF8&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;iconv -f big5 -t gb2312 vi.big5 -o vi.gb&lt;/code&gt;	繁体转简体&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;iconv --list&lt;/code&gt;	查看支持的所有语系&lt;/p&gt;
+
+&lt;h3 id=&quot;换行符的转换&quot;&gt;换行符的转换&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;dos2unix&lt;/code&gt; 工具用于转换 DOS 换行符。软件包含 &lt;code class=&quot;highlighter-rouge&quot;&gt;dos2unix&lt;/code&gt; 和 &lt;code class=&quot;highlighter-rouge&quot;&gt;unix2dos&lt;/code&gt; 两个工具。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-k&lt;/code&gt;  保留原 mtime&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-n&lt;/code&gt;  另存为新文件&lt;/p&gt;
+
+&lt;h4 id=&quot;unix-转-dos&quot;&gt;UNIX 转 DOS&lt;/h4&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;unix2dos &lt;span class=&quot;nt&quot;&gt;-k&lt;/span&gt; textfile
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;转换后直接覆盖原文件。&lt;/p&gt;
+
+&lt;h4 id=&quot;dos-转-unix&quot;&gt;DOS 转 UNIX&lt;/h4&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;dos2unix &lt;span class=&quot;nt&quot;&gt;-k&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; textfile textfile.linux
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;转换后另存为新文件。&lt;/p&gt;
+
+&lt;h2 id=&quot;文件的操作&quot;&gt;文件的操作&lt;/h2&gt;
+
+&lt;h3 id=&quot;split&quot;&gt;SPLIT&lt;/h3&gt;
+
+&lt;p&gt;把大文件切割成为若干小文件。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;split [-bl] file PREFIX&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-b&lt;/code&gt;  按容量切割，可加单位，b, k, m&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-l&lt;/code&gt;  按行数切割&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;PREFIX&lt;/code&gt;  切块文件名&lt;/p&gt;
+
+&lt;h4 id=&quot;范例&quot;&gt;范例&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;切割成 300k 的文件&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cd /tmp; split -b 300k /etc/services services&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;合成一个文件，文件名为 servicesback&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cat services\* &amp;gt;&amp;gt; servicesback&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;把 ls -al / 输出的信息，每十行存成一个文件&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ls -al / | split -l 10 - lsroot&lt;/code&gt;&lt;/p&gt;</content><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><category term="linux" /><category term="文件系统" /><category term="格式化" /><category term="xfs" /><category term="ext" /><summary type="html">文件系统对象的空间占用，文件的属性，文件的内容，文件的操作，文件的比较</summary></entry><entry><title type="html">Bash 脚本 - 时间</title><link href="https://linotes.imliloli.com/bash/time/" rel="alternate" type="text/html" title="Bash 脚本 - 时间" /><published>2017-07-01T00:00:00+08:00</published><updated>2017-07-01T00:00:00+08:00</updated><id>https://linotes.imliloli.com/bash/time</id><content type="html" xml:base="https://linotes.imliloli.com/bash/time/">&lt;h2 id=&quot;当前时间&quot;&gt;当前时间&lt;/h2&gt;
 
 &lt;h3 id=&quot;标准时间&quot;&gt;标准时间&lt;/h3&gt;
 
@@ -5426,570 +5764,4 @@ bash: ll: &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;not found...
 
 &lt;h5 id=&quot;运行期间修改&quot;&gt;运行期间修改&lt;/h5&gt;
 
-&lt;p&gt;要想临时修改当前环境，或想在脚本中修改选项，最好就是用 &lt;code class=&quot;highlighter-rouge&quot;&gt;set&lt;/code&gt; 命令，&lt;code class=&quot;highlighter-rouge&quot;&gt;- 选项&lt;/code&gt; 为启用，&lt;code class=&quot;highlighter-rouge&quot;&gt;+ 选项&lt;/code&gt; 为禁用。&lt;/p&gt;</content><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><category term="bash" /><category term="环境" /><summary type="html">Bash 与 Bash 脚本，脚本的编写与调试，Bash 环境</summary></entry><entry><title type="html">Python 编程导论</title><link href="https://linotes.imliloli.com/programming/programming_intro/" rel="alternate" type="text/html" title="Python 编程导论" /><published>2017-05-01T00:00:00+08:00</published><updated>2017-05-01T00:00:00+08:00</updated><id>https://linotes.imliloli.com/programming/programming_intro</id><content type="html" xml:base="https://linotes.imliloli.com/programming/programming_intro/">&lt;p&gt;本笔记的教材为 MIT Open Course ：&lt;a href=&quot;https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-00-introduction-to-computer-science-and-programming-fall-2008/&quot;&gt;Introduction to Computer Science and Programming&lt;/a&gt;，by Prof. Eric Grimson, John Guttag.&lt;/p&gt;
-
-&lt;p&gt;像计算机科学家一样思考。&lt;/p&gt;
-
-&lt;p&gt;用语言来 &lt;strong&gt;描述&lt;/strong&gt; 我们想让计算机做什么，描述整个的过程。&lt;/p&gt;
-
-&lt;h2 id=&quot;第一课--第三课&quot;&gt;第一课 ~ 第三课&lt;/h2&gt;
-
-&lt;h3 id=&quot;高级语言--低级语言&quot;&gt;高级语言 / 低级语言&lt;/h3&gt;
-
-&lt;p&gt;低级语言：汇编语言，通过简单的操作，把数据从内存的某个位置移动到另一个位置。类似这样的操作。&lt;/p&gt;
-
-&lt;p&gt;高级语言：功能更复杂。&lt;/p&gt;
-
-&lt;h3 id=&quot;通用语言--专用语言&quot;&gt;通用语言 / 专用语言&lt;/h3&gt;
-
-&lt;h3 id=&quot;解释型语言--编译型语言&quot;&gt;解释型语言 / 编译型语言&lt;/h3&gt;
-
-&lt;h4 id=&quot;解释型语言&quot;&gt;解释型语言：&lt;/h4&gt;
-
-&lt;p&gt;源码被检查之后，交给解释器，然后给出输出。基本上是在运行时直接进行操作。&lt;/p&gt;
-
-&lt;p&gt;解释型语言比较容易调试，因为还能看到源代码。&lt;/p&gt;
-
-&lt;h4 id=&quot;编译型语言&quot;&gt;编译型语言：&lt;/h4&gt;
-
-&lt;p&gt;有一个中间步骤，源码需要先送给一个检查器或编译器，或两者合一，产生出来的是对象代码，object code。&lt;/p&gt;
-
-&lt;p&gt;这个步骤会进行两个重要的操作：一是帮助检查代码错误，二是在实际运行之前，经常会转换为更高效的指令序列。&lt;/p&gt;
-
-&lt;p&gt;编译型语言执行起来更快。&lt;/p&gt;
-
-&lt;hr /&gt;
-&lt;p&gt;&lt;strong&gt;Python 是通用的，高级语言，解释型语言。&lt;/strong&gt;
-—&lt;/p&gt;
-
-&lt;h2 id=&quot;python-语法&quot;&gt;Python 语法&lt;/h2&gt;
-
-&lt;h3 id=&quot;语法&quot;&gt;语法&lt;/h3&gt;
-
-&lt;p&gt;语法是指在该语言中，什么才是 &lt;strong&gt;合法&lt;/strong&gt; 的表达。&lt;/p&gt;
-
-&lt;p&gt;“cat dog boy” 就不是合法的表达。&lt;/p&gt;
-
-&lt;h3 id=&quot;语义&quot;&gt;语义&lt;/h3&gt;
-
-&lt;h4 id=&quot;static-semantics&quot;&gt;static semantics&lt;/h4&gt;
-
-&lt;p&gt;&lt;strong&gt;什么&lt;/strong&gt; 样的程序是 &lt;strong&gt;有意义&lt;/strong&gt; 的，什么样的表达是有意义的。&lt;/p&gt;
-
-&lt;p&gt;有时候语法正确，却没有任何语义：”My desk is Suson”&lt;/p&gt;
-
-&lt;p&gt;虽然从语法上讲是合法的，但不具有任何语义，通常没人给桌子起名字。&lt;/p&gt;
-
-&lt;p&gt;静态语义帮助我们判断哪些表达式、代码具有的意义。&lt;/p&gt;
-
-&lt;h4 id=&quot;full-semantics&quot;&gt;full semantics&lt;/h4&gt;
-
-&lt;p&gt;这个程序是 &lt;strong&gt;做什么&lt;/strong&gt; 的？如果运行某程序，它会实现什么？&lt;/p&gt;
-
-&lt;h3 id=&quot;数据类型&quot;&gt;数据类型&lt;/h3&gt;
-
-&lt;p&gt;Python 会自动进行数据类型的检查，如果不符合要求会给出提示。&lt;/p&gt;
-
-&lt;h4 id=&quot;数字&quot;&gt;数字&lt;/h4&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;整形：5&lt;/li&gt;
-  &lt;li&gt;浮点：3.14&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;字符串&quot;&gt;字符串&lt;/h4&gt;
-
-&lt;h4 id=&quot;布尔&quot;&gt;布尔&lt;/h4&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;True&lt;/code&gt; / &lt;code class=&quot;highlighter-rouge&quot;&gt;False&lt;/code&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;类型转换&quot;&gt;类型转换&lt;/h4&gt;
-
-&lt;p&gt;把一种类型的数据转换为其它类型。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;str()&lt;/code&gt;，&lt;code class=&quot;highlighter-rouge&quot;&gt;int()&lt;/code&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;数据类型是动态的&quot;&gt;数据类型是动态的&lt;/h4&gt;
-
-&lt;p&gt;在 Python 中，数据类型是 &lt;strong&gt;动态&lt;/strong&gt; 的。可能该变量一开始是数字，接下来就可以变成字符串。但仍然建议不要随意修改数据类型，以避免更多的错误产生。&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'string'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;操作符&quot;&gt;操作符&lt;/h3&gt;
-
-&lt;p&gt;操作符用来连接操作对象。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;+&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;/&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;+&lt;/code&gt;&lt;/h4&gt;
-
-&lt;p&gt;用来连接数字时，会进行数学运算；连接字符串时，Python 把两个字符串整合到一起。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;str(5) + 'abc'&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;先把数字转换为字符串，再与其它字符串连接。&lt;/p&gt;
-
-&lt;p&gt;为了把不同类型的数据连接到一起，通常需要进行类型转换。&lt;/p&gt;
-
-&lt;h4 id=&quot;-&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-&lt;/code&gt;&lt;/h4&gt;
-
-&lt;p&gt;只能连接数字，进行减法数学运算。&lt;/p&gt;
-
-&lt;h4 id=&quot;-1&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt;&lt;/h4&gt;
-
-&lt;p&gt;连接数字时，进行乘法运算。&lt;/p&gt;
-
-&lt;p&gt;连接字符串和数字：如果是 &lt;code class=&quot;highlighter-rouge&quot;&gt;字符串 * 整形数字N&lt;/code&gt;，则字符串被重复 N 次。其它连接均会返回 “类型错误”。&lt;/p&gt;
-
-&lt;p class=&quot;notice--info&quot;&gt;操作符连接不同类型对象的行为，称为 &lt;strong&gt;过载&lt;/strong&gt;，即 overloaded，因为有点超出操作符本身的能力范围了。&lt;/p&gt;
-
-&lt;h4 id=&quot;-2&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;/&lt;/code&gt;&lt;/h4&gt;
-
-&lt;p&gt;只能连接数字，进行除法运算。&lt;/p&gt;
-
-&lt;h4 id=&quot;操作符的优先级&quot;&gt;操作符的优先级&lt;/h4&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;( )&lt;/code&gt; &amp;gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;**&lt;/code&gt; &amp;gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;*,/&lt;/code&gt; &amp;gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;+-&lt;/code&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;变量&quot;&gt;变量&lt;/h3&gt;
-
-&lt;p&gt;用变量来保存数据。&lt;/p&gt;
-
-&lt;p&gt;var = ‘what the hell?’&lt;/p&gt;
-
-&lt;p&gt;通过赋值语句，把变量与值 &lt;strong&gt;绑定&lt;/strong&gt; 到一起。&lt;/p&gt;
-
-&lt;p&gt;关于变量使用的 &lt;strong&gt;场合&lt;/strong&gt;：只要变量值在当前位置是合法的，如数据类型可以在当前环境使用，该变量就可以放在这儿。&lt;/p&gt;
-
-&lt;h4 id=&quot;变量名&quot;&gt;变量名&lt;/h4&gt;
-
-&lt;p&gt;尽量起有意义的变量名，便于代码的理解。如 &lt;code class=&quot;highlighter-rouge&quot;&gt;firstname&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;lastname&lt;/code&gt;，比 &lt;code class=&quot;highlighter-rouge&quot;&gt;A&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;B&lt;/code&gt; 好很多。&lt;/p&gt;
-
-&lt;h3 id=&quot;表达式&quot;&gt;表达式&lt;/h3&gt;
-
-&lt;p&gt;把操作对象用操作符组合在一起就形成了表达式。&lt;/p&gt;
-
-&lt;p&gt;在 shell 中直接键入表达式，Python 会自动进行对应的操作，如运算、连接字符串等，然后直接输出结果。而在脚本中的表达式则不会自动输出，必须显式使用 &lt;code class=&quot;highlighter-rouge&quot;&gt;print()&lt;/code&gt; 语句来实现输出。&lt;/p&gt;
-
-&lt;h4 id=&quot;比较表达式&quot;&gt;比较表达式&lt;/h4&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;4 &amp;gt; 2&lt;/code&gt;，&lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;abc&quot; == &quot;abc&quot;&lt;/code&gt;，&lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;z&quot; &amp;gt; &quot;a&quot;&lt;/code&gt; 返回的值为 &lt;code class=&quot;highlighter-rouge&quot;&gt;True&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;3 &amp;lt;= 2&lt;/code&gt;，&lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;z&quot; &amp;gt; &quot;za&quot;&lt;/code&gt; 返回 &lt;code class=&quot;highlighter-rouge&quot;&gt;False&lt;/code&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;赋值表达式&quot;&gt;赋值表达式&lt;/h4&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;C&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;B is &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;, C is &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;C&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;is&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;C&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;is&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;变量名 C 会指向具体的值 20，而不是指向变量 B。因此，虽然 B 变成了 3，但 C 仍然是 20。&lt;/p&gt;
-
-&lt;p&gt;赋值，可以理解为把变量名与某处的值链接起来，或把变量名指向值。&lt;/p&gt;
-
-&lt;h3 id=&quot;语句&quot;&gt;语句&lt;/h3&gt;
-
-&lt;p&gt;Python 可以解释的合法的命令。&lt;/p&gt;
-
-&lt;p&gt;常见的有赋值语句、&lt;code class=&quot;highlighter-rouge&quot;&gt;print()&lt;/code&gt; 等。&lt;/p&gt;
-
-&lt;h2 id=&quot;代码的组织方式&quot;&gt;代码的组织方式&lt;/h2&gt;
-
-&lt;h3 id=&quot;基本要素&quot;&gt;基本要素&lt;/h3&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;数据&lt;/th&gt;
-      &lt;th&gt;操作符&lt;/th&gt;
-      &lt;th&gt;命令&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;数字&lt;br /&gt;字符串&lt;br /&gt;布尔&lt;/td&gt;
-      &lt;td&gt;+ - * /&lt;br /&gt; and, or&lt;/td&gt;
-      &lt;td&gt;赋值&lt;br /&gt;输入/输出&lt;br /&gt;条件结构&lt;br /&gt;循环结构&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h3 id=&quot;代码的运行顺序&quot;&gt;代码的运行顺序&lt;/h3&gt;
-
-&lt;h4 id=&quot;线性程序&quot;&gt;线性程序&lt;/h4&gt;
-
-&lt;p&gt;Straight Line Program&lt;/p&gt;
-
-&lt;p&gt;程序代码按顺序 &lt;strong&gt;逐行&lt;/strong&gt; 执行。&lt;/p&gt;
-
-&lt;h4 id=&quot;分支程序&quot;&gt;分支程序&lt;/h4&gt;
-
-&lt;p&gt;基于某些测试的结果，指令的运行顺序是可以 &lt;strong&gt;变化&lt;/strong&gt; 的。&lt;/p&gt;
-
-&lt;p&gt;测试通常是针对变量的值进行的。&lt;/p&gt;
-
-&lt;h3 id=&quot;条件结构&quot;&gt;条件结构&lt;/h3&gt;
-
-&lt;p&gt;在测试条件结构时，一定要把 &lt;strong&gt;所有可能&lt;/strong&gt; 都测试到。&lt;/p&gt;
-
-&lt;h4 id=&quot;条件的构成&quot;&gt;条件的构成&lt;/h4&gt;
-
-&lt;p class=&quot;notice--info&quot;&gt;&lt;strong&gt;测试条件&lt;/strong&gt; 最终会归结为 &lt;strong&gt;一个布尔值&lt;/strong&gt;。&lt;/p&gt;
-
-&lt;p&gt;条件可以是 &lt;strong&gt;一个简单的表达式&lt;/strong&gt;，如 &lt;code class=&quot;highlighter-rouge&quot;&gt;a&amp;lt;z&lt;/code&gt;，其结果要么 &lt;code class=&quot;highlighter-rouge&quot;&gt;True&lt;/code&gt;，要么 &lt;code class=&quot;highlighter-rouge&quot;&gt;False&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;也可以是 &lt;strong&gt;多个表达式&lt;/strong&gt; 用 &lt;code class=&quot;highlighter-rouge&quot;&gt;and&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;or&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;not&lt;/code&gt; 连接而成的 &lt;strong&gt;布尔组合&lt;/strong&gt;。&lt;/p&gt;
-
-&lt;h4 id=&quot;条件结构常见的语法&quot;&gt;条件结构常见的语法&lt;/h4&gt;
-
-&lt;h5 id=&quot;if-&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;if ...&lt;/code&gt;&lt;/h5&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;some&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;block&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;of&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instructions&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;..........&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;无需像其它语言一样用 endif 之类的来关闭。&lt;/p&gt;
-
-&lt;h5 id=&quot;if--else-&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;if ... else ...&lt;/code&gt;&lt;/h5&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;some&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;block&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;of&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instructions&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;..........&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;block&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;of&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instructions&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;..........&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h5 id=&quot;elif&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;elif&lt;/code&gt;&lt;/h5&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;elif&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;或：&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;some&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;block&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;of&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instructions&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;..........&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;elif&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tests&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;block&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;of&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instructions&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;..........&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;elif&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tests&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;block&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;of&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instructions&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;..........&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h5 id=&quot;嵌套&quot;&gt;嵌套&lt;/h5&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;some&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-	&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tests&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;block&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;of&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instructions&lt;/span&gt;
-		&lt;span class=&quot;o&quot;&gt;..........&lt;/span&gt;
-		&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-	&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;block&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;of&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instructions&lt;/span&gt;
-		&lt;span class=&quot;o&quot;&gt;..........&lt;/span&gt;
-		&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;block&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;of&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instructions&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;..........&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;........&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;循环结构&quot;&gt;循环结构&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;循环&lt;/strong&gt;，loop，也叫 &lt;strong&gt;迭代&lt;/strong&gt;，iteration。&lt;/p&gt;
-
-&lt;h4 id=&quot;循环结构分析&quot;&gt;循环结构分析&lt;/h4&gt;
-
-&lt;h5 id=&quot;组成循环的要素&quot;&gt;组成循环的要素&lt;/h5&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;选择用于 &lt;strong&gt;计数&lt;/strong&gt; 的变量：循环中，必须有个变量的值随着每次循环会发生 &lt;strong&gt;变化&lt;/strong&gt;，次数必须是 &lt;strong&gt;有限&lt;/strong&gt; 的，否则会成为死循环；&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;初始化&lt;/strong&gt; 变量：变量须提前在 &lt;strong&gt;循环外&lt;/strong&gt; 初始化；&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;结束循环&lt;/strong&gt; 的测试：需要有一个用于结束循环的测试，通常测试变量值；&lt;/li&gt;
-  &lt;li&gt;组建循环内代码块：修改变量；&lt;/li&gt;
-  &lt;li&gt;循环结束后做什么&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p class=&quot;notice--success&quot;&gt;在设计一个循环时，必须确认循环会 &lt;strong&gt;中止&lt;/strong&gt;，而且一定会返回一个 &lt;strong&gt;合理的&lt;/strong&gt; 答案。&lt;/p&gt;
-
-&lt;h5 id=&quot;流程图&quot;&gt;流程图&lt;/h5&gt;
-
-&lt;p&gt;流程图是构建完善的循环结构的合适工具。&lt;/p&gt;
-
-&lt;h5 id=&quot;防御性编程&quot;&gt;防御性编程&lt;/h5&gt;
-
-&lt;p&gt;Defensive programming，是防御式设计的一种具体体现，它是为了保证，对程序的不可预见的使用，不会造成程序功能上的损坏。它可以被看作是为了减少或消除墨菲定律效力的想法。防御式编程主要用于可能被滥用，恶作剧或无意地造成灾难性影响的程序上。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;确保分析了所有可能的执行路径&lt;/li&gt;
-  &lt;li&gt;确保每条路径都有合理的输出&lt;/li&gt;
-  &lt;li&gt;所有可能的输入都有对应的路径，不会造成错误或死循环&lt;/li&gt;
-  &lt;li&gt;不要指望用户能给你期望的输入，要把用户当傻子，会犯错&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;以上的编程原则可以称为 &lt;strong&gt;穷举法&lt;/strong&gt;，exhaustive enumeration，即考虑所有的可能性。&lt;/p&gt;
-
-&lt;h4 id=&quot;while-循环&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;while&lt;/code&gt; 循环&lt;/h4&gt;
-
-&lt;p&gt;满足条件就 &lt;strong&gt;一直&lt;/strong&gt; 循环&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;.....&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;block&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;of&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;code&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;......&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;......&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;如：&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;## 计算两个不同大小的数之间所有因数&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'divisor '&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;for-循环&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;for&lt;/code&gt; 循环&lt;/h4&gt;
-
-&lt;p&gt;就给定的条件 &lt;strong&gt;有限&lt;/strong&gt; 地循环&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;var&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;some&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;collection&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;block&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;of&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;code&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;......&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;......&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;如 ：&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;## 另一种列出两数之间因数的方法&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'divisor '&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;元组&quot;&gt;元组&lt;/h4&gt;
-
-&lt;p&gt;tuple，元组，泛指 &lt;strong&gt;有限&lt;/strong&gt; 个元素所组成的 &lt;strong&gt;序列&lt;/strong&gt;，是复合数据结构的一种。它是 &lt;strong&gt;不可修改&lt;/strong&gt; 的。&lt;/p&gt;
-
-&lt;h5 id=&quot;元组的创建&quot;&gt;元组的创建&lt;/h5&gt;
-
-&lt;p&gt;元组由三部分组成：边界符、分隔符和元素。通常采用的边界符是小括号 &lt;code class=&quot;highlighter-rouge&quot;&gt;( )&lt;/code&gt;，分隔符是逗号 &lt;code class=&quot;highlighter-rouge&quot;&gt;,&lt;/code&gt;。&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h5 id=&quot;索引&quot;&gt;索引&lt;/h5&gt;
-
-&lt;p&gt;用索引来访问元组中每个位置的元素，索引从 0 开始。因此索引只能访问 &lt;strong&gt;单个&lt;/strong&gt; 的元素。&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 第 2 个元素&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
-
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 最后一个元素&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;#####　切片&lt;/p&gt;
-
-&lt;p&gt;用切片来访问指定 &lt;strong&gt;索引范围&lt;/strong&gt; 的元素。&lt;/p&gt;
-
-&lt;p&gt;在切片操作中，不包含区间范围的最后一个元素，这是 Python 的风格。&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 读取前 3 个元素&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;foo[1:3]&lt;/code&gt; 是从第 1 个元素开始提取，到第 3 个前面的截止。即提取第 1、2 个元素。&lt;/p&gt;
-
-&lt;p&gt;如果尝试读取索引之外的元素，会返回索引错误消息。&lt;/p&gt;
-
-&lt;h4 id=&quot;字符串的索引和切片&quot;&gt;字符串的索引和切片&lt;/h4&gt;
-
-&lt;p&gt;字符串中的每个字符可以类似于元组中的元素一样被索引或切片。&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'what the fuck'&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;'w'&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;'what t'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;sumDigits&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1952&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;sumDigits&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sumDigits&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;第-4-课-通过函数分解和抽象递归介绍&quot;&gt;第 4 课 ：通过函数分解和抽象，递归介绍&lt;/h2&gt;
-
-&lt;h3 id=&quot;函数&quot;&gt;函数&lt;/h3&gt;
-
-&lt;p&gt;把所有代码都放在一起来运行不利于运行、调试、升级，需要把这些代码进行分解、抽象成为函数。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;把代码拆分成多个模块&lt;/li&gt;
-  &lt;li&gt;忽略细节：对于某一段代码，只需要知道给它什么输入，它会有什么输出&lt;/li&gt;
-  &lt;li&gt;创建新的要素&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;关键字&quot;&gt;关键字&lt;/h4&gt;
-
-&lt;h5 id=&quot;def&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;def&lt;/code&gt;&lt;/h5&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;def&lt;/code&gt; 在 Python 中用于标识一个函数的开始，后面接着函数名称。&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sqrt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h5 id=&quot;return&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;return&lt;/code&gt;&lt;/h5&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;return&lt;/code&gt; 意味着到此处停止程序的运行，同时返回随后跟随的变量。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;return None&lt;/code&gt; 中的 None 是个特殊的值，意味着没有任何值可以返回。但 None 仍然可以用来与其它变量进行比较。&lt;/p&gt;
-
-&lt;h4 id=&quot;函数的调用&quot;&gt;函数的调用&lt;/h4&gt;
-
-&lt;p&gt;要调用一个函数，需要知道函数的名称和参数，如 &lt;code class=&quot;highlighter-rouge&quot;&gt;abs(55)&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;调用函数时，传入的参数与函数参数进行本地绑定，local binding，即只在函数内部生效。&lt;/p&gt;
-
-&lt;p&gt;本地绑定不影响全局绑定。本地和全局是针对函数和 Python 解释器来讲的。本地指函数内部，全局指整个解释器环境。&lt;/p&gt;
-
-&lt;h3 id=&quot;穷举算法&quot;&gt;穷举算法&lt;/h3&gt;
-
-&lt;p&gt;brute-force algorithm&lt;/p&gt;
-
-&lt;p&gt;农夫养猪和鸡，头加起来有 20 个，脚加起来有 56 个，计算猪和鸡各有多少。&lt;/p&gt;
-
-&lt;p&gt;可通过枚举所有的可能性来计算：&lt;/p&gt;
-
-&lt;p&gt;0 只鸡，20 只猪，算一下是否对的上？&lt;/p&gt;
-
-&lt;p&gt;1 只鸡，19 只猪，是否正确？&lt;/p&gt;
-
-&lt;p&gt;2 只鸡，18 只猪？&lt;/p&gt;
-
-&lt;p&gt;……&lt;/p&gt;
-
-&lt;p&gt;写个程序来实现上面的循环：&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numLegs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numHeads&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numChicks&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numHeads&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;numPigs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numHeads&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numChicks&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;totLegs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numPigs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numChicks&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;totLegs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numLegs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numPigs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numChicks&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-
-
-&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;barnYard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;heads&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;input&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Enter number of heads: '&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;legs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;input&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Enter number of legs: '&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;pigs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chickens&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;legs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;heads&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pigs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'There is no solution'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'Number of pigs:'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pigs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'Number of chickens:'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chickens&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;递归&quot;&gt;递归&lt;/h3&gt;
-
-&lt;p&gt;recursion&lt;/p&gt;
-
-&lt;p&gt;在尝试用程序解决一个问题时，除了循环，有时候还需要用另一种思路来考虑问题，递归。简单地说，递归就是函数 &lt;strong&gt;自己调用自己&lt;/strong&gt;。&lt;/p&gt;
-
-&lt;p&gt;递归函数的优点是定义简单，逻辑清晰。理论上，所有的递归函数都可以写成循环的方式，但循环的逻辑不如递归清晰。&lt;/p&gt;
-
-&lt;p&gt;递归算法与迭代算法的设计思路区别在于：函数或算法是否具备收敛性，当且仅当一个算法存在预期的收敛效果时，采用递归算法才是可行的，否则，就不能使用递归算法。&lt;/p&gt;
-
-&lt;p&gt;递归其实是方便了程序员难为了机器。它只要得到数学公式就能很方便的写出程序。优点就是易理解，容易编程。但递归是用栈机制实现的（c++），每深入一层，都要占去一块栈数据区域，对嵌套层数深的一些算法，递归会力不从心，空间上会以内存崩溃而告终，而且递归也带来了大量的函数调用，这也有许多额外的时间开销。所以在深度大时，它的时空性就不好了。&lt;/p&gt;
-
-&lt;p&gt;循环其缺点就是不容易理解，编写复杂问题时困难。优点是效率高。运行时间只因循环次数增加而增加，没什么额外开销。空间上没有什么增加。&lt;/p&gt;
-
-&lt;h2 id=&quot;第-5-课浮点数字连续细化查找根&quot;&gt;第 5 课：浮点数字，连续细化，查找根&lt;/h2&gt;
-
-&lt;h3 id=&quot;浮点数字&quot;&gt;浮点数字&lt;/h3&gt;
-
-&lt;p&gt;在 Python 中，浮点数字遵循 IEEE 754 标准。&lt;/p&gt;
-
-&lt;p&gt;按标准规定，浮点数由三部分组成：&lt;strong&gt;符号、尾数、阶&lt;/strong&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;mantissa，尾数，也称有效位。exponent，阶，即指数。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;这三部分合在一起来表示计算机中的浮点数。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;尾数 ：1 ≤ 尾数 ＜ 2&lt;/li&gt;
-  &lt;li&gt;阶 ：-1022 ~ 1023&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;在 CPython 中，浮点数总是 64 位的。&lt;/p&gt;
-
-&lt;p&gt;浮点数的结构：&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;符号&lt;/th&gt;
-      &lt;th&gt;阶&lt;/th&gt;
-      &lt;th&gt;尾数&lt;/th&gt;
-      &lt;th&gt; &lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;单精度&lt;/td&gt;
-      &lt;td&gt;1 位&lt;/td&gt;
-      &lt;td&gt;8 位&lt;/td&gt;
-      &lt;td&gt;23 位&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;双精度&lt;/td&gt;
-      &lt;td&gt;1 位&lt;/td&gt;
-      &lt;td&gt;11 位&lt;/td&gt;
-      &lt;td&gt;52 位&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;Python 默认的是十进制 17 位小数的精度，前 16 位是准确的，第 17 位开始不准确。&lt;/p&gt;
-
-&lt;h3 id=&quot;范例&quot;&gt;范例&lt;/h3&gt;
-
-&lt;p&gt;1/8 = 0.125&lt;/p&gt;
-
-&lt;p&gt;用十进制表示：1.25 * 10&lt;sup&gt;-1&lt;/sup&gt;&lt;/p&gt;
-
-&lt;p&gt;用二进制表示：1.0 * 10&lt;sup&gt;-3&lt;/sup&gt; ，即  0.001&lt;/p&gt;</content><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><category term="python" /><category term="编程" /><summary type="html">以 Python 为例，学习编程基础。</summary></entry></feed>
+&lt;p&gt;要想临时修改当前环境，或想在脚本中修改选项，最好就是用 &lt;code class=&quot;highlighter-rouge&quot;&gt;set&lt;/code&gt; 命令，&lt;code class=&quot;highlighter-rouge&quot;&gt;- 选项&lt;/code&gt; 为启用，&lt;code class=&quot;highlighter-rouge&quot;&gt;+ 选项&lt;/code&gt; 为禁用。&lt;/p&gt;</content><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><category term="bash" /><category term="环境" /><summary type="html">Bash 与 Bash 脚本，脚本的编写与调试，Bash 环境</summary></entry></feed>
