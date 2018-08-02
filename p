@@ -2,4 +2,4 @@
 #python tag_generator.py
 git add -A && \
 git commit -m "update" &&\
-git push
+git push origin master
