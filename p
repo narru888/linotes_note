@@ -2,7 +2,7 @@
 PATH=$PATH:"/home/liloli/linotes"
 #python tag_generator.py
 g1 
-wait
+sleep 5000
 g2
-wait
+sleep 5000
 g3
