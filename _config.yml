@@ -79,6 +79,18 @@ paginate_path: /page:num/
 
 
 
+gems:
+- jekyll/tagging
+
+
+tag_page_layout: tag
+tag_page_dir: tag
+
+
+
+
+
+
 
 include: ["_pages"]
 
