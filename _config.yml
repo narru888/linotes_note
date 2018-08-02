@@ -45,9 +45,8 @@ incremental: false
 
 # Theme
 theme: minimal-mistakes-jekyll
-minimal_mistakes_skin    : "air"
 remote_theme: mmistakes/minimal-mistakes
-
+minimal_mistakes_skin: "air"
 
 sass:
   sass_dir: _sass
