@@ -7,7 +7,7 @@ email: imhawkz@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   用简洁清晰的语言讨论技术
 
-
+repository              : "linotes.github.io"
 
 baseurl: "" # the subpath of your site, e.g. /blog
 twitter_username: liloli
@@ -242,3 +242,60 @@ keep_files:
   - .svn
 encoding: "utf-8"
 markdown_ext: "markdown,mkdown,mkdn,mkd,md"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+comments:
+  provider               : "disqus" # "disqus" , "discourse", "facebook", "google-plus", "staticman", "staticman_v2" "custom"
+  disqus:
+    shortname            : liloli # https://help.disqus.com/customer/portal/articles/466208-what-s-a-shortname-
+  discourse:
+    server               : # https://meta.discourse.org/t/embedding-discourse-comments-via-javascript/31963 , e.g.: meta.discourse.org
+  facebook:
+    # https://developers.facebook.com/docs/plugins/comments
+    appid                :
+    num_posts            : # 5 (default)
+    colorscheme          : # "light" (default), "dark"
+staticman:
+  allowedFields          : ['name', 'email', 'url', 'message']
+  branch                 : "master"
+  commitMessage          : "New comment."
+  filename               : # comment-{@timestamp}
+  format                 : # "yml"
+  moderation             : true
+  path                   : # "/_data/comments/{options.slug}" (default)
+  requiredFields         : ['name', 'email', 'message']
+  transforms:
+    email                : # "md5"
+  generatedFields:
+    date:
+      type               : # "date"
+      options:
+        format           : # "iso8601" (default), "timestamp-seconds", "timestamp-milliseconds"
+reCaptcha:
+  siteKey                :
+  secret                 :
+atom_feed:
+  path                   : # blank (default) uses feed.xml
+search                   : true # false (default)
+search_full_content      : # true, false (default)
+
+
+twitter:
+  username               : "liloli"
+facebook:
+  username               : "lilolibj"
