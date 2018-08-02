@@ -15,7 +15,7 @@ title                    : "LINOTES"
 title_separator          : "-"
 name                     : "Hawk Zhang"
 description              : "用简洁清晰的语言讨论技术"
-url                      : "https://liloli.github.io"
+url                      : "https://linotes.github.io"
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
 teaser                   : #/assets/images/fallback.jpg # path of fallback teaser image, e.g. "/assets/images/500x300.png"
@@ -90,7 +90,7 @@ author:
   avatar           : "/assets/images/bio-photo.jpg"
   bio              : # "用简洁清晰的语言讨论技术"
   location         : "北京"
-  email            : "liloli@gmail.com"
+  email            : "imhawkz@gmail.com"
   uri              :
   home             : # null (default), "absolute or relative url to link to author home"
   bitbucket        :
