@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="https://linotes.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://linotes.github.io/" rel="alternate" type="text/html" /><updated>2018-08-02T17:26:26+08:00</updated><id>https://linotes.github.io/</id><title type="html">LINOTES</title><subtitle>用简洁清晰的语言讨论技术</subtitle><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><entry><title type="html">Welcome to Jekyll!</title><link href="https://linotes.github.io/jekyll/update/welcome-to-jekyll/" rel="alternate" type="text/html" title="Welcome to Jekyll!" /><published>2018-08-01T21:35:40+08:00</published><updated>2018-08-01T21:35:40+08:00</updated><id>https://linotes.github.io/jekyll/update/welcome-to-jekyll</id><content type="html" xml:base="https://linotes.github.io/jekyll/update/welcome-to-jekyll/">&lt;p&gt;You’ll find this post in your &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-08-02T17:36:34+08:00</updated><id>http://localhost:4000/</id><title type="html">LINOTES</title><subtitle>用简洁清晰的语言讨论技术</subtitle><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><entry><title type="html">Welcome to Jekyll!</title><link href="http://localhost:4000/jekyll/update/welcome-to-jekyll/" rel="alternate" type="text/html" title="Welcome to Jekyll!" /><published>2018-08-01T21:35:40+08:00</published><updated>2018-08-01T21:35:40+08:00</updated><id>http://localhost:4000/jekyll/update/welcome-to-jekyll</id><content type="html" xml:base="http://localhost:4000/jekyll/update/welcome-to-jekyll/">&lt;p&gt;You’ll find this post in your &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
 
 &lt;p&gt;To add new posts, simply add a file in the &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory that follows the convention &lt;code class=&quot;highlighter-rouge&quot;&gt;YYYY-MM-DD-name-of-post.ext&lt;/code&gt; and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.&lt;/p&gt;
 
@@ -10,7 +10,7 @@
 &lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Tom'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints 'Hi, Tom' to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;Check out the &lt;a href=&quot;https://jekyllrb.com/docs/home&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://talk.jekyllrb.com/&quot;&gt;Jekyll Talk&lt;/a&gt;.&lt;/p&gt;</content><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><category term="test" /><category term="awe" /><category term="vgd" /><summary type="html">You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated.</summary></entry><entry><title type="html">Bash 脚本 - 时间</title><link href="https://linotes.github.io/bash/time/" rel="alternate" type="text/html" title="Bash 脚本 - 时间" /><published>2017-07-01T00:00:00+08:00</published><updated>2017-07-01T00:00:00+08:00</updated><id>https://linotes.github.io/bash/time</id><content type="html" xml:base="https://linotes.github.io/bash/time/">&lt;h2 id=&quot;当前时间&quot;&gt;当前时间&lt;/h2&gt;
+&lt;p&gt;Check out the &lt;a href=&quot;https://jekyllrb.com/docs/home&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://talk.jekyllrb.com/&quot;&gt;Jekyll Talk&lt;/a&gt;.&lt;/p&gt;</content><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><category term="test" /><category term="awe" /><category term="vgd" /><category term="gggggggggg" /><category term="dddddd" /><category term="eeeee" /><summary type="html">You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated.</summary></entry><entry><title type="html">Bash 脚本 - 时间</title><link href="http://localhost:4000/bash/time/" rel="alternate" type="text/html" title="Bash 脚本 - 时间" /><published>2017-07-01T00:00:00+08:00</published><updated>2017-07-01T00:00:00+08:00</updated><id>http://localhost:4000/bash/time</id><content type="html" xml:base="http://localhost:4000/bash/time/">&lt;h2 id=&quot;当前时间&quot;&gt;当前时间&lt;/h2&gt;
 
 &lt;h3 id=&quot;标准时间&quot;&gt;标准时间&lt;/h3&gt;
 
@@ -58,7 +58,7 @@
 1533092698
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;.&lt;/p&gt;</content><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><category term="bash" /><category term="时间" /><category term="秒" /><category term="毫秒" /><category term="epoch" /></entry><entry><title type="html">Bash 脚本 - 存储空间</title><link href="https://linotes.github.io/bash/storage/" rel="alternate" type="text/html" title="Bash 脚本 - 存储空间" /><published>2017-07-01T00:00:00+08:00</published><updated>2017-07-01T00:00:00+08:00</updated><id>https://linotes.github.io/bash/storage</id><content type="html" xml:base="https://linotes.github.io/bash/storage/">&lt;h2 id=&quot;检查磁盘空间&quot;&gt;检查磁盘空间&lt;/h2&gt;
+&lt;p&gt;.&lt;/p&gt;</content><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><category term="bash" /><category term="时间" /><category term="秒" /><category term="毫秒" /><category term="epoch" /></entry><entry><title type="html">Bash 脚本 - 存储空间</title><link href="http://localhost:4000/bash/storage/" rel="alternate" type="text/html" title="Bash 脚本 - 存储空间" /><published>2017-07-01T00:00:00+08:00</published><updated>2017-07-01T00:00:00+08:00</updated><id>http://localhost:4000/bash/storage</id><content type="html" xml:base="http://localhost:4000/bash/storage/">&lt;h2 id=&quot;检查磁盘空间&quot;&gt;检查磁盘空间&lt;/h2&gt;
 
 &lt;p&gt;把 &lt;code class=&quot;highlighter-rouge&quot;&gt;df -h&lt;/code&gt; 的结果按占用率排序，取最大的一行，截取占用率字段，去掉百分号，只保留数字。根据数字大小来决定显示什么消息，超过一定限制则发邮件。&lt;/p&gt;
 
@@ -89,7 +89,7 @@
 &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$Message&lt;/span&gt; | mail &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;disk report &lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;date&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; anny
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;.&lt;/p&gt;</content><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><category term="bash" /><category term="磁盘空间" /></entry><entry><title type="html">Bash 脚本 - 数字</title><link href="https://linotes.github.io/bash/numbers/" rel="alternate" type="text/html" title="Bash 脚本 - 数字" /><published>2017-07-01T00:00:00+08:00</published><updated>2017-07-01T00:00:00+08:00</updated><id>https://linotes.github.io/bash/numbers</id><content type="html" xml:base="https://linotes.github.io/bash/numbers/">&lt;h2 id=&quot;常用工具&quot;&gt;常用工具&lt;/h2&gt;
+&lt;p&gt;.&lt;/p&gt;</content><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><category term="bash" /><category term="磁盘空间" /></entry><entry><title type="html">Bash 脚本 - 数字</title><link href="http://localhost:4000/bash/numbers/" rel="alternate" type="text/html" title="Bash 脚本 - 数字" /><published>2017-07-01T00:00:00+08:00</published><updated>2017-07-01T00:00:00+08:00</updated><id>http://localhost:4000/bash/numbers</id><content type="html" xml:base="http://localhost:4000/bash/numbers/">&lt;h2 id=&quot;常用工具&quot;&gt;常用工具&lt;/h2&gt;
 
 &lt;h3 id=&quot;rand&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;rand()&lt;/code&gt;&lt;/h3&gt;
 
@@ -223,7 +223,7 @@
 &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$rnd&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;.&lt;/p&gt;</content><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><category term="bash" /><category term="数字" /><category term="随机数" /></entry><entry><title type="html">Bash 脚本 - 输入</title><link href="https://linotes.github.io/bash/input/" rel="alternate" type="text/html" title="Bash 脚本 - 输入" /><published>2017-07-01T00:00:00+08:00</published><updated>2017-07-01T00:00:00+08:00</updated><id>https://linotes.github.io/bash/input</id><content type="html" xml:base="https://linotes.github.io/bash/input/">&lt;h2 id=&quot;read&quot;&gt;read&lt;/h2&gt;
+&lt;p&gt;.&lt;/p&gt;</content><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><category term="bash" /><category term="数字" /><category term="随机数" /></entry><entry><title type="html">Bash 脚本 - 输入</title><link href="http://localhost:4000/bash/input/" rel="alternate" type="text/html" title="Bash 脚本 - 输入" /><published>2017-07-01T00:00:00+08:00</published><updated>2017-07-01T00:00:00+08:00</updated><id>http://localhost:4000/bash/input</id><content type="html" xml:base="http://localhost:4000/bash/input/">&lt;h2 id=&quot;read&quot;&gt;read&lt;/h2&gt;
 
 &lt;h3 id=&quot;读取一个变量&quot;&gt;读取一个变量&lt;/h3&gt;
 
@@ -309,7 +309,7 @@ echo &lt;/span&gt;输入完毕。
 &lt;p&gt;执行输出变量值的命令以后，将显示用户所输入的数据值，如下所示：&lt;/p&gt;
 
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Linux c+           &lt;span class=&quot;c&quot;&gt;#输出变量值&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><category term="bash" /><category term="输入" /><category term="read" /></entry><entry><title type="html">Bash 脚本 - 调试</title><link href="https://linotes.github.io/bash/debug/" rel="alternate" type="text/html" title="Bash 脚本 - 调试" /><published>2017-07-01T00:00:00+08:00</published><updated>2017-07-01T00:00:00+08:00</updated><id>https://linotes.github.io/bash/debug</id><content type="html" xml:base="https://linotes.github.io/bash/debug/">&lt;h2 id=&quot;检查文件语法错误&quot;&gt;检查文件语法错误&lt;/h2&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><category term="bash" /><category term="输入" /><category term="read" /></entry><entry><title type="html">Bash 脚本 - 调试</title><link href="http://localhost:4000/bash/debug/" rel="alternate" type="text/html" title="Bash 脚本 - 调试" /><published>2017-07-01T00:00:00+08:00</published><updated>2017-07-01T00:00:00+08:00</updated><id>http://localhost:4000/bash/debug</id><content type="html" xml:base="http://localhost:4000/bash/debug/">&lt;h2 id=&quot;检查文件语法错误&quot;&gt;检查文件语法错误&lt;/h2&gt;
 
 &lt;p&gt;通过检查返回状态来判断是否 sh 程序运行正确，进而判断是否脚本有语法错误。&lt;/p&gt;
 
@@ -341,7 +341,7 @@ else
 &lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;.&lt;/p&gt;</content><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><category term="bash" /><category term="调试" /></entry><entry><title type="html">文件描述符简介</title><link href="https://linotes.github.io/kernel/filedescriptor/" rel="alternate" type="text/html" title="文件描述符简介" /><published>2017-06-01T00:00:00+08:00</published><updated>2017-06-01T00:00:00+08:00</updated><id>https://linotes.github.io/kernel/filedescriptor</id><content type="html" xml:base="https://linotes.github.io/kernel/filedescriptor/">&lt;h2 id=&quot;文件描述符&quot;&gt;文件描述符&lt;/h2&gt;
+&lt;p&gt;.&lt;/p&gt;</content><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><category term="bash" /><category term="调试" /></entry><entry><title type="html">文件描述符简介</title><link href="http://localhost:4000/kernel/filedescriptor/" rel="alternate" type="text/html" title="文件描述符简介" /><published>2017-06-01T00:00:00+08:00</published><updated>2017-06-01T00:00:00+08:00</updated><id>http://localhost:4000/kernel/filedescriptor</id><content type="html" xml:base="http://localhost:4000/kernel/filedescriptor/">&lt;h2 id=&quot;文件描述符&quot;&gt;文件描述符&lt;/h2&gt;
 
 &lt;h3 id=&quot;文件-io&quot;&gt;文件 I/O&lt;/h3&gt;
 
@@ -536,7 +536,7 @@ else
 &lt;p&gt;下图展示了文件描述符、打开的文件句柄以及 i-node 之间的关系，图中，两个进程拥有诸多打开的文件描述符。&lt;/p&gt;
 
 &lt;figure class=&quot;&quot;&gt;
-  &lt;img src=&quot;https://linotes.github.io/assets/images/2017.4.1.pcb.inode.png&quot; alt=&quot;&quot; /&gt;
+  &lt;img src=&quot;http://localhost:4000/assets/images/2017.4.1.pcb.inode.png&quot; alt=&quot;&quot; /&gt;
   
 &lt;/figure&gt;
 
@@ -695,7 +695,7 @@ else
 
 &lt;p&gt;当要写入的数据量大于 &lt;code class=&quot;highlighter-rouge&quot;&gt;PIPE_BUF&lt;/code&gt; 时，linux 将不再保证写入的原子性。在写满所有 FIFO 空闲缓冲区后，写操作返回。&lt;/p&gt;
 
-&lt;p&gt;.&lt;/p&gt;</content><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><category term="文件描述符" /><category term="管道" /></entry><entry><title type="html">Bash 入门 03</title><link href="https://linotes.github.io/programming/bash03/" rel="alternate" type="text/html" title="Bash 入门 03" /><published>2017-05-03T00:00:00+08:00</published><updated>2017-05-03T00:00:00+08:00</updated><id>https://linotes.github.io/programming/bash03</id><content type="html" xml:base="https://linotes.github.io/programming/bash03/">&lt;h2 id=&quot;9-重复性任务&quot;&gt;9. 重复性任务&lt;/h2&gt;
+&lt;p&gt;.&lt;/p&gt;</content><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><category term="文件描述符" /><category term="管道" /></entry><entry><title type="html">Bash 入门 03</title><link href="http://localhost:4000/programming/bash03/" rel="alternate" type="text/html" title="Bash 入门 03" /><published>2017-05-03T00:00:00+08:00</published><updated>2017-05-03T00:00:00+08:00</updated><id>http://localhost:4000/programming/bash03</id><content type="html" xml:base="http://localhost:4000/programming/bash03/">&lt;h2 id=&quot;9-重复性任务&quot;&gt;9. 重复性任务&lt;/h2&gt;
 
 &lt;h3 id=&quot;91-for-循环&quot;&gt;9.1 &lt;code class=&quot;highlighter-rouge&quot;&gt;for&lt;/code&gt; 循环&lt;/h3&gt;
 
@@ -1905,7 +1905,7 @@ makewhatis &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; &lt;span class=&quot
 &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;0
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;……….&lt;/p&gt;</content><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><category term="bash" /><category term="for" /><category term="while" /><category term="until" /><category term="变量" /><summary type="html">循环，变量，函数，捕捉信号</summary></entry><entry><title type="html">Bash 入门 02</title><link href="https://linotes.github.io/programming/bash02/" rel="alternate" type="text/html" title="Bash 入门 02" /><published>2017-05-03T00:00:00+08:00</published><updated>2017-05-03T00:00:00+08:00</updated><id>https://linotes.github.io/programming/bash02</id><content type="html" xml:base="https://linotes.github.io/programming/bash02/">&lt;h2 id=&quot;4-正则表达式&quot;&gt;4. 正则表达式&lt;/h2&gt;
+&lt;p&gt;……….&lt;/p&gt;</content><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><category term="bash" /><category term="for" /><category term="while" /><category term="until" /><category term="变量" /><summary type="html">循环，变量，函数，捕捉信号</summary></entry><entry><title type="html">Bash 入门 02</title><link href="http://localhost:4000/programming/bash02/" rel="alternate" type="text/html" title="Bash 入门 02" /><published>2017-05-03T00:00:00+08:00</published><updated>2017-05-03T00:00:00+08:00</updated><id>http://localhost:4000/programming/bash02</id><content type="html" xml:base="http://localhost:4000/programming/bash02/">&lt;h2 id=&quot;4-正则表达式&quot;&gt;4. 正则表达式&lt;/h2&gt;
 
 &lt;p&gt;Regular Expressions&lt;/p&gt;
 
@@ -3374,7 +3374,7 @@ netscape
 &lt;/span&gt;&lt;span class=&quot;c&quot;&gt;# End here document&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;……….&lt;/p&gt;</content><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><category term="shell" /><category term="bash" /><category term="sed" /><category term="awk" /><summary type="html">正则表达式，SED，AWK，条件结构，交互式脚本</summary></entry><entry><title type="html">Bash 入门 01</title><link href="https://linotes.github.io/programming/bash01/" rel="alternate" type="text/html" title="Bash 入门 01" /><published>2017-05-03T00:00:00+08:00</published><updated>2017-05-03T00:00:00+08:00</updated><id>https://linotes.github.io/programming/bash01</id><content type="html" xml:base="https://linotes.github.io/programming/bash01/">&lt;p&gt;Bash Guide for Beginners is a good book.&lt;/p&gt;
+&lt;p&gt;……….&lt;/p&gt;</content><author><name>Hawk Zhang</name><email>imhawkz@gmail.com</email></author><category term="shell" /><category term="bash" /><category term="sed" /><category term="awk" /><summary type="html">正则表达式，SED，AWK，条件结构，交互式脚本</summary></entry><entry><title type="html">Bash 入门 01</title><link href="http://localhost:4000/programming/bash01/" rel="alternate" type="text/html" title="Bash 入门 01" /><published>2017-05-03T00:00:00+08:00</published><updated>2017-05-03T00:00:00+08:00</updated><id>http://localhost:4000/programming/bash01</id><content type="html" xml:base="http://localhost:4000/programming/bash01/">&lt;p&gt;Bash Guide for Beginners is a good book.&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;http://www.tldp.org/LDP/Bash-Beginners-Guide/html/index.html&quot;&gt;《 Bash Guide for Beginners 》&lt;/a&gt;&lt;/p&gt;
 

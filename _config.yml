@@ -66,6 +66,8 @@ tag_archive:
 plugins:
   - jekyll-feed
   - jekyll-paginate
+  - jekyll/tagging
+
 
 whitelist:
   - jekyll-paginate
@@ -79,8 +81,8 @@ paginate_path: /page:num/
 
 
 
-gems:
-- jekyll/tagging
+
+
 
 
 tag_page_layout: tag
