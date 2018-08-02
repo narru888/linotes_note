@@ -173,6 +173,8 @@ author:
 
 
 # comments
+comments:
+  provider               : "staticman"
 staticman:
   allowedFields          : ['name', 'email', 'message']
   branch                 : "master"
