@@ -551,3 +551,33 @@ div.initial-content div#main article div nav,
 div.initial-content div#main div.page__related {
 	border: none;
 }
+
+
+
+
+div.initial-content div#main article div footer h2.archive__item-title a {
+    color: #5c8cad;
+}
+
+div.initial-content div#main article div footer p.page__taxonomy strong {
+    color: #cccccc;
+    font-family: Roboto Light, Hiragino Sans GB;
+    font-weight: normal;
+}
+
+div.initial-content div#main article div footer a.page__taxonomy-item {
+    color: #cccccc;
+    border-color: #e0e0e0;
+}
+
+div.initial-content div#main article div footer p.page__date strong {
+    color: #cccccc;
+    font-family: Roboto Light, Hiragino Sans GB;
+    font-weight: normal;
+}
+
+div.initial-content div#main article div footer p.page__date time {
+    color: #cccccc;
+    font-weight: normal;
+    font-family: Roboto Light, Hiragino Sans GB;
+}
