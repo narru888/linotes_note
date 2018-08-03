@@ -316,8 +316,8 @@ it-IT:
 # -----------------
 zh: &DEFAULT_ZH_HANS
   page                       : "页面"
-  pagination_previous        : "向前"
-  pagination_next            : "向后"
+  pagination_previous        : "上一页"
+  pagination_next            : "下一页"
   breadcrumb_home_label      : "首页"
   breadcrumb_separator       : "/"
   menu_label                 : "切换菜单"
@@ -333,7 +333,7 @@ zh: &DEFAULT_ZH_HANS
   comments_label             : "留下评论"
   comments_title             : "评论"
   more_label                 : "了解更多"
-  related_label              : "猜您还喜欢"
+  related_label              : "相关文章"
   follow_label               : "关注:"
   feed_label                 : "Feed"
   powered_by                 : "技术来自于"
@@ -343,7 +343,7 @@ zh: &DEFAULT_ZH_HANS
   undefined_wpm              : "_config.yml配置中words_per_minute字段未定义"
   comment_form_info          : "您的电子邮箱地址并不会被展示。请填写标记为必须的字段。"
   comment_form_comment_label : "评论"
-  comment_form_md_info       : "Markdown语法已支持。"
+  comment_form_md_info       : "支持 Markdown 语法。"
   comment_form_name_label    : "姓名"
   comment_form_email_label   : "电子邮箱"
   comment_form_website_label : "网站（可选）"

@@ -546,12 +546,17 @@ div.initial-content div#main article div nav a.pagination--pager {
 	font-weight: normal;
 }
 
-//---------------  相关内容连线
+//---------------  相关内容边框
 div.initial-content div#main article div nav,
 div.initial-content div#main div.page__related {
 	border: none;
 }
-
+//---------- 相关内容单独一行
+div.initial-content div#main div.page__related div div.grid__item {
+	float: left;
+	width: 90%;
+	height: 25px;
+}
 
 
 
