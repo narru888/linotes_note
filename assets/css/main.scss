@@ -528,23 +528,25 @@ div.initial-content div#main article div section div ul li a {
 
 
 
-//----------  每页下部  关联博文标题
+//----------  每页下部
+
+//---------  关联博文标题
 
 div.initial-content div#main div.page__related div div.grid__item article h2 a {
 font-size: 0.7rem;
 font-weight: normal;
-color: #616161;
+color: #5c8cad;
 }
 
 
 
-
+//---------------  翻页按钮边线
 div.initial-content div#main article div nav a.pagination--pager {
 	font-size: 0.7rem;
 	font-weight: normal;
 }
 
-
+//---------------  相关内容连线
 div.initial-content div#main article div nav,
 div.initial-content div#main div.page__related {
 	border: none;
