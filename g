@@ -30,12 +30,12 @@ if [ ! -d ${REPO}/.git ]
     echo "${REPO} is a valid git repo! Proceeding..." >> ${LOG}
     cd ${REPO}
     echo 'starting git process ......'
-    echo 'jekyll is ${J}'
+    echo "jekyll is ${J}"
     ${J} build >> ${LOG}
     echo 'jekyll buid done.'
     ${GIT} --git-dir=.git add -A >> ${LOG}
     echo 'git add done.'
     ${GIT} --git-dir=.git commit -m "update on ${COMMIT_TIMESTAMP}" >> ${LOG}
-    echo 'git commit done.'
+    echo "git commit done. ${COMMIT_TIMESTAMP}"
     ${GIT} --git-dir=.git push >> ${LOG}
 fi
