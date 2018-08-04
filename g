@@ -18,24 +18,29 @@ fi
 REPO='/home/liloli/linotes'
 COMMIT_TIMESTAMP=`date +'%Y-%m-%d %H:%M:%S %Z'`
 DATELOG=`date +'%Y.%m.%d.%H.%M.%S'`
-LOG="/home/liloli/log/${DATELOG}.log"
-GIT=`command -v git`
-J='/home/liloli/gems/bin/jekyll'
+#LOG="/home/liloli/log/${DATELOG}.log"
+LOG="/home/liloli/git.log"
+G="/usr/bin/git"
+J="/home/liloli/gems/wrappers/jekyll"
 
+echo -e "--------------------${DATELOG}-----------------------\n" >> ${LOG}
 
 if [ ! -d ${REPO}/.git ]
   then
     echo "${REPO} is not a valid git repo! Aborting..." >> ${LOG}
     exit 0
   else
-    echo "${REPO} is a valid git repo! Proceeding..." >> ${LOG}
     cd ${REPO}
-    echo 'starting git process ......'
-    ${J} build >> ${LOG}
-    echo 'jekyll buid done.'
-    ${GIT} --git-dir=.git add -A >> ${LOG}
-    echo 'git add done.'
-    ${GIT} --git-dir=.git commit -m "update on ${COMMIT_TIMESTAMP}" >> ${LOG}
-    echo "git commit done. ${COMMIT_TIMESTAMP}"
-    ${GIT} --git-dir=.git push >> ${LOG}
+    echo -e "starting git process ...... \n \n"
+    ${J} build >> ${LOG} 2>&1
+    echo -e "jekyll buid done.\n" | tee -a ${LOG}
+    ${G}  add -A >> ${LOG} 2>&1
+    echo -e "git add done.\n"
+    ${G}  commit -m "update on ${COMMIT_TIMESTAMP}" >> ${LOG} 2>&1
+    echo -e  "git commit done. ${COMMIT_TIMESTAMP} \n"
+    ${G} push >> ${LOG} 2>&1
+    echo -e "\n\n git push done."
+    echo 
+    echo
+    echo ".........................git sync finished....................."
 fi
