@@ -17,7 +17,7 @@ fi
 REPO='/home/liloli/linotes'
 COMMIT_TIMESTAMP=`date +'%Y-%m-%d %H:%M:%S %Z'`
 DATELOG=`date +'%Y.%m.$d.%H.%M.%S'`
-LOG="/home/liloli/{DATELOG}.txt"
+LOG="/home/liloli/log/${DATELOG}.log"
 GIT=`command -v git`
 JEKYLL=`command -v jekyll`
 
@@ -29,6 +29,7 @@ if [ ! -d ${REPO}/.git ]
   else
     echo "${REPO} is a valid git repo! Proceeding..." >> ${LOG}
     cd ${REPO}
+    echo 'starting git process ......'
     ${JEKYLL} build >> ${LOG}
     ${GIT} add -A >> ${LOG}
     ${GIT} commit -m "update on ${COMMIT_TIMESTAMP}" >> ${LOG}
