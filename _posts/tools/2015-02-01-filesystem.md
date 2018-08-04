@@ -139,6 +139,68 @@ tmpfs                  103M     0  103M   0% /run/user/1004
 
 
 
+## 路径
+
+
+
+
+
+
+
+### 获取绝对路径
+
+
+
+#### `command -v`
+
+使用 `command -v`，杜绝使用 `which`，它已经过时，有时可能返回不准确的信息。
+
+```bash
+$ echo `command -v jekyll`
+/home/neo/gems/bin/jekyll
+```
+
+
+
+#### `realpath`
+
+```bash
+~ $ realpath example.txt
+/home/username/example.txt
+```
+
+
+
+#### `readlink`
+
+```bash
+$ readlink -f linotes
+/home/neo/linotes
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

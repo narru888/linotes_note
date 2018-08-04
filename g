@@ -31,7 +31,10 @@ if [ ! -d ${REPO}/.git ]
     cd ${REPO}
     echo 'starting git process ......'
     ${JEKYLL} build >> ${LOG}
-    ${GIT} add -A >> ${LOG}
-    ${GIT} commit -m "update on ${COMMIT_TIMESTAMP}" >> ${LOG}
-    ${GIT} push >> ${LOG}
+    echo 'jekyll buid done.'
+    ${GIT} --git-dir=.git add -A >> ${LOG}
+    echo 'git add done.'
+    ${GIT} --git-dir=.git commit -m "update on ${COMMIT_TIMESTAMP}" >> ${LOG}
+    echo 'git commit done.'
+    ${GIT} --git-dir=.git push >> ${LOG}
 fi
