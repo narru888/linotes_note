@@ -34,13 +34,13 @@ if [ ! -d ${REPO}/.git ]
   else
     cd ${REPO}
     jekyll build >> ${LOG} 2>&1
-    echo -e "\n\n..............................  jekyll buid done  ....... \n\n"
+    echo -e "\n\n.........................  jekyll buid done  ....... \n\n"
     git  add -A >> ${LOG} 2>&1
-    echo -e "..............................    git add done   ....... \n\n"
+    echo -e "..........................    git add done   ....... \n\n"
     git  commit -m "update on ${COMMIT_TIMESTAMP}" >> ${LOG} 2>&1
-    echo -e "\n\n..............................  git commit done   .......  ${COMMIT_TIMESTAMP} \n\n"
+    echo -e "\n\n.........................  git commit done   .......  ${COMMIT_TIMESTAMP} \n\n"
     git push >> ${LOG} 2>&1
-    echo -e "\n\n..............................   git push done  .......\n"
+    echo -e "\n\n.........................   git push done  .......\n"
     echo 
     echo
     echo -e "============================== git sync finished =====\n\n\n"
