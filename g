@@ -1,6 +1,6 @@
 #!/bin/bash
-env -i
-set -e
+# env -i
+# set -e
 
 # check if git is available
 chk=$(command -v git)
