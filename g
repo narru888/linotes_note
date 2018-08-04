@@ -22,7 +22,7 @@ COMMIT_TIMESTAMP=`date +'%Y-%m-%d %H:%M:%S %Z'`
 DATELOG=`date +'%Y.%m.%d.%H.%M.%S'`
 #LOG="/home/liloli/log/${DATELOG}.log"
 LOG="/home/liloli/git.log"
-G="/usr/bin/git"
+#G="/usr/bin/git"
 #J="/home/liloli/gems/wrappers/jekyll"
 
 echo -e "-- ${DATELOG} -------------------------------------------\n" >> ${LOG}
@@ -35,12 +35,12 @@ if [ ! -d ${REPO}/.git ]
     cd ${REPO}
     echo -e "starting git process ...... \n \n"
     jekyll build >> ${LOG} 2>&1
-    echo -e "jekyll buid done.\n" | tee -a ${LOG}
-    ${G}  add -A >> ${LOG} 2>&1
+    echo -e "jekyll buid done.\n"
+    git  add -A >> ${LOG} 2>&1
     echo -e "git add done.\n"
-    ${G}  commit -m "update on ${COMMIT_TIMESTAMP}" >> ${LOG} 2>&1
+    git  commit -m "update on ${COMMIT_TIMESTAMP}" >> ${LOG} 2>&1
     echo -e  "git commit done. ${COMMIT_TIMESTAMP} \n"
-    ${G} push >> ${LOG} 2>&1
+    git push >> ${LOG} 2>&1
     echo -e "\n\n git push done."
     echo 
     echo
