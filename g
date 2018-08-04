@@ -25,7 +25,7 @@ LOG="/home/liloli/git.log"
 #G="/usr/bin/git"
 #J="/home/liloli/gems/wrappers/jekyll"
 
-echo -e "-- ${DATELOG} -------------------------------------------\n" >> ${LOG}
+echo -e "== ${DATELOG} ==============================\n" >> ${LOG}
 
 if [ ! -d ${REPO}/.git ]
   then
@@ -33,16 +33,15 @@ if [ ! -d ${REPO}/.git ]
     exit 0
   else
     cd ${REPO}
-    echo -e "starting git process ...... \n \n"
     jekyll build >> ${LOG} 2>&1
-    echo -e "\n\n==============  jekyll buid done  ===== \n\n"
+    echo -e "\n\n..............................  jekyll buid done  ....... \n\n"
     git  add -A >> ${LOG} 2>&1
-    echo -e "==============    git add done    ===== \n\n"
+    echo -e "..............................    git add done   ....... \n\n"
     git  commit -m "update on ${COMMIT_TIMESTAMP}" >> ${LOG} 2>&1
-    echo -e "\n\n==============  git commit done   =====  ${COMMIT_TIMESTAMP} \n\n"
+    echo -e "\n\n..............................  git commit done   .......  ${COMMIT_TIMESTAMP} \n\n"
     git push >> ${LOG} 2>&1
-    echo -e "\n\n ==============   git push done   =====\n"
+    echo -e "\n\n..............................   git push done  .......\n"
     echo 
     echo
-    echo -e "------------------------------------------ git sync finished --\n\n\n"
+    echo -e "============================== git sync finished =====\n\n\n"
 fi
