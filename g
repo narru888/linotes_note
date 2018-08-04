@@ -1,5 +1,7 @@
 #!/bin/bash
 # env -i
+source /etc/profile
+source /home/liloli/.bash_profile
 set -e
 
 
