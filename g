@@ -19,7 +19,7 @@ COMMIT_TIMESTAMP=`date +'%Y-%m-%d %H:%M:%S %Z'`
 DATELOG=`date +'%Y.%m.%d.%H.%M.%S'`
 LOG="/home/liloli/log/${DATELOG}.log"
 GIT=`command -v git`
-JEKYLL=`command -v jekyll`
+J=`command -v jekyll`
 
 
 if [ ! -d ${REPO}/.git ]
@@ -30,7 +30,8 @@ if [ ! -d ${REPO}/.git ]
     echo "${REPO} is a valid git repo! Proceeding..." >> ${LOG}
     cd ${REPO}
     echo 'starting git process ......'
-    ${JEKYLL} build >> ${LOG}
+    echo 'jekyll is ${J}'
+    ${J} build >> ${LOG}
     echo 'jekyll buid done.'
     ${GIT} --git-dir=.git add -A >> ${LOG}
     echo 'git add done.'
