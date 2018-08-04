@@ -23,7 +23,7 @@ DATELOG=`date +'%Y.%m.%d.%H.%M.%S'`
 #LOG="/home/liloli/log/${DATELOG}.log"
 LOG="/home/liloli/git.log"
 G="/usr/bin/git"
-J="/home/liloli/gems/wrappers/jekyll"
+#J="/home/liloli/gems/wrappers/jekyll"
 
 echo -e "--------------------${DATELOG}-----------------------\n" >> ${LOG}
 
@@ -34,7 +34,7 @@ if [ ! -d ${REPO}/.git ]
   else
     cd ${REPO}
     echo -e "starting git process ...... \n \n"
-    ${J} build >> ${LOG} 2>&1
+    jekyll build >> ${LOG} 2>&1
     echo -e "jekyll buid done.\n" | tee -a ${LOG}
     ${G}  add -A >> ${LOG} 2>&1
     echo -e "git add done.\n"
