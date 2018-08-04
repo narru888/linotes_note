@@ -25,7 +25,7 @@ LOG="/home/liloli/git.log"
 G="/usr/bin/git"
 #J="/home/liloli/gems/wrappers/jekyll"
 
-echo -e "--------------------${DATELOG}-----------------------\n" >> ${LOG}
+echo -e "-- ${DATELOG} -------------------------------------------\n" >> ${LOG}
 
 if [ ! -d ${REPO}/.git ]
   then
@@ -44,5 +44,5 @@ if [ ! -d ${REPO}/.git ]
     echo -e "\n\n git push done."
     echo 
     echo
-    echo ".........................git sync finished....................."
+    echo -e "------------------------------------------ git sync finished --\n\n"
 fi
