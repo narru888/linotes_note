@@ -532,12 +532,22 @@ div.initial-content div#main article div section div ul li a {
 
 //---------  关联博文标题
 
+
+//---------- 相关内容单独一行
+div.initial-content div#main div.page__related div div.grid__item {
+	float: left;
+	width: 90%;
+}
+
+div.initial-content div#main div.page__related div div.grid__item article {
+	height: 35px;
+}
+
 div.initial-content div#main div.page__related div div.grid__item article h2 a {
 font-size: 0.7rem;
 font-weight: normal;
 color: #5c8cad;
 }
-
 
 
 //---------------  翻页按钮边线
@@ -551,16 +561,8 @@ div.initial-content div#main article div nav,
 div.initial-content div#main div.page__related {
 	border: none;
 }
-//---------- 相关内容单独一行
-div.initial-content div#main div.page__related div div.grid__item {
-	float: left;
-	width: 90%;
 
-}
 
-div.initial-content div#main div.page__related div div.grid__item article ｛
-	height: 35 px;
-｝
 
 
 div.initial-content div#main article div footer h2.archive__item-title a {
