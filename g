@@ -1,6 +1,7 @@
 #!/bin/bash
 # env -i
-# set -e
+set -e
+
 
 # check if git is available
 chk=$(command -v git)
@@ -19,7 +20,7 @@ COMMIT_TIMESTAMP=`date +'%Y-%m-%d %H:%M:%S %Z'`
 DATELOG=`date +'%Y.%m.%d.%H.%M.%S'`
 LOG="/home/liloli/log/${DATELOG}.log"
 GIT=`command -v git`
-J=`command -v jekyll`
+J='/home/liloli/gems/bin/jekyll'
 
 
 if [ ! -d ${REPO}/.git ]
@@ -30,7 +31,6 @@ if [ ! -d ${REPO}/.git ]
     echo "${REPO} is a valid git repo! Proceeding..." >> ${LOG}
     cd ${REPO}
     echo 'starting git process ......'
-    echo "jekyll is ${J}"
     ${J} build >> ${LOG}
     echo 'jekyll buid done.'
     ${GIT} --git-dir=.git add -A >> ${LOG}
