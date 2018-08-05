@@ -1,6 +1,7 @@
 #!/bin/bash
 source /etc/profile
 source /home/liloli/.bash_profile
+source /home/liloli/.keychain/${HOSTNAME}-sh
 set -e
 
 
