@@ -1,30 +1,76 @@
 ---
 toc: true
-toc_label: "速查手册-权限控制"
+toc_label: "Linux 的使用 - 权限控制"
 toc_icon: "book"
-title: "速查手册-权限控制"
-tag: [权限]
-category: "handbook"
+title: "Linux 的使用 - 权限控制"
+tags: linux umask sudo su 权限
+category: "tools"
 classes: wide
-excerpt: "传统的 Linux 权限控制及 SELinux"
+excerpt: "传统的 Linux 权限控制，SELinux"
 header:
   overlay_image: /assets/images/header/access-control-systems.jpg
   overlay_filter: rgba(0, 0, 0, 0.6)
 published: false
 ---
 
-DAC, MAC
-
-## DAC
-
-传统的 Linux 权限控制其主体是 UID 及 GID。
 
 
+## 权限控制的类别
 
-### 文件权限
+* MAC：Mandatory Access Control，**强制** 访问控制。
+* DAC：Discretionary Access Control，**自由** 访问控制。
+* RBAC：Role Based Access Control，基于 **角色** 的访问控制。
+
+传统的 Linux 权限控制其主体是 **UID** 及 **GID**。
 
 
-#### UMASK
+### DAC
+
+Discretionary Access Control，**自由** 访问控制。它偏重于 **可用性**，它的决策是基于 **权限**。
+
+DAC 让用户管理自己的数据。如在线社区网络中，让用户自行选择谁可以访问他们的数据。通过 DAC ，用户可以轻松地立即废除或转发权限。
+
+
+### RBAC
+
+Role Based Access Control，基于 **角色** 的访问控制。它的决策是基于 **功能** 或 **角色**。
+
+RBAC 适用于在一个系统中把各项责任拆开，分配给不同的角色。RBAC 既适用于企业，也适用于单用户操作系统，用来实施最小权限原则。RBAC 的设计初衷是：通过允许用户为特定任务选择自己角色，来 **拆分责任**。因此关键的问题是，你是否使用角色来完成特定的任务，并且需要经由统一授权来分配角色。或者你需要使用角色，来让用户在自己的对象上控制权限，导致每个对象可以使用不同的角色。
+
+
+### MAC
+
+Mandatory Access Control，**强制** 访问控制。
+
+MAC 的概念本身有些模糊，它的实现有许多方式。它适用于对 **保密级别** 要求较高的情况，它的决策是先基于 **标签**，然后是 **权限**。
+
+在生产中，经常使用不同权限控制的组合。例如，在 UNIX 系统中，最常用使用的是 DAC ，但 root 帐户却可以绕过其限制。在企业中，除了用 MAC / RBAC 来为各部门分配权限之外，还可以允许通过 CAC 在同事之间共享信息。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 文件权限
+
+
+### `umask`
 
 设置默认权限掩码
 
@@ -48,7 +94,7 @@ DAC, MAC
 
 
 
-#### CHMOD
+### `chmod`
 
 `chmod` 用于修改文件的权限位。
 
@@ -66,9 +112,10 @@ DAC, MAC
 
 
 
-#### CHOWN
 
-修改文件拥有者、属组
+### `chown`
+
+修改文件所有者、属组
 
 `chown [参数] 用户 文件`
 
@@ -90,7 +137,7 @@ DAC, MAC
 
 
 
-#### CHGRP
+### `chgrp`
 
 修改文件属组
 
@@ -111,10 +158,21 @@ DAC, MAC
 
 
 
-### 文件属性
 
 
-#### CHATTR  
+
+
+
+
+
+
+
+## 文件属性
+
+
+
+
+### `chattr`  
 
 `chattr` 命令用于修改文件属性，但只能在 EXT 中完整生效，XFS 系统中仅支持部份参数。
 
@@ -156,7 +214,7 @@ EXT 文件系统支持所有参数，XFS 仅支持 `AadiS`。
 
 
 
-#### LSATTR  
+### `lsattr`  
 
 查看文件 **隐藏属性**
 
@@ -169,7 +227,8 @@ EXT 文件系统支持所有参数，XFS 仅支持 `AadiS`。
 
 
 
-#### SETFATTR
+
+### `setfattr`
 
 
 使用 `setfattr` 来设置扩展属性
@@ -191,17 +250,31 @@ EXT 文件系统支持所有参数，XFS 仅支持 `AadiS`。
 
 
 
-### ACL
 
 
 
-#### 查看系统是否支持 ACL
+
+
+
+
+
+
+
+## ACL
+
+
+
+
+
+### 查看系统是否支持 ACL
 
 `dmesg | grep -i acl`
 
 
 
-#### GETFACL
+
+
+### `getfacl`
 
 `getfacl`  用于查看文件的 ACL 条目
 
@@ -209,7 +282,9 @@ EXT 文件系统支持所有参数，XFS 仅支持 `AadiS`。
 
 
 
-#### SETFACL
+
+
+### `setfacl`
 
 `setfacl` 用于设置、修改、删除普通文件和目录的访问控制列表。
 
@@ -242,17 +317,18 @@ EXT 文件系统支持所有参数，XFS 仅支持 `AadiS`。
 
 
 
-##### 范例
+
+#### 范例
 
 * 为指定用户设定权限
 
 `setfacl -m u:user1:rx file`
 
-* 为文件拥有者设定权限
+* 为文件所有者设定权限
 
 `setfacl -m u::rwx file`
 
-`u` 后面留空，表示针对文件 **拥有者**。
+`u` 后面留空，表示针对文件 **所有者**。
 
 * 为指定用户设定权限，空
 
@@ -286,11 +362,31 @@ EXT 文件系统支持所有参数，XFS 仅支持 `AadiS`。
 
 
 
-### 切换用户
 
 
 
-#### SU
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 切换用户
+
+
+
+### `su`
 
 `su` 在某个登陆会话中，变成其他用户。
 
@@ -304,7 +400,7 @@ EXT 文件系统支持所有参数，XFS 仅支持 `AadiS`。
 
 `-m`  保留当前的环境变量（$PATH, $IFS 除外）
 
-##### 范例
+#### 范例
 
 
 * 以 non-login shell 方式切换 root
@@ -333,7 +429,7 @@ EXT 文件系统支持所有参数，XFS 仅支持 `AadiS`。
 
 
 
-#### SUDO
+### `sudo`
 
 `sudo [-b] [-u 新用户帐号]`
 
@@ -343,7 +439,37 @@ EXT 文件系统支持所有参数，XFS 仅支持 `AadiS`。
 `-u`   指定切换的用户，省略则切换为 root
 
 
-##### 范例
+
+#### 配置文件
+
+`sudo` 专用的配置文件为 `/etc/sudoers`，但不能直接修改，一定要使用 **`visudo`** 来编辑。
+
+##### 为特定用户增加 SUDO 权限
+
+```conf
+neo ALL=(ALL) ALL
+```
+
+##### 为特定组增加 SUDO 权限
+
+与配置用户的区别就是在组名前面加上百分号 `%`。
+
+```conf
+%wheel ALL=(ALL) ALL
+```
+
+##### 允许免输密码使用 SUDO
+
+```conf
+neo ALL=(ALL) NOPASSWD: ALL
+%wheel ALL=(ALL) NOPASSWD: ALL
+```
+
+这样配置以后，用户使用 sudo 命令时无需再输入密码。
+
+
+
+#### 范例
 
 * 以其他身份创建文件
 
@@ -368,7 +494,16 @@ EXT 文件系统支持所有参数，XFS 仅支持 `AadiS`。
 
 
 
+
+
+
+
+
+
+
 ## SELinux
+
+
 
 
 
@@ -399,6 +534,8 @@ SELINUX=enforcing/permissive/disabled
 
 `setenforce 1`  切换到强制模式
 
+
+
 #### 系统启动时指定参数
 
 `enforcing=0`  让系统以宽容模式启动
@@ -417,6 +554,8 @@ SELINUX=enforcing/permissive/disabled
 
 ### 上下文
 
+
+
 #### 查看上下文
 
 `ls -Z` 查看文件和目录的上下文
@@ -426,7 +565,9 @@ SELINUX=enforcing/permissive/disabled
 `ps -eZ | grep httpd`  查看特定进程的上下文
 
 
+
 #### 上下文操作
+
 
 ##### 修改上下文
 
@@ -445,6 +586,7 @@ SELINUX=enforcing/permissive/disabled
 ~]# restorecon -v file-name|directory-name
 ```
 
+
 ##### 标签维护
 
 `cp --preserve=context file /tmp/` 复制时保留原上下文
@@ -456,12 +598,15 @@ SELINUX=enforcing/permissive/disabled
 `tar --selinux`  打包或解包时保留上下文，不用参数解包时会继承目标目录的上下文
 
 
+
+
 #### 挂载文件系统
 
 `mount -o context=SELinux_user:role:type:level`  挂载文件系统时使用上下文参数
 
 当文件系统 **挂载时使用了 `context` 参数** 时，系统会 **禁止用户和进程修改上下文**，`chcon` 会返回 `Operation not supported` 错误。
 {: .notice--warning}
+
 
 ##### 用挂载参数控制服务对 NFS 的访问
 
@@ -479,11 +624,13 @@ SELINUX=enforcing/permissive/disabled
 context="system_u:object_r:httpd_sys_content_t:s0"
 ```
 
+
 ##### 修改文件系统的默认上下文
 
 ```
 ~]# mount /dev/sda2 /test/ -o defcontext="system_u:object_r:samba_share_t:s0"
 ```
+
 
 ##### NFS 同一导出目录不同子目录，用不同类型分别挂载
 
@@ -497,11 +644,14 @@ context="system_u:object_r:httpd_sys_content_t:s0"
 #                                          ^^^^^^^^^^^
 ```
 
+
 ##### `/etc/fstab` 中指定挂载参数
 
 ```
 server:/export /local/mount/ nfs context="system_u:object_r:httpd_sys_content_t:s0" 0 0
 ```
+
+
 
 
 
@@ -530,13 +680,14 @@ server:/export /local/mount/ nfs context="system_u:object_r:httpd_sys_content_t:
 
 
 
+
 ### 信息分析
 
 
 
-#### `seinfo`
+#### `seinfo` 查询 SELinux 策略中的各要素
 
-`seinfo` 用于 **查询 SELinux 策略中的各要素**，身份、角色、类型、规则。它使用 `policy.conf`、二进制策略文件、策略包的模块化列表或一个策略列表文件做为输入。其输出也会根据不同的输入而有所区别。
+`seinfo` 用于查询 SELinux 策略中的各要素，身份、角色、类型、规则。它使用 `policy.conf`、二进制策略文件、策略包的模块化列表或一个策略列表文件做为输入。其输出也会根据不同的输入而有所区别。
 
 `seinfo [-trub]`
 
@@ -557,16 +708,15 @@ server:/export /local/mount/ nfs context="system_u:object_r:httpd_sys_content_t:
 
 
 
-#### `avcstat`
+#### `avcstat` 本次开机以来 AVC 的简要统计
 
 `avcstat`  查看本次开机以来 AVC 的简要统计
 
 
 
 
-#### `sestatus`
+#### `sestatus` 查询 SELinux 当前状态信息
 
-可 **查询 SELinux 当前状态信息**：
 
 * SELinux 当前状态，启动或关闭
 * SELinux 关键目录的位置，/etc/selinux
@@ -585,9 +735,7 @@ server:/export /local/mount/ nfs context="system_u:object_r:httpd_sys_content_t:
 
 
 
-#### `semanage`
-
-用于配置策略中的各个要素
+#### `semanage` 配置策略中的各要素
 
 `semanage {login|user|port|interface|fcontext|translation} -l `
 
@@ -602,6 +750,7 @@ server:/export /local/mount/ nfs context="system_u:object_r:httpd_sys_content_t:
 `semanage user` 用于由 SL 用户映射到角色组（一用户可以有多角色）。
 
 多数时间里，管理员只需要使用 `semanage login` 来设置，后者原则上是由基础策略模块定义的，通常不需要修改。
+
 
 ##### 修改目录默认上下文
 
@@ -618,6 +767,7 @@ server:/export /local/mount/ nfs context="system_u:object_r:httpd_sys_content_t:
 `-m`			修改
 
 `-d`			删除
+
 
 ##### 用户操作
 
@@ -645,6 +795,7 @@ server:/export /local/mount/ nfs context="system_u:object_r:httpd_sys_content_t:
 
 	`semanage login -m -S targeted -s "user_u" -r s0 __default__`
 
+
 #####  范例：查看 `/etc` `/etc/cron.d` 两个目录的默认上下文
 
 > 思路：先用 `semanage fcontext -l` 列出系统中所有文件上下文的定义，有几千条，然后使用 grep 过滤。
@@ -662,6 +813,7 @@ SELinux fcontext type Context
 
 由查询结果可知，`/etc` 目录的默认文件类型为 etc_t；`/etc/cron.d` 目录的默认文件类型为 `system_cron_spool_t`。
 
+
 ##### 范例：设置新建目录的默认上下文类型
 
 😈 新建的目录是不存在的上下文默认值的，可以手动创建，以便之后在该目录可以随时使用 `restorecon` 命令。本例只创建其默认的 **文件类型**。
@@ -675,9 +827,9 @@ SELinux fcontext type Context
 
 
 
-#### `sesearch`
+#### `sesearch` 在策略中查找特定的规则
 
-`sesearch` 用于在策略中 **查找特定的规则**。可以在策略源文件中查找，也可以在二进制文件中查找。
+可以在策略源文件中查找，也可以在二进制文件中查找。
 
 `sesearch [-A] [-s 主体类型] [-t 客体类型] [-b 规则名称]`
 
@@ -705,6 +857,7 @@ SELinux fcontext type Context
 # 控制 |   域  |     类型       | 客体  |           操作
 ```
 
+
 ##### 范例：指定的域有权访问哪些类型的文件
 
 运行于 `crond_t` 域中的进程是否有权访问与 `spool` 相关的文件。
@@ -718,6 +871,7 @@ SELinux fcontext type Context
 ```
 
 查询结果表明：`crond_t` 域中的进程允许访问 `system_cron_spool_t` 类型的文件。
+
 
 ##### 范例：指定的域是否有权访问特定文件
 
@@ -744,6 +898,7 @@ SELinux fcontext type Context
 
 虽然有 `crond_t` `admin_home_t` 的规则，但不是针对文件的，因此 `crond_t` 域中的进程无权访问 `admin_home_t` 类型的文件。
 
+
 ##### 范例：查看某个布尔值所影响的所有规则
 
 要知道布尔值的完整名称，通过该命令可以了解该布尔值开或关时，会影响到哪些具体的规则的状态。布尔值开的时候，有哪些规则会启用，哪些会禁用，以及布尔值关的时候的情况。
@@ -768,6 +923,7 @@ ET allow user_t user_t : capability2 syslog ; [ user_dmesg ]
 ET allow staff_t kernel_t : system syslog_read ; [ user_dmesg ]
 ET allow staff_t staff_t : capability2 syslog ; [ user_dmesg ]
 ```
+
 
 ##### 范例：哪些角色可以访问指定类型的文件
 
@@ -812,7 +968,13 @@ Found 20 role allow rules:
 
 
 
+
+
+
 ### SELinux 排错
+
+
+
 
 
 #### `vsftpd` 服务常遇到的问题
@@ -831,6 +993,7 @@ Found 20 role allow rules:
 * 默认 UID 大于 1000 的帐号都可以访问 FTP
 * 所有帐号只允许访问自己的主文件夹
 * 所有帐号可以上传、下载
+
 
 ##### 准备测试环境
 
@@ -865,9 +1028,11 @@ Found 20 role allow rules:
 ~]# systemctl enable vsftpd
 ```
 
+
 ##### 匿名用户无法下载某些文件
 
 查看文件 rwx 权限是否正常。
+
 
 ##### 普通用户从家目录之外的目录上传/下载文件
 
@@ -915,6 +1080,7 @@ drwxr-xr-x. root root system_u:object_r:public_content_t:s0 /var/ftp
 ~]# curl ftp://ftptest:myftp123@localhost//srv/gogogo/test.txt
 test
 ```
+
 
 ##### 修改 vsftpd 端口号
 
