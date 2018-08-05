@@ -1,7 +1,6 @@
 #!/bin/bash
 source /etc/profile
 source /home/liloli/.bash_profile
-source /home/liloli/.keychain/${HOSTNAME}-sh
 set -e
 
 
@@ -35,7 +34,7 @@ if [ ! -d ${REPO}/.git ]
     echo -e "..........................    git add done   ....... \n\n"
     sudo git  commit -m "update on ${COMMIT_TIMESTAMP}" >> ${LOG} 2>&1
     echo -e "\n\n.........................  git commit done   .......  ${COMMIT_TIMESTAMP} \n\n"
-    sudo git push >> ${LOG} 2>&1
+    sudo git push origin master >> ${LOG} 2>&1
     echo -e "\n\n.........................   git push done  .......\n"
     echo 
     echo
