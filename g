@@ -3,6 +3,7 @@
 #source $HOME/.bash_profile
 #set -e
 
+LOG="/var/log/git/sync.log"
 
 
 source $HOME/.keychain/${HOSTNAME}-sh
@@ -12,7 +13,7 @@ len=${#chk}
 
 if [[ $len == 0 ]]
   then 
-    echo "$1 is not found. Script ended." ; exit 11
+    sudo echo "$1 is not found. Script ended." ; exit 11 >> ${LOG}
 fi
 
 
@@ -21,7 +22,6 @@ fi
 REPO='/home/liloli/linotes'
 COMMIT_TIMESTAMP=`date +'%Y-%m-%d %H:%M:%S %Z'`
 DATELOG=`date +'%Y.%m.%d.%H.%M.%S'`
-LOG="/var/log/git/sync.log"
 
 sudo echo -e "== ${DATELOG} ==============================\n" >> ${LOG}
 
@@ -32,14 +32,14 @@ if [ ! -d ${REPO}/.git ]
   else
     cd ${REPO}
     /home/liloli/gems/bin/jekyll build >> ${LOG} 2>&1
-    echo -e "\n\n.........................  jekyll buid done  ....... \n\n"
+    sudo echo -e "\n\n.........................  jekyll buid done  ....... \n\n" >> ${LOG}
     /usr/bin/git  add -A >> ${LOG} 2>&1
-    echo -e "..........................    git add done   ....... \n\n"
+    sudo echo -e "..........................    git add done   ....... \n\n" >> ${LOG}
     /usr/bin/git  commit -m "update on ${COMMIT_TIMESTAMP}" >> ${LOG} 2>&1
-    echo -e "\n\n.........................  git commit done   .......  ${COMMIT_TIMESTAMP} \n\n"
+    sudo echo -e "\n\n.........................  git commit done   .......  ${COMMIT_TIMESTAMP} \n\n" >> ${LOG}
     /usr/bin/git push >> ${LOG} 2>&1
-    echo -e "\n\n.........................   git push done  .......\n"
+    sudo echo -e "\n\n.........................   git push done  .......\n" >> ${LOG}
     echo 
     echo
-    echo -e "============================== git sync finished =====\n\n\n"
+    sudo echo -e "============================== git sync finished =====\n\n\n" >> ${LOG}
 fi
