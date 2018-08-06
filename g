@@ -31,7 +31,7 @@ if [ ! -d ${REPO}/.git ]
     exit 0
   else
     cd ${REPO}
-    /home/liloli/gems/bin/jekyll build >> ${LOG} 2>&1
+    /home/liloli/gems/wrappers/jekyll build >> ${LOG} 2>&1
     sudo echo -e "\n\n.........................  jekyll buid done  ....... \n\n" >> ${LOG}
     /usr/bin/git  add -A >> ${LOG} 2>&1
     sudo echo -e "..........................    git add done   ....... \n\n" >> ${LOG}
