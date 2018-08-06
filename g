@@ -4,6 +4,9 @@ source /home/liloli/.bash_profile
 set -e
 
 
+
+source $HOME/.keychain/${HOSTNAME}-sh
+
 chk=$(command -v git)
 len=${#chk}
 
