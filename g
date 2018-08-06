@@ -1,6 +1,6 @@
 #!/bin/bash
 #source /etc/profile
-source $HOME/.bash_profile
+#source $HOME/.bash_profile
 #set -e
 
 
