@@ -1,6 +1,4 @@
 #!/bin/bash
-#source /etc/profile
-#source $HOME/.bash_profile
 #set -e
 
 LOG="/var/log/git/sync.log"
@@ -17,11 +15,12 @@ if [[ $len == 0 ]]
 fi
 
 
-
-
 REPO='/home/liloli/linotes'
 COMMIT_TIMESTAMP=`date +'%Y-%m-%d %H:%M:%S %Z'`
 DATELOG=`date +'%Y.%m.%d %H:%M:%S'`
+GIT=`command -v git`
+
+
 
 sudo echo -e "==  ${DATELOG}  ============================\n" >> ${LOG}
 
