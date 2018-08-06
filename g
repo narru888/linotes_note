@@ -31,13 +31,13 @@ if [ ! -d ${REPO}/.git ]
     exit 0
   else
     cd ${REPO}
-    jekyll build >> ${LOG} 2>&1
+    /home/liloli/gems/bin/jekyll build >> ${LOG} 2>&1
     echo -e "\n\n.........................  jekyll buid done  ....... \n\n"
-    git  add -A >> ${LOG} 2>&1
+    /usr/bin/git  add -A >> ${LOG} 2>&1
     echo -e "..........................    git add done   ....... \n\n"
-    sudo git  commit -m "update on ${COMMIT_TIMESTAMP}" >> ${LOG} 2>&1
+    /usr/bin/git  commit -m "update on ${COMMIT_TIMESTAMP}" >> ${LOG} 2>&1
     echo -e "\n\n.........................  git commit done   .......  ${COMMIT_TIMESTAMP} \n\n"
-    sudo git push >> ${LOG} 2>&1
+    /usr/bin/git push >> ${LOG} 2>&1
     echo -e "\n\n.........................   git push done  .......\n"
     echo 
     echo
