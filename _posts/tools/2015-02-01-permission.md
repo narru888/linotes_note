@@ -444,7 +444,7 @@ EXT 文件系统支持所有参数，XFS 仅支持 `AadiS`。
 
 `sudo` 专用的配置文件为 `/etc/sudoers`，但不能直接修改，一定要使用 **`visudo`** 来编辑。
 
-如果只是要增加 sudoers，建议在 `/etc/sudoers.d/` 目录中新建自定义配置文件，单独编辑该文件来实现，既安全，又灵活。
+如果只是要增加 sudoers，建议在 `/etc/sudoers.d/` 目录中新建自定义配置文件，用 `sudo visudo -f /etc/sudoers.d/neo` 来编辑该文件来实现，既安全，又灵活。
 {: .notice--success}
 
 

@@ -2,6 +2,7 @@
 #set -e
 
 LOG="/var/log/git/sync.log"
+PATH=${PATH}:/home/liloli/gems/wrappers
 
 
 source $HOME/.keychain/${HOSTNAME}-sh
@@ -19,7 +20,7 @@ REPO='/home/liloli/linotes'
 COMMIT_TIMESTAMP=`date +'%Y-%m-%d %H:%M:%S %Z'`
 DATELOG=`date +'%Y.%m.%d %H:%M:%S'`
 GIT=`command -v git`
-
+#J=
 
 
 sudo echo -e "==  ${DATELOG}  ============================\n" >> ${LOG}
