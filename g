@@ -23,7 +23,7 @@ REPO='/home/liloli/linotes'
 COMMIT_TIMESTAMP=`date +'%Y-%m-%d %H:%M:%S %Z'`
 DATELOG=`date +'%Y.%m.%d %H:%M:%S'`
 
-sudo echo -e "== ${DATELOG} ==============================\n" >> ${LOG}
+sudo echo -e "==  ${DATELOG}  ============================\n" >> ${LOG}
 
 if [ ! -d ${REPO}/.git ]
   then
@@ -32,17 +32,17 @@ if [ ! -d ${REPO}/.git ]
   else
     cd ${REPO}
 
-    sudo echo -e "\n\n.........................  jekyll buid  ....... \n\n" >> ${LOG}
+    sudo echo -e ".........................  jekyll buid  .......\n\n" >> ${LOG}
     /home/liloli/gems/wrappers/jekyll build >> ${LOG} 2>&1
 
-    sudo echo -e "\n\n..........................    git add   ....... \n\n" >> ${LOG}
+    sudo echo -e "\n..........................  git add  .........\n\n" >> ${LOG}
     /usr/bin/git  add -A >> ${LOG} 2>&1
 
-    sudo echo -e "\n\n.........................  git commit  ....... \n\n" >> ${LOG}
+    sudo echo -e ".........................  git commit  .......\n\n" >> ${LOG}
     /usr/bin/git  commit -m "update on ${COMMIT_TIMESTAMP}" >> ${LOG} 2>&1
 
-    sudo echo -e "\n\n.........................   git push  .......\n\n" >> ${LOG}
+    sudo echo -e "\n.........................  git push  .........\n\n" >> ${LOG}
     /usr/bin/git push >> ${LOG} 2>&1
 
-    sudo echo -e "\n\n============================== git sync finished =====\n\n\n" >> ${LOG}
+    sudo echo -e "\n=============================  git sync finished  ===\n\n\n" >> ${LOG}
 fi
