@@ -1,7 +1,7 @@
 #!/bin/bash
-source /etc/profile
-source /home/liloli/.bash_profile
-set -e
+#source /etc/profile
+source $HOME/.bash_profile
+#set -e
 
 
 
