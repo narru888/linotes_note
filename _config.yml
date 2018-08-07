@@ -64,6 +64,21 @@ tag_page_dir: tag
 
 
 
+# HTML Compression
+# - http://jch.penibelst.de/
+compress_html:
+  clippings: all
+  ignore:
+    envs: development
+
+
+
+
+
+
+
+
+
 
 # Defaults
 defaults:

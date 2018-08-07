@@ -33,8 +33,7 @@ if [ ! -d ${REPO}/.git ]
     cd ${REPO}
 
     sudo echo -e ".........................  jekyll buid  .......\n\n" >> ${LOG}
-    /home/liloli/gems/wrappers/jekyll build >> ${LOG} 2>&1
-
+    JEKYLL_ENV=production /home/liloli/gems/wrappers/jekyll build >> ${LOG} 2>&1 
     sudo echo -e "\n..........................  git add  .........\n\n" >> ${LOG}
     /usr/bin/git  add -A >> ${LOG} 2>&1
 
@@ -45,4 +44,5 @@ if [ ! -d ${REPO}/.git ]
     /usr/bin/git push >> ${LOG} 2>&1
 
     sudo echo -e "\n=============================  git sync finished  ===\n\n\n" >> ${LOG}
-fi
+    fi
+    sudo echo -e "\n..........................  git add  .........\n\n" >> ${LOG}
