@@ -45,4 +45,3 @@ if [ ! -d ${REPO}/.git ]
 
     sudo echo -e "\n=============================  git sync finished  ===\n\n\n" >> ${LOG}
     fi
-    sudo echo -e "\n..........................  git add  .........\n\n" >> ${LOG}

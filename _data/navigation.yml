@@ -11,7 +11,7 @@ main:
     url: /kernel/filedescriptor/
 
   - title: "数据流处理"
-    url: /tools/tools.datastream/
+    url: /tools/datastream/
 
 
 # 侧边栏
