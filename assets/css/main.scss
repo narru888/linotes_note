@@ -534,15 +534,13 @@ div.initial-content div#main article div section div ul li a {
 
 
 //---------- 相关内容单独一行
-div.initial-content div#main div.page__related div div.grid__item {
+div.initial-content div#main div.page__related div div.grid__item,
+div.initial-content div#main div.page__related div div.grid__item article {
+	height: 25px;
 	float: left;
 	width: 90%;
 }
 
-div.initial-content div#main div.page__related div div.grid__item,
-div.initial-content div#main div.page__related div div.grid__item article {
-	height: 25px;
-}
 
 div.initial-content div#main div.page__related div div.grid__item article h2 a {
 font-size: 0.7rem;
