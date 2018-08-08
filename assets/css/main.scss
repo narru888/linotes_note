@@ -590,3 +590,11 @@ div.initial-content div#main article div footer p.page__date time {
     font-weight: normal;
     font-family: Roboto Light, Hiragino Sans GB;
 }
+
+
+
+//-------- 评论标题上面的边框线
+
+div.initial-content div#main article div.page__comments h4 {
+	border: none;
+}
