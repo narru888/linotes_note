@@ -42,11 +42,12 @@ gallery:
 
 ## Notice
 
+深灰  --- 少用      				
+{: .notice--primary}
+
+
 浅灰
 {: .notice}   
-
-灰       				
-{: .notice--primary}
 
 浅蓝          	
 {: .notice--info}
