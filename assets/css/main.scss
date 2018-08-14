@@ -319,8 +319,11 @@ section.page__content blockquote {
 
 
 
-
-
+// ---- 斜体字不许倾斜
+section.page__content p em {
+    font-style: normal;
+    color: #000000;
+}
 
 
 
