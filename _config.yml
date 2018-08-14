@@ -16,9 +16,9 @@ description: >- # this means to ignore newlines until "baseurl:"
 
 
 comments:
-  provider               : "custom" #"disqus"
+  provider               : #"custom" #"disqus"
   disqus:
-    shortname            : "linotes"
+    shortname            : #"linotes"
 
 
 

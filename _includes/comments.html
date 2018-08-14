@@ -184,21 +184,7 @@
     {% when "custom" %}
       <section id="custom-comments"></section>
 
-	  <div id="container"></div>
-	  <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
-	  <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
-	  <script>
-	  var gitment = new Gitment({
-	    id: '<%= window.location.pathname %>'
-	    owner: 'liloli',
-	    repo: 'linotescomm',
-	    oauth: {
-	      client_id: '825e6c2b5fd4423149e6',
-	      client_secret: '88cdc09af8dd37695ce87161d10a412547ea260a',
-	    },
-	  })
-	  gitment.render('container')
-	  </script>
+
 
   {% endcase %}
 </div>
