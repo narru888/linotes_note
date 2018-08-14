@@ -189,7 +189,7 @@
 	  <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
 	  <script>
 	  var gitment = new Gitment({
-	    id: '{{ page.date | date: '%B %d, %Y' }}'
+	    id: '<%= window.location.pathname %>'
 	    owner: 'liloli',
 	    repo: 'linotescomm',
 	    oauth: {
