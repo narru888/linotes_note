@@ -371,7 +371,8 @@ div.archive div.list__item article p {
 //--- 段落中代码
 p code.highlighter-rouge,
 table tbody tr td code.highlighter-rouge,
-div.page__inner-wrap section.page__content ul li code {
+div.page__inner-wrap section.page__content ul li code,
+div.initial-content div#main article div section ol li code.highlighter-rouge {
     background-color: #0000000c !important;
 	border-radius: 4px;
     color: #333333;
