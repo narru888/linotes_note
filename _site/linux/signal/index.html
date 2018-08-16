@@ -1,0 +1,1852 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Linux 基础 - 12. 信号 - LINOTES</title>
+<meta name="description" content="用简洁清晰的语言讨论技术">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Linux 基础 - 12. 信号">
+<meta property="og:url" content="https://linotes.netlify.com/linux/signal/">
+
+
+  <meta property="og:description" content="用简洁清晰的语言讨论技术">
+
+
+
+  <meta property="og:image" content="https://linotes.netlify.com/assets/images/header/linux.jpg">
+
+
+
+
+
+  <meta property="article:published_time" content="2015-01-12T00:00:00+08:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://linotes.netlify.com/linux/signal/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="https://linotes.netlify.com/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="https://linotes.netlify.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="https://linotes.netlify.com/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://linotes.netlify.com/assets/images/header/linux.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Linux 基础 - 12. 信号
+
+        
+      </h1>
+      
+        <p class="page__lead">
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="https://linotes.netlify.com/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:imhawkz@gmail.com">
+            <meta itemprop="email" content="imhawkz@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Linux 基础 - 12. 信号">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="January 12, 2015">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-upload"></i> 12. 信号</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#121-信号的概念">12.1 信号的概念</a></li>
+  <li><a href="#122-信号的种类">12.2 信号的种类</a>
+    <ul>
+      <li><a href="#1221-可靠信号与不可靠信号">12.2.1 可靠信号与不可靠信号</a></li>
+      <li><a href="#1222-实时信号与非实时信号">12.2.2 实时信号与非实时信号</a></li>
+      <li><a href="#1223-linux-信号列表">12.2.3 Linux 信号列表</a></li>
+    </ul>
+  </li>
+  <li><a href="#123-信号的生命周期">12.3 信号的生命周期</a>
+    <ul>
+      <li><a href="#1231-信号的产生">12.3.1 信号的产生</a></li>
+      <li><a href="#1232-信号在目标进程中注册">12.3.2 信号在目标进程中注册</a></li>
+      <li><a href="#1233-信号的执行和注销">12.3.3 信号的执行和注销</a></li>
+      <li><a href="#1234-信号的传递">12.3.4 信号的传递</a></li>
+    </ul>
+  </li>
+  <li><a href="#124-信号的阻塞">12.4 信号的阻塞</a>
+    <ul>
+      <li><a href="#1241-为什么要阻塞">12.4.1 为什么要阻塞</a></li>
+      <li><a href="#1242-信号集">12.4.2 信号集</a></li>
+      <li><a href="#1243-进程信号掩码">12.4.3 进程信号掩码</a></li>
+      <li><a href="#1244-测试信号的传递">12.4.4 测试信号的传递</a></li>
+      <li><a href="#1245-为信号处理器阻塞">12.4.5 为信号处理器阻塞</a></li>
+      <li><a href="#1246-检查挂起的信号">12.4.6 检查挂起的信号</a></li>
+      <li><a href="#1247-记住一个信号">12.4.7 记住一个信号</a></li>
+    </ul>
+  </li>
+  <li><a href="#125-等待信号">12.5 等待信号</a>
+    <ul>
+      <li><a href="#1251-使用-pause-函数">12.5.1 使用 pause 函数</a></li>
+      <li><a href="#1252-pause-的问题">12.5.2 pause 的问题</a></li>
+      <li><a href="#1253-使用-sigsuspend">12.5.3 使用 sigsuspend</a></li>
+    </ul>
+  </li>
+  <li><a href="#126-信号的安装">12.6 信号的安装</a>
+    <ul>
+      <li><a href="#1261-为什么要安装">12.6.1 为什么要安装</a></li>
+      <li><a href="#1261-如何安装">12.6.1 如何安装</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="121-信号的概念">12.1 信号的概念</h2>
+
+<p>全称为 <strong>软中断信号</strong>，也被称为软中断，简称信号。</p>
+
+<p>信号是发送给进程的软中断，操作系统用信号来通知正在运行的程序，发生了意外情况。如引用了不可用的内存地址，或异步事件（如电话断线）。</p>
+
+<p>信号本质上是在软件层次上 <strong>对硬件中断机制的一种模拟</strong>。</p>
+
+<p>一个 <strong>进程收到一个信号</strong> 与 <strong>处理器收到一个中断请求</strong> 可以说是 <strong>一样</strong> 的。</p>
+
+<p>信号用于警告意外事件的发生，这些事件会 <strong>生成</strong> 或 <strong>触发</strong> 信号：</p>
+
+<p>GNU 的 C 函数库定义了各种信号类型，每种类型都适用于特定类型的事件。某些类型的事件使程序不能像往常一样继续进行，相应的信号通常会终止程序。其他类型的报告无害事件的信号在默认情况下被忽略。</p>
+
+<p>如果用户要参与到会触发信号的事件中，可以事先定义 <strong>信号处理函数</strong>，当收到 <strong>特定信号</strong> 时，操作系统会运行它。有时称信号处理函数 <strong>捕获</strong>（catch） 了信号，当函数运行时，该信号通常处于 <strong>阻塞</strong>（blocked） 状态。</p>
+
+<p>一个进程可以给另一个进程发信号，父进程可以借此抛弃子进程，或者两个相关进程借此通信并同步。</p>
+
+<h2 id="122-信号的种类">12.2 信号的种类</h2>
+
+<h3 id="1221-可靠信号与不可靠信号">12.2.1 可靠信号与不可靠信号</h3>
+
+<p>早期Unix系统中的信号机制比较简单和原始，信号值小于 <code class="highlighter-rouge">SIGRTMIN</code> 的信号都是 <strong>不可靠信号</strong>。这就是 “不可靠信号” 的来源。它的主要问题是 <strong>信号可能丢失</strong>。</p>
+
+<p>信号值位于 <code class="highlighter-rouge">SIGRTMIN</code> 和 <code class="highlighter-rouge">SIGRTMAX</code> 之间的信号都是可靠信号，可靠信号克服了信号可能丢失的问题。Linux 在支持新版本的信号安装函数 <code class="highlighter-rouge">sigation()</code> 以及信号发送函数 <code class="highlighter-rouge">sigqueue()</code> 的同时，仍然支持早期的 <code class="highlighter-rouge">signal()</code> 信号安装函数，支持信号发送函数 <code class="highlighter-rouge">kill()</code>。</p>
+
+<p><strong>信号的可靠与不可靠只与信号值有关</strong>，与信号的发送及安装函数无关。目前 linux 中的 <code class="highlighter-rouge">signal()</code> 是通过 <code class="highlighter-rouge">sigation()</code> 函数实现的，因此，即使通过 <code class="highlighter-rouge">signal()</code> 安装的信号，在信号处理函数的结尾也不必再调用一次信号安装函数。同时，由 <code class="highlighter-rouge">signal()</code> 安装的实时信号支持排队，同样不会丢失。</p>
+
+<p>对于目前 linux 的两个信号安装函数：<code class="highlighter-rouge">signal()</code> 及 <code class="highlighter-rouge">sigaction()</code> 来说，它们都不能把 <code class="highlighter-rouge">SIGRTMIN</code> 以前的信号变成可靠信号（都不支持排队，仍有可能丢失，仍然是不可靠信号），而且对SIGRTMIN以后的信号都支持排队。这两个函数的最大区别在于，经过sigaction安装的信号都能传递信息给信号处理函数，而经过signal安装的信号不能向信号处理函数传递信息。对于信号发送函数来说也是一样的。</p>
+
+<h3 id="1222-实时信号与非实时信号">12.2.2 实时信号与非实时信号</h3>
+
+<p>早期 Unix 系统只定义了 32 种信号，前 32 种信号已经有了预定义值，每个信号有了确定的用途及含义，并且每种信号都有各自的缺省动作。如按键盘的 CTRL ^C 时，会产生 <code class="highlighter-rouge">SIGINT</code> 信号，对该信号的默认反应就是进程终止。后 32 个信号表示实时信号，等同于前面阐述的可靠信号。这保证了发送的多个实时信号都被接收。</p>
+
+<p><strong>非实时信号</strong> 都不支持排队，都是 <strong>不可靠信号</strong>；<strong>实时信号</strong> 都支持排队，都是 <strong>可靠信号</strong>。</p>
+
+<h3 id="1223-linux-信号列表">12.2.3 Linux 信号列表</h3>
+
+<p>Linux 内核中的信号，每一种都用一个数字标识，它们不会携带任何参数，名字大多是自我解释的。编号为 1 ~ 31 的信号为传统 UNIX 支持的信号，是 <strong>不可靠信号</strong>（非实时的），编号为 32 ~ 63 的信号是后来扩充的，为 <strong>可靠信号</strong> （实时信号）。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>编号</th>
+      <th>信号</th>
+      <th>说明</th>
+      <th>产生方法</th>
+      <th>默认动作</th>
+      <th>可忽略</th>
+      <th>可处理</th>
+      <th>可阻塞</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>SIGHUP</td>
+      <td>通知同一会话内的各个作业，告知它们与控制终端不再关联</td>
+      <td>终端连接正常或非正常结束</td>
+      <td>终止进程</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>SIGINT</td>
+      <td>中断进程</td>
+      <td><code class="highlighter-rouge">^C</code></td>
+      <td>优雅结束进程</td>
+      <td>N</td>
+      <td>N</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>SIGQUIT</td>
+      <td>终止进程，内核转储</td>
+      <td><code class="highlighter-rouge">^\</code></td>
+      <td>终止进程</td>
+      <td>N</td>
+      <td>N</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>SIGILL</td>
+      <td>执行了非法指令，无法恢复到默认动作</td>
+      <td>可执行文件出现错误，试图执行数据段，堆栈溢出</td>
+      <td>终止进程</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>SIGTRAP</td>
+      <td>调试器用信号，无法恢复到默认动作</td>
+      <td>断点指令，其它陷阱指令</td>
+      <td>终止进程</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>SIGABRT</td>
+      <td>程序本身检测到错误</td>
+      <td>调用 <code class="highlighter-rouge">abort</code> 函数</td>
+      <td>终止进程</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>SIGBUS</td>
+      <td>非法地址，包括内存地址对齐错误</td>
+      <td> </td>
+      <td>终止进程</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>SIGFPE</td>
+      <td>致命算术错误</td>
+      <td> </td>
+      <td>终止进程</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>SIGKILL</td>
+      <td>立即终止进程，致命</td>
+      <td><code class="highlighter-rouge">kill -9</code></td>
+      <td>终止进程</td>
+      <td>N</td>
+      <td>N</td>
+      <td>N</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>SIGUSR1</td>
+      <td>预留给用户，用于任何自定义功能</td>
+      <td> </td>
+      <td>终止进程</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>SIGSEGV</td>
+      <td>分割违规</td>
+      <td>访问不属于自己存储空间或只读存储空间</td>
+      <td>终止进程</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>SIGUSR2</td>
+      <td>预留给用户，用于任何自定义功能</td>
+      <td> </td>
+      <td>终止进程</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>SIGPIPE</td>
+      <td>管道已损坏</td>
+      <td> </td>
+      <td>终止进程</td>
+      <td>Y</td>
+      <td>Y</td>
+      <td>Y</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>SIGALRM</td>
+      <td>测量真实时间或钟表时间的计时器超时</td>
+      <td><code class="highlighter-rouge">alarm</code></td>
+      <td>终止进程</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>SIGTERM</td>
+      <td>立即终止进程</td>
+      <td><code class="highlighter-rouge">kill</code></td>
+      <td>优雅结束进程</td>
+      <td>Y</td>
+      <td>Y</td>
+      <td>Y</td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td>SIGSTKFLT</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td>SIGCHLD</td>
+      <td>子进程终止或暂停</td>
+      <td> </td>
+      <td>忽略</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>18</td>
+      <td>SIGCONT</td>
+      <td>让进程继续运行</td>
+      <td> </td>
+      <td>什么也不做</td>
+      <td> </td>
+      <td>Y</td>
+      <td>Y</td>
+    </tr>
+    <tr>
+      <td>19</td>
+      <td>SIGSTOP</td>
+      <td>暂停进程</td>
+      <td><code class="highlighter-rouge">kill -STOP</code></td>
+      <td> </td>
+      <td>N</td>
+      <td>N</td>
+      <td>N</td>
+    </tr>
+    <tr>
+      <td>20</td>
+      <td>SIGTSTP</td>
+      <td>挂起进程</td>
+      <td><code class="highlighter-rouge">^Z</code></td>
+      <td> </td>
+      <td>Y</td>
+      <td>Y</td>
+      <td>Y</td>
+    </tr>
+    <tr>
+      <td>21</td>
+      <td>SIGTTIN</td>
+      <td>后台作业的进程想读取终端</td>
+      <td> </td>
+      <td>暂停进程</td>
+      <td>Y</td>
+      <td>Y</td>
+      <td>Y</td>
+    </tr>
+    <tr>
+      <td>22</td>
+      <td>SIGTTOU</td>
+      <td>后台作业的进程想写到终端</td>
+      <td> </td>
+      <td>暂停进程</td>
+      <td>Y</td>
+      <td>Y</td>
+      <td>Y</td>
+    </tr>
+    <tr>
+      <td>23</td>
+      <td>SIGURG</td>
+      <td>紧急或带外数据到达套接字</td>
+      <td> </td>
+      <td>忽略</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>24</td>
+      <td>SIGXCPU</td>
+      <td>超过 CPU 时间限制</td>
+      <td> </td>
+      <td>终止进程</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>25</td>
+      <td>SIGXFSZ</td>
+      <td>超出文件大小限制</td>
+      <td> </td>
+      <td>终止进程</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>26</td>
+      <td>SIGVTALRM</td>
+      <td>测量当前进程使用 CPU 时间的计时器超时</td>
+      <td> </td>
+      <td>终止进程</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>27</td>
+      <td>SIGPROF</td>
+      <td>测量当前进程使用的 CPU 时间，以及系统花在该进程上的 CPU 时间的计时器超时</td>
+      <td> </td>
+      <td>终止进程</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>28</td>
+      <td>SIGWINCH</td>
+      <td>终端窗口大小发生改变</td>
+      <td> </td>
+      <td>忽略</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>29</td>
+      <td>SIGIO</td>
+      <td>文件描述符为输入输出准备就绪</td>
+      <td><code class="highlighter-rouge">fcntl</code></td>
+      <td>忽略</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>30</td>
+      <td>SIGPWR</td>
+      <td> </td>
+      <td> </td>
+      <td>忽略</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>31</td>
+      <td>SIGSYS</td>
+      <td>非法的系统调用</td>
+      <td>执行陷阱指令</td>
+      <td>终止进程</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>34</td>
+      <td>SIGRTMIN</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>35</td>
+      <td>SIGRTMIN+1</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>36</td>
+      <td>SIGRTMIN+2</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>37</td>
+      <td>SIGRTMIN+3</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>38</td>
+      <td>SIGRTMIN+4</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>39</td>
+      <td>SIGRTMIN+5</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>40</td>
+      <td>SIGRTMIN+6</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>41</td>
+      <td>SIGRTMIN+7</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>42</td>
+      <td>SIGRTMIN+8</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>43</td>
+      <td>SIGRTMIN+9</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>44</td>
+      <td>SIGRTMIN+10</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>45</td>
+      <td>SIGRTMIN+11</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>46</td>
+      <td>SIGRTMIN+12</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>47</td>
+      <td>SIGRTMIN+13</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>48</td>
+      <td>SIGRTMIN+14</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>49</td>
+      <td>SIGRTMIN+15</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>50</td>
+      <td>SIGRTMAX-14</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>51</td>
+      <td>SIGRTMAX-13</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>52</td>
+      <td>SIGRTMAX-12</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>53</td>
+      <td>SIGRTMAX-11</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>54</td>
+      <td>SIGRTMAX-10</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>55</td>
+      <td>SIGRTMAX-9</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>56</td>
+      <td>SIGRTMAX-8</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>57</td>
+      <td>SIGRTMAX-7</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>58</td>
+      <td>SIGRTMAX-6</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>60</td>
+      <td>SIGRTMAX-4</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>59</td>
+      <td>SIGRTMAX-5</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>61</td>
+      <td>SIGRTMAX-3</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>62</td>
+      <td>SIGRTMAX-2</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>63</td>
+      <td>SIGRTMAX-1</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>64</td>
+      <td>SIGRTMAX</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>根据信号功能的不同，可以大致分成以下几类：</p>
+
+<h4 id="程序错误信号">程序错误信号</h4>
+
+<p>当操作系统检测到严重的程序错误时会产生以下的信号。通常这些信号表明，程序以某种方式崩溃了，一般没有办法继续运行下去了。</p>
+
+<p>一些程序会处理程序错误信号，以便在终止之前进行清理。</p>
+
+<p><strong>终止</strong> 是大多数程序中程序错误的最终结果。</p>
+
+<p>所有这些信号的 <strong>默认操作是导致进程终止</strong>。</p>
+
+<p>如果您 <strong>阻止或忽略</strong> 这些信号，或为它们建立了正常返回的处理程序，那么当这些信号发生时，您的程序可能会发生可怕的破坏，除非它们是通过 <code class="highlighter-rouge">raise</code> 或 <code class="highlighter-rouge">kill</code> 函数，而不是真正的错误产生的。</p>
+
+<blockquote>
+  <p><code class="highlighter-rouge">raise</code> 函数用于进程给自己发送信号，<code class="highlighter-rouge">kill</code> 函数用于把信号发送给进程或进程组，它不仅可以中止进程，也可以向进程发送其他信号。</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>内核转储</strong>：core dump，当进程被这些程序错误信号之一终止运行时，操作系统会将此时进程地址空间的内容以及有关进程状态写出一个文件，文件名为 <code class="highlighter-rouge">core</code>，可保存在进程的任何当前目录。用调试器检查它们，可以调查导致错误的原因。</p>
+</blockquote>
+
+<h5 id="sigfpe">SIGFPE</h5>
+
+<p>该信号报告一个 <strong>致命的算术错误</strong>。包括几乎所有的算术错误，包括被零除及溢出。如果程序在某个位置保存了整数，然后用在了浮点运算，就会产生 “非法运算”，因为处理器无法把数据识别为浮点数字。</p>
+
+<h5 id="sigill">SIGILL</h5>
+
+<p>名字来源于 <strong>非法指令</strong>，Illegal Instruction。通常意味着程序在尝试执 <strong>行垃圾指令或特权指令</strong>。因为 C 编译器产生的程序只会执行合法指令，因此 <code class="highlighter-rouge">SIGILL</code> 通常表示可执行文件被损坏了，或者在尝试执行数据，而不是程序。</p>
+
+<p>当发生栈区溢出时，或当系统无法运行信号处理函数时，也会产生 <code class="highlighter-rouge">SIGILL</code> 信号，</p>
+
+<h5 id="sigsegv">SIGSEGV</h5>
+
+<p>分割违规，Segmentation Violation。</p>
+
+<p>当程序 <strong>尝试在为其分配的内存以外读或写</strong> 时，或者，<strong>尝试写入只读内存</strong> 时，会产生该信号。</p>
+
+<p>实际上，程序走的太远，才能被系统的内存保护机制检测到，此时，信号才会出现。</p>
+
+<p>获取 <code class="highlighter-rouge">SIGSEGV</code> 条件的常用方法包括：<strong>解引用空指针或未初始化的指针</strong>，或者当你使 <strong>用指针逐步遍历数组，但未能检查数组的末尾时</strong>。取消引用空指针会生成 <code class="highlighter-rouge">SIGSEGV</code> 还是 <code class="highlighter-rouge">SIGBUS</code>，在不同的系统中是不同的。</p>
+
+<h5 id="sigbus">SIGBUS</h5>
+
+<p>该信号的名称是 “总线错误” 的缩写。当 <strong>无效指针被解除引用时</strong> 会生成此信号。</p>
+
+<p>像 <code class="highlighter-rouge">SIGSEGV</code> 一样，该信号通常是解引用未初始化的指针的结果。两者之间的区别在于 <strong><code class="highlighter-rouge">SIGSEGV</code> 表示对有效内存的无效访问，而 <code class="highlighter-rouge">SIGBUS</code> 表示访问无效地址</strong>。特别是，<code class="highlighter-rouge">SIGBUS</code> 信号通常是由于 <strong>引用一个未对齐的指针</strong> 而引起的，比如指向一个不能被 4 整除的地址的四字整数。（每种计算机都有自己的地址对齐要求。）</p>
+
+<h5 id="sigabrt">SIGABRT</h5>
+
+<p>该信号表示程序本身检测到错误，并通过调用 <code class="highlighter-rouge">abort</code> 进行报告。请参阅中止程序。</p>
+
+<h5 id="sigiot">SIGIOT</h5>
+
+<p>由 PDP-11 <code class="highlighter-rouge">iot</code> 指令生成。在大多数机器上，这只是 <code class="highlighter-rouge">SIGABRT</code> 的另一个名称。</p>
+
+<h5 id="sigtrap">SIGTRAP</h5>
+
+<p>由机器的 <strong>断点指令</strong>（breakpoint）生成，可能还有其他 <strong>陷阱指令</strong>（trap）。这个信号被 <strong>调试器</strong> 使用。如果程序以某种方式执行错误的指令，你的程序可能只会看到 <code class="highlighter-rouge">SIGTRAP</code>。</p>
+
+<blockquote>
+  <p>【 breakpoint 】：软件开发中，断点指程序中故意设计的暂停位置，用于调试，有时干脆就叫暂停（pause）。</p>
+</blockquote>
+
+<blockquote>
+  <p>【 trap 】：陷阱，也称异常或故障，是一种典型的同步中断，通常是由异常情况（如断点、零除、无效的内存访问）产生的。陷阱通常会导致切换到内核态，操作系统在返回原始进程之前会进行一些操作。在系统进程中的陷阱要比用户进程中的陷阱更严重，在某些系统中是致命的。在有些用法中，陷阱这个词单指某个中断，该中断用于启动上下文切换，到监控程序或调试器。</p>
+</blockquote>
+
+<h5 id="sigemt">SIGEMT</h5>
+
+<p>模拟器陷​​阱。这是由某些未实现的指令造成的，这些指令可能在软件中模拟，或操作系统未能正确模拟它们。</p>
+
+<h5 id="sigsys">SIGSYS</h5>
+
+<p>坏的系统调用。也就是说，执行了向操作系统施加陷阱的指令，但系统调用执行的代码号无效。</p>
+
+<h4 id="终止信号">终止信号</h4>
+
+<p>这些信号都用于以不同的方式通知进程终止。它们的目的稍有不同，程序也希望以不同的方式来处理这些信号。</p>
+
+<p>处理这些信号的原因通常是为了让程序在终止之前，能够清理一下资源和数据。如，保存状态信息、删除临时文件、恢复之前的终端模式等。这一类的信号处理函数结尾时应该 <strong>指定响应信号的默认动作</strong>，然后 <strong>再重新给自己发信号</strong>（reraise）。</p>
+
+<p>以下所有信号的 <strong>默认动作均为终止进程</strong>。</p>
+
+<h5 id="sigterm">SIGTERM</h5>
+
+<p>通用的终止进程的信号，与 <code class="highlighter-rouge">SIGKILL</code> 不同，该信号可被阻塞、处理、忽略。</p>
+
+<p>优雅地要求进程终止。</p>
+
+<p><code class="highlighter-rouge">kill</code> 会产生该信号。</p>
+
+<h5 id="sigint">SIGINT</h5>
+
+<p>中止进程，在终端按下 <code class="highlighter-rouge">^C</code> 时产生。</p>
+
+<h5 id="sigquit">SIGQUIT</h5>
+
+<p>由 “退出字符” 控制，终端按下 <code class="highlighter-rouge">^\</code> 会产生。它会在终止进程时产生内核转储，就像程序错误信号一样。可以认为是被用户检测到的程序错误情形。</p>
+
+<p>由该信号终止的进程会省略一些清理工作，如不会删除临时文件，以便用户连同内核转储一起查看。</p>
+
+<h5 id="sigkill">SIGKILL</h5>
+
+<p>立即终止进程。不能被处理、忽略、阻塞，因此是致命的信号。</p>
+
+<p>通常只由专门的请求来产生，因为它不能被处理，应该做为最后的措施来使用，之前应该先尝试使用不这么激烈的办法，如 <code class="highlighter-rouge">^C</code>。如果其它所有信号对进程都不管用时，使用该信号往往会让它马上终止。</p>
+
+<p>在某些异常情况下，如程序已经完全无法继续运行时（连一个信号处理函数都运行不了），系统会自动为进程产生 <code class="highlighter-rouge">SIGKILL</code> 信号。</p>
+
+<h5 id="sighup">SIGHUP</h5>
+
+<p>hang-up，用于报告用户终端已经断开连接，也许因为网络故障。</p>
+
+<p>该信号还用于将 “终端上的控制进程的终止” 报告给与该会话相关联的作业，该终止在控制终端上有效地断开了会话中的所有进程。</p>
+
+<p>用户终端连接正常或非正常结束时发出，通常是在终端的控制进程结束时，通知同一会话内的各个作业，告知它们与控制终端不再关联。</p>
+
+<p>此外，对于与终端脱离关系的守护进程，这个信号用于通知它重新读取配置文件。</p>
+
+<h4 id="闹铃信号">闹铃信号</h4>
+
+<p>这些信号用于提醒计时器已超时。默认动作为促使进程终止，但很少使用默认动作，大多数用来交给信号处理函数执行。</p>
+
+<h5 id="sigalrm">SIGALRM</h5>
+
+<p>该信号通常表示，用来测量真实时间或钟表时间的计时器超时了，如使用 <code class="highlighter-rouge">alarm</code> 函数。</p>
+
+<h5 id="sigvtalrm">SIGVTALRM</h5>
+
+<p>该信号通常表示，用来测量当前进程使用 CPU 时间的计时器超时了，名字源于 virtual time alarm。</p>
+
+<h5 id="sigprof">SIGPROF</h5>
+
+<p>该信号通常表示，用于测量当前进程使用的 CPU 时间，以及系统花在该进程上的 CPU 时间的计时器超时了，这样的定时器用于实现代码分析工具。</p>
+
+<h4 id="异步-io-信号">异步 I/O 信号</h4>
+
+<p>这些信号用于和异步 I/O 设备的连接。必须通过调用 <code class="highlighter-rouge">fcntl</code> 来采取明确的动作，以促使特定的文件描述符产生这些信号，默认动作为忽略。</p>
+
+<h5 id="sigio">SIGIO</h5>
+
+<p>当一个文件描述符准备就绪，可以进行输入或输出时产生。</p>
+
+<p>在大多数操作系统中，终端和 socket 是能生 <code class="highlighter-rouge">SIGIO</code> 信号的唯一类型的文件，其它类型，包括普通文件，即便你要求它们，也永远也不会产生该信号。</p>
+
+<p>GNU 系统中，如果使用 <code class="highlighter-rouge">fcntl</code> 成功地设定了异步模式，该信号就会产生。</p>
+
+<h5 id="sigurg">SIGURG</h5>
+
+<p>当 “紧急（urgent）” 或带外数据（out-of-band）到达套接字时，会发送此信号。</p>
+
+<h5 id="sigpoll">SIGPOLL</h5>
+
+<p>这是一个 System V 的信号名字，与 <code class="highlighter-rouge">SIGIO</code> 类似，仅为兼容性定义。</p>
+
+<h4 id="作业控制信号">作业控制信号</h4>
+
+<p>这些信号用于支持作业控制。如果操作系统不支持作业控制，则这些信号无法被处理或 raise。</p>
+
+<p>如果不是很懂作业控制，最好不要使用这些信号。</p>
+
+<h5 id="sigchld">SIGCHLD</h5>
+
+<p>子进程终止或暂停时，会把该信号发给父进程。</p>
+
+<p>默认动作为忽略。</p>
+
+<p>如果为该信号准备了信号处理函数，但此时有被终止的子进程仍未通过 <code class="highlighter-rouge">wait</code> 或 <code class="highlighter-rouge">waitpid</code> 报告自己的状态，那么，该信号处理函数是否要管理这些进程决定于不同的操作系统。</p>
+
+<h5 id="sigcld">SIGCLD</h5>
+
+<p>已过时，被 <code class="highlighter-rouge">SIGCHLD</code>取代。</p>
+
+<h5 id="sigcont">SIGCONT</h5>
+
+<p>用于使进程继续运行。比较特殊的信号，如果进程已暂停，在信号传送之前 ，它永远会使其继续。</p>
+
+<p>默认动作为什么也不做。</p>
+
+<p>可以阻塞该信号，可以为其设定处理函数，但它永远会不管不顾地使进程继续运行。</p>
+
+<h5 id="sigstop">SIGSTOP</h5>
+
+<p>暂停进程，不可捕获、忽略、阻塞。</p>
+
+<h5 id="sigtstp">SIGTSTP</h5>
+
+<p>交互式暂停信号，与 <code class="highlighter-rouge">SIGSTOP</code> 不同，该信号可捕获、忽略。</p>
+
+<p>如果你想在进程暂停时，让文件或系统表处于安全状态，就需要用函数来捕获该信号。例如，关闭屏显的程序应该捕获 <code class="highlighter-rouge">SIGTSTP</code>，以便它们暂停之前能恢复屏显。</p>
+
+<p>当用户键入 SUSP 字符时（^Z）会产生。</p>
+
+<h5 id="sigttin">SIGTTIN</h5>
+
+<p>当进程作为后台作业运行时，无法从用户终端读取。如果后台进程尝试读取终端，作业中的所有进程都会收到一个 <code class="highlighter-rouge">SIGTTIN</code> 信号，默认动作为暂停进程。</p>
+
+<h5 id="sigttou">SIGTTOU</h5>
+
+<p>当后台进程尝试向终端写入，或尝试设置终端模式时，产生该信号。</p>
+
+<p>默认动作为暂停进程。</p>
+
+<p>只有在开启了 <code class="highlighter-rouge">TOSTOP</code> 模式的情况下，尝试写入终端才会产生该信号。</p>
+
+<p>当进程暂停时，不会再给它传递任何信号，直到它又继续运行，当然，除了 <code class="highlighter-rouge">SIGKILL</code> 和 <code class="highlighter-rouge">SIGCONT</code>。</p>
+
+<p>暂停期间，想要传递给进程的信号会标记为挂起（pending），直到其运行再传递给它。</p>
+
+<p><code class="highlighter-rouge">SIGKILL</code> 信号永远会让进程终止，不能被阻塞、捕获、忽略。</p>
+
+<p><code class="highlighter-rouge">SIGCONT</code> 虽然可以被忽略，但它不管怎么样都会让暂停的进程继续运行。</p>
+
+<p>给进程发送 <code class="highlighter-rouge">SIGCONT</code> 信号，会促使任何挂起的暂停信号被丢弃。同样，任何挂起的 <code class="highlighter-rouge">SIGCONT</code> 信号，当进程收到暂停信号时都会被丢弃。</p>
+
+<p>如果孤儿进程组中的一个进程收到 <code class="highlighter-rouge">SIGTSTP</code>、<code class="highlighter-rouge">SIGTTIN</code> 或 <code class="highlighter-rouge">SIGTTOU</code> 信号，但不予捕获，进程就不会暂停。暂停该进程其实没什么用了，因为不会有 shell 程序会注意到它暂停，然后再允许用户继续运行它。取而代之的是，取决于在用的操作系统，有些系统什么也不会做，还有些系统会发送另一个信号，如 <code class="highlighter-rouge">SIGKILL</code> 或 <code class="highlighter-rouge">SIGHUP</code>。在 GNU 系统中，进程遇到 <code class="highlighter-rouge">SIGKILL</code> 就会死掉，由此避免了过多的暂停进程或孤儿进程在系统驻留可能引发的问题。</p>
+
+<blockquote>
+  <p>【 孤儿进程组 】：当一个控制进程终止时，它的终端变得可用，可在上面新建起一个会话。实际上，其它用户可以登陆到该终端。如果原会话中的任何进程仍然尝试使用该终端时，会造成问题。为了防止问题的发生，当会话发起者被终止时，进程组仍需继续运行，称为孤儿进程组。
+当进程组变成孤儿时，其中的进程都会收到一个 <code class="highlighter-rouge">SIGHUP</code> 信号，一般情况会造成进程终止，但如果进程忽略该信号，或建立一个信号处理函数，它就可以继续运行于孤儿进程组中，即便其控制进程已经终止，但它仍然再也无法访问终端了。</p>
+</blockquote>
+
+<h4 id="操作错误信号">操作错误信号</h4>
+
+<p>这些信号用于报告由于程序操作引起的各种错误。并不是程序内部的程序错误，而是导致操作系统调用无法顺利完成的错误。</p>
+
+<p>所有信号的默认动作均为终止进程。</p>
+
+<h5 id="sigpipe">SIGPIPE</h5>
+
+<p>管道已损坏。</p>
+
+<p>如果使用管道或 FIFO，你必须精心设计你的程序，必须先用一个进程来打开管道读取，然后才能允许其它进程开始写入。如果读取进程始终没有运行，或异常终止，写入管道会产生 <code class="highlighter-rouge">SIGPIPE</code> 信号。</p>
+
+<p>如果该信号被阻塞、捕获或忽略，则违规呼叫将以 <code class="highlighter-rouge">EPIPE</code> 而失败。</p>
+
+<p>如果尝试向一个已断开的套接字输出也会产生该信号。</p>
+
+<h5 id="siglost">SIGLOST</h5>
+
+<p>资源丢失。</p>
+
+<p>当你对 NFS 文件进行咨询锁定时，NFS 服务器重启了，并忘记锁定这回事了，此时会产生该信号。</p>
+
+<p>在 GNU 系统中，当服务进程异常死掉时会产生该信号，可以忽略该信号。</p>
+
+<p>无论使用了什么调用都会返回一个错误。</p>
+
+<blockquote>
+  <p>根据 man SIGNAL(7)，Linux 中，<code class="highlighter-rouge">SIGIO</code> 和 <code class="highlighter-rouge">SIGLOST</code> 使用同一个编号，29。<code class="highlighter-rouge">SIGLOST</code> 在内核中被注释掉了，但某些软件编译过程中，仍然会把 29 当作 <code class="highlighter-rouge">SIGLOST</code>。</p>
+</blockquote>
+
+<h5 id="sigxcpu">SIGXCPU</h5>
+
+<p>超出了 CPU 时间限制。</p>
+
+<p>当进程超过了其在 CPU 时间上的软件资源限制时会产生该信号。</p>
+
+<h5 id="sigxfsz">SIGXFSZ</h5>
+
+<p>超出文件大小限制。</p>
+
+<p>当进程尝试扩展文件大小，超出进程软件资源在文件大小的限制时，会产生该信号。</p>
+
+<h4 id="其他信号">其他信号</h4>
+
+<p>这些信号用于各种不同的目的，它们通常不会影响进程，除非为了什么明确地使用它们。</p>
+
+<h5 id="sigusr1sigusr2">SIGUSR1、SIGUSR2</h5>
+
+<p>预留给用户，用于任何自定义功能。</p>
+
+<p>可用于简单的进程间通讯。</p>
+
+<p>默认动作为终止进程。</p>
+
+<h5 id="sigwinch">SIGWINCH</h5>
+
+<p>Window size change，改变窗口大小。</p>
+
+<p>当终端驱动程序记录屏幕上的行数和列数发生变化时，产生该信号。</p>
+
+<p>默认动作为忽略。</p>
+
+<h5 id="siginfo">SIGINFO</h5>
+
+<p>显示系统、进程状态信息</p>
+
+<p>当用户在终端的规范模式（canonical mode）下键入 STATUS 字符时，该信号被发送到控制终端的前台进程组中的所有进程。</p>
+
+<p>如果该进程是进程组的首领（leader），默认动作是显示一些关于系统及进程当前行为的状态信息，否则默认动作为什么都不做。</p>
+
+<p>该信号只对 alpha 和 sparc 架构的系统可用。</p>
+
+<h2 id="123-信号的生命周期">12.3 信号的生命周期</h2>
+
+<p>对于一个完整的信号生命周期（从信号发送到相应的处理函数执行完毕）来说，可以分为三个阶段：</p>
+
+<h3 id="1231-信号的产生">12.3.1 信号的产生</h3>
+
+<h4 id="产生信号的事件">产生信号的事件</h4>
+
+<p>通常来说，产生信号的事件主要可归结为以下三类：<strong>错误、外部事件、显式请求</strong>。</p>
+
+<h5 id="错误">错误</h5>
+
+<p>错误意味着某个程序做了非法的事情，无法继续执行下去了。但并非所有类型的错误都会产生信号 – 事实上，大多数情况下不会。例如，打开一个不存在的文件是一个错误，但它不会产生一个信号；相反，<code class="highlighter-rouge">open</code> 返回 <code class="highlighter-rouge">-1</code>。通常，通过返回指示错误的值，来报告与某些库函数相关的错误。引发信号的错误可能发生在程序中的任何地方，而不仅仅是在库调用中。这些包括除以零和无效的内存地址。</p>
+
+<h5 id="外部事件">外部事件</h5>
+
+<p>部事件通常与 I/O 或其他进程有关。这些包括输入的到达，计时器的到期以及子进程的终止。</p>
+
+<h5 id="显式请求">显式请求</h5>
+
+<p>显式请求意味着使用库函数，如 <code class="highlighter-rouge">kill</code>，其目的很明确，就是为了生成一个信号。</p>
+
+<h4 id="信号产生的时机">信号产生的时机</h4>
+
+<p>信号可以 <strong>同步生成</strong> 或 <strong>异步生成</strong>。</p>
+
+<h5 id="同步">同步</h5>
+
+<p>同步信号 <strong>与程序中的特定操作有关</strong>，并在该操作期间传递（除非被阻塞）。</p>
+
+<p>大多数 <strong>错误</strong> 会同步地生成信号，进程为自己生成信号的 <strong>显式请求</strong> 也是同步产生。</p>
+
+<p>在某些机器上，某些类型的硬件错误（通常是浮点异常）不会完全同步地报告，而是会在运行几个指令之后。。</p>
+
+<h5 id="异步">异步</h5>
+
+<p>生成异步信号的事件，往往 <strong>不受进程的控制</strong>。</p>
+
+<p>在进程执行期间，这些信号到达的时间是不可预测的。<strong>外部事件</strong> 会异步生成信号，对进程的 <strong>显式请求</strong> 也是异步生成信号。</p>
+
+<p>给定类型的信号通常要么是同步的，要么是异步的。例如，错误信号通常是同步的，因为错误会同步地产生信号。但是任何类型的信号都可以通过 <strong>显示请求</strong> <strong>同步或异步生成</strong>。</p>
+
+<h4 id="生成信号">生成信号</h4>
+
+<p>除了由于硬件陷阱或中断而产生的信号之外，程序可以显示地（explicitly）将信号发送给自己或另一个进程。</p>
+
+<h5 id="给自己发信号">给自己发信号</h5>
+
+<p>进程可以给使用 <code class="highlighter-rouge">raise</code> 函数来自己发信号，该函数声明于 <code class="highlighter-rouge">signal.h</code>。</p>
+
+<p><code class="highlighter-rouge">raise</code> 的用途之一是 <strong>重现</strong> 你已捕获的信号的 <strong>默认行为</strong>。</p>
+
+<p>比如可以做到：当收到一个暂停信号时，可以把响应重新设为默认动作，然后执行一些清理工作，再重新发送一遍暂停信号。当进程重新继续时，再恢复信号处理器。</p>
+
+<h5 id="给另一进程发信号">给另一进程发信号</h5>
+
+<p><code class="highlighter-rouge">kill</code> 函数可用于向另一个进程发送信号。虽然它的名字代表杀掉进程，但实际上它还可以用于许多其它的目的。比如：</p>
+
+<ul>
+  <li>父进程启动一个子进程来执行一项任务，也许让其处于一个无限循环，当不再需要该任务时，就结束它。</li>
+  <li>一个进程做为进程组的一部分执行任务时，需要终止掉，或遇到错误及其它事件时，需要通知其它进程。</li>
+  <li>两个进程协同工作时，需要同步。</li>
+</ul>
+
+<p>当进程给自己发一个信号时，如果该信号没有被阻塞，在进程返回之前，<code class="highlighter-rouge">kill</code> 会传递至少一个信号给进程，但该信号不一定非的是刚刚发给自己的这个信号，也有可能是其它挂起的、未阻塞的信号。</p>
+
+<p>如果信号可以成功发送，<code class="highlighter-rouge">kill</code> 的返回值为零。否则，不会发送信号，返回值为 <code class="highlighter-rouge">-1</code>。</p>
+
+<p>如果 <code class="highlighter-rouge">pid</code> （<code class="highlighter-rouge">kill</code> 函数的参数）指定了向多个进程发送一个信号，如果它能向至少一个进程发送信号，则 <code class="highlighter-rouge">kill</code> 就成功了。你无法区分是一个进程收到了信号，还是所有进程都收到了。</p>
+
+<h5 id="使用-kill-的权限">使用 <code class="highlighter-rouge">kill</code> 的权限</h5>
+
+<p>你是无法用 <code class="highlighter-rouge">kill</code> 把信号发送给任意的随机进程的，因为存在一些限制。这些限制旨在防止反社会行为，例如任意杀死属于另一用户的进程。<code class="highlighter-rouge">kill</code> 比较典型的使用，还是在父、子、兄弟进程之间传递信号，在这些情况下，你通常有权发送信号。唯一常见的例外，是在子进程中运行 setuid 程序。如果程序更改了其真实 UID 以及其有效 UID，你就可能不再有权限来发送信号了。<code class="highlighter-rouge">su</code> 就是这样的程序。</p>
+
+<p>一个进程是否有权给另一个进程发信号，由两个进程的 UID 决定的。</p>
+
+<p>通常，一个进程要想给另一个进程发信号，要么 <strong>发送进程属于特权用户</strong>（如 root），要么 <strong>发送进程的真实 UID 或有效 UID 与接收进程的相匹配</strong>。如果接收进程已从其映像文件上的 SUID 模式位更改了其有效 UID，则进程映像文件的所有者会被用来代替其当前有效 UID。在一些实施方案中，即使 UID 不匹配，父进程也能够将信号发送到子进程，而其他实施方案则可能会用别的限制。</p>
+
+<p><code class="highlighter-rouge">SIGCONT</code> 信号是一种特殊情况。如果发送进程与接收进程处于同一个会话，则可以发送，而不考虑 UID。</p>
+
+<h3 id="1232-信号在目标进程中注册">12.3.2 信号在目标进程中注册</h3>
+
+<p>在 <strong>进程表的表项</strong> 中有一个 <strong>软中断信号域</strong>，该域中每一位对应一个信号。</p>
+
+<p>内核给一个进程发送软中断信号的方法，是在进程所在的进程表项的信号域设置对应于该信号的位。</p>
+
+<ul>
+  <li>如果信号发送给一个正在睡眠的进程，如果进程为可中断睡眠，则唤醒进程</li>
+  <li>如果进程为不可中断睡眠，则仅设置进程表中信号域相应的位，而不唤醒进程</li>
+  <li>如果进程处于就绪状态，则仅设置进程表中信号域相应的位</li>
+</ul>
+
+<p>当一个 <strong>实时信号</strong> 发送给一个进程时，不管该信号是否已经在进程中注册，都会被 <strong>再注册一次</strong>，因此，信号不会丢失，因此，实时信号又叫做 “可靠信号”。</p>
+
+<p>当一个 <strong>非实时信号</strong> 发送给一个进程时，如果该信号已经在进程中注册，则该信号将被 <strong>丢弃</strong>，造成信号丢失。因此，非实时信号又叫做 “不可靠信号”。</p>
+
+<p class="notice--success">因此，<strong>信号是否可靠只与信号值有关</strong>。</p>
+
+<h3 id="1233-信号的执行和注销">12.3.3 信号的执行和注销</h3>
+
+<p>内核处理一个进程收到的软中断信号是在该 <strong>进程的上下文</strong> 中，因此，<strong>进程必须处于运行状态</strong>。当其由于被信号唤醒或者正常调度重新获得 CPU 时，在其从内核空间返回到用户空间时，会检测是否有信号等待处理。如果存在未决信号等待处理，且该信号没有被进程阻塞，则在运行相应的信号处理函数前，进程会把信号在未决信号链中占有的结构卸掉。</p>
+
+<p>对于 <strong>非实时信号</strong> 来说，由于在未决信号信息链中最多只 <strong>占用一个 <code class="highlighter-rouge">sigqueue</code></strong> 结构，因此该结构被释放后，应该 <strong>把信号在进程未决信号集中删除</strong>（信号注销完毕）；</p>
+
+<p>而对于 <strong>实时信号</strong> 来说，可能在未决信号信息链中占用多个 <code class="highlighter-rouge">sigqueue</code> 结构，因此应该针对占用 <code class="highlighter-rouge">sigqueue</code> 结构的数目区别对待：如果只 <strong>占用一个 <code class="highlighter-rouge">sigqueue</code></strong> 结构（进程只收到该信号一次），则执行完相应的处理函数后，应该 <strong>把信号在进程的未决信号集中删除</strong>（信号注销完毕）。如果 <strong>占用多个</strong>，则 <strong>要等待该信号的所有 <code class="highlighter-rouge">sigqueue</code> 处理完毕</strong> 后再在进程的未决信号 <strong>集中删除</strong> 该信号。</p>
+
+<blockquote>
+  <p>信号屏蔽字：就是进程中被阻塞的信号集，这些信号不能发送给该进程，它们在该进程中被 “屏蔽” 了.</p>
+</blockquote>
+
+<p>当所有未被屏蔽的信号都处理完毕后，即可返回用户空间。对于被屏蔽的信号，当取消屏蔽后，在返回到用户空间时会再次执行上述检查处理的一套流程。</p>
+
+<p><strong>内核处理</strong> 一个进程收到的 <strong>信号的时机</strong>，是在一个 <strong>进程从内核态返回用户态</strong> 时。所以，当一个进程在内核态下运行时，软中断信号并不立即起作用，要等到将返回用户态时才处理。<strong>进程只有处理完信号才会返回用户态</strong>，<strong>进程在用户态下不会有未处理完的信号</strong>。</p>
+
+<h3 id="1234-信号的传递">12.3.4 信号的传递</h3>
+
+<p>信号被生成时，一开始先是被 <strong>挂起</strong>（pending）。但通常只在挂起状态停留很小一段时间，然后就会被 <strong>传递</strong> 给进程。然而，如果这类的信号当前 <strong>被阻塞</strong>，它就有可能无限期地停留在挂起状态，直到这种信号被 <strong>解阻</strong>（unblocked）。一旦被解阻，它就会立即被传递出去。</p>
+
+<p>传递信号时，无论是立即传递出去，还是长时间延迟之后才传递出去，都会引起程序的 <strong>特定动作</strong>。</p>
+
+<p>对于某些信号，如 <code class="highlighter-rouge">SIGKILL</code> 和 <code class="highlighter-rouge">SIGSTOP</code>，采取的动作是固定的，但对于大多数信号，程序有一个选择：<strong>忽略</strong> 信号、<strong>指定处理函数</strong> 或 <strong>接受</strong> 该类信号的 <strong>默认动作</strong>。程序会使用 <code class="highlighter-rouge">signal</code> 或 <code class="highlighter-rouge">sigaction</code> 等函数来设定其选择。我们有时会说处理函数 <strong>捕捉到</strong> 信号。当运行处理程序时，该信号通常处于被阻塞状态。</p>
+
+<p>如果对某种信号设定的默认动作为忽略，则所产生的任何此类信号当即就会被丢弃。即使信号在此时被阻塞，也会发生这种情况。以这种方式被丢弃的信号将永远不会被传送，即使程序随后为该类信号指定了不同的动作，然后解除阻止。</p>
+
+<p>如果信号到达时，程序既没有处理也没有忽略，其默认动作就上场了。每种信号都有其自己的默认动作。对于大多数信号，默认操作是终止进程。对于那些代表 “无害” 事件的信号，默认行为是什么都不做。</p>
+
+<p>当信号终止进程时，其父进程可以通过检查由 <code class="highlighter-rouge">wait</code> 或 <code class="highlighter-rouge">waitpid</code> 函数报告的终止状态代码来确定终止的原因。它可以通过获得的信息来确认：子进程的终止，是由一个信号及其涉及的同类信号引起的。如果在 shell 中运行的程序被信号终止，shell 通常会打印出一些错误消息。</p>
+
+<p>通常用于代表程序错误的信号具有一个特殊的属性：当一个信号终止进程时，它还会写入一个核心转储文件，该文件会记录终止时进程的状态。你可以使用调试器来检查核心转储，以调查导致错误的原因。</p>
+
+<p>如果你通过显示请求引发了 “程序错误” 信号，并且导致了进程的终止，那么它就会生成一个核心转储文件，就好像该信号是由于错误直接引发的一样。</p>
+
+<p>如果进程收到一个要捕捉的信号，那么进程从内核态返回用户态时执行用户定义的函数。而且执行用户定义的函数的方法很巧妙，内核是在用户栈上创建一个新的层，该层中将返回地址的值设置成用户定义的处理函数的地址，这样进程从内核返回、弹出栈顶时，就返回到用户定义的函数处，从函数返回再弹出栈顶时，才返回原先进入内核的地方。这样做的原因是，用户定义的处理函数不能且不允许在内核态下执行（如果用户定义的函数在内核态下运行的话，用户就可以获得任何权限）。</p>
+
+<h4 id="传递信号的命令">传递信号的命令</h4>
+
+<h5 id="kill"><code class="highlighter-rouge">kill</code></h5>
+
+<p><code class="highlighter-rouge">kill -signal PID</code></p>
+
+<p>用 kill 把信号传递给指定作业（%jobnumber）或进程（PID）。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kill -SIGHUP $(ps aux | grep 'rsyslogd' | grep -v 'grep'| awk '{print $2}')
+</code></pre></div></div>
+
+<h5 id="killall"><code class="highlighter-rouge">killall</code></h5>
+
+<p><code class="highlighter-rouge">killall -signal command</code></p>
+
+<p><code class="highlighter-rouge">killall</code> 可以直接指定发送信号的进程名称。可以杀掉所有指定名称的进程，用于杀服务。</p>
+
+<p><code class="highlighter-rouge">killall [-iIe] [command name]</code></p>
+
+<p><code class="highlighter-rouge">-i</code>   交互式</p>
+
+<p><code class="highlighter-rouge">-e</code>   指定里程准确名称</p>
+
+<p><code class="highlighter-rouge">-I</code>   进程名称忽略大小写</p>
+
+<p>范例：</p>
+
+<p><code class="highlighter-rouge">killall -1 rsyslogd</code>  给 rsyslogd 启动的 PID 发送 SIGHUP 信号</p>
+
+<p><code class="highlighter-rouge">killall -9 httpd</code>  强制终止所有 httpd 启动的进程</p>
+
+<p><code class="highlighter-rouge">killall -i -9 bash</code>  依次询问每个 bash 进程是否需要被终止</p>
+
+<h2 id="124-信号的阻塞">12.4 信号的阻塞</h2>
+
+<p>阻塞信号意味着告诉操作系统先按住它（hold），稍后再传送。一般来说，程序不会无限期地阻塞信号 – 也有可能通过设置动作为 <code class="highlighter-rouge">SIG_IGN</code> 来忽略它们。但是暂时阻塞信号是很有用的，可以防止它们中断敏感的操作。如：</p>
+
+<ul>
+  <li>在你修改全局变量时，如果这些变量也会被某些信号的处理器修改，可以使用函数来阻塞这些信号</li>
+  <li>在特定的信号处理器运行时，你可以在 <code class="highlighter-rouge">sigaction</code> 调用中设置 <code class="highlighter-rouge">sa_mask</code>，来阻塞某些信号，以保证信号处理器运行时不会被信号中断</li>
+</ul>
+
+<h3 id="1241-为什么要阻塞">12.4.1 为什么要阻塞</h3>
+
+<p>临时阻塞信号可以 <strong>防止运行重要代码时被中断</strong>，此收到的信号会在解阻之后传递给进程。</p>
+
+<p>有时阻塞会使 <strong>程序变的更加可靠</strong>。如信号处理器以外的其它代码在检查或修改数据期间，可以阻塞特定的信号，不让信号处理函数在引期间运行。</p>
+
+<p>如果希望只有当 <strong>信号尚未到达时，才想执行特定的操作</strong>，则阻塞信号也是必要的。</p>
+
+<p>想要 <strong>测试信号是否到达</strong> 的唯一可靠方法，就是在信号被阻塞时进行测试。</p>
+
+<h3 id="1242-信号集">12.4.2 信号集</h3>
+
+<p>所有的信号阻塞函数都使用一种数据结构，称为信号集（signal set），用来 <strong>指定哪些信号会受到影响</strong>。因此，每个活动都涉及两个阶段：创建信号集，然后将其做为参数传给一个库函数。</p>
+
+<h3 id="1243-进程信号掩码">12.4.3 进程信号掩码</h3>
+
+<p><strong>当前被阻塞的信号集合</strong> 称为信号掩码（signal mask），每个进程都有其自己的信号掩码，创建新进程时，它会继承父进程的信号掩码。通过设置信号掩码，你可以 <strong>灵活地施加阻塞或解阻</strong>。</p>
+
+<p>在多线程进程中，每个线程都有其自己的信号掩码，不存在唯一的进程掩码。</p>
+
+<h3 id="1244-测试信号的传递">12.4.4 测试信号的传递</h3>
+
+<p>阻塞可用于测试信号的传递，可以临时把会影响测试的信号阻塞，避免对测试造成中断。</p>
+
+<h3 id="1245-为信号处理器阻塞">12.4.5 为信号处理器阻塞</h3>
+
+<p>如果要使用信号处理器，你通常希望它能够完成其运行，期间不受其它信号的打扰。从信号处理器开始运行，直到其结束，期间必须阻塞可能引起混乱或损坏其数据的信号。</p>
+
+<p>如果要拿信号处理函数来对付信号，在处理函数运行期间，该信号会自动阻塞（加入到该进程的信号掩码中）。例如，如果针对 <code class="highlighter-rouge">SIGTSTP</code> 设定了处理函数，则信号到来时，处理函数运行期间，将会迫使随后的所有 <code class="highlighter-rouge">SIGTSTP</code> 信号全部等待。</p>
+
+<p>然而，默认情况下，其它类型的信号不会被阻塞，在处理函数运行期间，它们可以正常抵达。</p>
+
+<p>在任何情况下，当处理程序返回时，系统将恢复在处理程序之前就位的掩码。如果有任何未决信号在挂起，则该进程将立即收到这些信号，然后才继续执行下面的代码。</p>
+
+<h3 id="1246-检查挂起的信号">12.4.6 检查挂起的信号</h3>
+
+<p>可以随时通过系统调用来查看哪些信号正在挂起。检查某个信号是否在挂起的测试，通常并没有什么用处。如果在该信号没有被阻塞的情况下来测试，则更是个坏主意。</p>
+
+<p>如果有一种特定的信号在为进程挂起，随后到达的更多相同类型的信号很可能会被丢弃。比如，如果有一个 <code class="highlighter-rouge">SIGINT</code> 信号正在挂起，此时另一个 <code class="highlighter-rouge">SIGINT</code> 信号到来，当解阻该信号时，程序很有可能只会看到其中的一个。</p>
+
+<h3 id="1247-记住一个信号">12.4.7 记住一个信号</h3>
+
+<p>记住一个信号，稍后再有所行动。</p>
+
+<p>除了使用库功能来阻塞信号，还可以让处理程序设置一个标签随后来测试，同样可以直到和阻塞相同的效果。</p>
+
+<h2 id="125-等待信号">12.5 等待信号</h2>
+
+<p>如果程序是由外部事件驱动的，或者需要使用信号来同步，当它无事可做时，可能需要等待，直到某个信号到来。</p>
+
+<h3 id="1251-使用-pause-函数">12.5.1 使用 <code class="highlighter-rouge">pause</code> 函数</h3>
+
+<p>让进程进入等待直到信号到来，最简单的方法是调用 <code class="highlighter-rouge">pause</code> 函数。它会暂停程序的执行，直到收到信号处理器被执行，或是进程终止。</p>
+
+<p>如果信号促使处理函数被执行，则 <code class="highlighter-rouge">pause</code> 返回。这被认为是一个不成功的返回，（因为成功的行为应该是永远暂停程序），因此返回值为 <code class="highlighter-rouge">-1</code>。</p>
+
+<h3 id="1252-pause-的问题">12.5.2 <code class="highlighter-rouge">pause</code> 的问题</h3>
+
+<p><code class="highlighter-rouge">pause</code> 的简单性会隐藏严重的时间错误，这些错误会使程序神秘地挂起。</p>
+
+<p>如果程序的真正工作是由信号处理器自己完成的，则可以安全的使用 <code class="highlighter-rouge">pause</code>，主程序除了调用 <code class="highlighter-rouge">pause</code> 就什么也不做。每次有信号被传递时，处理程序会做后继的批量工作，然后再返回，于是程序的主循环再次调用 <code class="highlighter-rouge">pause</code>。</p>
+
+<p>直到等来一个或多个信号，才能安全地使用 <code class="highlighter-rouge">pause</code>，然后再继续真正的工作。即便想办法让信号处理程序通过设置标签来从中协调，也仍然无法可靠地使用 <code class="highlighter-rouge">pause</code>。</p>
+
+<h3 id="1253-使用-sigsuspend">12.5.3 使用 <code class="highlighter-rouge">sigsuspend</code></h3>
+
+<p>等待信号的干净、可靠的方法就是阻塞它，然后再使用 <code class="highlighter-rouge">sigsuspend</code>。通过在循环中使用 <code class="highlighter-rouge">sigsuspend</code> 函数，可以等待特定类别的信号，同时允许其他类型的信号交给各自的处理程序。</p>
+
+<h2 id="126-信号的安装">12.6 信号的安装</h2>
+
+<p>如果 <strong>进程要处理某一信号</strong>，那么就 <strong>要在进程中安装该信号</strong>。</p>
+
+<h3 id="1261-为什么要安装">12.6.1 为什么要安装</h3>
+
+<p>安装信号主要用来确定 <strong>信号值</strong> 及进程针对该信号值的 <strong>动作</strong> 之间的 <strong>映射关系</strong>，即进程将要处理哪个信号，该信号被传递给进程时，将执行何种操作。</p>
+
+<h3 id="1261-如何安装">12.6.1 如何安装</h3>
+
+<p>linux 主要有两个函数实现信号的安装：<code class="highlighter-rouge">signal()</code>、<code class="highlighter-rouge">sigaction()</code></p>
+
+<ul>
+  <li><code class="highlighter-rouge">signal()</code>：只有两个参数，不支持信号传递信息，主要是用于前 32 种 <strong>非实时信号的安装</strong></li>
+  <li><code class="highlighter-rouge">sigaction()</code>：是 <strong>较新</strong> 的函数，由 <code class="highlighter-rouge">sys_signal</code>，<code class="highlighter-rouge">sys_rt_sigaction</code> 这两个系统调用实现，有三个参数，<strong>支持信号传递信息</strong>，主要用来与 <code class="highlighter-rouge">sigqueue()</code> 系统调用配合使用。<code class="highlighter-rouge">sigaction()</code> 同样 <strong>支持非实时信号的安装</strong>。</li>
+</ul>
+
+<p><code class="highlighter-rouge">sigaction()</code> 优于 <code class="highlighter-rouge">signal()</code> 主要体现在 <strong>支持信号携带参数</strong>。</p>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/信号" class="page__taxonomy-item" rel="tag">信号</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/linux" class="page__taxonomy-item" rel="tag">linux</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://linotes.netlify.com/categories/#linux" class="page__taxonomy-item" rel="tag">linux</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2015-01-12T00:00:00+08:00">January 12, 2015</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="https://linotes.netlify.com/linux/thread/" class="pagination--pager" title="上一页
+">Linux 基础 - 11. 线程</a>
+    
+    
+      <a href="https://linotes.netlify.com/linux/selinux/" class="pagination--pager" title="下一页
+">Linux 基础 - 13. SELinux</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">相关文章</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/kernel/filedescriptor/" rel="permalink">文件描述符简介
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash03/" rel="permalink">Bash 入门 03
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">循环，变量，函数，捕捉信号
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash02/" rel="permalink">Bash 入门 02
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">正则表达式，SED，AWK，条件结构，交互式脚本
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash01/" rel="permalink">Bash 入门 01
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">Bash 与 Bash 脚本，脚本的编写与调试，Bash 环境
+</p>
+-->
+
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+    
+    
+    
+    
+    <li><a href="https://linotes.netlify.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="https://linotes.netlify.com/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,627 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Linux 的使用 - 进程 - LINOTES</title>
+<meta name="description" content="用简洁清晰的语言讨论技术">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Linux 的使用 - 进程">
+<meta property="og:url" content="https://linotes.netlify.com/tools/process/">
+
+
+  <meta property="og:description" content="用简洁清晰的语言讨论技术">
+
+
+
+  <meta property="og:image" content="https://linotes.netlify.com/assets/images/header/linux.jpg">
+
+
+
+
+
+  <meta property="article:published_time" content="2015-02-01T00:00:00+08:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://linotes.netlify.com/tools/process/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="https://linotes.netlify.com/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="https://linotes.netlify.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="https://linotes.netlify.com/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://linotes.netlify.com/assets/images/header/linux.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Linux 的使用 - 进程
+
+        
+      </h1>
+      
+        <p class="page__lead">
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="https://linotes.netlify.com/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:imhawkz@gmail.com">
+            <meta itemprop="email" content="imhawkz@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Linux 的使用 - 进程">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="February 01, 2015">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-laptop"></i> Linux 的使用 - 进程</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#查看">查看</a>
+    <ul>
+      <li><a href="#查看当前所有进程">查看当前所有进程</a></li>
+      <li><a href="#实时查看进程状态及-cpu-占用">实时查看进程状态及 CPU 占用</a></li>
+      <li><a href="#查看守护进程">查看守护进程</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="查看">查看</h2>
+
+<h3 id="查看当前所有进程">查看当前所有进程</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ps <span class="nt">-ef</span>
+UID         PID   PPID  C STIME TTY          TIME CMD
+root          1      0  0 06:59 ?        00:00:02 /usr/lib/systemd/systemd <span class="nt">--switched-root</span> <span class="nt">--system</span> <span class="nt">--</span>
+root          2      0  0 06:59 ?        00:00:00 <span class="o">[</span>kthreadd]
+root          3      2  0 06:59 ?        00:00:00 <span class="o">[</span>ksoftirqd/0]
+</code></pre></div></div>
+
+<h3 id="实时查看进程状态及-cpu-占用">实时查看进程状态及 CPU 占用</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>top
+top - 09:24:05 up  2:24,  2 <span class="nb">users</span>,  load average: 0.00, 0.01, 0.04
+Tasks: 175 total,   1 running, 174 sleeping,   0 stopped,   0 zombie
+%Cpu<span class="o">(</span>s<span class="o">)</span>:  0.1 us,  0.0 sy,  0.0 ni, 99.9 <span class="nb">id</span>,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+KiB Mem :   999964 total,    66488 free,   661372 used,   272104 buff/cache
+KiB Swap:  1048572 total,  1046440 free,     2132 used.   120096 avail Mem
+
+   PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND                         
+    36 root      20   0       0      0      0 S   0.3  0.0   0:02.48 kworker/0:1                     
+    80 root      20   0       0      0      0 S   0.3  0.0   0:00.83 kworker/3:1                     
+  2473 mysql     20   0 1888520 379700  10168 S   0.3 38.0   0:22.66 mysqld                          
+     1 root      20   0  193628   6396   3632 S   0.0  0.6   0:02.58 systemd                         
+     2 root      20   0       0      0      0 S   0.0  0.0   0:00.00 kthreadd       
+</code></pre></div></div>
+
+<h3 id="查看守护进程">查看守护进程</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ systemctl list-units
+UNIT                                  LOAD   ACTIVE SUB       DESCRIPTION
+ proc-sys-fs-binfmt_misc.automount     loaded active waiting   Arbitrary Executable File Formats File
+ -.mount                               loaded active mounted   /
+ boot.mount                            loaded active mounted   /boot
+ dev-hugepages.mount                   loaded active mounted   Huge Pages File System
+ dev-mqueue.mount                      loaded active mounted   POSIX Message Queue File System
+ home.mount                            loaded active mounted   /home
+ proc-fs-nfsd.mount                    loaded active mounted   NFSD configuration filesystem
+ run-user-1000.mount                   loaded active mounted   /run/user/1000
+ run-user-42.mount                     loaded active mounted   /run/user/42
+</code></pre></div></div>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/linux" class="page__taxonomy-item" rel="tag">linux</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/进程" class="page__taxonomy-item" rel="tag">进程</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://linotes.netlify.com/categories/#tools" class="page__taxonomy-item" rel="tag">tools</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2015-02-01T00:00:00+08:00">February 01, 2015</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="https://linotes.netlify.com/tools/pipeline/" class="pagination--pager" title="上一页
+">Linux 的使用 - 管道</a>
+    
+    
+      <a href="https://linotes.netlify.com/tools/re/" class="pagination--pager" title="下一页
+">Linux 的使用 - 正则表达式</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">相关文章</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/kernel/filedescriptor/" rel="permalink">文件描述符简介
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash03/" rel="permalink">Bash 入门 03
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">循环，变量，函数，捕捉信号
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash02/" rel="permalink">Bash 入门 02
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">正则表达式，SED，AWK，条件结构，交互式脚本
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash01/" rel="permalink">Bash 入门 01
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">Bash 与 Bash 脚本，脚本的编写与调试，Bash 环境
+</p>
+-->
+
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+    
+    
+    
+    
+    <li><a href="https://linotes.netlify.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="https://linotes.netlify.com/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

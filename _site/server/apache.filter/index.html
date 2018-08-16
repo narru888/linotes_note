@@ -1,0 +1,674 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Apache 过滤器 - LINOTES</title>
+<meta name="description" content="本节内容来自 Apache HTTP Server 2.4 官方文档。">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Apache 过滤器">
+<meta property="og:url" content="https://linotes.netlify.com/server/apache.filter/">
+
+
+  <meta property="og:description" content="本节内容来自 Apache HTTP Server 2.4 官方文档。">
+
+
+
+  <meta property="og:image" content="https://linotes.netlify.com/assets/images/header/datacenter-3.jpg">
+
+
+
+
+
+  <meta property="article:published_time" content="2016-01-02T00:00:00+08:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://linotes.netlify.com/server/apache.filter/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="https://linotes.netlify.com/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="https://linotes.netlify.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="https://linotes.netlify.com/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('https://linotes.netlify.com/assets/images/header/datacenter-3.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Apache 过滤器
+
+        
+      </h1>
+      
+        <p class="page__lead">本节内容来自 Apache HTTP Server 2.4 <a href="https://httpd.apache.org/docs/2.4/zh-cn/">官方文档</a>。
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="https://linotes.netlify.com/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:imhawkz@gmail.com">
+            <meta itemprop="email" content="imhawkz@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Apache 过滤器">
+    <meta itemprop="description" content="本节内容来自 Apache HTTP Server 2.4 官方文档。">
+    <meta itemprop="datePublished" content="January 02, 2016">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-copy"></i> Apache 过滤器</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#apache-过滤器">Apache 过滤器</a>
+    <ul>
+      <li><a href="#apache-2-中的过滤器">Apache 2 中的过滤器</a></li>
+      <li><a href="#智能过滤">智能过滤</a></li>
+      <li><a href="#把过滤器当作-http-服务">把过滤器当作 HTTP 服务</a></li>
+      <li><a href="#如何使用过滤器">如何使用过滤器</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="apache-过滤器">Apache 过滤器</h2>
+
+<p>Apache Filters</p>
+
+<h3 id="apache-2-中的过滤器">Apache 2 中的过滤器</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>相关模块</th>
+      <th>相关指令</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">[mod_filter]</code><br /><code class="highlighter-rouge">[mod_deflate]</code><br /><code class="highlighter-rouge">[mod_ext_filter]</code><br /><code class="highlighter-rouge">[mod_include]</code><br /><code class="highlighter-rouge">[mod_charset_lite]</code><br /><code class="highlighter-rouge">[mod_reflector]</code><br /><code class="highlighter-rouge">[mod_buffer]</code><br /><code class="highlighter-rouge">[mod_data]</code><br /><code class="highlighter-rouge">[mod_ratelimit]</code><br /><code class="highlighter-rouge">[mod_reqtimeout]</code><br /><code class="highlighter-rouge">[mod_request]</code><br /><code class="highlighter-rouge">[mod_sed]</code><br /><code class="highlighter-rouge">[mod_substitute]</code><br /><code class="highlighter-rouge">[mod_xml2enc]</code><br /><code class="highlighter-rouge">[mod_proxy_html]</code></td>
+      <td><code class="highlighter-rouge">[FilterChain]</code><br /><code class="highlighter-rouge">[FilterDeclare]</code><br /><code class="highlighter-rouge">[FilterProtocol]</code><br /><code class="highlighter-rouge">[FilterProvider]</code><br /><code class="highlighter-rouge">[AddInputFilter]</code><br /><code class="highlighter-rouge">[AddOutputFilter]</code><br /><code class="highlighter-rouge">[RemoveInputFilter]</code><br /><code class="highlighter-rouge">[RemoveOutputFilter]</code><br /><code class="highlighter-rouge">[ReflectorHeader]</code><br /><code class="highlighter-rouge">[ExtFilterDefine]</code><br /><code class="highlighter-rouge">[ExtFilterOptions]</code><br /><code class="highlighter-rouge">[SetInputFilter]</code><br /><code class="highlighter-rouge">[SetOutputFilter]</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Apache 2.0 之后的版本有了过滤链（Filter Chain）这个概念，有了它以后，应用程序能够以一种高灵活、可配置的方式来处理传入和传出的数据，完全不用考虑数据是从哪里来的。</p>
+
+<p>根据需要，可以对传入的数据进行预处理，对传出的数据进行后处理。这基本上独立于传统的请求处理阶段。</p>
+
+<p><img src="/assets/images/apache.req.proc.png" alt="image-center" class="align-center" /></p>
+
+<p>在标准的 Aapche 版本中有一些过滤器，如：</p>
+
+<p><code class="highlighter-rouge">mod_include</code> ：服务端 include</p>
+
+<p><code class="highlighter-rouge">mod_ssl</code> ：SSL 加密</p>
+
+<p><code class="highlighter-rouge">mod_deflate</code> ：实时压缩、解压</p>
+
+<p><code class="highlighter-rouge">mod_charset_lite</code> ：转换字符集</p>
+
+<p><code class="highlighter-rouge">mod_ext_filter</code> ：运行外部程序，做为过滤器</p>
+
+<p>Apache 内部也使用一些过滤器，用于处理像 chunking 和 byte-range 这样的函数。</p>
+
+<p>大量的程序是通过第三方过滤器模块来部署的，它们可以从 modules.apache.org 获取。如：</p>
+
+<ul>
+  <li>HTML 和 XML 处理及重写</li>
+  <li>XSLT 转换及 XIncludes</li>
+  <li>XML 命令空间的支持</li>
+  <li>处理 HTML 表单上传的文件，并对其进行解码</li>
+  <li>图像处理</li>
+  <li>保护 PHP 脚本等易受攻击的程序</li>
+  <li>文本的搜索和替换</li>
+</ul>
+
+<h3 id="智能过滤">智能过滤</h3>
+
+<p><img src="/assets/images/apache_mod_filter.png" alt="image-center" class="align-center" /></p>
+
+<p><code class="highlighter-rouge">mod_filter</code> 在 Apache 2.1 之后的版本中可用，它可以让过滤链在运行时能够动态配置。例如，你可以设置一个代理，用一个 HTML 过滤器来重写 HTML，用另一个过滤器来重写 JPEG 图像，尽管代理无法预知源服务器会发送什么信息。这是由过滤器束（filter harness）实现的，在运行时，根据具体的内容为其分配不同的提供程序。过滤器既可以直接插入过滤链，然后无条件运行，也可以作为提供程序使用，动态地插入。例如：</p>
+
+<ul>
+  <li>只有当内容为 text/html 或 application/xhtml+xml 时，才会运行处理 HTML 的过滤器</li>
+  <li>只有当输入为可压缩类型，且未被压缩时，才会运行压缩过滤器</li>
+  <li>只有当文本文档不是希望的字符集时，才会插入字符集转换的过滤器</li>
+</ul>
+
+<h3 id="把过滤器当作-http-服务">把过滤器当作 HTTP 服务</h3>
+
+<p>除了处理来自服务端的内容，过滤器还可使用 <code class="highlighter-rouge">mod_reflector</code> 模块来处理来自客户端的内容。</p>
+
+<p><code class="highlighter-rouge">mod_reflector</code> 会接收来自客户端的 POST 请求，并将收到的内容在回复中反射回去，在返回客户端的过程中会穿越输出过滤器。</p>
+
+<p>此技术可用于替代在应用程序服务器堆栈中运行的 web 服务，其中输出筛选器提供请求正文所需的转换。例如，<code class="highlighter-rouge">mod_deflate</code> 模块可用来提供一般的压缩服务，或图像转换过滤器可用来提供图像转换服务。</p>
+
+<h3 id="如何使用过滤器">如何使用过滤器</h3>
+
+<p>有两种方法来使用过滤器：简易和动态。</p>
+
+<p>一般只使用其中的一种方法，混合使用会造成不可预料的结果。</p>
+
+<h4 id="简易方法">简易方法</h4>
+
+<p>简易方法是配置输入过滤的唯一方法，在需要一个静态过滤链时，也可以用于输出过滤。</p>
+
+<p>相关的指令为 ：<code class="highlighter-rouge">SetInputFilter</code>、<code class="highlighter-rouge">SetOutputFilter</code>、<code class="highlighter-rouge">AddInputFilter</code>、<code class="highlighter-rouge">AddOutputFilter</code>、<code class="highlighter-rouge">RemoveInputFilter</code>、RemoveOutputFilter`</p>
+
+<h4 id="动态方法">动态方法</h4>
+
+<p>使用动态方法可以对输出过滤进行静态的、灵活的、动态的配置，相关的指令为 <code class="highlighter-rouge">FilterChain</code>、<code class="highlighter-rouge">FilterDeclare</code>、<code class="highlighter-rouge">FilterProvider</code>。</p>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/apache" class="page__taxonomy-item" rel="tag">apache</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/过滤器" class="page__taxonomy-item" rel="tag">过滤器</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://linotes.netlify.com/categories/#server" class="page__taxonomy-item" rel="tag">server</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2016-01-02T00:00:00+08:00">January 02, 2016</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="https://linotes.netlify.com/server/apache.config/" class="pagination--pager" title="上一页
+">Apache 的配置</a>
+    
+    
+      <a href="https://linotes.netlify.com/server/apache.intro/" class="pagination--pager" title="下一页
+">Apache HTTP Server 简介</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">相关文章</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/kernel/filedescriptor/" rel="permalink">文件描述符简介
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash03/" rel="permalink">Bash 入门 03
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">循环，变量，函数，捕捉信号
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash02/" rel="permalink">Bash 入门 02
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">正则表达式，SED，AWK，条件结构，交互式脚本
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash01/" rel="permalink">Bash 入门 01
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">Bash 与 Bash 脚本，脚本的编写与调试，Bash 环境
+</p>
+-->
+
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+    
+    
+    
+    
+    <li><a href="https://linotes.netlify.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="https://linotes.netlify.com/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

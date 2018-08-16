@@ -1,0 +1,1676 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Linux 基础 - 14. Systemd - LINOTES</title>
+<meta name="description" content="用简洁清晰的语言讨论技术">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Linux 基础 - 14. Systemd">
+<meta property="og:url" content="https://linotes.netlify.com/linux/systemd/">
+
+
+  <meta property="og:description" content="用简洁清晰的语言讨论技术">
+
+
+
+  <meta property="og:image" content="https://linotes.netlify.com/assets/images/header/linux.jpg">
+
+
+
+
+
+  <meta property="article:published_time" content="2015-01-14T00:00:00+08:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://linotes.netlify.com/linux/systemd/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="https://linotes.netlify.com/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="https://linotes.netlify.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="https://linotes.netlify.com/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://linotes.netlify.com/assets/images/header/linux.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Linux 基础 - 14. Systemd
+
+        
+      </h1>
+      
+        <p class="page__lead">
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="https://linotes.netlify.com/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:imhawkz@gmail.com">
+            <meta itemprop="email" content="imhawkz@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Linux 基础 - 14. Systemd">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="January 14, 2015">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-code-branch"></i> 14. SYSTEMD</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#141-守护进程与服务">14.1 守护进程与服务</a>
+    <ul>
+      <li><a href="#1411-服务">14.1.1 服务</a></li>
+      <li><a href="#1412-守护进程">14.1.2 守护进程</a></li>
+      <li><a href="#1413-sysvinit">14.1.3 sysvinit</a></li>
+      <li><a href="#1414-systemd">14.1.4 systemd</a></li>
+      <li><a href="#1415-systemd-与-sysvinit-的区别">14.1.5 systemd 与 sysvinit 的区别</a></li>
+    </ul>
+  </li>
+  <li><a href="#142-systemd-简介">14.2 systemd 简介</a>
+    <ul>
+      <li><a href="#1421-systemd-设计宗旨">14.2.1 systemd 设计宗旨</a></li>
+      <li><a href="#1422-单元">14.2.2 单元</a></li>
+      <li><a href="#1423-核心组件">14.2.3 核心组件</a></li>
+      <li><a href="#1424-辅助组件">14.2.4 辅助组件</a></li>
+    </ul>
+  </li>
+  <li><a href="#143-单元的配置文件">14.3 单元的配置文件</a>
+    <ul>
+      <li><a href="#1431-概述">14.3.1 概述</a></li>
+      <li><a href="#1432-配置文件的状态">14.3.2 配置文件的状态</a></li>
+      <li><a href="#1433-配置文件的格式">14.3.3 配置文件的格式</a></li>
+      <li><a href="#1434-配置文件的区块">14.3.4 配置文件的区块</a></li>
+    </ul>
+  </li>
+  <li><a href="#144-target">14.4 Target</a>
+    <ul>
+      <li><a href="#1441-常用命令">14.4.1 常用命令</a></li>
+      <li><a href="#1442-target-与-传统运行级的对应关系">14.4.2 Target 与 传统运行级的对应关系</a></li>
+      <li><a href="#1443-target-与-init-进程的主要差别">14.4.3 Target 与 init 进程的主要差别</a></li>
+      <li><a href="#1444-target-的配置文件">14.4.4 Target 的配置文件</a></li>
+    </ul>
+  </li>
+  <li><a href="#145-日志管理">14.5 日志管理</a>
+    <ul>
+      <li><a href="#常用命令">常用命令</a></li>
+    </ul>
+  </li>
+  <li><a href="#145-centos-7x-默认启动的服务简易说明">14.5 CentOS 7.x 默认启动的服务简易说明</a></li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="141-守护进程与服务">14.1 守护进程与服务</h2>
+
+<h3 id="1411-服务">14.1.1 服务</h3>
+
+<p>服务，Service，是一种 <strong>进程</strong>，它通过进程间通信机制来 <strong>响应其它程序的请求</strong>，这些请求 <strong>通常来自于网络</strong>。服务通常是由服务软件提供的。</p>
+
+<p>服务包括守护进程及其他服务。非守护进程的服务通常由 <code class="highlighter-rouge">xinetd</code> 控制，<code class="highlighter-rouge">xinetd</code> 负责监听请求，必要时会启动相关的服务来处理，请求被处理完成以后，服务会再次被关闭。</p>
+
+<blockquote>
+  <p>【 xinetd 】 extended internet deamon。<strong>负责管理基于互联网的活动</strong>。相对于较早的 <code class="highlighter-rouge">inetd</code>，其安全性更好。<code class="highlighter-rouge">xinetd</code> <strong>监听</strong> 其管理的所有服务的 <strong>端口</strong>，当发生连接请求时，<code class="highlighter-rouge">xinetd</code> 决定是否允许客户端访问。如果允许，则启动对应的服务。</p>
+</blockquote>
+
+<h3 id="1412-守护进程">14.1.2 守护进程</h3>
+
+<p>守护进程，Daemon，是一种 <strong>服务进程</strong>，它们运行于后台，管理系统或为其它进程提供特定的功能。它 <strong>不会与用户发生任何交互</strong>。</p>
+
+<p>早期的守护进程由 <code class="highlighter-rouge">SysVinit</code> 部署，而现代的守护进程遵循一个简单而更强大的方案，由 <code class="highlighter-rouge">systemd</code> 部署，称之为新型守护进程。</p>
+
+<p>守护进程进程名字均以字母 ‘<strong>d</strong>’ 结尾，如 syslogd、sshd 等。</p>
+
+<p>典型的守护进程：<code class="highlighter-rouge">MySQL</code>，<code class="highlighter-rouge">Apache</code>。典型的非守护进程：<code class="highlighter-rouge">rsync</code>，<code class="highlighter-rouge">vsftpd</code>。</p>
+
+<p>📕 服务的概念大于守护进程。</p>
+
+<h3 id="1413-sysvinit">14.1.3 sysvinit</h3>
+
+<p>在 <code class="highlighter-rouge">systemd</code> 之前，一直以来都是 <code class="highlighter-rouge">SysVinit</code> 掌管启动进程。当系统使用 <code class="highlighter-rouge">SysVint</code> 时，<code class="highlighter-rouge">init</code> 是加载内核后，第一个执行的进程。 <code class="highlighter-rouge">init</code> 会加载一系列的脚本，这些脚本会启动各种系统服务。</p>
+
+<p><code class="highlighter-rouge">SysVinit</code> 的问题在于它 <strong>需要细致的调整</strong>。<strong>必须确保进程的启动顺序正确</strong>，以满足进程间的依赖性。</p>
+
+<p><code class="highlighter-rouge">SysVinit</code> 实现的方式是 <strong>为服务设定严格的启动顺序</strong>，每个服务都被分配了 <strong>优先级</strong> 数字，然后 <code class="highlighter-rouge">init</code> 按照优先级的顺序 <strong>依次启动</strong> 服务。导致 <strong>启动时间较长</strong>。</p>
+
+<p>要想确保服务的启动顺序正确，必须为服务手工配置优先级，为此需花费很大的精力。</p>
+
+<h4 id="init-的特点">init 的特点</h4>
+
+<p>init 的缺点：</p>
+
+<ul>
+  <li><strong>启动时间长</strong>：init 进程是串行启动，只有前一个进程启动完，才会启动下一个进程。</li>
+  <li><strong>启动脚本复杂</strong>：init 进程只是执行启动脚本，不管其他事情。脚本需要自己处理各种情况，这往往使得脚本变得很长。</li>
+</ul>
+
+<h5 id="操作命令">操作命令</h5>
+
+<p>所有的服务启动脚本都放在 <code class="highlighter-rouge">/etc/init.d/</code></p>
+
+<p>启动命令：<code class="highlighter-rouge">/etc/init.d/apache2 start</code> 或 <code class="highlighter-rouge">service apache2 start</code></p>
+
+<p>停止命令：<code class="highlighter-rouge">/etc/init.d/apache2 stop</code> 或 <code class="highlighter-rouge">service apache2 stop</code></p>
+
+<p>重新启动：/etc/init.d/apache2 restart 或 <code class="highlighter-rouge">service apache2 restart</code></p>
+
+<p>查看状态：/etc/init.d/apache2 status 或 <code class="highlighter-rouge">service apache2 status</code></p>
+
+<h5 id="服务启动模式">服务启动模式</h5>
+
+<ul>
+  <li>
+    <p><strong>独立启动</strong>：stand alone，服务独立启动，常驻于内存，反应速度快。</p>
+  </li>
+  <li>
+    <p><strong>超级守护进程</strong>：super daemon，做为总管进程，<strong>统一管理所有的守护进程</strong>。早期的超级守护进程是 <code class="highlighter-rouge">inetd</code>，后来被 <strong><code class="highlighter-rouge">xinetd</code></strong> 取代了。</p>
+
+    <p><code class="highlighter-rouge">xinetd</code> 管理多个网络服务。当没有用户请求套接字或端口时，服务不会启动。有用户请求时，<code class="highlighter-rouge">xinetd</code> 唤醒对应的服务。请求结束，服务也会停止。</p>
+
+    <p>优点是可以 <strong>管理多个网络服务</strong>，缺点是 <strong>唤醒服务会有一点延迟</strong>。</p>
+  </li>
+  <li>
+    <p><strong>服务的依赖关系</strong>：</p>
+
+    <p>init 需要管理员根据服务之间的依赖关系，<strong>手动排序</strong> 优先级。相当费精力。</p>
+  </li>
+  <li>
+    <p><strong>执行等级的分类</strong>： init 可以根据使用者自定义的 <strong>执行等级</strong> 来唤醒不同的服务，以进入不同的 <strong>服务环境</strong> 和 <strong>操作界面</strong>。</p>
+
+    <p>Linux 提供 7 个执行等级，0 ~ 6， 其中比较重要的是 1，单人维护模式，3，纯文本模式，5，文字加图形界面</p>
+
+    <p>各个执行等级的启动脚本是通过 <code class="highlighter-rouge">/etc/rc.d/rc[0-6]/SXXdaemon</code> 链接到 <code class="highlighter-rouge">/etc/init.d/daemon</code></p>
+
+    <p>链接文件名：SXXdaemon。S 表示启动该服务，XX 是优先级。</p>
+  </li>
+  <li>
+    <p>设置执行等级对应的服务：SXXdaemon 这些链接文件不是手动生成的，而是通过以下命令自动生成的：</p>
+
+    <ul>
+      <li>
+        <p>开机启动： <code class="highlighter-rouge">chkconfig daemon on</code></p>
+      </li>
+      <li>
+        <p>开机不启动： <code class="highlighter-rouge">chkconfig daemon off</code></p>
+      </li>
+      <li>
+        <p>查看是否开机启动： <code class="highlighter-rouge">chkconfig --list daemon</code></p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>执行等级的切换：</p>
+
+    <p><code class="highlighter-rouge">init 5</code> 会从纯命令行（运行等级 3）切换到图形界面（运行等级 5），init 会自动分析 <code class="highlighter-rouge">/etc/rc.d/rc[3].d/</code> 和 <code class="highlighter-rouge">/etc/rc.d/rc[5].d/</code> 目录中的脚本，然后启动转换执行等级所需的服务。</p>
+  </li>
+</ul>
+
+<h3 id="1414-systemd">14.1.4 systemd</h3>
+
+<h4 id="systemd-简介">systemd 简介</h4>
+
+<p>从 CentOS 7 以后，Red Hat 系列发行版放弃沿用多年的 System V 开机启动服务的流程，改用 systemd 这个启动服务管理机制。</p>
+
+<p>在系统启动后，做为第一个运行的进程，systemd 扮演初始化系统的角色，负责启动和维护用户空间的服务。</p>
+
+<p>Systemd 中，<strong>所有的服务都是彼此分离的</strong>，即使某一个服务的配置文件有问题，也不会影响到其它的服务。</p>
+
+<p>Systemd 不只是一个初始化的系统，它也 <strong>是一套库和工具</strong>。可以用来 <strong>替代多种服务和工具</strong>，包括 sysvinit, pm-utils, inetd, acpid, syslog, watchdog, cron, atd 等。</p>
+
+<p>Systemd 可以兼容 init 的启动脚本，因此，init 启动脚本也能够通过 systemd 来管理，但无法使用 systemd 的高级功能。</p>
+
+<h4 id="systemd-独有的功能">systemd 独有的功能</h4>
+
+<ul>
+  <li>sysvinit 的执行等级，只有 1, 3, 5 有对应的 target 类型</li>
+  <li>所有服务都用 systemctl 管理，支持的语法有限制，不可自定义参数</li>
+  <li>如果没有用 systemctl 启动服务，而是手动启动的，systemd 将无法管理</li>
+  <li>systemd 启动过程中，不接受任何输入，因此自定义的服务不应在启动期间尝试用标准输入与之互动，因为期间标准输入被设置为 <code class="highlighter-rouge">/dev/null</code></li>
+</ul>
+
+<h3 id="1415-systemd-与-sysvinit-的区别">14.1.5 systemd 与 sysvinit 的区别</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>功能</th>
+      <th>systemd</th>
+      <th>SysVinit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>服务</td>
+      <td>引入 <strong>单元</strong>（systemd units）的概念，每个服务为一个单元，这些单元由各自的配置文件控制，这些文件包含了服务启动时需要的所有配置信息，包括进程依赖关系的描述。</td>
+      <td>每个服务对应一个脚本文件</td>
+    </tr>
+    <tr>
+      <td>服务启动顺序</td>
+      <td><strong>并行启动多个服务</strong>，提升启动速度。只需设置少量的文件。</td>
+      <td>依照优先级 <strong>逐个启动</strong>，需要花费大量精力去手动设置。</td>
+    </tr>
+    <tr>
+      <td>服务的管理</td>
+      <td>按需启动服务，<strong>无需另外的服务来管理</strong></td>
+      <td>按需启动服务，<strong>需要超级守护进程来管理</strong></td>
+    </tr>
+    <tr>
+      <td>服务依赖</td>
+      <td>服务依赖关系 <strong>自动管理</strong>，会自动启动相关的服务，防止长时间超时。</td>
+      <td><strong>静态管理</strong>，需要管理员手动调整各服务启动顺序，需要管理员对各服务关系非常了解</td>
+    </tr>
+    <tr>
+      <td>服务监控</td>
+      <td><strong>持续监控</strong> 服务，可以自动重启崩溃的服务</td>
+      <td>需要常常调整监控服务，服务很容易逃避监控</td>
+    </tr>
+    <tr>
+      <td>记录日志</td>
+      <td>增强了记录日志能力，启动后就可以开始记录</td>
+      <td>启动后一段时间才开始记录日志</td>
+    </tr>
+    <tr>
+      <td>服务环境</td>
+      <td>按相关性把所有服务 <strong>分组</strong>（target），通过切换组来切换服务环境</td>
+      <td>使用 <strong>执行等级</strong> 来切换不同的服务环境</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="142-systemd-简介">14.2 systemd 简介</h2>
+
+<p>systemd 是 <strong>一套软件</strong>，它为 Linux 提供基本的构建块。其中最突出的一个软件就是 <strong><code class="highlighter-rouge">systemd</code></strong>，是一个 <strong>系统管理和服务管理的工具</strong>。它是一个 <strong>初始化</strong> 的系统，负责 <strong>自举用户空间</strong>，并在 <strong>启动后管理系统进程</strong>。是 UNIX System V 以及 BSD init 的替代品。</p>
+
+<p>systemd 项目的主要目标之一是，在所有的 Linux 发行版中 <strong>统一基本配置和服务行为</strong>。</p>
+
+<p>2015 年起，大量的发行版开始把 systemd 做为其默认的初始化系统。</p>
+
+<p>Systemd 的优点是功能强大，使用方便，缺点是体系庞大，非常复杂。</p>
+
+<p>事实上，现在还有很多人反对使用 systemd，理由就是它过于复杂，与操作系统的其他部分强耦合，违反 “<strong>keep simple, keep stupid</strong>” 的 Unix 哲学。</p>
+
+<figure class="">
+  <img src="https://linotes.netlify.com/assets/images/Systemd_components.png" alt="systemd 的架构" />
+  
+</figure>
+
+<h3 id="1421-systemd-设计宗旨">14.2.1 systemd 设计宗旨</h3>
+
+<p>systemd 的设计目标是，为系统的启动和管理提供一套完整的解决方案。Systemd 这个名字的含义，就是它要守护整个系统。</p>
+
+<p>使用了 Systemd，就不需要再用init了。Systemd 取代了initd，成为系统的第一个进程（PID 等于 1），其他进程都是它的子进程。</p>
+
+<p>systemd 的立意：</p>
+
+<ul>
+  <li>系统管理及服务管理：通过应用各种配置，来管理系统和服务</li>
+  <li>软件平台：为其它软件的开发提供服务</li>
+  <li>应用与内核的粘合剂：提供多种接口，便于程序访问各种内核的功能</li>
+</ul>
+
+<p>systemd 不仅仅是初始化的那个守护进程，它更是代表围绕它的整个的软件包，包括 journald、logind、networkd 等许多其它的底层组件。</p>
+
+<p>做为一个内置的软件包，systemd <strong>代替了</strong> 那些由传统初始化守护进程控制的 <strong>启动序列、运行级以及各个脚本</strong>。同时，它也 <strong>整合</strong> 了许多 Linux 常见的 <strong>其它的服务</strong>，如用户登陆、系统控制台、设备热插拔、计划任务、日志、主机名及区域设置。</p>
+
+<p>与 <code class="highlighter-rouge">init</code> 一样，<code class="highlighter-rouge">systemd</code> 也是一个守护进程，用来管理其它的守护进程，包括它自己。它是系统启动过程中第一个守护进程，也是系统关闭过程中最后一个终止的守护进程。<code class="highlighter-rouge">systemd</code> 是进程树中的根，Unix 系统中的第一个进程（PID 1）往往扮演着特殊的角色，当某个守护进程从其父进程分离出来以后被终止时，<code class="highlighter-rouge">systemd</code> 会收到一个 SIGCHLD 信号。因此，第一个进程非常适合用来监控守护进程。传统的管理守护进程的办法是，把守护进程启动之后就不再监控了，而 systemd 尝试在这方面有所改进。</p>
+
+<p>systemd 是以并行的方式执行启动序列的，比传统的方法要快。对于进程间通信，systemd 使 Unix domain socket 和 D-Bus 对运行中的守护进程变的可用。systemd 自身的状态也可以保存于快照中，便于日后查看。</p>
+
+<h3 id="1422-单元">14.2.2 单元</h3>
+
+<p>Systemd 可以管理所有 <strong>系统资源</strong>。不同的资源统称为 Unit（<strong>单元</strong>）。</p>
+
+<p>单元一共分成 12 种。</p>
+
+<ul>
+  <li>Service unit：系统服务</li>
+  <li>Target unit：多个单元构成的一个组</li>
+  <li>Device Unit：硬件设备</li>
+  <li>Mount Unit：文件系统的挂载点</li>
+  <li>Automount Unit：自动挂载点</li>
+  <li>Path Unit：文件或路径</li>
+  <li>Scope Unit：不是由 Systemd 启动的外部进程</li>
+  <li>Slice Unit：进程组</li>
+  <li>Snapshot Unit：Systemd 快照，可以切回某个快照</li>
+  <li>Socket Unit：进程间通信的套接字</li>
+  <li>Swap Unit：交换文件</li>
+  <li>Timer Unit：定时器</li>
+</ul>
+
+<p>systemd 把 <strong>每个守护进程的</strong> 初始化指令都保存在一个 <strong>配置文件</strong> 中，称之为 <strong>单元文件</strong>（Unit File），使用的是声明语言，传统方法是每个守护进程用一个脚本文件来配置。</p>
+
+<p><code class="highlighter-rouge">systemctl list-units</code>  列出正在运行的单元</p>
+
+<p><code class="highlighter-rouge">systemctl list-units --all</code>  列出所有单元，包括没有找到配置文件的或者启动失败的</p>
+
+<p><code class="highlighter-rouge">systemctl list-units --all --state=inactive</code>  列出所有没有运行的单元</p>
+
+<p><code class="highlighter-rouge">systemctl list-units --failed</code>  列出所有加载失败的单元</p>
+
+<p><code class="highlighter-rouge">systemctl list-units --type=service</code>  列出所有正在运行的、类型为服务的单元</p>
+
+<h4 id="单元的状态">单元的状态</h4>
+
+<p><code class="highlighter-rouge">systemctl status</code></p>
+
+<p>命令用于查看系统状态和单个单元的状态。</p>
+
+<p><code class="highlighter-rouge">systemctl status</code></p>
+
+<p>显示系统状态</p>
+
+<p><code class="highlighter-rouge">sysystemctl status bluetooth.service</code></p>
+
+<p>显示单个单元的状态</p>
+
+<p><code class="highlighter-rouge">systemctl -H root@rhel7.example.com status httpd.service</code></p>
+
+<p>显示远程主机的某个单元的状态</p>
+
+<p>除了<code class="highlighter-rouge">status</code>命令，<code class="highlighter-rouge">systemctl</code>还提供了三个查询状态的简单方法，主要供脚本内部的判断语句使用。</p>
+
+<p><code class="highlighter-rouge">systemctl is-active application.service</code></p>
+
+<p>显示某个单元是否正在运行</p>
+
+<p><code class="highlighter-rouge">systemctl is-failed application.service</code></p>
+
+<p>显示某个单元是否处于启动失败状态</p>
+
+<p><code class="highlighter-rouge">systemctl is-enabled application.service</code></p>
+
+<p>显示某个单元服务是否建立了启动链接</p>
+
+<h4 id="单元管理">单元管理</h4>
+
+<p>对于用户来说，最常用的是下面这些命令，用于启动和停止单元（经常用于管理服务）。</p>
+
+<p><code class="highlighter-rouge">sudo systemctl start apache.service</code></p>
+
+<p>立即 <strong>启动</strong> 一个服务</p>
+
+<p><code class="highlighter-rouge">sudo systemctl stop apache.service</code></p>
+
+<p>立即 <strong>停止</strong> 一个服务</p>
+
+<p><code class="highlighter-rouge">sudo systemctl restart apache.service</code></p>
+
+<p><strong>重启</strong> 一个服务</p>
+
+<p><code class="highlighter-rouge">sudo systemctl kill apache.service</code></p>
+
+<p><strong>杀死</strong> 一个服务的所有子进程</p>
+
+<p><code class="highlighter-rouge">sudo systemctl reload apache.service</code></p>
+
+<p><strong>重新加载</strong> 一个服务的 <strong>配置文件</strong></p>
+
+<p><code class="highlighter-rouge">sudo systemctl daemon-reload</code></p>
+
+<p><strong>重新加载所有修改过的配置文件</strong></p>
+
+<p><code class="highlighter-rouge">systemctl show httpd.service</code></p>
+
+<p>显示某个单元的 <strong>所有底层参数</strong></p>
+
+<p><code class="highlighter-rouge">systemctl show -p CPUShares httpd.service</code></p>
+
+<p>显示某个单元的指定属性的值</p>
+
+<p><code class="highlighter-rouge">sudo systemctl set-property httpd.service CPUShares=500</code></p>
+
+<p>设置某个单元的指定属性</p>
+
+<h4 id="依赖关系">依赖关系</h4>
+
+<p>单元之间存在依赖关系：A 依赖于 B，就意味着 Systemd 在启动 A 的时候，同时会去启动 B。</p>
+
+<p><code class="highlighter-rouge">systemctl list-dependencies</code> 命令列出一个单元的所有依赖。</p>
+
+<p><code class="highlighter-rouge">systemctl list-dependencies nginx.service</code></p>
+
+<p>上面命令的输出结果之中，有些依赖是 Target 类型，默认不会展开显示。如果要展开 Target，就需要使用<code class="highlighter-rouge">--all</code>参数。</p>
+
+<p><code class="highlighter-rouge">systemctl list-dependencies --all nginx.service</code></p>
+
+<h3 id="1423-核心组件">14.2.3 核心组件</h3>
+
+<p>随着被整合进 Linux，systemd 也提供了各种守护进程和工具的替代品，可以替代启动脚本、pm-utils、inetd、acpid、syslog、watchdog、cron、atd 等。systemd 的核心组件包括：</p>
+
+<ul>
+  <li>systemd 是系统管理器及服务管理器</li>
+  <li>systemctl 可用于检查和控制 systemd 的状态</li>
+  <li>systemd-analyze 用于确定系统启动性能统计信息，并从 systemd 中检索其他状态和跟踪信息</li>
+</ul>
+
+<p>systemd <strong>不再使用 PID，而是使用内核的 cgroups 子系统来追踪进程</strong>，因此，守护进程是无法逃脱 systemd 的。system 不仅仅是使用 cgroups，它还用 <strong><code class="highlighter-rouge">systemd-nspawn</code> 和 <code class="highlighter-rouge">machinectl</code></strong> 这两个工具来 <strong>强化</strong> 其功能，这两个工具 <strong>实现了 Linux 容器的创建和管理</strong>。从 205 版本开始，systemd 也提供了 cgroups 接口。</p>
+
+<blockquote>
+  <p>【 cgroups 】Control Groups 的缩写，是 Linux 内核的功能，它会 <strong>限制、计算、隔离一组进程的资源使用</strong>（CPU，内存，磁盘 I/O，网络等）。</p>
+</blockquote>
+
+<h3 id="1424-辅助组件">14.2.4 辅助组件</h3>
+
+<h4 id="journald">journald</h4>
+
+<p><code class="highlighter-rouge">systemd-journald</code> 该守护进程负责把事件保存到日志中，使用只可追加的二进制文件做为日志文件。系统管理员可以选择是使用 <code class="highlighter-rouge">systemd-journald</code> 来保存系统事件的日志，还是使用 <code class="highlighter-rouge">syslog-ng</code> 或 <code class="highlighter-rouge">rsyslog</code>。</p>
+
+<h4 id="logind">logind</h4>
+
+<p><code class="highlighter-rouge">systemd-logind</code> 守护进程以多种方式 <strong>管理用户登陆和座位</strong>（seats），它是一个集成的登陆管理器，增强了多座位（Multi-Seat）的支持，替代了 ConsoleKit（已不再维护）。</p>
+
+<blockquote>
+  <p>【 Multi-Seat 】一个座位，seat，由分配给特定工作空间的所有硬件设备组成，通常至少要包括键盘、鼠标，也可包含摄像头、声卡等。多座位，Multi-Seat，多座系统允许多个独立的座位，这些座位都能独立地、同时被不同的用户使用。</p>
+</blockquote>
+
+<h4 id="networkd">networkd</h4>
+
+<p><code class="highlighter-rouge">networkd</code> 守护进程用于控制网络接口的配置。</p>
+
+<h4 id="tmpfiles">tmpfiles</h4>
+
+<p><code class="highlighter-rouge">systemd-tmpfiles</code> 工具用于临时文件和临时目录的创建和清理，这些临时文件和临时目录经常只在启动时运行一次，之后便是以一定的时间间隔来运行了。</p>
+
+<h4 id="timedated">timedated</h4>
+
+<p><code class="highlighter-rouge">systemd-timedated</code> 守护进程用于控制与时间相关的设置，如系统时间、系统时区，或在 UTC 与本地时间系统时钟之间做出选择。可以通过 <code class="highlighter-rouge">D-Bus</code> 来访问该守护进程。</p>
+
+<h4 id="udevd">udevd</h4>
+
+<p><code class="highlighter-rouge">udev</code> 是内核的设备管理器，用于控制 <code class="highlighter-rouge">/dev</code> 目录，以及在添加删除设备时用户空间的所有行为，包括固件的加载。</p>
+
+<h4 id="libudev">libudev</h4>
+
+<p>这是使用 <code class="highlighter-rouge">udev</code> 的标准库，允许第三方程序查询 <code class="highlighter-rouge">udev</code> 的资源。</p>
+
+<h4 id="systemd-boot">systemd-boot</h4>
+
+<p><code class="highlighter-rouge">systemd-boot</code> 是启动管理器。</p>
+
+<h2 id="143-单元的配置文件">14.3 单元的配置文件</h2>
+
+<h3 id="1431-概述">14.3.1 概述</h3>
+
+<p>每一个单元都有一个配置文件，告诉 Systemd 怎么启动这个单元。配置文件有时也称为 <strong>单元文件</strong>。</p>
+
+<p>Systemd <strong>默认从目录 <code class="highlighter-rouge">/etc/systemd/system/</code> 读取配置文件</strong>。但是，里面存放的大部分文件都是 <strong>符号链接</strong>，指向目录<code class="highlighter-rouge">/usr/lib/systemd/system/</code>，真正的配置文件存放在这里。</p>
+
+<p><code class="highlighter-rouge">systemctl enable</code> 命令用于在上面两个目录之间，<strong>建立符号链接</strong> 关系。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo systemctl enable clamd@scan.service
+# 等同于
+$ sudo ln -s '/usr/lib/systemd/system/clamd@scan.service' '/etc/systemd/system/multi-user.target.wants/clamd@scan.service'
+</code></pre></div></div>
+
+<p>如果配置文件里面设置了开机启动，<code class="highlighter-rouge">systemctl enable</code> 命令相当于 <strong>激活开机启动</strong>。</p>
+
+<p>与之对应的，<code class="highlighter-rouge">systemctl disable</code> 命令用于在两个目录之间，撤销符号链接关系，相当于 <strong>撤销开机启动</strong>。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo systemctl disable clamd@scan.service
+</code></pre></div></div>
+
+<p>配置文件的 <strong>后缀名</strong>，就是该 <strong>单元的种类</strong>，比如 <code class="highlighter-rouge">sshd.socket</code>。<strong>如果省略</strong>，Systemd <strong>默认后缀名为 <code class="highlighter-rouge">.service</code></strong>，所以 <code class="highlighter-rouge">sshd</code> 会被理解成 <code class="highlighter-rouge">sshd.service</code>。</p>
+
+<p>支持 Systemd 的程序在安装的时候，会自动在 <code class="highlighter-rouge">/usr/lib/systemd/system</code> 目录添加一个配置文件。</p>
+
+<h3 id="1432-配置文件的状态">14.3.2 配置文件的状态</h3>
+
+<p>列出所有配置文件：</p>
+
+<p><code class="highlighter-rouge">systemctl list-unit-files</code></p>
+
+<p>列出指定类型的配置文件：</p>
+
+<p><code class="highlighter-rouge">systemctl list-unit-files --type=service</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ systemctl list-unit-files
+
+UNIT FILE              STATE
+chronyd.service        enabled
+clamd@.service         static
+clamd@scan.service     disabled
+</code></pre></div></div>
+
+<h4 id="enabled">enabled</h4>
+
+<p><strong>启用</strong>，已建立启动链接，开机自动启动</p>
+
+<h4 id="disabled">disabled</h4>
+
+<p><strong>禁用</strong>，没建立启动链接，开机不会自动启动，但可由其他服务激活，也可以手动运行。</p>
+
+<h4 id="static">static</h4>
+
+<p><strong>静态</strong>，其配置文件没有 <code class="highlighter-rouge">install</code> 部分，所以无法被启用。但可以被其他单元激活，通常作为其它单元的依赖。</p>
+
+<h4 id="masked">masked</h4>
+
+<p><strong>屏蔽</strong>，该配置文件被禁止建立启动链接。彻底禁用，任何情况都无法运行。</p>
+
+<p class="notice--warning">注意，从配置文件的状态无法看出，该单元是否正在运行。必须用 <code class="highlighter-rouge">systemctl status bluetooth.service</code> 命令查看。一旦 <strong>修改</strong> 了配置文件，就要让 SystemD <strong>重新加载</strong> 配置文件，然后 <strong>重新启动单元</strong>，否则修改不会生效。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo systemctl daemon-reload
+$ sudo systemctl restart httpd.service
+</code></pre></div></div>
+
+<h3 id="1433-配置文件的格式">14.3.3 配置文件的格式</h3>
+
+<p>配置文件就是普通的文本文件，可以用文本编辑器打开。</p>
+
+<p><code class="highlighter-rouge">systemctl cat</code> 命令可以查看配置文件的内容。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ systemctl cat atd.service
+&gt;
+[Unit]
+Description=ATD daemon
+&gt;
+[Service]
+Type=forking
+ExecStart=/usr/bin/atd
+&gt;
+[Install]
+WantedBy=multi-user.target
+</code></pre></div></div>
+
+<p>单元文件的内部结构是由多个区块组成的，每个区块的第一行，是用 <strong>方括号表示的区块名</strong>，如 <code class="highlighter-rouge">[Unit]</code>。</p>
+
+<h3 id="1434-配置文件的区块">14.3.4 配置文件的区块</h3>
+
+<p>为表达方便，下文中用 “我” 来代表当前单元。</p>
+
+<p>修改配置文件以后，需要重新加载配置文件，然后重新启动相关服务。</p>
+
+<p><code class="highlighter-rouge">sudo systemctl daemon-reload</code>  重新加载配置文件</p>
+
+<p><code class="highlighter-rouge">sudo systemctl restart foobar</code>  重启相关服务</p>
+
+<h4 id="通用区块">通用区块</h4>
+
+<p><strong>区块的名称</strong> 是系统预定义的，<strong>区分大小写</strong>。如果需要增加非标准的区块用于自定义功能，可以在区块名称前加 <code class="highlighter-rouge">X-</code> 前缀。</p>
+
+<p class="notice--warning">每个区块内部是一些 <strong>等号连接的键值对</strong>。而且键值对的 <strong>等号两侧不能有空格</strong>。</p>
+
+<p>在发生文件覆盖时，通过给指令分配空值，可以重置该变量。如 <code class="highlighter-rouge">Requires=</code>。</p>
+
+<p>systemd 允许在配置文件中使用比较灵活宽松的配置。如对于布尔值，可以用 <code class="highlighter-rouge">1</code>、<code class="highlighter-rouge">yes</code>、<code class="highlighter-rouge">on</code>、<code class="highlighter-rouge">true</code> 等代表真。</p>
+
+<h5 id="unit-区块">[Unit] 区块</h5>
+
+<p>通常是配置文件的 <strong>第一个区块</strong>，用来定义 <strong>单元的元数据</strong>，以及配置 <strong>与其他单元的关系</strong>。它的主要字段如下。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">Description</code>：简短描述</li>
+  <li><code class="highlighter-rouge">Documentation</code>：文档地址</li>
+  <li><code class="highlighter-rouge">Requires</code>：我 <strong>必须要</strong> 这些单元，它们不运行，我会启动失败</li>
+  <li><code class="highlighter-rouge">Wants</code>：我 <strong>想要</strong> 这些单元，没有就算了，我不会启动失败</li>
+  <li><code class="highlighter-rouge">BindsTo</code>：我和它 <strong>绑定</strong>，它退出，我就停止运行</li>
+  <li><code class="highlighter-rouge">Before</code>：我必须在这些单元 <strong>之前启动</strong></li>
+  <li><code class="highlighter-rouge">After</code>：我必须在这些单元 <strong>之后启动</strong></li>
+  <li><code class="highlighter-rouge">Conflicts</code>：我和它们冲突，<strong>不能同时运行</strong></li>
+  <li><code class="highlighter-rouge">Condition...</code>：这些条件必须满足，否则我 <strong>优雅地忽略</strong></li>
+  <li><code class="highlighter-rouge">Assert...</code>：这些条件必须满足，否则会 <strong>报错</strong></li>
+</ul>
+
+<h5 id="install-区块">[Install] 区块</h5>
+
+<p>通常是配置文件的 <strong>最后一个区块</strong>，用来 <strong>定义如何启动</strong>，以及 <strong>是否开机启动</strong>。它的主要字段如下。下文中的 “我” 指当前单元。</p>
+
+<ul>
+  <li>
+    <p><code class="highlighter-rouge">WantedBy</code>：这些目标有我更好，没我也行。</p>
+
+    <p>它的值是一个或多个 <strong>目标</strong>（target），当前单元激活时（enable）符号链接会放入 <code class="highlighter-rouge">/etc/systemd/system</code> 目录下面以 <code class="highlighter-rouge">目标名.wants</code> 后缀命名的子目录中。</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">RequiredBy</code>：这些目标有我才能运行</p>
+
+    <p>它的值是一个或多个 <strong>目标</strong>，当前单元激活时符号链接会放入 <code class="highlighter-rouge">/etc/systemd/system</code> 目录下面以 <code class="highlighter-rouge">目标名.required</code> 后缀命名的子目录中。</p>
+  </li>
+  <li><code class="highlighter-rouge">Alias</code>：我的 <strong>别名</strong>，可用于诸多 <code class="highlighter-rouge">systemctl</code> 命令中</li>
+  <li><code class="highlighter-rouge">Also</code>：当前单元激活（enable）时，会被同时激活的其他 Unit</li>
+</ul>
+
+<h4 id="特定单元的区块">特定单元的区块</h4>
+
+<p>夹在 [Unit] 和 [Install] 中间的区块，每种单元有着不同的内容，这些区块大多用于设定其特定种类的参数。</p>
+
+<p>其中，<code class="highlighter-rouge">device</code>、<code class="highlighter-rouge">target</code>、<code class="highlighter-rouge">snapshot</code>、<code class="highlighter-rouge">scope</code> 这些区块不属于特定种类。</p>
+
+<h5 id="service-区块">[Service] 区块</h5>
+
+<p>用于进行 <strong>服务</strong> 的配置，只有 Service 类型的单元才有这个区块。它的主要字段如下。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">Type</code>：定义 <strong>启动时的进程行为</strong>。它有以下几种值。
+    <ul>
+      <li><code class="highlighter-rouge">Type=simple</code>：默认值，执行 <code class="highlighter-rouge">ExecStart</code> 指定的命令，启动主进程</li>
+      <li><code class="highlighter-rouge">Type=forking</code>：以 fork 方式从父进程创建子进程，创建后父进程会立即退出</li>
+      <li><code class="highlighter-rouge">Type=oneshot</code>：一次性进程，Systemd 会等当前服务退出，再继续往下执行</li>
+      <li><code class="highlighter-rouge">Type=dbus</code>：当前服务通过 D-Bus 启动</li>
+      <li><code class="highlighter-rouge">Type=notify</code>：我启动完毕，会通知 <code class="highlighter-rouge">Systemd</code>，再继续往下执行</li>
+      <li><code class="highlighter-rouge">Type=idle</code>：其他所有作业执行完毕才会运行</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">ExecStart</code>：<strong>启动我</strong> 的命令，设置命令的完整路径及参数，文件中只能指定一次</li>
+  <li><code class="highlighter-rouge">ExecStartPre</code>：<strong>启动我之前要执行的命令</strong>，可指定多次</li>
+  <li><code class="highlighter-rouge">ExecStartPost</code>：<strong>启动我之后要执行的命令</strong>，可指定多次</li>
+  <li><code class="highlighter-rouge">ExecReload</code>：<strong>重新加载我的配置文件</strong> 时要执行的命令</li>
+  <li><code class="highlighter-rouge">ExecStop</code>：<strong>暂停我</strong> 时要执行的命令，如果不指定，服务被暂停时，服务进程会立即被终止</li>
+  <li><code class="highlighter-rouge">ExecStopPost</code>：<strong>暂停我之后要执行的命令</strong></li>
+  <li><code class="highlighter-rouge">RestartSec</code>：如果启用了 <strong>间隔自动重启</strong>，该参数用于设置 <strong>间隔的秒数</strong></li>
+  <li><code class="highlighter-rouge">Restart</code>：定义 <strong>何种情况 Systemd 会自动重启我</strong>，可用值为 <code class="highlighter-rouge">always</code>、<code class="highlighter-rouge">on-success</code>、<code class="highlighter-rouge">on-failure</code>、<code class="highlighter-rouge">on-abnormal</code>、<code class="highlighter-rouge">on-abort</code>、<code class="highlighter-rouge">on-watchdog</code></li>
+  <li><code class="highlighter-rouge">TimeoutSec</code>：定义 <strong>Systemd 停止我之前等待的秒数</strong></li>
+  <li><code class="highlighter-rouge">Environment</code>：指定环境变量</li>
+</ul>
+
+<p>另外，对于某些特殊的服务类型，还有一些附加的指令：</p>
+
+<ul>
+  <li><code class="highlighter-rouge">RemainAfterExit=</code> 通常用于 <code class="highlighter-rouge">oneshot</code> 类型的服务，即使进程退出了也应该视该服务为激活。</li>
+  <li><code class="highlighter-rouge">PIDFile=</code> 服务类别为 <code class="highlighter-rouge">forking</code> 时，被监视的主要子进程 PID 会保存在一个文件中，该命令用于设置该文件的路径。</li>
+  <li><code class="highlighter-rouge">BusName=</code> 当使用 <code class="highlighter-rouge">dbus</code> 服务类型时，该参数用于设置 bus name。</li>
+  <li><code class="highlighter-rouge">NotifyAccess=</code> 当服务类型为 <code class="highlighter-rouge">notify</code> 时，该参数用于指定该服务使用哪个套接字来监听通知消息，可选值为 <code class="highlighter-rouge">none</code>、<code class="highlighter-rouge">main</code>、<code class="highlighter-rouge">all</code>。默认为 <code class="highlighter-rouge">none</code>，即忽略所有状态消息。<code class="highlighter-rouge">main</code> 表示监听主进程发出的消息，<code class="highlighter-rouge">all</code> 表示使用该服务 cgroup 中的所有成员来监听。</li>
+</ul>
+
+<p><a href="https://www.freedesktop.org/software/systemd/man/systemd.unit.html">【 更多区块介绍 】</a></p>
+
+<h2 id="144-target">14.4 Target</h2>
+
+<p>启动计算机的时候，需要启动大量的单元。如果每一次启动，都要一一写明本次启动需要哪些单元，显然非常不方便。Systemd 的解决方案就是 Target。</p>
+
+<p>简单说，<strong>Target 就是一个单元组</strong>，包含许多相关的单元 。启动某个 Target 的时候，Systemd 就会启动里面所有的单元。</p>
+
+<p class="notice--success">从这个意义上说，Target 这个概念类似于 “状态点”，<strong>启动某个 Target 就好比启动到某种状态</strong>。</p>
+
+<p>传统的 <code class="highlighter-rouge">init</code> 启动模式里面，有运行级的概念，跟 Target 的作用很类似。不同的是，运行级是互斥的，<strong>不可能多个运行级同时启动</strong>，但是 <strong>多个 Target 可以同时启动</strong>。</p>
+
+<h3 id="1441-常用命令">14.4.1 常用命令</h3>
+
+<p><code class="highlighter-rouge">systemctl list-unit-files --type=target</code></p>
+
+<p>查看当前系统的所有 Target</p>
+
+<p><code class="highlighter-rouge">systemctl list-dependencies multi-user.target</code></p>
+
+<p>查看一个 Target 包含的所有单元</p>
+
+<p><code class="highlighter-rouge">systemctl get-default</code></p>
+
+<p>查看启动时的默认 Target</p>
+
+<p><code class="highlighter-rouge">sudo systemctl set-default multi-user.target</code></p>
+
+<p>设置启动时的默认 Target</p>
+
+<p><code class="highlighter-rouge">sudo systemctl isolate multi-user.target</code></p>
+
+<p>关闭前一个 Target 里面所有不属于后一个 Target 的进程。切换 Target 时，默认不关闭前一个 Target 启动的进程，<code class="highlighter-rouge">systemctl isolate</code> 命令会改变这种行为，</p>
+
+<h3 id="1442-target-与-传统运行级的对应关系">14.4.2 Target 与 传统运行级的对应关系</h3>
+
+<table>
+  <tbody>
+    <tr>
+      <td>runlevel</td>
+      <td>target</td>
+      <td>符号链接指向</td>
+    </tr>
+    <tr>
+      <td>Runlevel 0</td>
+      <td>runlevel0.target</td>
+      <td>poweroff.target</td>
+    </tr>
+    <tr>
+      <td>Runlevel 1</td>
+      <td>runlevel1.target</td>
+      <td>rescue.target</td>
+    </tr>
+    <tr>
+      <td>Runlevel 2</td>
+      <td>runlevel2.target</td>
+      <td>multi-user.target</td>
+    </tr>
+    <tr>
+      <td>Runlevel 3</td>
+      <td>runlevel3.target</td>
+      <td>multi-user.target</td>
+    </tr>
+    <tr>
+      <td>Runlevel 4</td>
+      <td>runlevel4.target</td>
+      <td>multi-user.target</td>
+    </tr>
+    <tr>
+      <td>Runlevel 5</td>
+      <td>runlevel5.target</td>
+      <td>graphical.target</td>
+    </tr>
+    <tr>
+      <td>Runlevel 6</td>
+      <td>runlevel6.target</td>
+      <td>reboot.target</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="1443-target-与-init-进程的主要差别">14.4.3 Target 与 <code class="highlighter-rouge">init</code> 进程的主要差别</h3>
+
+<ul>
+  <li>默认的运行级（在 <code class="highlighter-rouge">/etc/inittab</code> 文件设置）被默认的 Target 取代，位置是 <code class="highlighter-rouge">/etc/systemd/system/default.target</code>，通常软链接到 <code class="highlighter-rouge">graphical.target</code> 或 <code class="highlighter-rouge">multi-user.target</code>。</li>
+  <li>启动脚本的位置，以前是 <code class="highlighter-rouge">/etc/init.d</code> 目录，软链接到不同的运行级目录 （如 <code class="highlighter-rouge">/etc/rc3.d</code>、<code class="highlighter-rouge">/etc/rc5.d</code> 等），现在则存放在 <code class="highlighter-rouge">/lib/systemd/system</code> 和 <code class="highlighter-rouge">/etc/systemd/system</code> 目录。</li>
+  <li>配置文件的位置，以前 <code class="highlighter-rouge">init</code> 进程的配置文件是 <code class="highlighter-rouge">/etc/inittab</code>，各种服务的配置文件存放在 <code class="highlighter-rouge">/etc/sysconfig</code> 目录。现在的配置文件主要存放在 <code class="highlighter-rouge">/lib/systemd</code> 目录，在 <code class="highlighter-rouge">/etc/systemd</code> 目录里面的修改可以覆盖原始设置。</li>
+</ul>
+
+<h3 id="1444-target-的配置文件">14.4.4 Target 的配置文件</h3>
+
+<p>注意，Target 配置文件里面 <strong>没有启动命令</strong>。</p>
+
+<h2 id="145-日志管理">14.5 日志管理</h2>
+
+<p>Systemd <strong>统一管理所有单元的启动日志</strong>。带来的好处就是，可以只用 <code class="highlighter-rouge">journalctl</code> 一个命令，查看所有日志（内核日志和应用日志）。日志的配置文件是 <code class="highlighter-rouge">/etc/systemd/journald.conf</code>。</p>
+
+<p><code class="highlighter-rouge">journalctl</code> 功能强大，用法非常多。</p>
+
+<h3 id="常用命令">常用命令</h3>
+
+<p>查看所有日志（默认情况下 ，只保存本次启动的日志）：</p>
+
+<p><code class="highlighter-rouge">sudo journalctl</code></p>
+
+<p>查看内核日志（不显示应用日志）：</p>
+
+<p><code class="highlighter-rouge">sudo journalctl -k</code></p>
+
+<p>查看系统本次启动的日志：</p>
+
+<p><code class="highlighter-rouge">sudo journalctl -b</code></p>
+
+<p><code class="highlighter-rouge">sudo journalctl -b -0</code></p>
+
+<p>查看上一次启动的日志（需更改设置）：</p>
+
+<p><code class="highlighter-rouge">sudo journalctl -b -1</code></p>
+
+<p>查看指定时间的日志：</p>
+
+<p><code class="highlighter-rouge">sudo journalctl --since="2012-10-30 18:17:16"</code></p>
+
+<p><code class="highlighter-rouge">sudo journalctl --since "20 min ago"</code></p>
+
+<p><code class="highlighter-rouge">sudo journalctl --since yesterday</code></p>
+
+<p><code class="highlighter-rouge">sudo journalctl --since "2015-01-10" --until "2015-01-11 03:00"</code></p>
+
+<p><code class="highlighter-rouge">sudo journalctl --since 09:00 --until "1 hour ago"</code></p>
+
+<p>显示尾部的最新 10 行日志：</p>
+
+<p><code class="highlighter-rouge">sudo journalctl -n</code></p>
+
+<p>显示尾部指定行数的日志：</p>
+
+<p><code class="highlighter-rouge">sudo journalctl -n 20</code></p>
+
+<p>实时滚动显示最新日志</p>
+
+<p><code class="highlighter-rouge">sudo journalctl -f</code></p>
+
+<p>查看指定服务的日志：</p>
+
+<p><code class="highlighter-rouge">sudo journalctl /usr/lib/systemd/systemd</code></p>
+
+<p>查看指定进程的日志：</p>
+
+<p><code class="highlighter-rouge">sudo journalctl _PID=1</code></p>
+
+<p>查看某个路径的脚本的日志：</p>
+
+<p><code class="highlighter-rouge">sudo journalctl /usr/bin/bash</code></p>
+
+<p>查看指定用户的日志：</p>
+
+<p><code class="highlighter-rouge">sudo journalctl _UID=33 --since today</code></p>
+
+<p>查看某个单元 的日志：</p>
+
+<p><code class="highlighter-rouge">sudo journalctl -u nginx.service</code></p>
+
+<p><code class="highlighter-rouge">sudo journalctl -u nginx.service --since today</code></p>
+
+<p>实时滚动显示某个单元的最新日志：</p>
+
+<p><code class="highlighter-rouge">sudo journalctl -u nginx.service -f</code></p>
+
+<p>合并显示多个单元的日志：</p>
+
+<p><code class="highlighter-rouge">journalctl -u nginx.service -u php-fpm.service --since today</code></p>
+
+<p>查看指定优先级（及其以上级别）的日志，共有8级：</p>
+
+<p>0: emerg</p>
+
+<p>1: alert</p>
+
+<p>2: crit</p>
+
+<p>3: err</p>
+
+<p>4: warning</p>
+
+<p>5: notice</p>
+
+<p>6: info</p>
+
+<p>7: debug</p>
+
+<p><code class="highlighter-rouge">sudo journalctl -p err -b</code></p>
+
+<p>日志默认分页输出，–no-pager 改为正常的标准输出：</p>
+
+<p><code class="highlighter-rouge">sudo journalctl --no-pager</code></p>
+
+<p>以 JSON 格式（单行）输出：</p>
+
+<p><code class="highlighter-rouge">sudo journalctl -b -u nginx.service -o json</code></p>
+
+<p>以 JSON 格式（多行）输出，可读性更好：</p>
+
+<p><code class="highlighter-rouge">sudo journalctl -b -u nginx.serviceqq -o json-pretty</code></p>
+
+<p>显示日志占据的硬盘空间：</p>
+
+<p><code class="highlighter-rouge">sudo journalctl --disk-usage</code></p>
+
+<p>指定日志文件占据的最大空间：</p>
+
+<p><code class="highlighter-rouge">sudo journalctl --vacuum-size=1G</code></p>
+
+<p>指定日志文件保存多久：</p>
+
+<p><code class="highlighter-rouge">sudo journalctl --vacuum-time=1years</code></p>
+
+<h2 id="145-centos-7x-默认启动的服务简易说明">14.5 CentOS 7.x 默认启动的服务简易说明</h2>
+
+<p>CentOS 7 默认启动的服务</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">服务名称</th>
+      <th style="text-align: left">可关闭</th>
+      <th>服务类别</th>
+      <th>功能简介</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">abrtd</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>用于监控应用程序的崩溃。当崩溃发生时，它会收集错误信息，然后根据应用程序的类型及配置文件的参数采取对应的措施。通过插件可以把错误信息通过邮件、FTP 等发给管理员</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">accounts-daemon</td>
+      <td style="text-align: left">关闭</td>
+      <td>系统</td>
+      <td>是 AccountsService 的一部分，允许程序获取并修改用户帐户信息。有潜在安全风险</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">alsa-X</td>
+      <td style="text-align: left">关闭</td>
+      <td>系统</td>
+      <td>与音效有关</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">atd</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>一次性计划任务</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">auditd</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>SELinux 依靠它监控授权验证情况，日志为 /var/log/audit/audit.log</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">avahi-daemon</td>
+      <td style="text-align: left">关闭</td>
+      <td>系统</td>
+      <td>通过部署苹果公司的 Zeroconf 架构，自动的分析与管理网络。常用于移动设备</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">brandbot rhel-*</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>开机环境检测，网络启动关闭</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">chronyd ntpd ntpdate</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>通过网络校正时间</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">cpupower</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>一组为辅助 CPU 调频而设计的用户空间工具</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">crond</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>计划任务</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">cups</td>
+      <td style="text-align: left">关闭</td>
+      <td>管理打印机，包括网络打印</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td style="text-align: left">dbus</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>提供简便进程间通信的消息总线系统。包含一个能以全系统或者针对一个用户会话运行的守护进程，和一系列提供与 D-Bus 通信的库</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">dm-event multipathd</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>用于监控设备映射</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">dmraid-activation mdmonitor</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>用来启动软 RAID</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">dracut-shutdown</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>与开机过程有关</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ebtables</td>
+      <td style="text-align: left">保留</td>
+      <td>系统/网络</td>
+      <td>防火墙，如果启用了 firewalld，可以关闭</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">emergency rescue</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>进入紧急模式或者是救援模式的服务</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">firewalld</td>
+      <td style="text-align: left">保留</td>
+      <td>系统/网络</td>
+      <td>新的防火墙服务</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">gdm</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>GNOME显示环境的管理器</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">getty@</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>命令行服务</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">hyper_ksm_libvirt* vmtoolsd</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>虚拟机相关的一系列服务，不用虚拟机可以关闭</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">irqbalance</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>适用于多核心的硬件，用于自动分配系统中断</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">iscsi*</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>挂载网络磁盘</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">kdump</td>
+      <td style="text-align: left">可关闭</td>
+      <td>系统</td>
+      <td>记录 Linux 核心的出错信息</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">lvm2-*</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>LVM 相关的多个服务</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">microcode</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>Intel 的 CPU 提供的微指令集，如果没有下载 Intel 的指令集文件，可以关闭</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ModemManager network NetworkManager*</td>
+      <td style="text-align: left">保留</td>
+      <td>系统/网络</td>
+      <td>Modem、网络设置等服务</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">quotaon</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>Quota 服务</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">rc-local</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>兼容于 /etc/rc.d/rc.local 的调用方式</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">rsyslog</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>记录系统产生的各项信息， 包括 /var/log/messages 等日志</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">smartd</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>自动监测硬盘状态，发生问题自动的反馈信息</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">sysstat</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>一体化的 Linux 系统性能和使用活动监控工具</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">systemd-*</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>系统运行过程所需要的服务</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">plymount* upower</td>
+      <td style="text-align: left">保留</td>
+      <td>系统</td>
+      <td>图形界面有关的一些服务</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>CentOS 7 默认不会启动的服务</p>
+
+<p>所有服务均为网络服务：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">服务名称</th>
+      <th style="text-align: left">功能</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">dovecot</td>
+      <td style="text-align: left">提供 POP3/IMAP 邮件服务</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">httpd</td>
+      <td style="text-align: left">www server</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">named</td>
+      <td style="text-align: left">DNS Server</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">nfs nfs-server</td>
+      <td style="text-align: left">Network Filesystem Server</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">smb nmb</td>
+      <td style="text-align: left">模拟 Windows 网络邻居</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">vsftpd</td>
+      <td style="text-align: left">FTP Server</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">sshd</td>
+      <td style="text-align: left">SSH Server</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">rpcbind</td>
+      <td style="text-align: left">实现 RPC 协议的重要服务</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">postfix</td>
+      <td style="text-align: left">邮件服务器，系统产生的邮件也是通过它发送</td>
+    </tr>
+  </tbody>
+</table>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/守护进程" class="page__taxonomy-item" rel="tag">守护进程</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/linux" class="page__taxonomy-item" rel="tag">linux</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://linotes.netlify.com/categories/#linux" class="page__taxonomy-item" rel="tag">linux</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2015-01-14T00:00:00+08:00">January 14, 2015</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="https://linotes.netlify.com/linux/selinux/" class="pagination--pager" title="上一页
+">Linux 基础 - 13. SELinux</a>
+    
+    
+      <a href="https://linotes.netlify.com/linux/log/" class="pagination--pager" title="下一页
+">Linux 基础 - 15. 日志</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">相关文章</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/kernel/filedescriptor/" rel="permalink">文件描述符简介
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash03/" rel="permalink">Bash 入门 03
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">循环，变量，函数，捕捉信号
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash02/" rel="permalink">Bash 入门 02
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">正则表达式，SED，AWK，条件结构，交互式脚本
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash01/" rel="permalink">Bash 入门 01
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">Bash 与 Bash 脚本，脚本的编写与调试，Bash 环境
+</p>
+-->
+
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+    
+    
+    
+    
+    <li><a href="https://linotes.netlify.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="https://linotes.netlify.com/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

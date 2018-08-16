@@ -1,0 +1,996 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Linux 的使用 - 任务计划 - LINOTES</title>
+<meta name="description" content="用简洁清晰的语言讨论技术">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Linux 的使用 - 任务计划">
+<meta property="og:url" content="https://linotes.netlify.com/tools/cron/">
+
+
+  <meta property="og:description" content="用简洁清晰的语言讨论技术">
+
+
+
+  <meta property="og:image" content="https://linotes.netlify.com/assets/images/header/stream.jpg">
+
+
+
+
+
+  <meta property="article:published_time" content="2015-02-01T00:00:00+08:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://linotes.netlify.com/tools/cron/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="https://linotes.netlify.com/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="https://linotes.netlify.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="https://linotes.netlify.com/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://linotes.netlify.com/assets/images/header/stream.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Linux 的使用 - 任务计划
+
+        
+      </h1>
+      
+        <p class="page__lead">
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="https://linotes.netlify.com/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:imhawkz@gmail.com">
+            <meta itemprop="email" content="imhawkz@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Linux 的使用 - 任务计划">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="February 01, 2015">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-angle-double-right"></i> Linux 的使用 - 任务计划</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#守护进程">守护进程</a>
+    <ul>
+      <li><a href="#cron">cron</a></li>
+    </ul>
+  </li>
+  <li><a href="#一次性任务计划工具">一次性任务计划工具</a></li>
+  <li><a href="#at">at</a>
+    <ul>
+      <li><a href="#语法">语法</a></li>
+      <li><a href="#时间格式">时间格式</a></li>
+      <li><a href="#范例">范例</a></li>
+    </ul>
+  </li>
+  <li><a href="#周期性任务计划工具">周期性任务计划工具</a>
+    <ul>
+      <li><a href="#crontab">crontab</a></li>
+      <li><a href="#anacron">anacron</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="守护进程">守护进程</h2>
+
+<h3 id="cron"><code class="highlighter-rouge">cron</code></h3>
+
+<p><code class="highlighter-rouge">cron</code> 是一个用于执行任务计划的 <strong>守护进程</strong>。</p>
+
+<p>在 systemV 系统中，cron 是做为启动脚本启动的，通常保存在 <code class="highlighter-rouge">/etc/rc.d/init.d/</code> 或 <code class="highlighter-rouge">/etc/init.d/</code> 目录中。</p>
+
+<p>在 systemD 系统中，cron 是一个守护进程，其服务单元为 ` /lib/systemd/system/crond.service<code class="highlighter-rouge">，由 </code>systemctl start crond.service` 命令启动。</p>
+
+<h4 id="cron-自动检查的配置文件"><code class="highlighter-rouge">cron</code> 自动检查的配置文件</h4>
+
+<p><code class="highlighter-rouge">cron</code> 作为守护进程会每分钟自动检查特定文件和目录，以便执行其中配置的任务计划。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">/etc/crontab</code>：cron 主配置文件</li>
+  <li><code class="highlighter-rouge">/etc/cron.d/</code>：目录中的所有 cron 配置文件，这些是按功能区分的独立配置文件，如 <code class="highlighter-rouge">0hourly</code>。</li>
+  <li><code class="highlighter-rouge">/var/spool/cron/</code>：<code class="highlighter-rouge">crontab</code> 的配置文件。在该目录中搜索与 Linux 用户同名的配置文件，将其加载到内存。</li>
+  <li><code class="highlighter-rouge">/etc/anacrontab</code>：<code class="highlighter-rouge">anacron</code> 的配置文件。</li>
+</ul>
+
+<h4 id="主配置文件">主配置文件</h4>
+
+<p><code class="highlighter-rouge">cron</code> 的主配置文件为 <code class="highlighter-rouge">/etc/crontab</code></p>
+
+<p>周期格式为 <code class="highlighter-rouge">分 时 日 月 周 用户 命令</code>，<strong>周</strong> 指每周的星期几。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># cron 配置文件语法
+# .---------------- 分 (0 - 59)
+# |  .------------- 时 (0 - 23)
+# |  |  .---------- 日 (1 - 31)
+# |  |  |  .------- 月 (1 - 12) 或 jan,feb,mar,apr ...
+# |  |  |  |  .---- 星期 (0 - 6) (周日=0 or 7) 或 sun,mon,tue,wed,thu,fri,sat
+# |  |  |  |  |
+# *  *  *  *  * user-name  command
+</code></pre></div></div>
+
+<h2 id="一次性任务计划工具">一次性任务计划工具</h2>
+
+<h2 id="at"><code class="highlighter-rouge">at</code></h2>
+
+<p>在指定时间 <strong>单次</strong> 执行任务，任务执行完毕，该计划即删除。</p>
+
+<h3 id="语法">语法</h3>
+
+<p><code class="highlighter-rouge">at [-V] [-q queue] [-f file] [-mMlv] timespec...</code></p>
+
+<p><code class="highlighter-rouge">at [-V] [-q queue] [-f file] [-mMkv] [-t time]</code></p>
+
+<p><code class="highlighter-rouge">at -c job [job...]</code></p>
+
+<p><code class="highlighter-rouge">at [-rd] job [job...]</code></p>
+
+<p><code class="highlighter-rouge">at -b</code></p>
+
+<p><code class="highlighter-rouge">atq</code> 查看当前计划任务列表</p>
+
+<p><code class="highlighter-rouge">atrm 5</code> 通过指定任务号码，删除指定计划任务</p>
+
+<p><code class="highlighter-rouge">-m</code>   强制给用户发邮件</p>
+
+<p><code class="highlighter-rouge">-l</code>   相当于 atq，查看该用户的所有计划任务</p>
+
+<p><code class="highlighter-rouge">-r</code>/<code class="highlighter-rouge">-d</code>   相当于 atrm，删除指定计划任务</p>
+
+<p><code class="highlighter-rouge">-b</code>   相当于 batch，系统负载低于特定值时才执行计划任务</p>
+
+<p><code class="highlighter-rouge">-v</code>   用较明显的时间格式查看 at 计划任务列表</p>
+
+<p><code class="highlighter-rouge">-c</code>   查看指定任务号码的任务内容</p>
+
+<h3 id="时间格式">时间格式</h3>
+
+<p><code class="highlighter-rouge">at</code> 使用一种非常生活化的方式来表示时间和日期，它甚至懂得一些人们日常会使用的词语。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>表示方法</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>noon</td>
+      <td>12:00 PM October 18 2014</td>
+    </tr>
+    <tr>
+      <td>midnight</td>
+      <td>12:00 AM October 19 2014</td>
+    </tr>
+    <tr>
+      <td>teatime</td>
+      <td>4:00 PM October 18 2014</td>
+    </tr>
+    <tr>
+      <td>tomorrow</td>
+      <td>10:00 AM October 19 2014</td>
+    </tr>
+    <tr>
+      <td>noon tomorrow</td>
+      <td>12:00 PM October 19 2014</td>
+    </tr>
+    <tr>
+      <td>next week</td>
+      <td>10:00 AM October 25 2014</td>
+    </tr>
+    <tr>
+      <td>next monday</td>
+      <td>10:00 AM October 24 2014</td>
+    </tr>
+    <tr>
+      <td>fri</td>
+      <td>10:00 AM October 21 2014</td>
+    </tr>
+    <tr>
+      <td>NOV</td>
+      <td>10:00 AM November 18 2014</td>
+    </tr>
+    <tr>
+      <td>9:00 AM</td>
+      <td>9:00 AM October 19 2014</td>
+    </tr>
+    <tr>
+      <td>2:30 PM</td>
+      <td>2:30 PM October 18 2014</td>
+    </tr>
+    <tr>
+      <td>1430</td>
+      <td>2:30 PM October 18 2014</td>
+    </tr>
+    <tr>
+      <td>2:30 PM tomorrow</td>
+      <td>2:30 PM October 19 2014</td>
+    </tr>
+    <tr>
+      <td>2:30 PM next month</td>
+      <td>2:30 PM November 18 2014</td>
+    </tr>
+    <tr>
+      <td>2:30 PM Fri</td>
+      <td>2:30 PM October 21 2014</td>
+    </tr>
+    <tr>
+      <td>2:30 PM 10/21</td>
+      <td>2:30 PM October 21 2014</td>
+    </tr>
+    <tr>
+      <td>2:30 PM Oct 21</td>
+      <td>2:30 PM October 21 2014</td>
+    </tr>
+    <tr>
+      <td>2:30 PM 10/21/2014</td>
+      <td>2:30 PM October 21 2014</td>
+    </tr>
+    <tr>
+      <td>2:30 PM 21.10.14</td>
+      <td>2:30 PM October 21 2014</td>
+    </tr>
+    <tr>
+      <td>now + 30 minutes</td>
+      <td>10:30 AM October 18 2014</td>
+    </tr>
+    <tr>
+      <td>now + 1 hour</td>
+      <td>11:00 AM October 18 2014</td>
+    </tr>
+    <tr>
+      <td>now + 2 days</td>
+      <td>10:00 AM October 20 2014</td>
+    </tr>
+    <tr>
+      <td>4 PM + 2 days</td>
+      <td>4:00 PM October 20 2014</td>
+    </tr>
+    <tr>
+      <td>now + 3 weeks</td>
+      <td>10:00 AM November 8 2014</td>
+    </tr>
+    <tr>
+      <td>now + 4 months</td>
+      <td>10:00 AM February 18 2015</td>
+    </tr>
+    <tr>
+      <td>now + 5 years</td>
+      <td>10:00 AM October 18 2019</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="范例">范例</h3>
+
+<h4 id="五分钟后把文件寄给-root">五分钟后，把文件寄给 root</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# at now + 5 minutes
+at&gt; /bin/mail -s "testing at job" root &lt; /root/.bashrc
+at&gt; &lt;EOT&gt;
+job 2 at Thu Jul 30 19:35:00 2015
+</code></pre></div></div>
+
+<h4 id="查看第-2-个计划任务">查看第 2 个计划任务</h4>
+
+<p><code class="highlighter-rouge">at -c 2</code></p>
+
+<h4 id="于-20150804-2300-关机">于 2015/08/04 23:00 关机</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# at 23:00 2015-08-04
+at&gt; /bin/sync
+at&gt; /sbin/shutdown -h now
+at&gt; &lt;EOT&gt;
+job 3 at Tue Aug 4 23:00:00 2015
+</code></pre></div></div>
+
+<h2 id="周期性任务计划工具">周期性任务计划工具</h2>
+
+<h3 id="crontab"><code class="highlighter-rouge">crontab</code></h3>
+
+<p><code class="highlighter-rouge">crontab</code> 命令专门用于维护 crontab 配置文件。</p>
+
+<p>用户可以使用该工具来维护自身的任务计划。</p>
+
+<p>crontab 会为每个用户安装一个独立的 crontab 表文件，它们也需要借助 cron 守护进程来实现任务计划。</p>
+
+<p>CentOS 7 中的 cron 支持把所有任务计划文件保存在网络共享目录中。</p>
+
+<h4 id="配置文件">配置文件</h4>
+
+<p>每个用户的任务计划配置文件被单独保存为 <code class="highlighter-rouge">/var/spool/cron/username</code>，但 <strong>不要直接编辑</strong>，必须使用 <code class="highlighter-rouge">crontab -e</code>，以避免产生语法错误。</p>
+
+<p>周期格式为 <code class="highlighter-rouge">分 时 日 月 周 命令</code>，<strong>周</strong> 指每周的星期几。</p>
+
+<p class="notice--success">crontab 在运行任务计划时，会以该用户的身份运行，并且 <strong>工作目录</strong> 默认为 $HOME，而且看不到 bash 的 <strong>环境变量</strong>。因此，在做任务计划脚本时，一定要充分考虑到这些因素。</p>
+
+<h5 id="加载指定配置文件">加载指定配置文件</h5>
+
+<p>通过加载指定的配置文件，可以解决诸多 <strong>只有在 crond 中才会遇到的问题</strong>。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">source</span> /home/neo/.bash_profile
+</code></pre></div></div>
+
+<h5 id="git-权限不足问题">GIT 权限不足问题</h5>
+
+<p>在 cron 中运行 git 时，可能会遇到 <code class="highlighter-rouge">Permission denied (publickey).</code> 的问题，这是因为 SSH 客户端能看到和使用的一些参数，cron 是看不到的，比如 SSH 公钥。因此在 cron 环境中连接 SSH 时是没有公钥可用的，必须手动指定。通常借助 keychain 把公钥先放到缓存中，再导入相关的环境变量就可以解决。<a href="https://linotes.netlify.com/tools/security/#%E4%BD%BF%E7%94%A8-keychain-%E5%85%8D%E8%BE%93%E5%85%A5-ssh-%E5%AF%86%E7%A0%81">详见这里</a>。</p>
+
+<h4 id="语法-1">语法</h4>
+
+<p><code class="highlighter-rouge">crontab [-u username] [-l|-e|-r] </code></p>
+
+<p><code class="highlighter-rouge">-u</code>   为指定用户创建或删除计划任务</p>
+
+<p><code class="highlighter-rouge">-e</code>   编辑任务</p>
+
+<p><code class="highlighter-rouge">-l</code>   查看任务</p>
+
+<p><code class="highlighter-rouge">-r</code>   删除全部计划任务</p>
+
+<p>运行 <code class="highlighter-rouge">crontab -e</code> 之后会进入 vi 的界面，每个计划任务一行，以固定格式编辑。</p>
+
+<h4 id="辅助字符">辅助字符</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">字符</th>
+      <th style="text-align: left">代表意义</th>
+      <th style="text-align: left">范例</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">*</td>
+      <td style="text-align: left">任何时刻都接受</td>
+      <td style="text-align: left">05 12 * * * 每天 12:05 执行</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">,</td>
+      <td style="text-align: left">分隔时刻</td>
+      <td style="text-align: left">0 3,6 * * * 每天 3 点和 6 点都要执行</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">-</td>
+      <td style="text-align: left">时间范围</td>
+      <td style="text-align: left">20 8-12 * * * 8点到12点期间的每小时的20分都执行</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">/n</td>
+      <td style="text-align: left">每隔 n 单位</td>
+      <td style="text-align: left">*/5 * * * * 每五分钟执行一次</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="各字段有效值">各字段有效值</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">代表意义</th>
+      <th style="text-align: left">分钟</th>
+      <th style="text-align: left">小时</th>
+      <th style="text-align: left">日期</th>
+      <th style="text-align: left">月份</th>
+      <th style="text-align: left">周</th>
+      <th style="text-align: left">命令</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">数字范围</td>
+      <td style="text-align: left">0-59</td>
+      <td style="text-align: left">0-23</td>
+      <td style="text-align: left">1-31</td>
+      <td style="text-align: left">1-12</td>
+      <td style="text-align: left">0-7</td>
+      <td style="text-align: left">具体任务内容</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>在需要循环的字段上写明具体数字，不使用的字段用星号代替。</p>
+
+<p class="notice--success"><strong>周</strong> 用 0 到 7 表示，0 和 7 均代表 <strong>星期日</strong>。</p>
+
+<h4 id="范例-1">范例</h4>
+
+<h5 id="在不同用户间复制任务计划">在不同用户间复制任务计划</h5>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>crontab <span class="nt">-u</span> user1 <span class="nt">-l</span> | crontab <span class="nt">-u</span> user2
+</code></pre></div></div>
+
+<h5 id="用-neo-的身份每天-1200-给自己发邮件">用 neo 的身份，每天 12:00 给自己发邮件</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]$ crontab -e
+ 0 12 * * * mail -s "at 12:00" neo &lt; /home/neo/.bashrc
+</code></pre></div></div>
+
+<h5 id="每年-5-月-1-日-2359-发邮件给-kiki邮件内容保存在-homeneolovertxt">每年 5 月 1 日 23:59 发邮件给 kiki，邮件内容保存在 /home/neo/lover.txt。</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>59 23 1 5 * mail kiki &lt; /home/neo/lover.txt
+</code></pre></div></div>
+
+<h5 id="每五分钟执行一次-homeneotestsh">每五分钟执行一次 /home/neo/test.sh</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>*/5 * * * * /home/neo/test.sh
+</code></pre></div></div>
+
+<h5 id="每周五-1630-发邮件">每周五 16:30 发邮件</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 30 16 * * 5 mail friend@his.server.name &lt; /home/neo/friend.txt
+</code></pre></div></div>
+
+<h5 id="查看计划任务">查看计划任务</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]$ crontab -l
+0 12 * * * mail -s "at 12:00" neo &lt; /home/neo/.bashrc
+59 23 1 5 * mail kiki &lt; /home/neo/lover.txt
+</code></pre></div></div>
+
+<h5 id="清除全部计划任务">清除全部计划任务</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]$ crontab -r
+~]$ crontab -l
+no crontab for neo
+</code></pre></div></div>
+
+<h3 id="anacron"><code class="highlighter-rouge">anacron</code></h3>
+
+<p><code class="highlighter-rouge">anacron</code> 的运行频率为 <strong>每天</strong>。它不假设主机会持续运行。因此，可以用于 <strong>非持续运转的主机</strong>，执行日、周、月的周期性计划任务。</p>
+
+<h4 id="语法-2">语法</h4>
+
+<p><code class="highlighter-rouge">anacron [-sfn] [job]..</code></p>
+
+<p><code class="highlighter-rouge">anacron -u [job]..</code></p>
+
+<p><code class="highlighter-rouge">-s</code>   依次执行计划任务，前一个任务完成后，才继续执行下一个</p>
+
+<p><code class="highlighter-rouge">-f</code>   强制执行，忽略时间戳</p>
+
+<p><code class="highlighter-rouge">-n</code>   立即进行未进行的任务，忽略延迟时间</p>
+
+<p><code class="highlighter-rouge">-u</code>   仅更新时间戳，不执行计划任务</p>
+
+<h4 id="配置文件-1">配置文件</h4>
+
+<p><code class="highlighter-rouge">/etc/anacrontab</code> 为 anacron 配置文件。默认包含每天、每周、每月的计划任务。</p>
+
+<p>计划任务主要字段为：</p>
+
+<p><code class="highlighter-rouge">间隔天数，延迟分钟数，任务名称，命令</code></p>
+
+<h4 id="时间戳文件">时间戳文件</h4>
+
+<p><code class="highlighter-rouge">/var/spool/anacron/</code> 目录中保存了 <code class="highlighter-rouge">cron.daily</code>，<code class="highlighter-rouge">cron.monthly</code>，<code class="highlighter-rouge">cron.weekly</code> 时间戳文件，文件内容仅是 <strong>一行日期</strong>，格式如 20171001。</p>
+
+<p>每次执行完计划任务，anacron 就会更新这些时间戳。</p>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/任务计划" class="page__taxonomy-item" rel="tag">任务计划</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/cron" class="page__taxonomy-item" rel="tag">cron</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/crontab" class="page__taxonomy-item" rel="tag">crontab</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://linotes.netlify.com/categories/#tools" class="page__taxonomy-item" rel="tag">tools</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2015-02-01T00:00:00+08:00">February 01, 2015</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="https://linotes.netlify.com/tools/backup/" class="pagination--pager" title="上一页
+">Linux 的使用 - 备份</a>
+    
+    
+      <a href="https://linotes.netlify.com/tools/datastream/" class="pagination--pager" title="下一页
+">Linux 的使用 - 数据流处理</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">相关文章</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/kernel/filedescriptor/" rel="permalink">文件描述符简介
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash03/" rel="permalink">Bash 入门 03
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">循环，变量，函数，捕捉信号
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash02/" rel="permalink">Bash 入门 02
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">正则表达式，SED，AWK，条件结构，交互式脚本
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash01/" rel="permalink">Bash 入门 01
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">Bash 与 Bash 脚本，脚本的编写与调试，Bash 环境
+</p>
+-->
+
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+    
+    
+    
+    
+    <li><a href="https://linotes.netlify.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="https://linotes.netlify.com/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

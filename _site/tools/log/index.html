@@ -1,0 +1,899 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Linux 的使用 - 日志管理 - LINOTES</title>
+<meta name="description" content="用简洁清晰的语言讨论技术">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Linux 的使用 - 日志管理">
+<meta property="og:url" content="https://linotes.netlify.com/tools/log/">
+
+
+  <meta property="og:description" content="用简洁清晰的语言讨论技术">
+
+
+
+  <meta property="og:image" content="https://linotes.netlify.com/assets/images/header/stream.jpg">
+
+
+
+
+
+  <meta property="article:published_time" content="2015-02-01T00:00:00+08:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://linotes.netlify.com/tools/log/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="https://linotes.netlify.com/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="https://linotes.netlify.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="https://linotes.netlify.com/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://linotes.netlify.com/assets/images/header/stream.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Linux 的使用 - 日志管理
+
+        
+      </h1>
+      
+        <p class="page__lead">
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="https://linotes.netlify.com/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:imhawkz@gmail.com">
+            <meta itemprop="email" content="imhawkz@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Linux 的使用 - 日志管理">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="February 01, 2015">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-angle-double-right"></i> Linux 的使用 - 日志管理</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#常用日志">常用日志</a>
+    <ul>
+      <li><a href="#varlogbootlog">/var/log/boot.log</a></li>
+      <li><a href="#varlogcron">/var/log/cron</a></li>
+      <li><a href="#varlogdmesg">/var/log/dmesg</a></li>
+      <li><a href="#varloglastlog">/var/log/lastlog</a></li>
+      <li><a href="#varlogmaillog-或-varlogmail">/var/log/maillog 或 /var/log/mail/*</a></li>
+      <li><a href="#varlogmessages">/var/log/messages</a></li>
+      <li><a href="#varlogsecure">/var/log/secure</a></li>
+      <li><a href="#varlogwtmp">/var/log/wtmp</a></li>
+      <li><a href="#varlogfaillog">/var/log/faillog</a></li>
+      <li><a href="#varloghttpd">/var/log/httpd/</a></li>
+      <li><a href="#varlogsamba">/var/log/samba/</a></li>
+    </ul>
+  </li>
+  <li><a href="#日志的滚动">日志的滚动</a>
+    <ul>
+      <li><a href="#logrotate">LOGROTATE</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="常用日志">常用日志</h2>
+
+<h3 id="varlogbootlog"><code class="highlighter-rouge">/var/log/boot.log</code></h3>
+
+<p>启动的时候系统内核会检测并启动硬件，然后启动内核的功能。这些流程都会记录在 <code class="highlighter-rouge">/var/log/boot.log</code> 里。该文件只保留 <strong>本次启动的信息</strong>，不记录上一次启动的信息。</p>
+
+<h3 id="varlogcron"><code class="highlighter-rouge">/var/log/cron</code></h3>
+
+<p>crontab <strong>计划任务</strong> 日志。</p>
+
+<h3 id="varlogdmesg"><code class="highlighter-rouge">/var/log/dmesg</code></h3>
+
+<p>CentOS 在启动时默认不显示 <strong>内核的硬件检测信息</strong>，都保存在该日志。</p>
+
+<h3 id="varloglastlog"><code class="highlighter-rouge">/var/log/lastlog</code></h3>
+
+<p>记录所有帐号最近一次登陆系统的信息</p>
+
+<h3 id="varlogmaillog-或-varlogmail"><code class="highlighter-rouge">/var/log/maillog</code> 或 <code class="highlighter-rouge">/var/log/mail/\*</code></h3>
+
+<p>邮件的往来信息，主要是 postfix （SMTP 协议提供者）与 dovecot（POP3 协议提供者）所产生的信息。</p>
+
+<h3 id="varlogmessages"><code class="highlighter-rouge">/var/log/messages</code></h3>
+
+<p>用于保存有价值的、非调试的、非关键的消息，即系统的普通活动日志。</p>
+
+<h3 id="varlogsecure"><code class="highlighter-rouge">/var/log/secure</code></h3>
+
+<p>用于追踪认证系统，所有与安全相关的消息，sudo login，SSH login 等其它登陆错误</p>
+
+<h3 id="varlogwtmp"><code class="highlighter-rouge">/var/log/wtmp</code></h3>
+
+<p>成功登陆系统的帐号</p>
+
+<h3 id="varlogfaillog"><code class="highlighter-rouge">/var/log/faillog</code></h3>
+
+<p>登陆失败的帐号</p>
+
+<h3 id="varloghttpd"><code class="highlighter-rouge">/var/log/httpd/</code></h3>
+
+<p>apache 服务日志</p>
+
+<h3 id="varlogsamba"><code class="highlighter-rouge">/var/log/samba/</code></h3>
+
+<p>samba 服务日志</p>
+
+<h2 id="日志的滚动">日志的滚动</h2>
+
+<h3 id="logrotate">LOGROTATE</h3>
+
+<p>日志滚动的设计是为了简化日志管理的工作，控制无休止生成的大量日志。</p>
+
+<p>日志滚动可以实现自动 <strong>滚动、压缩、删除、发邮件</strong>。滚动的频率要么是按 <strong>日、周、月</strong>，要么是日志 <strong>达到一定大小</strong> 时处理。</p>
+
+<h4 id="实现原理">实现原理</h4>
+
+<p>logrotate 程序是依靠 cron 来实现计划任务的，系统一般把日志滚动作为计划任务来运行，通常每天进行一次。脚本大多位于 <code class="highlighter-rouge">/etc/cron.daily/logrotate</code>。如果需要更高的滚动频率，也可以把脚本放到 <code class="highlighter-rouge">/etc/cron.hourly</code> 目录。</p>
+
+<p>当 logrotate 运行时，它会读取配置文件，以了解日志文件的位置、滚动频率、保留归档日志的数量。</p>
+
+<figure class="">
+  <img src="https://linotes.netlify.com/assets/images/logrotate.png" alt="日志滚动示意图" />
+  
+</figure>
+
+<h4 id="主配置文件">主配置文件</h4>
+
+<p>logrotate 通常由主配置文件 <code class="highlighter-rouge">/etc/logrotate.conf</code> 统一管理，它会用 <code class="highlighter-rouge">include</code> 语句把 <code class="highlighter-rouge">/etc/logrotate.d/</code> 目录中的所有其它需要的配置文件全部包含进来。</p>
+
+<p><code class="highlighter-rouge">/etc/logrotate.d</code> 目录是专门为 <code class="highlighter-rouge">/etc/logrotate.conf</code> 规划出来的。每个以 RPM 包方式创建的服务，都会把其日志的配置文件，放到该目录。</p>
+
+<h4 id="配置文件指令">配置文件指令</h4>
+
+<p>用几个例子解释各指令。</p>
+
+<p>配置文件默认值：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>weekly			# 每周滚动一次
+rotate 4		# 保留 4 个日志文件
+create			# 原日志更名后新建空日志
+dateext			# 旧日志用日期做文件名
+#compress	# 压缩旧日志
+
+include /etc/logrotate.d	# 加载该目录下所有配置文件
+
+/var/log/wtmp {			# 针对 /var/log/wtmp 该日志文件单独设定参数
+    monthly						# 每月一次滚动
+    create 0664 root utmp		# 新建文件的权限，用户，组
+    minsize 1M					# 日志超过 1M 才进行滚动
+    rotate 1					# 只保留一个日志文件
+}
+</code></pre></div></div>
+
+<h5 id="加载指定目录中的配置">加载指定目录中的配置</h5>
+
+<p><code class="highlighter-rouge">include /etc/logrotate.d</code></p>
+
+<h5 id="滚动频率">滚动频率</h5>
+
+<h6 id="每天">每天</h6>
+
+<p><code class="highlighter-rouge">daily</code> 每周滚动一次</p>
+
+<h6 id="每周">每周</h6>
+
+<p><code class="highlighter-rouge">weekly</code> 每周滚动一次</p>
+
+<h6 id="每月">每月</h6>
+
+<p><code class="highlighter-rouge">monthly</code> 每月滚动一次</p>
+
+<h6 id="每年">每年</h6>
+
+<p><code class="highlighter-rouge">yearly</code> 每年滚动一次</p>
+
+<h5 id="滚动条件判断">滚动条件判断</h5>
+
+<h6 id="超过限定的大小">超过限定的大小</h6>
+
+<p><code class="highlighter-rouge">minsize 1M</code> 日志超过 1M 才进行滚动，直到开始滚动时才会检查。与时间间隔不冲突。</p>
+
+<p><code class="highlighter-rouge">size 10M</code> 与时间间隔是互斥的。仅根据文件大小来判断是否滚动，只要文件大小满足，马上滚动，不考虑是否到达时间间隔。</p>
+
+<h6 id="空文件也滚动">空文件也滚动</h6>
+
+<p><code class="highlighter-rouge">ifempty</code> 即使日志文件是空的，也要滚动。</p>
+
+<h6 id="如果有日志丢失也继续滚动">如果有日志丢失也继续滚动</h6>
+
+<p><code class="highlighter-rouge">missingok</code></p>
+
+<h5 id="滚动前操作">滚动前操作</h5>
+
+<h6 id="全局滚动前操作">全局滚动前操作</h6>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">firstaction</span>
+......
+......
+<span class="n">endscript</span>
+</code></pre></div></div>
+
+<p>介于 firstaction 和 endscript 之间的各行命令，会在所有日志滚动开始之前最先执行。</p>
+
+<h6 id="特定日志滚动前操作">特定日志滚动前操作</h6>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">prerotate</span>
+......
+......
+<span class="n">endscript</span>
+</code></pre></div></div>
+
+<p>介于 prerotate 和 endscript 之间的各行命令，会在滚动开始之前执行，如修改日志属性。对于已加上隐藏属性的文件特别必要。</p>
+
+<p>只能用于特定日志文件的定义中，如果日志文件有多个，这些命令会运行多次。</p>
+
+<p>通常会在 prerotate 之前加上 <strong><code class="highlighter-rouge">sharedscripts</code></strong> ，以便所有文件只执行一次脚本，而不是多次。</p>
+
+<h5 id="滚动后操作">滚动后操作</h5>
+
+<h6 id="全局滚动后操作">全局滚动后操作</h6>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">lasstaction</span>
+......
+......
+<span class="n">endscript</span>
+</code></pre></div></div>
+
+<p>介于 lastaction 和 endscript 之间的各行命令，会在所有日志滚动结束之后最后执行。</p>
+
+<h6 id="特定日志滚动后操作">特定日志滚动后操作</h6>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">postrotate</span>
+......
+......
+<span class="n">endscript</span>
+</code></pre></div></div>
+
+<p>介于 postrotate 和 endscript 之间的各行命令，会在滚动完成之后执行，如重启某服务。对于已加上隐藏属性的文件特别必要。</p>
+
+<p>只能用于特定日志文件的定义中，如果日志文件有多个，这些命令会运行多次。</p>
+
+<p>通常会在 postrotate 之前加上 <strong><code class="highlighter-rouge">sharedscripts</code></strong> ，以便所有文件只执行一次脚本，而不是多次。</p>
+
+<h5 id="旧文件操作">旧文件操作</h5>
+
+<h6 id="保留">保留</h6>
+
+<p><code class="highlighter-rouge">rotate 4</code> 保留 4 个日志文件</p>
+
+<h6 id="压缩">压缩</h6>
+
+<p><code class="highlighter-rouge">compress</code> <strong>压缩</strong> 旧日志，默认用 gzip 压缩</p>
+
+<p><code class="highlighter-rouge">delaycompress</code> <strong>延迟压缩</strong>。本次滚动产生的旧文件，要到下次滚动时才会压缩。因为有时有些程序暂时无法关闭日志文件，需要持续向日志文件写入一段时间。</p>
+
+<p><code class="highlighter-rouge">compressext .xz</code> 指定压缩文件的 <strong>后缀</strong></p>
+
+<p><code class="highlighter-rouge">compresscmd /usr/bin/xz</code> 指定使用的 <strong>压缩命令</strong></p>
+
+<p><code class="highlighter-rouge">uncompresscmd /usr/bin/unxz</code> 指定 <strong>解压缩命令</strong></p>
+
+<p><code class="highlighter-rouge">compressoptions -9</code> 指定 <strong>压缩比</strong>，默认为 <code class="highlighter-rouge">-9</code>，即最大压缩比</p>
+
+<p><code class="highlighter-rouge">nocompress</code> 不压缩旧日志</p>
+
+<h6 id="复制">复制</h6>
+
+<p><code class="highlighter-rouge">copy</code> 生成旧文件副本，但 <strong>不修改旧文件</strong> 本身。使用该指令时，<code class="highlighter-rouge">create</code> 失效。</p>
+
+<p><code class="highlighter-rouge">nocopy</code> 不复制原始旧文件，会覆盖 <code class="highlighter-rouge">copy</code>。</p>
+
+<p><code class="highlighter-rouge">copytruncate</code> 生成旧文件副本后，<strong>直接修改旧文件</strong>。使用该指令时，<code class="highlighter-rouge">create</code> 失效。</p>
+
+<p><code class="highlighter-rouge">nocopytruncate</code> 生成旧文件副本后，不要直接修改旧文件，会覆盖 <code class="highlighter-rouge">copytruncate</code>。</p>
+
+<h6 id="重命名">重命名</h6>
+
+<p><code class="highlighter-rouge">dateext</code> 旧日志 <strong>用日期做文件名</strong>，会在原文件名后面加上格式为 <code class="highlighter-rouge">-20180609</code> 的字符串。</p>
+
+<p><code class="highlighter-rouge">dateformat -%Y-%m-%d-%s</code> 需要与 <code class="highlighter-rouge">dateext</code> 配合使用，自定义日期格式。</p>
+
+<p class="notice--success">只能使用 <code class="highlighter-rouge">%Y</code>、<code class="highlighter-rouge">%m</code>、<code class="highlighter-rouge">%d</code>、<code class="highlighter-rouge">%s</code>，而且必须遵守年、月、日的先后顺序，因为 logrotate 会按第一个字段来排序，来判断哪个是旧的，再予以删除。</p>
+
+<p><code class="highlighter-rouge">extension foo</code> 指定在滚动日志时需要保留的后缀，<code class="highlighter-rouge">mylog.foo</code> 在滚动后会重命名为 <code class="highlighter-rouge">mylog.1.foo.gz</code>，而不是 <code class="highlighter-rouge">mylog.foo.1.gz</code>。</p>
+
+<h6 id="移动">移动</h6>
+
+<p><code class="highlighter-rouge">olddir /home/neo/logs</code> 把旧日志文件移动到指定目录中滚动。</p>
+
+<h6 id="删除">删除</h6>
+
+<p><code class="highlighter-rouge">maxage 100</code> 超过 100 天的旧日志将被删除。只有在开始滚动日志时才会检查。如果配置了 <code class="highlighter-rouge">mail</code> 和 <code class="highlighter-rouge">maillast</code>，这些文件就会被做为附件发邮件给管理员。</p>
+
+<p><code class="highlighter-rouge">shred</code> 用 <code class="highlighter-rouge">shred -u</code> 来删除文件，而不是用 <code class="highlighter-rouge">unlink()</code>，这样删除的比较彻底、安全。</p>
+
+<h5 id="新文件">新文件</h5>
+
+<h6 id="新建">新建</h6>
+
+<p><code class="highlighter-rouge">create</code> 滚动后，<strong>新建</strong> 空日志</p>
+
+<p><code class="highlighter-rouge">nocreate</code> 滚动后，不要新建空日志，会覆盖 <code class="highlighter-rouge">create</code>。</p>
+
+<h6 id="属性">属性</h6>
+
+<p><code class="highlighter-rouge">create 0664 root utmp</code> 新建空日志的 <strong>权限</strong>、<strong>所有者</strong>、<strong>属组</strong></p>
+
+<h5 id="发邮件">发邮件</h5>
+
+<h6 id="给特定邮箱发邮件">给特定邮箱发邮件</h6>
+
+<p><code class="highlighter-rouge">mail imhawkz@gmail.com</code></p>
+
+<h6 id="邮件内容为刚刚滚动的日志">邮件内容为刚刚滚动的日志</h6>
+
+<p><code class="highlighter-rouge">mailfirst</code></p>
+
+<h6 id="邮件内容为快要过期的文件">邮件内容为快要过期的文件</h6>
+
+<p><code class="highlighter-rouge">maillast</code></p>
+
+<h5 id="配置特定日志">配置特定日志</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>日志绝对路径  {		# 可以用空格分隔多个日志
+    参数设置1
+	参数设置2
+	执行脚本
+	...
+}
+</code></pre></div></div>
+
+<p>执行脚本部分可调用外部指令来执行额外的命令，需用 <code class="highlighter-rouge">sharedscripts .... endscript</code> 标签包围。</p>
+
+<h4 id="配置范例">配置范例</h4>
+
+<p>只对 <code class="highlighter-rouge">/var/log/</code> 内的 cron, maillog, messages, secure, spooler 这几个日志文件有效。</p>
+
+<p>日志滚动每周一次，保留四个，滚动下来的日志不压缩，滚动完毕后获取 syslog 的 PID，用 kill -HUP 重启 syslogd。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/var/log/cron
+/var/log/maillog
+/var/log/messages
+/var/log/secure
+/var/log/spooler
+    {
+        sharedscripts
+        prerotate
+        	/usr/bin/chattr -a /var/log/messages
+        endscript
+        sharedscripts
+        postrotate
+            /bin/kill -HUP `cat /var/run/syslogd.pid 2&gt; /dev/null` 2&gt; /dev/null || true
+            /usr/bin/chattr +a /var/log/messages
+        endscript
+    }
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">/bin/kill -HUP</code> 会让 rsyslogd 重启并读取其配置文件。</p>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/linux" class="page__taxonomy-item" rel="tag">linux</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/日志" class="page__taxonomy-item" rel="tag">日志</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/logrotate" class="page__taxonomy-item" rel="tag">logrotate</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://linotes.netlify.com/categories/#tools" class="page__taxonomy-item" rel="tag">tools</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2015-02-01T00:00:00+08:00">February 01, 2015</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="https://linotes.netlify.com/tools/filesystem/" class="pagination--pager" title="上一页
+">Linux 的使用 - 文件系统</a>
+    
+    
+      <a href="https://linotes.netlify.com/tools/network/" class="pagination--pager" title="下一页
+">Linux 的使用 - 网络</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">相关文章</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/kernel/filedescriptor/" rel="permalink">文件描述符简介
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash03/" rel="permalink">Bash 入门 03
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">循环，变量，函数，捕捉信号
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash02/" rel="permalink">Bash 入门 02
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">正则表达式，SED，AWK，条件结构，交互式脚本
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash01/" rel="permalink">Bash 入门 01
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">Bash 与 Bash 脚本，脚本的编写与调试，Bash 环境
+</p>
+-->
+
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+    
+    
+    
+    
+    <li><a href="https://linotes.netlify.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="https://linotes.netlify.com/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

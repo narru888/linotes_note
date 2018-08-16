@@ -1,0 +1,1390 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Linux 基础 - 19. 编译内核 - LINOTES</title>
+<meta name="description" content="用简洁清晰的语言讨论技术">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Linux 基础 - 19. 编译内核">
+<meta property="og:url" content="https://linotes.netlify.com/linux/cmpkernel/">
+
+
+  <meta property="og:description" content="用简洁清晰的语言讨论技术">
+
+
+
+  <meta property="og:image" content="https://linotes.netlify.com/assets/images/header/linux.jpg">
+
+
+
+
+
+  <meta property="article:published_time" content="2015-01-19T00:00:00+08:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://linotes.netlify.com/linux/cmpkernel/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="https://linotes.netlify.com/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="https://linotes.netlify.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="https://linotes.netlify.com/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://linotes.netlify.com/assets/images/header/linux.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Linux 基础 - 19. 编译内核
+
+        
+      </h1>
+      
+        <p class="page__lead">
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="https://linotes.netlify.com/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:imhawkz@gmail.com">
+            <meta itemprop="email" content="imhawkz@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Linux 基础 - 19. 编译内核">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="January 19, 2015">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-code-branch"></i> 19. 编译内核</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#191-内核简介">19.1 内核简介</a>
+    <ul>
+      <li><a href="#1911-内核">19.1.1 内核</a></li>
+      <li><a href="#1912-内核源码">19.1.2 内核源码</a></li>
+    </ul>
+  </li>
+  <li><a href="#192-自定义内核">19.2 自定义内核</a>
+    <ul>
+      <li><a href="#1921-为什么要重新构建内核">19.2.1 为什么要重新构建内核</a></li>
+      <li><a href="#1922-构建内核流程">19.2.2 构建内核流程</a></li>
+    </ul>
+  </li>
+  <li><a href="#193-内核模块">19.3 内核模块</a>
+    <ul>
+      <li><a href="#1931-内核模块简介">19.3.1 内核模块简介</a></li>
+      <li><a href="#1932-内核模块的构建">19.3.2 内核模块的构建</a></li>
+      <li><a href="#1933-模块管理工具">19.3.3 模块管理工具</a></li>
+      <li><a href="#1934-编译内核模块">19.3.4 编译内核模块</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="191-内核简介">19.1 内核简介</h2>
+
+<p>Linux 主要由 liunx 内核和一些支持模块组成。</p>
+
+<h3 id="1911-内核">19.1.1 内核</h3>
+
+<p>Kernel</p>
+
+<p>内核是整个操作系统的最底层，它负责了整个 <strong>硬件的驱动</strong>，以及提供各种系统所需的 <strong>核心功能</strong>。包括防火墙机制、是否支援 LVM 或 Quota 等文件系统。如果你的内核不认识某个最新的硬件，那么该硬件也就无法被驱动，当然也就无法使用该硬件。</p>
+
+<p>其实内核就是系统上面的 <strong>一个文件</strong> 而已，其中包含了驱动主机各项硬件的 <strong>检测程序与驱动模块</strong>。</p>
+
+<p>在开机流程中，系统读取 BIOS 并加载 MBR 内的引导程序后，就能够把该内核文件加载到内存中了。然后内核开始检测硬件，挂载根目录，获取内核模块来驱动所有的硬件，之后调用 systemd 依序启动所有系统服务。</p>
+
+<p>内核文件位于 <code class="highlighter-rouge">/boot/</code> 目录，文件名为 <code class="highlighter-rouge">vmlinuz-*</code>，一台主机上可以有多个内核文件，但开机时仅能选择一个来加载。多个内核文件可以实现多重启动。</p>
+
+<h3 id="1912-内核源码">19.1.2 内核源码</h3>
+
+<h4 id="原厂内核">原厂内核</h4>
+
+<p>各主要发行版在发布产品时，都附带内核的源代码。</p>
+
+<p>主要的源代码网站：</p>
+
+<p>CentOS 的 SRPM： http://vault.centos.org</p>
+
+<p>Linux 内核官网： http://www.kernel.org</p>
+
+<p>从 CentOS 7 开始的版本，在版本号后面会接上发布日期，如 <code class="highlighter-rouge">7.1.1503</code> 表示 CentOS 7.1 是在 2015 年 03 月发布的。</p>
+
+<p>原厂发布的源代码中，含有出厂的默认设置，便于了解内核及模块在出厂时的各项目的参数，可以更好地配合系统的默认参数来加以修改，编译的难度较低。</p>
+
+<h4 id="内核补丁">内核补丁</h4>
+
+<p>每一次发布新内核时，同时也会发布该版本与前一版本的 <strong>差异补丁文件</strong>。</p>
+
+<h4 id="内核源码目录结构">内核源码目录结构</h4>
+
+<p><code class="highlighter-rouge">arch</code>  硬件平台相关代码，每种平台一个目录，如 <code class="highlighter-rouge">x86</code>，<code class="highlighter-rouge">arm64</code> 等</p>
+
+<p><code class="highlighter-rouge">block</code>  部分块设备驱动程序</p>
+
+<p><code class="highlighter-rouge">crypto</code>  常用加密和散列算法（如 AES、SHA 等），还有一些压缩和 CRC 校验算法</p>
+
+<p><code class="highlighter-rouge">Documentation</code>  内核各部分的通用解释和注释</p>
+
+<p><code class="highlighter-rouge">drivers</code>  设备驱动程序</p>
+
+<p><code class="highlighter-rouge">firmware</code>  旧硬件的固件</p>
+
+<p><code class="highlighter-rouge">fs</code>  内核支持的文件系统，如 xfs，nfs 等</p>
+
+<p><code class="highlighter-rouge">include</code>  头文件。其中，和系统相关的头文件被放置在linux子目录下。</p>
+
+<p><code class="highlighter-rouge">init</code>  内核初始化代码</p>
+
+<p><code class="highlighter-rouge">ipc</code>  进程间通信的代码</p>
+
+<p><code class="highlighter-rouge">kernel</code>  内核的最核心部分，包括进程调度、定时器等，和平台相关的一部分代码放在 archmm 目录下</p>
+
+<p><code class="highlighter-rouge">lib</code>  公用的函数库</p>
+
+<p><code class="highlighter-rouge">mm</code>  内存管理代码</p>
+
+<p><code class="highlighter-rouge">net</code>  网络相关代码，实现了各种常见的网络协议。</p>
+
+<p><code class="highlighter-rouge">security</code>  包括 selinux 在内的安全性设置</p>
+
+<p><code class="highlighter-rouge">sound</code>  常用音频设备的驱动程序等</p>
+
+<p><code class="highlighter-rouge">virt</code>  与虚拟化有关的信息，KVM （Kernel base Virtual Machine）等</p>
+
+<p><code class="highlighter-rouge">Makefile</code>  配合 <code class="highlighter-rouge">make</code> 命令进行一系列编译期间操作的配置文件</p>
+
+<p><code class="highlighter-rouge">README</code>  编译说明文档，通常只是简要的说明，更多的文档在 <code class="highlighter-rouge">Documentation</code> 目录</p>
+
+<h2 id="192-自定义内核">19.2 自定义内核</h2>
+
+<p>内核是通过源代码构建而成的，如果获得了内核的源代码，可以根据需要进行修改，<strong>重新构建</strong>，生成自定义的内核 RPM 包。</p>
+
+<h3 id="1921-为什么要重新构建内核">19.2.1 为什么要重新构建内核</h3>
+
+<h5 id="创建自已的系统调用">创建自已的系统调用</h5>
+
+<p>希望把自己的程序放进内核，平时使用自已的系统调用。</p>
+
+<h5 id="需要新功能">需要新功能</h5>
+
+<p>有些新版本的内核会提供一些新的功能，如果恰好是你需要的，就可以通过更新内核来获得。</p>
+
+<p>另外，新的内核对新的硬件支持的也更完美，能充分发挥新硬件的性能。</p>
+
+<h5 id="需要精简内核">需要精简内核</h5>
+
+<p>如果对于系统 <strong>稳定性</strong> 要求很高，可以通过重新构建内核来删除不需要的部分。组件越少，相对来说稳定性就越有保证。</p>
+
+<h5 id="提升安全性">提升安全性</h5>
+
+<p>新版本的内核经常会修补之前的安全漏洞，提升了安全性。</p>
+
+<p>虽说如此，就像 CentOS Wiki 中说的，99.9% 的用户不再需要重新构建自己的内核了，大多数情况下，可能只需要构建一个 <strong>内核模块</strong> 就能满足特定的需求。</p>
+
+<h3 id="1922-构建内核流程">19.2.2 构建内核流程</h3>
+
+<p>本文以 <strong>CentOS 7</strong> 为例构建内核。CentOS 6 在构建过程中有部分内容<a href="https://wiki.centos.org/HowTos/Custom_Kernel">稍有不同</a>。</p>
+
+<h4 id="构建准备工作">构建准备工作</h4>
+
+<h5 id="构建所需工具">构建所需工具</h5>
+
+<p>开始构建之前，准备好 <strong>开发工具</strong> 以及一个 <strong>配置文件</strong>。配置文件用来设定内核中哪些东西需要构建，哪些不需要。</p>
+
+<p>对于 CentOS，可以根据当前主机的情况，选择运行以下命令来准备开发工具：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum groupinstall "Development Tools"
+yum install ncurses-devel
+yum install hmaccalc zlib-devel binutils-devel elfutils-libelf-devel
+</code></pre></div></div>
+
+<p>或者借助 <code class="highlighter-rouge">yum-builddep</code> 命令：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo yum-builddep -y kernel
+sudo yum install -y pesign
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">pesign</code> 是为二进制文件签名的工具。</p>
+
+<h5 id="确定系统硬件">确定系统硬件</h5>
+
+<p>可以用以下命令统计当前主机所有硬件设备。</p>
+
+<p><code class="highlighter-rouge">lscpu</code>，<code class="highlighter-rouge">lspci</code>，<code class="highlighter-rouge">lsusb</code>，<code class="highlighter-rouge">lsblk</code>，<code class="highlighter-rouge">hal-device</code></p>
+
+<h5 id="确定要保留的内核功能">确定要保留的内核功能</h5>
+
+<p>内核功能选择的原则：</p>
+
+<ul>
+  <li>确认要使用的功能，直接构建进内核</li>
+  <li>可能会用到的功能，尽量构建成模块</li>
+  <li>不了解的可以保留默认值，或构建成模块</li>
+</ul>
+
+<h5 id="取得内核-srpm">取得内核 SRPM</h5>
+
+<p>可以从发行版软件库或 kernel.org 来下载，建议下载 SRPM，相比 Tarball 更便于构建 RPM。</p>
+
+<p>记住，从发行版下载的内核与从 kernel.org 下载的完全不同，即使是版本号相同。因为发行版厂商都会对原版内核进行修改和调整。</p>
+
+<p class="notice--info">出于对系统的保护，<a href="http://www.owlriver.com/tips/non-root/">CentOS 建议以普通用户的身份来构建，而不使用超级用户。</a></p>
+
+<p>可以用以下命令来下载内核 SRPM：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yumdownloader --source kernel
+</code></pre></div></div>
+
+<h5 id="解包-srpm">解包 SRPM</h5>
+
+<p>使用普通用户运行 <code class="highlighter-rouge">rpm -i kernel-3.10.0-862.el7.src.rpm</code> 命令来解开软件包，<strong>SPEC 文件</strong> 默认被放到 <code class="highlighter-rouge">~/rpmbuild/SPECS</code> 目录，其它的文件（内核源代码压缩包、补丁等）都被放到 <code class="highlighter-rouge">~/rpmbuild/SOURCES</code> 目录。</p>
+
+<p>下一步，把内核 <strong>源代码</strong> 解压到 <code class="highlighter-rouge">~/rpmbuild/BUILD/kernel-*/linux-*/</code> 目录：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd ~/rpmbuild/SPECS
+rpmbuild -bp --target=$(uname -m) kernel.spec
+</code></pre></div></div>
+
+<h4 id="配置内核">配置内核</h4>
+
+<h5 id="清理缓存">清理缓存</h5>
+
+<p>如果是首次构建，本步可以省略。如果已构建过内核，建议再次构建前要清理一下缓存。</p>
+
+<h6 id="make-clean"><code class="highlighter-rouge">make clean</code></h6>
+
+<p>用于删除前一次构建残留的中间文件。</p>
+
+<p><code class="highlighter-rouge">make clean</code> 会删除所有的目标文件和内核目标文件，即 <code class="highlighter-rouge">*.o</code>，<code class="highlighter-rouge">*.ko</code>，以及一些其它文件。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd ~/rpmbuild/BUILD/kernel-*/linux-*/
+make clean
+</code></pre></div></div>
+
+<h6 id="make-mrproper"><code class="highlighter-rouge">make mrproper</code></h6>
+
+<p><code class="highlighter-rouge">make mrproper</code> 命令会删除所有 <code class="highlighter-rouge">make clean</code> 要删除的文件，再加上用户的配置文件（.config）、依赖关系文件，以及其它 make config 生成的文件。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd ~/rpmbuild/BUILD/kernel-*/linux-*/
+make mrproper
+</code></pre></div></div>
+
+<h5 id="创建-config">创建 <code class="highlighter-rouge">.config</code></h5>
+
+<p>本步为构建内核最重要的环节，用于选择、确定需要构建的内核功能，通常由一个名为 <code class="highlighter-rouge">.config</code> 的配置文件决定。</p>
+
+<p>在构建内核时，<code class="highlighter-rouge">make</code> 命令需要配合 <code class="highlighter-rouge">.config</code> 来工作，该配置文件的内容为 <strong>内核功能列表</strong>。</p>
+
+<p><code class="highlighter-rouge">.config</code> 文件的内容决定了要构建内核的哪些驱动和功能，因此要花一点时间来按照准备工作中计划好的功能清单，逐项地落实到配置文件中。同时也指明了哪些需要以外部模块化的方式构建，不要构建到内核中。</p>
+
+<h6 id="复制-config">复制 <code class="highlighter-rouge">.config</code></h6>
+
+<p>该配置文件无需手动创建，可以从当前版本的配置文件 <strong>复制一份</strong>：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd ~/rpmbuild/BUILD/kernel-*/linux-*/
+cp /boot/config-`uname -r`* .config
+</code></pre></div></div>
+
+<p>或者从下载的内核源代码中复制：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd ~/rpmbuild/BUILD/kernel-*/linux-*/
+cp configs/kernel-3.10.0-x86_64.config .config
+</code></pre></div></div>
+
+<h6 id="自定义内核配置">自定义内核配置</h6>
+
+<p>上面得到的 <code class="highlighter-rouge">.config</code> 可借助 <code class="highlighter-rouge">make menuconfig</code> 做进一步的自定义。</p>
+
+<p>在此之前建议先备份一下 <code class="highlighter-rouge">.config</code>：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cp .config config.bak
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">make menuconfig</code> 运行的程序是一个基于 ncurse 库编写的图形界面工具，允许用户逐项进行选择要构建的内核功能等项目：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make menuconfig
+</code></pre></div></div>
+
+<p><img src="/assets/images/menuconfig.png" alt="image-center" class="align-center" /></p>
+
+<p><code class="highlighter-rouge">menuconfig</code> 是 <code class="highlighter-rouge">makefile</code> 中的一个目标。</p>
+
+<p>程序启动时，如果当前目录存在 <code class="highlighter-rouge">.config</code> 文件，会将该文件的配置读取到程序中对应的选项。如果不存在，则会以默认配置启动。</p>
+
+<p>用户使用方向键、回车键在各级菜单中导航，空格键切换选择与否，<code class="highlighter-rouge">M</code> 键将条目模块化。</p>
+
+<p>退出时可以自定义要保存的配置文件名，如果之前不存在 <code class="highlighter-rouge">.config</code> 文件，会自动保存为该文件。</p>
+
+<p>进行到这里，我们已经获得了自定义的 <code class="highlighter-rouge">.config</code> 文件。</p>
+
+<h6 id="更新-config">更新 <code class="highlighter-rouge">.config</code></h6>
+
+<p>我们需要把修改好的 <code class="highlighter-rouge">.config</code> 放回 <code class="highlighter-rouge">~/rpmbuild/BUILD/kernel-*/linux-*/configs/</code> 目录，但之前，还要在其第一行加入当前系统的硬件平台信息，即 <code class="highlighter-rouge">$(uname -i)</code> 的值，64 位 PC 上通常为 <code class="highlighter-rouge">x86_64</code>，前面要加上注释井号：</p>
+
+<p>在 <code class="highlighter-rouge">.config</code> 最前面加上一行：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># x86_64
+</code></pre></div></div>
+
+<p>然后，把 <code class="highlighter-rouge">.config</code> 文件拷回 <code class="highlighter-rouge">configs/</code> 目录：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cp .config configs/kernel-3.10.0-`uname -m`.config
+</code></pre></div></div>
+
+<p>最后一步，把 <code class="highlighter-rouge">configs/</code> 目录中所有文件拷到 <code class="highlighter-rouge">~/rpmbuild/SOURCES/</code> 目录中：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cp configs/* ~/rpmbuild/SOURCES/
+</code></pre></div></div>
+
+<h4 id="内核-abi"><a href="https://en.wikipedia.org/wiki/Linux_kernel_interfaces#Linux_ABI">内核 ABI</a></h4>
+
+<h5 id="linux-abi-简介">Linux ABI 简介</h5>
+
+<p>Application Binary Interface</p>
+
+<p>ABI 定义了两个软件模块在特定硬件平台上的二进制接口。它定义了应用内部如何交互，应用如何与内核交互，以及如何和库交互。</p>
+
+<p>Linux ABI 是指 <code class="highlighter-rouge">内核-用户空间</code> 的 ABI。该 ABI 是指编译好的二进制程序，任何这样的 ABI 都被绑定到指令集中。对于每种不同的硬件平台都要定义各自的指令集的 ABI。</p>
+
+<blockquote>
+  <p>API，是编程的接口，编写应用程序时候调用的函数之类的东西。对于内核来说，它的 “应用程序” 有两种：一种是在它之上的，用户空间的真正的应用程序，内核给它们提供的是系统调用这种接口，比如 <code class="highlighter-rouge">read(2)</code>，<code class="highlighter-rouge">write(2)</code>；另一种就是内核模块了，它们和内核处于同一层，内核给它们提供的是导出的内核函数，比如 <code class="highlighter-rouge">kmalloc()</code>，<code class="highlighter-rouge">printk()</code>。这些接口都是你可以在编写程序的时候直接看到的，可以直接拿来用的。</p>
+</blockquote>
+
+<blockquote>
+  <p>而 ABI 是另一种形式的接口，二进制接口。除非你直接使用汇编语言，这种接口一般是不能直接拿来用的。比如，内核系统调用用哪些寄存器或者干脆用堆栈来传递参数，返回值又是通过哪个寄存器传递回去，内核里面定义的某个结构体的某个字段偏移是多少等等，这些都是二进制层面上的接口。这些接口是直接给 <strong>编译好的</strong> 二进制用的。换句话说，如果 ABI 保持稳定的话，你在之前版本上编译好的二进制应用程序、内核模块，完全可以无须重新编译直接在新版本上运行。另一种比较特殊的 ABI 是像 <code class="highlighter-rouge">/proc</code>，<code class="highlighter-rouge">/sys</code> 目录下面导出的文件，它们虽然不是直接的二进制形式，但也会影响编译出来的二进制，如果它里面使用到它们的话，因此这些 “接口” 也是一种 ABI。</p>
+</blockquote>
+
+<h5 id="禁用-kabi-检查">禁用 kABI 检查</h5>
+
+<p>CentOS 内核有一个特点，它的 ABI 在整个产品周期内始终保留，拥有一个持续稳定的 ABI 有很大的好处，外部的内核模块可以独立于内核版本来构建，因此无需为每个新版本的内核重新构建。</p>
+
+<p>为了维护 ABI 的一致性，原始的内核 ABI 被记录下来，并保存在一个文件中。构建每个新内核时，该文件都用于进行内核 ABI 的检查。如果新内核配置或修改的方式与已发布的 ABI 不一致，则构建将失败，并显示一条消息，指出发生了 kABI 破坏。此时可以选择重新配置新内核以适应现有的 ABI，或者在构建过程中禁用对 KABI 的检查。</p>
+
+<p>禁用对 kABI 的检查：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rpmbuild --without kabichk
+</code></pre></div></div>
+
+<h4 id="修改内核-spec-文件">修改内核 SPEC 文件</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd ~/rpmbuild/SPECS/
+cp kernel.spec kernel.spec.distro
+vi kernel.spec
+</code></pre></div></div>
+
+<h5 id="修改-buildid">修改 <code class="highlighter-rouge">buildid</code></h5>
+
+<p>通常定义 <code class="highlighter-rouge">buildid</code> 的语句会被注释，需将其取消注释：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>%define buildid .my_identifier
+</code></pre></div></div>
+
+<p class="notice--info">注意，<code class="highlighter-rouge">%</code> 与 <code class="highlighter-rouge">define</code> 之前不能有空格。</p>
+
+<h5 id="应用补丁">应用补丁</h5>
+
+<p>如果没有补丁要应用，则忽略此步。如果有，需要在两处引用：</p>
+
+<p>第一处：</p>
+
+<p>找到 <code class="highlighter-rouge"># empty final patch to facilitate testing of kernel patches</code> 段落，在这一行下面增加一行，用数字 40000 声明，以便补丁不会与内核补丁冲突：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Patch40000: my-custom-kernel.patch
+</code></pre></div></div>
+
+<p>第二处：</p>
+
+<p>找到 <code class="highlighter-rouge">ApplyOptionalPatch linux-kernel-test.patch</code> 段落，在该行之前增加一行：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ApplyOptionalPatch my-custom-kernel.patch
+</code></pre></div></div>
+
+<h4 id="构建新内核">构建新内核</h4>
+
+<p>开始构建：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd ~/rpmbuild/SPECS/
+rpmbuild -bb --target=`uname -m` kernel.spec 2&gt; build-err.log | tee build-out.log
+</code></pre></div></div>
+
+<p>构建命令中，如有需要，可以选择一些有用的选项，使用 <code class="highlighter-rouge">--with</code> 或 <code class="highlighter-rouge">--without</code> 标签：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--with baseonly
+--without up
+--without debug
+--without debuginfo
+--without fips
+--without kabichk
+</code></pre></div></div>
+
+<p>例如，只构建最基本的内核：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--with baseonly --without debug --without debuginfo
+</code></pre></div></div>
+
+<h4 id="安装新内核">安装新内核</h4>
+
+<p>构建完成后，自定义的新内核 RPM 文件保存在 <code class="highlighter-rouge">~/rpmbuild/RPMS/</code> 中的硬件平台的子目录中。</p>
+
+<p>切换到超级用户后，可以使用 <code class="highlighter-rouge">yum</code> 来安装：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum localinstall kernel-*.rpm
+</code></pre></div></div>
+
+<p>也可以用 <code class="highlighter-rouge">rpm</code> 命令：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rpm -ivh kernel-*.rpm
+</code></pre></div></div>
+
+<p>如果用 <code class="highlighter-rouge">rpm</code> 命令安装，需注意提前必须安装 <code class="highlighter-rouge">kernel</code> 和 <code class="highlighter-rouge">kernel-devel</code>，不是更新，而是用 <code class="highlighter-rouge">rpm -ivh</code> 安装。</p>
+
+<p>如果构建了一个比当前安装的内核版本低的内核，安装时需要使用 <code class="highlighter-rouge">--oldpackage</code> 标签。</p>
+
+<h2 id="193-内核模块">19.3 内核模块</h2>
+
+<h3 id="1931-内核模块简介">19.3.1 内核模块简介</h3>
+
+<p>Loadable Kernel Module，LKM，内核模块是一种 <strong>目标文件</strong>，其中包含了能在内核空间运行的代码。</p>
+
+<p>内核模块是单独的代码，运行在 base kernel，通常用来支持新的硬件、文件系统、系统调用，需要时可以动态地加载或卸载，可以最小化内核的内存占用。</p>
+
+<p>Linux 内核之所以提供模块机制，是因为它本身是一个单内核（monolithic kernel）。单内核的最大优点是效率高，因为所有的内容都集成在一起，但其缺点是可扩展性和可维护性相对较差，模块机制就是为了弥补这一缺陷。借助内核模块，可以轻松地扩展基础内核的功能，而无需重新构建内核。</p>
+
+<p>内核模块的扩展名为 <code class="highlighter-rouge">.ko</code>，通常位于 <code class="highlighter-rouge">/lib/modules/$(uname -r)/kernel/</code> 目录。</p>
+
+<p>内核模块是要运行在内核态的代码，所以编写内核模块需要包含的头文件都是内核中的头文件，使用的函数都是内核的函数。</p>
+
+<h4 id="内部模块">内部模块</h4>
+
+<p>In-tree build</p>
+
+<p>内部模块是与内核其它部分一起构建的。</p>
+
+<blockquote>
+  <p>内核的源代码其结构也是树形的，习惯性地称为 source tree，因此随内核一同发布的内核模块可以称为内部模块，即 <code class="highlighter-rouge">in-tree</code> module。</p>
+</blockquote>
+
+<h4 id="外部模块">外部模块</h4>
+
+<p>Out-of-tree build</p>
+
+<p>外部模块是在 <strong>独立的软件包</strong> 中构建的，并且是针对某个 <strong>特定的内核版本</strong> 构建的。</p>
+
+<h4 id="动态内核模块">动态内核模块</h4>
+
+<p>Dynamic Kernel Module Support，DKMS，动态内核模块支持</p>
+
+<p class="notice--info">DKMS 是一个 <strong>程序框架</strong>，可以编译内核代码树之外的模块。升级内核时，通过 DKMS 管理的内核模块可以被 <strong>自动重新构建</strong> 以适应新的内核版本。</p>
+
+<p>无需等待软件包维护者发布最新版本的内核模块，内核更新时会自动生成和安装新的软件包。</p>
+
+<p>动态内核模块支持框架基本上是内核源代码树的副本，存在于内核源代码之外，保存着特定模块的源代码以及二进制文件。可通过调用 DKMS 来构建、安装、卸载模块。DKMS 要求模块的源代码必须保存在系统中。DKMS 的二进制文件负责构建、安装模块。</p>
+
+<p>DKMS 可以用在两个方向：</p>
+
+<ul>
+  <li><strong>内核版本升级</strong> 时，自动编译所有的模块。</li>
+  <li><strong>旧系统装新模块</strong>，无需手动编译或预编译软件包。使得新显卡可以用在旧系统上。</li>
+</ul>
+
+<p>DKMS 由一个用户层的 DKM 服务器来管理，并非由内核来管理。当核心需要某模块时，由 DKM 服务器负责把相应的 DKM 加载；当内核的内存资源紧缺时，由 DKM 服务器负责卸载没有被使用的 DKM。</p>
+
+<h3 id="1932-内核模块的构建">19.3.2 内核模块的构建</h3>
+
+<h4 id="构建相关软件包">构建相关软件包</h4>
+
+<p>构建内核模块时，根据不同的硬件平台和不同的功能需求，可能需要安装不同的内核软件包：</p>
+
+<p><code class="highlighter-rouge">kernel</code>  ：包含支持多处理器系统的内核，对于 x86 系统，只能使用前 4GB 内存</p>
+
+<p><code class="highlighter-rouge">kernel-devel</code>  ：包含内核头文件及 makefile，便于构建针对 <code class="highlighter-rouge">kernel</code> 包的模块</p>
+
+<p><code class="highlighter-rouge">kernel-PAE</code>  ：仅适用于 i686 系统，除支持 kernel 包的选项之外，还支持</p>
+
+<p>超过 4GB 内存（x86 最高到 64GB）；</p>
+
+<p>支持 PAE，Physical Address Extension，物理地址扩展，或在支持 PAE 的 x86 处理器上使用三级页面；</p>
+
+<p>内核可使用 4GB 虚拟地址空间，在 x86 系统中，每用户进程可使用接近 4GB 地址空间。</p>
+
+<p><code class="highlighter-rouge">kernel-PAE-devel</code>  ：包含内核头文件及 makefile，用于构建针对 <code class="highlighter-rouge">kernel-PAE</code> 包的模块</p>
+
+<p><code class="highlighter-rouge">kernel-xen</code>  ：包含运行虚拟机所需要的内核</p>
+
+<p><code class="highlighter-rouge">kernel-xen-devel</code>  ：包含内核头文件及 makefile，用于构建针对 <code class="highlighter-rouge">kernel-xen</code> 包的模块</p>
+
+<h4 id="kbuild">KBUILD</h4>
+
+<p><code class="highlighter-rouge">kbuild</code> 是早期专门用于构建外部模块的工具，它需要提前编译好的完整的内核。实际上 <code class="highlighter-rouge">kbuild</code> 不是一个程序，它是由一系列内置于内核的脚本组成的，其构建的过程也是靠 make 来完成的。</p>
+
+<p>构建模块：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make -C &lt;path to kernel src&gt; M=$PWD
+</code></pre></div></div>
+
+<p>安装模块：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make -C &lt;path to kernel src&gt; M=$PWD modules_install
+</code></pre></div></div>
+
+<h4 id="dkms">DKMS</h4>
+
+<p><code class="highlighter-rouge">dkms</code> 命令用于动态内核模块的管理。它会把模块编译、安装到内核代码树中，卸载模块时，可以恢复之前版本的模块。</p>
+
+<p>默认情况下，会把模块安装到当前的内核代码树，可以通过选项来指定特定的代码树来安装。</p>
+
+<p>要想使用 DKMS 来管理模块，首先要把模块的代码放到 <code class="highlighter-rouge">/usr/src/</code> 目录中，同时还需要一个配套的 <code class="highlighter-rouge">.conf</code> 配置文件。</p>
+
+<p>DKMS 还支持基于条件的构建、打补丁等。</p>
+
+<h5 id="语法">语法</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dkms &lt;command&gt; &lt;module&gt;/&lt;version&gt;
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">dkms autoinstall</code>  重新构建模块</p>
+
+<p><code class="highlighter-rouge">dkms uninstall</code>  将模块从内核删除</p>
+
+<p><code class="highlighter-rouge">dkms remove</code>  将 <moudle>/<moudule-version> 从 DKMS 目录树删除</moudule-version></moudle></p>
+
+<p><code class="highlighter-rouge">dkms status</code>  查看 DKMS 的当前状态、版本，包括源码树内的模块</p>
+
+<p><code class="highlighter-rouge">dkms mkrpm</code>  在 <code class="highlighter-rouge">/var/lib/dkms/&lt;module&gt;/&lt;module-version&gt;/rpm/</code> 目录中生成一个 RPM 文件</p>
+
+<h3 id="1933-模块管理工具">19.3.3 模块管理工具</h3>
+
+<h4 id="查看模块信息">查看模块信息</h4>
+
+<p>模块名通常使用 <code class="highlighter-rouge">_</code> 或 <code class="highlighter-rouge">-</code> 连接，但是这些符号在 modprobe 命令和 <code class="highlighter-rouge">/etc/modprobe.d/</code> 配置文件中都是可以相互替换的。</p>
+
+<h5 id="查看内核中已加载的模块">查看内核中已加载的模块：</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ lsmod
+</code></pre></div></div>
+
+<h5 id="查询内核模块的信息">查询内核模块的信息：</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ modinfo module_name
+</code></pre></div></div>
+
+<h5 id="查看所有模块的配置信息">查看所有模块的配置信息：</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ modprobe -c | less
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">modprobe</code> 用于向内核中增加、删除模块。它很智能，会基于模块依赖关系进行加载、卸载的操作。</p>
+
+<h5 id="查看某个模块的配置信息">查看某个模块的配置信息：</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ modprobe -c | grep module_name
+</code></pre></div></div>
+
+<h5 id="查看已加载模块所用的选项">查看已加载模块所用的选项：</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ systool -v -m module_name
+</code></pre></div></div>
+
+<h5 id="查看模块的依赖关系">查看模块的依赖关系：</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ modprobe --show-depends module_name
+</code></pre></div></div>
+
+<h4 id="自动加载模块">自动加载模块</h4>
+
+<p>目前，所有必要模块的加载均由 udev 自动完成。所以，如果不需要使用任何额外的模块，就没有必要在任何配置文件中添加启动时加载的模块。但是，有些情况下可能需要在系统启动时加载某个额外的模块，或者将某个模块列入黑名单以便使系统正常运行。</p>
+
+<p>systemd 读取 <code class="highlighter-rouge">/etc/modules-load.d/</code> 中的配置文件，加载额外的内核模块。配置文件名称通常为 <code class="highlighter-rouge">/etc/modules-load.d/&lt;program&gt;.conf</code>。格式很简单，一行一个要读取的模块名，而空行以及第一个非空格字符为 <code class="highlighter-rouge">#</code> 或 <code class="highlighter-rouge">;</code> 的行会被忽略，如：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Load virtio-net.ko at boot
+virtio-net
+</code></pre></div></div>
+
+<h4 id="手动加载卸载模块">手动加载卸载模块</h4>
+
+<p>控制内核模块载入/移除的命令是 kmod 软件包提供的, 要手动加载模块的话，执行:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># modprobe _module_name_
+</code></pre></div></div>
+
+<p>按文件名加载模块:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># insmod filename [args]
+</code></pre></div></div>
+
+<p class="notice--info">如果升级了内核但是没有重启，路径 <code class="highlighter-rouge">/usr/lib/modules/$(uname -r)/</code> 已经不存在。<code class="highlighter-rouge">modprobe</code> 会返回错误 1，没有额外的错误信息。如果出现 <code class="highlighter-rouge">modprobe</code> 加载失败，请检查模块路径以确认是否是这个问题导致。</p>
+
+<p>如果要移除一个模块：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># modprobe -r _module_name_
+</code></pre></div></div>
+
+<p>或者:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># rmmod _module_name_
+</code></pre></div></div>
+
+<h4 id="配置模块参数">配置模块参数</h4>
+
+<h5 id="手动加载时设置">手动加载时设置</h5>
+
+<p>传递参数的基本方式是使用 modprobe 选项，格式是 <code class="highlighter-rouge">key=value</code>：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># modprobe module_name parameter_name=parameter_value
+</code></pre></div></div>
+
+<h5 id="使用-etcmodprobed中的文件">使用 <code class="highlighter-rouge">/etc/modprobe.d/</code>中的文件</h5>
+
+<p>要通过配置文件传递参数，在 <code class="highlighter-rouge">/etc/modprobe.d/</code> 中放入任意名称 <code class="highlighter-rouge">.conf</code> 文件，加入:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>options modname parametername=parametercontents
+</code></pre></div></div>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># On thinkpads, this lets the thinkfan daemon control fan speed
+options thinkpad_acpi fan_control=1
+</code></pre></div></div>
+
+<h5 id="使用内核命令行">使用内核命令行</h5>
+
+<p>如果模块直接编译进内核，也可以通过启动管理器 GRUB 的内核行加入参数：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>modname.parametername=parametercontents
+</code></pre></div></div>
+
+<p>例如:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>thinkpad_acpi.fan_control=1
+</code></pre></div></div>
+
+<h4 id="别名">别名</h4>
+
+<p>有些模块具有别名，以方便其它程序自动加载模块：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Lets you use 'mymod' in MODULES, instead of 'really_long_module_name'
+alias mymod really_long_module_name
+</code></pre></div></div>
+
+<p><strong>禁用</strong> 这些别名可以阻止自动加载，但是仍然可以手动加载：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Prevent autoload of bluetooth
+alias net-pf-31 off
+
+# Prevent autoload of ipv6
+alias net-pf-10 off
+</code></pre></div></div>
+
+<h4 id="禁用内核模块">禁用内核模块</h4>
+
+<p>对内核模块来说，黑名单是指禁止某个模块加载的机制。当对应的硬件不存在或者加载某个模块会导致问题时很有用。</p>
+
+<h5 id="使用-etcmodprobed-中的文件">使用 <code class="highlighter-rouge">/etc/modprobe.d/</code> 中的文件</h5>
+
+<p>在 <code class="highlighter-rouge">/etc/modprobe.d/</code> 中创建 <code class="highlighter-rouge">.conf</code> 文件，使用 <code class="highlighter-rouge">blacklist</code> 关键字屏蔽不需要的模块，例如如果不想加载 <code class="highlighter-rouge">pcspkr</code> 模块：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Do not load the pcspkr module on boot
+blacklist pcspkr
+</code></pre></div></div>
+
+<p class="notice--info"><code class="highlighter-rouge">blacklist</code> 命令将屏蔽一个模块，所以 <strong>不会自动加载</strong>，但是如果其它非屏蔽模块需要这个模块，系统依然会加载它。</p>
+
+<p>要避免这个行为，可以让 modprobe 使用自定义的 <code class="highlighter-rouge">install</code> 命令，直接返回导入失败：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vi /etc/modprobe.d/blacklist.conf
+...
+install MODULE /bin/false
+...
+</code></pre></div></div>
+
+<p>这样就可以屏蔽模块及所有依赖它的模块。</p>
+
+<h5 id="使用内核命令行-1">使用内核命令行</h5>
+
+<p>同样可以通过内核命令行禁用模块：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>modprobe.blacklist=modname1,modname2,modname3
+</code></pre></div></div>
+
+<p>当某个模块导致系统无法启动时，可以使用此方法禁用模块。</p>
+
+<h4 id="模块未加载问题处理">模块未加载问题处理</h4>
+
+<p>如果出现模块在启动时未加载，而且启动日志中 <code class="highlighter-rouge">journalctl -b</code> 显示模块被屏蔽，但是 <code class="highlighter-rouge">/etc/modprobe.d/</code> 中未找到屏蔽设置，请检查 <code class="highlighter-rouge">/usr/lib/modprobe.d/</code> 目录。</p>
+
+<p><code class="highlighter-rouge">vermagic</code> 字符串与内核不一致的模块不会被加载，如果确认模块与当前内核兼容，可以用  <code class="highlighter-rouge">modprobe --force-vermagic</code> 参数加载，跳过检查。</p>
+
+<p class="notice--warning">忽略模块检查，可能因为不兼容导致系统崩溃或不可预知行为，请谨慎使用 <code class="highlighter-rouge">--force-vermagic</code>。</p>
+
+<h3 id="1934-编译内核模块">19.3.4 编译内核模块</h3>
+
+<h4 id="编译内部模块">编译内部模块</h4>
+
+<p>编译内部模块有明显的劣势，因为它依赖于编译时的内核版本，一旦要在新版本的内核中使用，或硬件架构有所变化，就必须重新编译。</p>
+
+<p>假设在为 cifs 内核模块应用了一次更新补丁之后，现在要重新构建该模块。</p>
+
+<p><code class="highlighter-rouge">~/rpmbuild/BUILD/kernel-2.6.18/linux-2.6.18-i686/fs/cifs/</code></p>
+
+<h5 id="应用更新补丁文件">应用更新补丁文件</h5>
+
+<h5 id="配置内核-1">配置内核</h5>
+
+<p>切换到内核源代码根目录，如果是首次编译该内核，进行必要的配置，务必确保 cifs 做为模块构建。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd ~/rmpbuild/BUILD/kernel-2.6.18/linux-2.6.18-i686
+make oldconfig
+make menuconfig
+make prepare
+</code></pre></div></div>
+
+<h5 id="更新内核源文件">更新内核源文件</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make modules_prepare
+</code></pre></div></div>
+
+<p>实际上，编译单独的内核模块之前，如果能先把内核完整地编译一遍是最好的，因为构建过程会生成构建模块所需要的配置信息及头文件。当然不编译内核也是可以的，可以使用 <code class="highlighter-rouge">make modules_prepare</code> 命令来 <strong>确保内核源代码包含构建模块所需要的信息</strong>。这个目标的存在基本上就是为了这个目的。</p>
+
+<p>但 <code class="highlighter-rouge">make modules_prepare</code> 不会构建 <code class="highlighter-rouge">Module.symvers</code>，即使设置了 <code class="highlighter-rouge">CONFIG_MODVERSIONS</code>。因此，要想让模块的版本正常工作，还是需要完整地编译内核的。</p>
+
+<h5 id="编译模块">编译模块</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make M=fs/cifs
+</code></pre></div></div>
+
+<p>通过把模块的相对路径做为参数，来编译该模块。</p>
+
+<p>模块所在的目录可以放置于任何地方。例如：如果将其放置在 <code class="highlighter-rouge">~/mycifs/</code> 目录，则上面的命令可以修改为：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make M=~/mycifs
+</code></pre></div></div>
+
+<h5 id="剥离冗余符号">剥离冗余符号</h5>
+
+<p>如果编译该模块不是为了调试，此时需要剥离掉无用的符号：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>strip --strip-debug fs/cifs/cifs.ko
+</code></pre></div></div>
+
+<h5 id="复制到系统模块目录">复制到系统模块目录</h5>
+
+<p>用超级用户权限把构建好的模块复制到模块目录：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo cp fs/cifs/cifs.ko /lib/modules/`uname -r`/extra
+</code></pre></div></div>
+
+<h5 id="更新模块依赖关系">更新模块依赖关系</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo depmod -a
+</code></pre></div></div>
+
+<h5 id="更新内核源代码版本号">更新内核源代码版本号</h5>
+
+<p>修改内核源代码根目录中的 <code class="highlighter-rouge">Makefile</code>，更新其中的 <code class="highlighter-rouge">EXTRAVERSION</code> 变量的值，额外版本号可以是以下形式的一种：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>EXTRAVERSION = -419.el5
+EXTRAVERSION = -419.el5PAE
+EXTRAVERSION = -419.el5xen
+EXTRAVERSION = -419.el5.centos.plus
+EXTRAVERSION = -419.el5.centos.plusPAE
+EXTRAVERSION = -419.el5.centos.plusxen
+</code></pre></div></div>
+
+<p>在编译完标准内核的模块之后，更新 <code class="highlighter-rouge">EXTRAVERSION</code> 变量，然后运行 <code class="highlighter-rouge">make modules_prepare</code>，最后运行 <code class="highlighter-rouge">make M=fs/cifs</code> 来构建带新版本号的模块。</p>
+
+<h4 id="构建动态模块">构建动态模块</h4>
+
+<p>使用 DKMS 来构建内核模块。</p>
+
+<p>使用与上面相同的例子来构建、安装 cifs 模块。整个过程都要用 <strong>root</strong> 来操作。</p>
+
+<p>目前模块源代码在这里： <code class="highlighter-rouge">~/rpmbuild/BUILD/kernel-2.6.18/linux-2.6.18-i686/fs/cifs/</code></p>
+
+<h5 id="安装开发工具包">安装开发工具包</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum update kernel*
+reboot
+......
+yum install kernel-devel
+</code></pre></div></div>
+
+<h5 id="安装-dkms-软件包">安装 DKMS 软件包</h5>
+
+<p>从 EPEL 软件库安装 dkms 软件包</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget -P /etc/yum.repos.d/ http://mirrors.aliyun.com/repo/epel-7.repo 
+yum clean all
+yum install dkms
+</code></pre></div></div>
+
+<h5 id="创建源代码目录">创建源代码目录</h5>
+
+<p>在 <code class="highlighter-rouge">/usr/src/</code> 目录中创建模块目录，命名格式为 <code class="highlighter-rouge">&lt;module&gt;-&lt;module-version&gt;</code>：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir /usr/src/cifs-1.45fixed/
+</code></pre></div></div>
+
+<h5 id="复制源代码">复制源代码</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd ~/rpmbuild/BUILD/kernel-2.6.18/linux-2.6.18-i686/fs/cifs
+cp -a * /usr/src/cifs-1.45fixed/
+</code></pre></div></div>
+
+<h5 id="创建模块配置文件">创建模块配置文件</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd /usr/src/cifs-1.45fixed
+vi dkms.conf
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">dkms.conf</code> 需要包含以下内容：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PACKAGE_NAME="cifs"
+PACKAGE_VERSION="1.45fixed"
+BUILT_MODULE_NAME[0]="cifs"
+DEST_MODULE_LOCATION[0]="/kernel/fs/cifs/"
+AUTOINSTALL="yes"
+</code></pre></div></div>
+
+<p class="notice--info"><code class="highlighter-rouge">DEST_MODULE_LOCATION[0]</code> 参数仅在 <strong>替换</strong> 了某个 <strong>内部模块</strong> 时才使用。所以其值在安装模块时会被忽略，因为模块始终会被安装到 <code class="highlighter-rouge">/lib/modules/&lt;kernel-version&gt;/extra/</code> 目录中。用这个参数的目的是，卸载该外部模块时，之前被替换的 <strong>旧的内部模块</strong> 应该被 <strong>恢复</strong> 到该位置。</p>
+
+<h5 id="加入-dkms-目录树">加入 DKMS 目录树</h5>
+
+<p>把 <module>/<module-version> 加入 DKMS 目录树。</module-version></module></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dkms add -m cifs/1.45fixed
+</code></pre></div></div>
+
+<p>DKMS 会创建符号链接 <code class="highlighter-rouge">/var/lib/dkms/cifs/1.45fixed/source/</code>，指向 <code class="highlighter-rouge">/usr/src/cifs-1.45fixed</code>。</p>
+
+<h5 id="在-dkms-的控制下构建模块">在 DKMS 的控制下构建模块</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dkms build -m cifs/1.45fixed
+</code></pre></div></div>
+
+<h5 id="在-dkms-的控制下安装模块">在 DKMS 的控制下安装模块</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dkms install -m cifs/1.45fixed
+</code></pre></div></div>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/kernel" class="page__taxonomy-item" rel="tag">kernel</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/linux" class="page__taxonomy-item" rel="tag">linux</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/编译" class="page__taxonomy-item" rel="tag">编译</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/内核" class="page__taxonomy-item" rel="tag">内核</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://linotes.netlify.com/categories/#linux" class="page__taxonomy-item" rel="tag">linux</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2015-01-19T00:00:00+08:00">January 19, 2015</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="https://linotes.netlify.com/linux/rpm/" class="pagination--pager" title="上一页
+">Linux 基础 - 18. 软件包的管理</a>
+    
+    
+      <a href="https://linotes.netlify.com/linux/backup/" class="pagination--pager" title="下一页
+">Linux 基础  - 20. 备份</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">相关文章</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/kernel/filedescriptor/" rel="permalink">文件描述符简介
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash03/" rel="permalink">Bash 入门 03
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">循环，变量，函数，捕捉信号
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash02/" rel="permalink">Bash 入门 02
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">正则表达式，SED，AWK，条件结构，交互式脚本
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash01/" rel="permalink">Bash 入门 01
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">Bash 与 Bash 脚本，脚本的编写与调试，Bash 环境
+</p>
+-->
+
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+    
+    
+    
+    
+    <li><a href="https://linotes.netlify.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="https://linotes.netlify.com/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

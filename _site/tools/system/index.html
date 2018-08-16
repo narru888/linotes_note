@@ -1,0 +1,1417 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Linux 的使用 - 系统维护 - LINOTES</title>
+<meta name="description" content="系统软硬件信息，操作系统信息，系统负载，系统时间，语系，系统操作">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Linux 的使用 - 系统维护">
+<meta property="og:url" content="https://linotes.netlify.com/tools/system/">
+
+
+  <meta property="og:description" content="系统软硬件信息，操作系统信息，系统负载，系统时间，语系，系统操作">
+
+
+
+  <meta property="og:image" content="https://linotes.netlify.com/assets/images/header/linux.jpg">
+
+
+
+
+
+  <meta property="article:published_time" content="2015-02-01T00:00:00+08:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://linotes.netlify.com/tools/system/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="https://linotes.netlify.com/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="https://linotes.netlify.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="https://linotes.netlify.com/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/app/rsync/">Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/server/vsftpd/">Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/kernel/filedescriptor/">文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/tools/tools.datastream/">数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay" style=" background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://linotes.netlify.com/assets/images/header/linux.jpg');">
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Linux 的使用 - 系统维护
+
+        
+      </h1>
+      
+        <p class="page__lead">系统软硬件信息，操作系统信息，系统负载，系统时间，语系，系统操作
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="https://linotes.netlify.com/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:imhawkz@gmail.com">
+            <meta itemprop="email" content="imhawkz@gmail.com">
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox">
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Linux 的使用 - 系统维护">
+    <meta itemprop="description" content="系统软硬件信息，操作系统信息，系统负载，系统时间，语系，系统操作">
+    <meta itemprop="datePublished" content="February 01, 2015">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title">
+<i class="fas fa-laptop"></i> Linux 的使用 - 系统维护</h4></header>
+              <ul class="toc__menu">
+  <li>
+<a href="#%E6%9F%A5%E7%9C%8B%E7%A1%AC%E4%BB%B6%E4%BF%A1%E6%81%AF">查看硬件信息</a>
+    <ul>
+      <li><a href="#%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7">常用工具</a></li>
+      <li><a href="#%E6%89%80%E6%9C%89%E7%A1%AC%E4%BB%B6">所有硬件</a></li>
+      <li><a href="#bios">BIOS</a></li>
+      <li><a href="#%E5%86%85%E5%AD%98">内存</a></li>
+      <li><a href="#cpu">CPU</a></li>
+      <li><a href="#%E6%80%BB%E7%BA%BF">总线</a></li>
+    </ul>
+  </li>
+  <li>
+<a href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%BF%A1%E6%81%AF">操作系统信息</a>
+    <ul>
+      <li><a href="#%E5%86%85%E6%A0%B8">内核</a></li>
+      <li><a href="#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F">环境变量</a></li>
+      <li><a href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4">运行时间</a></li>
+      <li><a href="#%E7%B3%BB%E7%BB%9F%E8%B4%9F%E8%BD%BD">系统负载</a></li>
+      <li><a href="#%E5%86%85%E5%AD%98-1">内存</a></li>
+      <li><a href="#%E7%B3%BB%E7%BB%9F-io">系统 I/O</a></li>
+    </ul>
+  </li>
+  <li>
+<a href="#%E7%B3%BB%E7%BB%9F%E6%93%8D%E4%BD%9C">系统操作</a>
+    <ul>
+      <li><a href="#%E5%85%B3%E6%9C%BA">关机</a></li>
+      <li><a href="#%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5">数据同步</a></li>
+      <li><a href="#%E7%B3%BB%E7%BB%9F%E6%97%B6%E9%97%B4">系统时间</a></li>
+      <li><a href="#%E8%AF%AD%E7%B3%BB">语系</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="查看硬件信息">查看硬件信息</h2>
+
+<h3 id="常用工具">常用工具</h3>
+
+<h4 id="dmidecode"><code class="highlighter-rouge">dmidecode</code></h4>
+
+<blockquote>
+  <p>SMBIOS，System Management BIOS，是主板或系统制造者以标准格式显示产品管理信息所需遵循的统一规范。
+DMI，Desktop Management Interface 是帮助收集电脑系统信息的管理系统，DMI 信息的收集必须在严格遵照 SMBIOS 规范的前提下进行。
+SMBIOS 和 DMI 是由行业指导机构 Desktop Management Task Force （DMTF）起草的开放性的技术标准；不过 DMTF 宣布 DMI 的生命期在 2005 年结束了。</p>
+</blockquote>
+
+<p><code class="highlighter-rouge">dmidecode</code> 是系统内置的程序，可以解析计算机的 <strong>DMI 表</strong> 的内容，输出为易读的格式。该表包含了对 <strong>系统各硬件</strong> 的描述，以及其它有用的信息，如序列号、BIOS 版本号等。有了这张表，就无需打开机箱查看真正的硬件了。虽然带来的便利，但也带来了信息不可靠的风险。</p>
+
+<p>DMI 表不仅描述当前系统由当些硬件组成，还会报告它有哪些升级的空间，如最快支持哪些 CPU，支持多少最大内存等。</p>
+
+<p>运行 <code class="highlighter-rouge">dmidecode</code> 命令时，它会去寻找 DMI 表。首先会尝试从 sysfs 读取，如果访问失败，再尝试直接从内存读取。当它成功找到有效的 DMI 表时，它就会将其内容以一定的格式显示出来。</p>
+
+<h5 id="语法">语法</h5>
+
+<p><code class="highlighter-rouge">dmidecode -t 类别</code></p>
+
+<p>常用的类别：</p>
+
+<p><code class="highlighter-rouge">1</code> ：详细的系统数据，含主板的型号与硬件的基础数据等</p>
+
+<p><code class="highlighter-rouge">4</code> ：CPU 的相关数据，包括倍频、外频、内核数、内核绪数等</p>
+
+<p><code class="highlighter-rouge">9</code> ：系统的相关插槽格式，包括 PCI, PCI-E 等等的插槽规格说明</p>
+
+<p><code class="highlighter-rouge">17</code>：每一个内存插槽的规格，若内有内存，则列出该内存的容量与型号</p>
+
+<h4 id="lspci"><code class="highlighter-rouge">lspci</code></h4>
+
+<p>查看 PCI 总线上连接的设备信息。</p>
+
+<p><code class="highlighter-rouge">lspci [-vvn]</code></p>
+
+<p><code class="highlighter-rouge">-v</code>  ：显示更多信息；</p>
+
+<p><code class="highlighter-rouge">-vv</code> ：比 -v 更详细信息，便于查看某一设备详细信息</p>
+
+<p><code class="highlighter-rouge">-n</code>  ：只显示设备的 ID，而不显示厂商名称</p>
+
+<p><code class="highlighter-rouge">-s</code> ：只查看某一设备，后面接 <code class="highlighter-rouge">domain:bus:device.function</code> 格式的 ID</p>
+
+<p>可以先不加参数运行 <code class="highlighter-rouge">lspci</code>，查看所有设备，以获取其 ID，以便于进一步用 ID 查看更详细信息。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ lspci -s 02:01.0 -vv  
+02:01.0 Ethernet controller: Intel Corporation 82545EM Gigabit Ethernet Controller (Copper) (rev 01)
+        Subsystem: VMware PRO/1000 MT Single Port Adapter
+        Physical Slot: 33
+        Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV+ VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
+        Status: Cap+ 66MHz+ UDF- FastB2B- ParErr- DEVSEL=medium &gt;TAbort- &lt;TAbort- &lt;MAbort- &gt;SERR- &lt;PERR- INTx-
+        Latency: 0 (63750ns min), Cache Line Size: 64 bytes
+        Interrupt: pin A routed to IRQ 19
+        Region 0: Memory at fd5c0000 (64-bit, non-prefetchable) [size=128K]
+        Region 2: Memory at fdff0000 (64-bit, non-prefetchable) [size=64K]
+        Region 4: I/O ports at 2000 [size=64]
+        [virtual] Expansion ROM at fd500000 [disabled] [size=64K]
+        Capabilities: &lt;access denied&gt;
+        Kernel driver in use: e1000
+        Kernel modules: e1000
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">-s</code> 后面接的 <code class="highlighter-rouge">domain:bus:device.function</code> 表示每个设备的总线、插槽和功能，其具体的对照表包含在 <code class="highlighter-rouge">/usr/share/hwdata/pci.ids</code> 文件中。该文件内容为 PCI 的标准 ID 和各厂商名称的对应表。用 <code class="highlighter-rouge">lspci</code> 命令查看信息时，其实所有的数据都来自于 <code class="highlighter-rouge">/proc/bus/pci/</code> 目录。可以用以下方法来在线更新该数据库：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# update-pciids
+</code></pre></div></div>
+
+<h3 id="所有硬件">所有硬件</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ dmidecode
+Handle 0x0002, DMI type 2, 8 bytes. Base Board Information
+        Manufacturer: Intel
+        Product Name: C440GX+
+        Version: 727281-001
+        Serial Number: INCY92700942
+</code></pre></div></div>
+
+<h3 id="bios">BIOS</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ dmidecode -t bios
+  ....
+BIOS Information
+    Vendor: American Megatrends Inc.
+    Version: 4.6.5
+    Release Date: 04/25/2012
+    .......
+    BIOS Revision: 4.6
+  ....
+</code></pre></div></div>
+
+<h3 id="内存">内存</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ dmidecode -t memory
+# dmidecode 2.11
+SMBIOS 2.7 present.
+
+Handle 0x0008, DMI type 16, 23 bytes
+Physical Memory Array
+    Location: System Board Or Motherboard
+....
+    Maximum Capacity: 32 GB  # 最大支持 32 GB
+....
+
+Handle 0x000A, DMI type 17, 34 bytes
+....
+Memory Device  # 单条内存
+    Array Handle: 0x0008
+    Error Information Handle: Not Provided
+    Total Width: 64 bits
+    Data Width: 64 bits
+    Size: 4096 MB  # 大小为 4 G
+.....
+</code></pre></div></div>
+
+<h3 id="cpu">CPU</h3>
+
+<h4 id="查看-cpu-架构信息">查看 CPU 架构信息</h4>
+
+<p>该命令会从 sysfs、<code class="highlighter-rouge">/proc/cpuinfo</code> 及相关架构函数库中读取 CPU 架构的信息。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~$ lscpu
+Architecture:          i686            # cpu 架构
+CPU op-mode(s):        32-bit, 64-bit
+Byte Order:            Little Endian   # 小尾序
+CPU(s):                4               # 总共有 4 核
+On-line CPU(s) list:   0-3
+Thread(s) per core:    1               # 每个 cpu 核，只能支持一个线程，即不支持超线程
+Core(s) per socket:    4               # 每个 cpu，有4个核
+Socket(s):             1               # 总共有1一个cpu
+Vendor ID:             GenuineIntel    # cpu 产商 intel
+CPU family:            6
+Model:                 42
+Stepping:              7
+CPU MHz:               1600.000
+BogoMIPS:              5986.12
+Virtualization:        VT-x            # 支持 cpu 虚拟化技术
+L1d cache:             32K
+L1i cache:             32K
+L2 cache:              256K
+L3 cache:              6144K
+</code></pre></div></div>
+
+<h4 id="查看--cpu-的数量家族型号频率缓存大小等详细信息">查看  CPU 的数量、家族、型号、频率、缓存大小等详细信息</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cat /proc/cpuinfo
+</code></pre></div></div>
+
+<h3 id="总线">总线</h3>
+
+<h4 id="pci-设备">PCI 设备</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ lspci
+$ lspci -s 02:01.0 -vv  
+</code></pre></div></div>
+
+<p>先查看设备总表，再根据其 ID 查看详细信息。</p>
+
+<h4 id="usb-设备">USB 设备</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lsusb -t
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">-t</code> ：用树状目录显示各 USB 端口的关系</p>
+
+<h2 id="操作系统信息">操作系统信息</h2>
+
+<h3 id="内核">内核</h3>
+
+<h4 id="查看当前内核操作系统架构等">查看当前内核、操作系统、架构等</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>uname -a
+</code></pre></div></div>
+
+<h4 id="查看内核版本">查看内核版本</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>uname -r
+</code></pre></div></div>
+
+<h4 id="查看操作系统的位版本">查看操作系统的位版本</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>uname -m
+</code></pre></div></div>
+
+<h4 id="查看主机名">查看主机名</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hostname
+</code></pre></div></div>
+
+<h3 id="环境变量">环境变量</h3>
+
+<h4 id="查看所有环境变量">查看所有环境变量</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ env
+</code></pre></div></div>
+
+<h3 id="运行时间">运行时间</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ uptime
+ 10:24:51 up  3:25,  2 users,  load average: 0.00, 0.01, 0.04
+</code></pre></div></div>
+
+<p>主要用于显示系统已经运行多长时间。</p>
+
+<p>显示的附加内容：</p>
+
+<ul>
+  <li>当前 <strong>系统时间</strong>
+</li>
+  <li>系统 <strong>运行时长</strong>
+</li>
+  <li>当前 <strong>登陆人数</strong>
+</li>
+  <li>1 分钟内、5 分钟内、10 分钟内的 <strong>系统平均负载</strong>，</li>
+</ul>
+
+<h3 id="系统负载">系统负载</h3>
+
+<p>系统中会有一部分进程处于运行状态或不间断状态，系统平均负载（System Load Averages）用来描述这一类进程的平均数量。</p>
+
+<ul>
+  <li>处于运行状态的进程要么正要使用 CPU，要么正在等待使用 CPU</li>
+  <li>处于不间断状态的进程正在等待特定的 I/O 访问，如等待磁盘操作</li>
+</ul>
+
+<h4 id="top"><code class="highlighter-rouge">top</code></h4>
+
+<p>实时显示进程状态及 CPU 占用率</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>top - 10:23:49 up  3:24,  2 users,  load average: 0.00, 0.01, 0.04
+Tasks: 174 total,   1 running, 173 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+KiB Mem :   999964 total,    62164 free,   661560 used,   276240 buff/cache
+KiB Swap:  1048572 total,  1046476 free,     2096 used.   119716 avail Mem
+
+   PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND                         
+  2473 mysql     20   0 1888520 379700  10168 S   0.3 38.0   0:31.62 mysqld                          
+  5426 liloli    20   0  157712   2292   1556 R   0.3  0.2   0:00.09 top                             
+     1 root      20   0  193628   6396   3632 S   0.0  0.6   0:02.65 systemd   
+</code></pre></div></div>
+
+<h4 id="cat-procloadavg"><code class="highlighter-rouge">cat /proc/loadavg</code></h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]$ cat /proc/loadavg
+0.00 0.01 0.05 1/268 5181
+</code></pre></div></div>
+
+<h3 id="内存-1">内存</h3>
+
+<h4 id="查看已用可用内存">查看已用、可用内存</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ free -h
+              total        used        free      shared  buff/cache   available
+Mem:           976M        645M         61M        5.1M        269M        117M
+Swap:          1.0G        2.0M        1.0G
+</code></pre></div></div>
+
+<h4 id="查看内存总量">查看内存总量</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ grep MemTotal /proc/meminfo    
+MemTotal:         999964 kB
+</code></pre></div></div>
+
+<h4 id="查看可用内存总量">查看可用内存总量</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ grep MemFree /proc/meminfo
+MemFree:           62580 kB
+</code></pre></div></div>
+
+<h4 id="查看内存使用详细信息">查看内存使用详细信息</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cat /proc/meminfo
+MemTotal:        4020868 kB
+MemFree:          230884 kB
+Buffers:            7600 kB
+Cached:           454772 kB
+SwapCached:          836 kB
+.....
+</code></pre></div></div>
+
+<h3 id="系统-io">系统 I/O</h3>
+
+<h4 id="iostat"><code class="highlighter-rouge">iostat</code></h4>
+
+<p><code class="highlighter-rouge">iostat</code> 命令用于 <strong>监控系统 I/O 设备</strong>，生成的相关报告可用于在不同的物理磁盘间平衡 I/O。</p>
+
+<p>可监视磁盘操作，给出磁盘活动统计；可以列出 CPU 使用情况等。</p>
+
+<p><code class="highlighter-rouge">iostat</code> 属于 <code class="highlighter-rouge">sysstat</code> 软件包一部分，CentOS 默认不安装该软件，使用 <code class="highlighter-rouge">yum install sysstat</code> 来安装。</p>
+
+<h5 id="语法-1">语法</h5>
+
+<p><code class="highlighter-rouge">iostat [-c|-d] [-k|-m] [-t] [间隔秒数] [检测次数]</code></p>
+
+<p><code class="highlighter-rouge">-c</code>  ：仅显示 CPU 的状态</p>
+
+<p><code class="highlighter-rouge">-d</code>  ：仅显示储存设备的状态</p>
+
+<p><code class="highlighter-rouge">-k</code>  ：以 KB 为单位显示，默认以 block 为单位</p>
+
+<p><code class="highlighter-rouge">-m</code>  ：以 MB 为单位显示</p>
+
+<p><code class="highlighter-rouge">-t</code>  ：显示当前日期、时间</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# iostat
+Linux 3.10.0-229.el7.x86_64 （study.centos.vbird）  09/02/2015   _x86_64_    （4 CPU）
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           0.08    0.01    0.02    0.00    0.01   99.88
+Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+vda               0.46         5.42         3.16     973670     568007
+scd0              0.00         0.00         0.00        154          0
+sda               0.01         0.03         0.00       4826          0
+dm-0              0.23         4.59         3.09     825092     555621
+</code></pre></div></div>
+
+<p>显示结果分为上下两部分，上半部为 CPU 信息，下半部为存储设备信息。</p>
+
+<p><code class="highlighter-rouge">tps</code>       ：平均每秒钟的传送次数</p>
+
+<p><code class="highlighter-rouge">kB_read/s</code> ：开机到现在，平均每秒读取的数据量</p>
+
+<p><code class="highlighter-rouge">kB_wrtn/s</code> ：开机到现在平均每秒的写入数据量</p>
+
+<p><code class="highlighter-rouge">kB_read</code>   ：开机到现在，读取的总数据量</p>
+
+<p><code class="highlighter-rouge">kB_wrtn</code>   ：开机到现在，写入的总数据量</p>
+
+<h4 id="查看-cpu-与存储设备状态">查看 CPU 与存储设备状态</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# iostat
+Linux 3.10.0-229.el7.x86_64 （study.centos.vbird）  09/02/2015   _x86_64_    （4 CPU）
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           0.08    0.01    0.02    0.00    0.01   99.88
+Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+vda               0.46         5.42         3.16     973670     568007
+scd0              0.00         0.00         0.00        154          0
+sda               0.01         0.03         0.00       4826          0
+dm-0              0.23         4.59         3.09     825092     555621
+</code></pre></div></div>
+
+<h4 id="监视磁盘-io">监视磁盘 I/O</h4>
+
+<p>可以指定监测频率、次数。</p>
+
+<p>监测存储设备 <code class="highlighter-rouge">vda</code>，每 <strong>2</strong> 秒钟检测一次，共检测 <strong>3</strong> 次：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# iostat -d 2 3 /dev/sda
+Linux 3.10.0-229.el7.x86_64 （study.centos.vbird）  09/02/2015   _x86_64_    （4 CPU）
+
+Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+vda               0.46         5.41         3.16     973682     568148
+
+Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+vda               1.00         0.00         0.50          0          1
+
+Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+vda               0.00         0.00         0.00          0          0
+</code></pre></div></div>
+
+<p>如果指定了检测次数，则第一组数据显示的为 “从开机到现在的数据”。</p>
+
+<p>第二次以后所显示的数据，为两次检测之间的数据。</p>
+
+<h2 id="系统操作">系统操作</h2>
+
+<h3 id="关机">关机</h3>
+
+<h4 id="shutdown"><code class="highlighter-rouge">shutdown</code></h4>
+
+<p><code class="highlighter-rouge">shutdown</code> 的功能：关机或重启、设置关机时间、自定义关机信息、仅发出关机警告信息。</p>
+
+<p><code class="highlighter-rouge">shutdown [-krhc] [时间] [警告信息]</code></p>
+
+<p>选项与参数：</p>
+
+<p><code class="highlighter-rouge">-k</code>  不关机，只发警告信息</p>
+
+<p><code class="highlighter-rouge">-r</code>  关闭系统服务，重启（常用）</p>
+
+<p><code class="highlighter-rouge">-h</code>  关闭系统服务，关机 （常用）</p>
+
+<p><code class="highlighter-rouge">-c</code>  取消已经在进行的 shutdown 命令</p>
+
+<p><code class="highlighter-rouge">+5</code> 指定时间后关机，默认为 1 分钟</p>
+
+<p>shutdown 会以 <strong>安全</strong> 的方式关掉系统，所有已经登陆的用户都会被 <strong>通知</strong> 系统要关机，同时还会 <strong>禁止后来的人</strong> 尝试登陆系统。</p>
+
+<h4 id="正常关机流程">正常关机流程</h4>
+
+<h5 id="看谁在线">看谁在线</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># who
+</code></pre></div></div>
+
+<h5 id="看网络的连接状态">看网络的连接状态</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># netstat -a
+</code></pre></div></div>
+
+<h5 id="看后台运行的程序">看后台运行的程序</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># ps -aux
+</code></pre></div></div>
+
+<h5 id="通知在线用户关机的时间">通知在线用户关机的时间</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># shutdown +5 "system will shutdown in 5 minutes"
+</code></pre></div></div>
+
+<h5 id="使用正确的关机命令">使用正确的关机命令</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># shutdown -h now
+</code></pre></div></div>
+
+<h4 id="关机权限">关机权限</h4>
+
+<p>在 <strong>本地</strong> 从终端 tty1~tty7 登陆系统时，<strong>所有用户</strong> 都有权关机。</p>
+
+<p>使用 <strong>远程</strong> 工具关机只能用 <strong>root</strong> 。</p>
+
+<h4 id="10-分钟后关机并发送警告消息">10 分钟后关机，并发送警告消息</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># shutdown -h 10 'I will shutdown after 10 mins'
+</code></pre></div></div>
+
+<h4 id="立即关机">立即关机</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># shutdown -h now
+</code></pre></div></div>
+
+<h4 id="定时关机">定时关机</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># shutdown -h 20:25
+</code></pre></div></div>
+
+<h4 id="十分钟后关机">十分钟后关机</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># shutdown -h +10
+</code></pre></div></div>
+
+<h4 id="立即重启">立即重启</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># shutdown -r now
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># reboot
+</code></pre></div></div>
+
+<h4 id="30-分钟后重启发送警告消息">30 分钟后重启，发送警告消息</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shutdown -r +30 'The system will reboot'
+</code></pre></div></div>
+
+<h4 id="只发警告信息">只发警告信息</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shutdown -k now 'This system will reboot'
+</code></pre></div></div>
+
+<h4 id="shutdown--halt--poweroff--reboot">shutdown / halt / poweroff / reboot</h4>
+
+<p><code class="highlighter-rouge">halt</code>  ：停止 CPU，不关电源</p>
+
+<p><code class="highlighter-rouge">poweroff</code> 停止 CPU，关电源</p>
+
+<p>在使用 Systemd 的系统中，<code class="highlighter-rouge">shutdown</code>、<code class="highlighter-rouge">halt</code>、<code class="highlighter-rouge">poweroff</code>、<code class="highlighter-rouge">reboot</code> 均是指向 <code class="highlighter-rouge">/bin/systemctl</code> 的符号链接。</p>
+
+<p>与以往 initd 系统不同，关机已经与运行级别无关，而与 target 目标有关，基本上这些命令会 isolate 特定的目标。</p>
+
+<blockquote>
+  <p>isolate ：启动一个目标，停止其它目标。</p>
+</blockquote>
+
+<p><code class="highlighter-rouge">systemctl isolate halt.target</code> 简写为：</p>
+
+<p><code class="highlighter-rouge">shutdown -H now</code></p>
+
+<p><code class="highlighter-rouge">systemctl halt</code></p>
+
+<p><code class="highlighter-rouge">halt</code></p>
+
+<p><code class="highlighter-rouge">systemctl isolate reboot.target</code> 简写为：</p>
+
+<p><code class="highlighter-rouge">shutdown -r now</code></p>
+
+<p><code class="highlighter-rouge">telinit 6</code></p>
+
+<p><code class="highlighter-rouge">systemctl reboot</code></p>
+
+<p><code class="highlighter-rouge">reboot</code></p>
+
+<p><code class="highlighter-rouge">systemctl isolate poweroff.target</code> 简写为：</p>
+
+<p><code class="highlighter-rouge">shutdown -P now</code></p>
+
+<p><code class="highlighter-rouge">telinit 0</code></p>
+
+<p><code class="highlighter-rouge">shutdown now</code></p>
+
+<p><code class="highlighter-rouge">systemctl poweroff</code></p>
+
+<p><code class="highlighter-rouge">poweroff</code></p>
+
+<h3 id="数据同步">数据同步</h3>
+
+<p><code class="highlighter-rouge">sync</code> 命令用于 <strong>冲刷文件系统缓存</strong>。强制把发生更改的块保存到磁盘中，并更新超级块。</p>
+
+<p>shutdown、reboot、halt 等等命令均会在关机前自动运行 sync，以保证数据不会丢失。</p>
+
+<p>普通用户也可以使用 sync，只不过他所更新的数据只是 <strong>自己的那部分</strong>，而 <strong>root</strong> 可以 <strong>更新整个系统中的数据</strong>。</p>
+
+<h3 id="系统时间">系统时间</h3>
+
+<h4 id="时区">时区</h4>
+
+<h5 id="查看当前时区与时间">查看当前时区与时间</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ timedatectl
+      Local time: Sat 2018-07-28 13:25:33 CST
+  Universal time: Sat 2018-07-28 05:25:33 UTC
+        RTC time: Sat 2018-07-28 05:25:31
+       Time zone: Asia/Shanghai (CST, +0800)
+     NTP enabled: no
+NTP synchronized: no
+ RTC in local TZ: no
+      DST active: n/a
+</code></pre></div></div>
+
+<h5 id="查看支持的所有时区">查看支持的所有时区</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ timedatectl list-timezones
+......
+</code></pre></div></div>
+
+<h5 id="查找时区">查找时区</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ timedatectl list-timezones | grep -i shanghai
+Asia/Shanghai
+</code></pre></div></div>
+
+<h5 id="设置时区">设置时区</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# timedatectl set-timezone "Asia/Shanghai"
+</code></pre></div></div>
+
+<h4 id="时间">时间</h4>
+
+<p>Linux 系统上有两个时间，一个是 Linux 系统的时间，另一个是 BIOS 时间，真正的硬件记录的时间。</p>
+
+<h5 id="查看时间">查看时间</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ date
+Sat Jul 28 13:52:10 CST 2018
+</code></pre></div></div>
+
+<h5 id="设置时间">设置时间</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# timedatectl set-time "2015-09-01 12:02"
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># date --set "8/31/98 00:01"
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">--set</code> 后面的格式为 月/日/年 时:分</p>
+
+<h5 id="把时间写入-bios">把时间写入 BIOS</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># hwclock -w
+</code></pre></div></div>
+
+<h4 id="校时">校时</h4>
+
+<h5 id="启用网络校时">启用网络校时</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ timedatectl set-ntp true
+</code></pre></div></div>
+
+<h5 id="手动网络校时">手动网络校时</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# ntpdate 0.asia.pool.ntp.org
+12 Apr 08:48:36 ntpdate[2129]: adjust time server 118.140.184.99 offset -0.286377 sec
+
+~]# hwclock -w
+</code></pre></div></div>
+
+<h4 id="时间的表示-与-格式转换">时间的表示 与 格式转换</h4>
+
+<p>Linux 使用的时间格式为 Unix 时间，即 POSIX 时间，或 epoch 时间。</p>
+
+<p class="notice--success"><strong>epoch 时间</strong> 用于描述一个 <strong>时间点</strong>，表示从 <strong>1970 年 1 月 1 日</strong> 起，至当前时刻共逝去了多少 <strong>秒钟</strong>。</p>
+
+<h5 id="查看当前-epoch-秒数">查看当前 epoch 秒数</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ date +%s
+1532757615
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">+%s</code> 为 1970/01/01 以来的累积总秒数。</p>
+
+<h5 id="计算某日的-epoch-秒数">计算某日的 epoch 秒数</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ echo $(date --date="2015/05/04" +%s)
+</code></pre></div></div>
+
+<h5 id="查看当前-epoch-天数">查看当前 epoch 天数</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ echo $(($(date +%s)/86400+1))
+17741
+</code></pre></div></div>
+
+<h5 id="计算某日的-epoch-天数">计算某日的 epoch 天数</h5>
+
+<p>假设要计算的日期为 2015/05/04</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ echo $(($(date --date="2015/05/04" +%s)/86400+1))
+16559
+</code></pre></div></div>
+
+<p>每天的秒数 = 86400。由于 bash 仅支持整数，因此最终需要加上 1 补齐 1970/01/01 当天。</p>
+
+<h5 id="epoch-时间-转-标准格式">epoch 时间 转 标准格式</h5>
+
+<p><code class="highlighter-rouge">date -d @1190000000</code></p>
+
+<p>Mon Sep 17 11:33:20 CST 2007</p>
+
+<h5 id="标准格式-转-epoch-时间">标准格式 转 epoch 时间</h5>
+
+<p><code class="highlighter-rouge">date +%s -d"Jan 1, 1980 00:00:01"</code></p>
+
+<h3 id="语系">语系</h3>
+
+<p>system locale，系统语系用于控制 <strong>系统服务和用户界面的语言</strong>。</p>
+
+<p>在 bash 环境下，可以随时为语系变量赋予新值，来随时切换语系，这种改动仅对该 bash 有效。</p>
+
+<h4 id="语系配置文件">语系配置文件</h4>
+
+<h5 id="系统语系">系统语系</h5>
+
+<p>系统语系的设置可以通过编辑 <code class="highlighter-rouge">/etc/locale.conf</code> 来实现，或用 <code class="highlighter-rouge">localectl</code> 命令来设置。</p>
+
+<p>它会在初始化引导期间被 <code class="highlighter-rouge">systemd</code> 守护进程读取，其中的设置会被每一个服务或用户继承，除非个别的程序或用户做了修改。</p>
+
+<p><code class="highlighter-rouge">locale.conf</code> 保存了语系的环境变量，一行一个，例如：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>LANG=de_DE.UTF-8
+LC_MESSAGES=C
+</code></pre></div></div>
+
+<p>对 <code class="highlighter-rouge">locale.conf</code> 的修改会在下次登录时生效，要想立即生效，可以运行:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# LANG= source /etc/profile.d/lang.sh
+</code></pre></div></div>
+
+<p class="notice--info">这只有在 <code class="highlighter-rouge">LANG</code> 变量没设置时才会有用，而且如果在 <code class="highlighter-rouge">locale.conf</code> 中移除了某些变量，再运行这个命令的话，移除的那些变量在注销前依然存在。</p>
+
+<h5 id="用户语系">用户语系</h5>
+
+<p>对于单独用户来说，可以编辑用户自己的配置文件 <code class="highlighter-rouge">~/.config/locale.conf</code> 来覆盖系统语系的设置。</p>
+
+<p>新建用户的默认语系：</p>
+
+<p>创建并编辑 <code class="highlighter-rouge">/etc/skel/.config/locale.conf</code> 文件，系统为新用户创建家目录时会将这个文件一同复制，即为新用户生成 <code class="highlighter-rouge">~/.config/locale.conf</code>。</p>
+
+<p>以上这些 <code class="highlighter-rouge">locale.conf </code>文件的优先级定义在 <code class="highlighter-rouge">/etc/profile.d/lang.sh</code> 中.</p>
+
+<h4 id="locale-的命名规则">Locale 的命名规则</h4>
+
+<p><code class="highlighter-rouge">语言_地区.字符集编码</code></p>
+
+<p>如：<code class="highlighter-rouge">en_US.UTF-8</code></p>
+
+<p><code class="highlighter-rouge">zh_CN.GB2312</code> ：zh 表示中文，CN 表示大陆地区，GB2312 表示使用的字符集为 GB2312。</p>
+
+<h4 id="常用语系变量">常用语系变量</h4>
+
+<p><code class="highlighter-rouge">LC_COLLATE</code></p>
+
+<p>定义该环境的排序和比较规则</p>
+
+<p><code class="highlighter-rouge">LC_CTYPE</code></p>
+
+<p>用于字符分类和字符串处理，控制所有字符的处理方式，包括字符编码，字符是单字节还是多字节，如何打印等。是最重要的一个环境变量。</p>
+
+<p><code class="highlighter-rouge">LC_MONETARY</code></p>
+
+<p>货币格式</p>
+
+<p><code class="highlighter-rouge">LC_NUMERIC</code></p>
+
+<p>非货币的数字显示格式</p>
+
+<p><code class="highlighter-rouge">LC_TIME</code></p>
+
+<p>时间和日期格式</p>
+
+<p><code class="highlighter-rouge">LC_MESSAGES</code></p>
+
+<p>提示信息的语言。</p>
+
+<p><code class="highlighter-rouge">LANG</code></p>
+
+<p>以上各 <code class="highlighter-rouge">LC_*</code> 变量的 <strong>默认值</strong>，是 <strong>最低级别</strong> 的设置，如果 <code class="highlighter-rouge">LC_*</code> 没有设置，则使用该值。该值是系统安装时确定的。</p>
+
+<p><code class="highlighter-rouge">LC_ALL</code></p>
+
+<p>它 <strong>不是变量</strong>，是一个 <strong>宏</strong>，如果该值设置了，则该值会 <strong>覆盖所有 LC_* 的设置值</strong>。注意，🚩 LANG 的值不受该宏影响。</p>
+
+<p>语系变量也能像其他的环境变量一样 <strong>传递给其它程序</strong>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# LANG="en_AU.UTF-8" ./my_application.sh
+</code></pre></div></div>
+
+<p>类似的，也可以通过 <strong>设置环境变量</strong>，让当前 <code class="highlighter-rouge">shell</code> 中运行的程序使用特定的语系：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# export LANG="en_AU.UTF-8"
+</code></pre></div></div>
+
+<h4 id="语系变量优先级">语系变量优先级</h4>
+
+<p><strong>不严格</strong> 地讲，可以简单地这样理解这些变量的优先级：</p>
+
+<p><code class="highlighter-rouge">LC_ALL</code> &gt; <code class="highlighter-rouge">LC_*</code> &gt; <code class="highlighter-rouge">LANG</code></p>
+
+<p>用宏 <code class="highlighter-rouge">LC_ALL</code> 设置语系时，它会覆盖所有 <code class="highlighter-rouge">LC_*</code> 的设置，此时系统忽略 <code class="highlighter-rouge">LANG</code> 的设置。如果 <code class="highlighter-rouge">LC_ALL</code> 和 <code class="highlighter-rouge">LC_*</code> 都没有设置，<code class="highlighter-rouge">LANG</code> 这个默认值才生效。</p>
+
+<h4 id="语系设置命令">语系设置命令</h4>
+
+<p><code class="highlighter-rouge">localectl</code> 命令用于查看、修改 <strong>系统语系</strong> 和键盘布局。</p>
+
+<p><code class="highlighter-rouge">locale</code> 命令仅用于查看，可以查看当前语系或所有公共语系。</p>
+
+<h5 id="查看当前语系">查看当前语系</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]$ localectl status
+System Locale: LANG=en_US.UTF-8
+   VC Keymap: us
+  X11 Layout: n/a
+</code></pre></div></div>
+
+<h5 id="查看可用语系">查看可用语系</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# localectl list-locales | grep zh_
+zh_CN
+zh_CN.gb2312
+zh_CN.utf8
+...
+</code></pre></div></div>
+
+<h5 id="设置语系">设置语系</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# localectl set-locale LANG=en_GB.utf8
+</code></pre></div></div>
+
+<h5 id="查看当前所有语系变量">查看当前所有语系变量</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# locale
+LANG=zh_TW.utf8
+LC_CTYPE="en_US.utf8"
+LC_NUMERIC="en_US.utf8"
+.....
+LC_ALL=en_US.utf8
+</code></pre></div></div>
+
+<h4 id="更改图形接口语系">更改图形接口语系</h4>
+
+<p>图形接口默认的显示语系也是 <strong>系统语系</strong>。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# localectl set-locale LANG=en_US.utf8
+~]# systemctl isolate multi-user.target
+~]# systemctl isolate graphical.target
+</code></pre></div></div>
+
+<h4 id="shell-正常显示中文">Shell 正常显示中文</h4>
+
+<p>要想在 Shell 中正常显示系统的中文提示信息和支持中文输入，<code class="highlighter-rouge">LANG</code> 和 <code class="highlighter-rouge">shell</code> 的编码配置需一致，并需安装中文 <code class="highlighter-rouge">locale</code>。</p>
+
+<p>如：<code class="highlighter-rouge">LANG</code> 和 <code class="highlighter-rouge">shell</code> 的编码都配置成 <code class="highlighter-rouge">zh_CN.utf8</code>，并安装有 <code class="highlighter-rouge">zh_CN.utf8</code> 这个 locale。</p>
+
+<p>如果 <code class="highlighter-rouge">shell</code> 和 <code class="highlighter-rouge">LANG</code> 配置不同，则中文显示乱码。</p>
+
+<p>如果 <code class="highlighter-rouge">LANG</code> 里设置的 <code class="highlighter-rouge">locale</code> 没有安装，则不能显示系统的中文提示信息，只会显示英文提示信息。</p>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	</p>
+<hr>
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/linux" class="page__taxonomy-item" rel="tag">linux</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/%E7%A1%AC%E4%BB%B6" class="page__taxonomy-item" rel="tag">硬件</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/%E5%88%86%E5%8C%BA" class="page__taxonomy-item" rel="tag">分区</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/%E8%B4%9F%E8%BD%BD" class="page__taxonomy-item" rel="tag">负载</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/%E6%97%B6%E9%97%B4" class="page__taxonomy-item" rel="tag">时间</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/%E5%85%B3%E6%9C%BA" class="page__taxonomy-item" rel="tag">关机</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/cpu" class="page__taxonomy-item" rel="tag">cpu</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/%E5%86%85%E5%AD%98" class="page__taxonomy-item" rel="tag">内存</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/%E4%BD%BF%E7%94%A8%E7%8E%87" class="page__taxonomy-item" rel="tag">使用率</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/%E8%AF%AD%E7%B3%BB" class="page__taxonomy-item" rel="tag">语系</a>
+    
+    </span>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://linotes.netlify.com/categories/#tools" class="page__taxonomy-item" rel="tag">tools</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2015-02-01T00:00:00+08:00">February 01, 2015</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="https://linotes.netlify.com/tools/storage/" class="pagination--pager" title="上一页
+">Linux 的使用 - 存储</a>
+    
+    
+      <a href="https://linotes.netlify.com/tools/user/" class="pagination--pager" title="下一页
+">Linux 的使用 - 用户管理</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">相关文章</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/kernel/filedescriptor/" rel="permalink">文件描述符简介
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash03/" rel="permalink">Bash 入门 03
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">循环，变量，函数，捕捉信号
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash02/" rel="permalink">Bash 入门 02
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">正则表达式，SED，AWK，条件结构，交互式脚本
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash01/" rel="permalink">Bash 入门 01
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">Bash 与 Bash 脚本，脚本的编写与调试，Bash 环境
+</p>
+-->
+
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+    
+    
+    
+    
+    <li><a href="https://linotes.netlify.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">© 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="https://linotes.netlify.com/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,1123 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>vsftpd 的配置 - LINOTES</title>
+<meta name="description" content="CentOS 7 安装 vsftpd 服务。">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="vsftpd 的配置">
+<meta property="og:url" content="https://linotes.netlify.com/server/vsftpd/">
+
+
+  <meta property="og:description" content="CentOS 7 安装 vsftpd 服务。">
+
+
+
+  <meta property="og:image" content="https://linotes.netlify.com/assets/images/header/mad-max-vsftpd.jpg">
+
+
+
+
+
+  <meta property="article:published_time" content="2016-01-04T00:00:00+08:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://linotes.netlify.com/server/vsftpd/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="https://linotes.netlify.com/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="https://linotes.netlify.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="https://linotes.netlify.com/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://linotes.netlify.com/assets/images/header/mad-max-vsftpd.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          vsftpd 的配置
+
+        
+      </h1>
+      
+        <p class="page__lead">CentOS 7 安装 vsftpd 服务。
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="https://linotes.netlify.com/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:imhawkz@gmail.com">
+            <meta itemprop="email" content="imhawkz@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="vsftpd 的配置">
+    <meta itemprop="description" content="CentOS 7 安装 vsftpd 服务。">
+    <meta itemprop="datePublished" content="January 04, 2016">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-code"></i> vsftpd 的配置</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#ftp-服务简介">FTP 服务简介</a>
+    <ul>
+      <li><a href="#连接模式">连接模式</a></li>
+      <li><a href="#用户类型">用户类型</a></li>
+      <li><a href="#缺点">缺点</a></li>
+    </ul>
+  </li>
+  <li><a href="#安装-vsftpd">安装 vsftpd</a></li>
+  <li><a href="#配置-vsftpd">配置 vsftpd</a>
+    <ul>
+      <li><a href="#匿名访问">匿名访问</a></li>
+      <li><a href="#使用虚拟用户">使用虚拟用户</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="ftp-服务简介">FTP 服务简介</h2>
+
+<p>FTP 服务仅使用 <strong>TCP</strong> 协议，不支持 UDP。比较特别的是，FTP 服务同时要使用 2 个端口，通常把 21 做为 <strong>命令端口</strong>，也叫控制端口，用来传输控制命令；把 20 做为 <strong>数据端口</strong>，用来传输数据。</p>
+
+<p>当数据通过数据流传输时，控制流处于空闲状态。而当控制流空闲很长时间后，客户端的防火墙会将其会话置为超时，这样当大量数据通过防火墙时，会产生一些问题。此时，虽然文件可以成功的传输，但因为控制会话，会被防火墙断开；传输会产生一些错误。</p>
+
+<p>FTP 虽然可以被终端用户直接使用，但是它是设计成由 FTP 客户端程序来控制的。</p>
+
+<p>运行 FTP 服务的许多站点都开放匿名服务，在这种设置下，用户不需要帐号就可以登录服务器，默认情况下，匿名用户的用户名是：<code class="highlighter-rouge">anonymous</code>。这个帐号不需要密码，虽然通常要求输入用户的邮件地址作为认证密码，但这只是一些细节或者此邮件地址根本不被确定，而是依赖于 FTP 服务器的配置情况。</p>
+
+<h3 id="连接模式">连接模式</h3>
+
+<p>FTP 有两种使用模式：主动（Port）和被动（Passive）。</p>
+
+<p>二者的区别：主动模式中数据连接是由服务器发起的，而被动模式中则是由客户端发起的。</p>
+
+<p>FTP 服务器一般都支持主动和被动模式，连接采用何种模式是由 FTP 客户端程序决定的。</p>
+
+<h4 id="主动模式">主动模式</h4>
+
+<p><img src="/assets/images/ftp.port.gif" alt="image-center" class="align-center" /></p>
+
+<h5 id="主动模式连接过程">主动模式连接过程</h5>
+
+<p>客户端发起命令连接：客户端打开一个大于 1024 的 <strong>随机</strong> 的端口 C，连接到服务器端口 21。</p>
+
+<p>客户端打开数据端口：客户端打开端口 C+1，同时向服务器发送命令 <code class="highlighter-rouge">PORT C+1</code>，告知自己的数据端口号。</p>
+
+<p>服务器发起数据连接 ：服务器打开端口 20，连接到客户端端口 C+1。</p>
+
+<p>创建连接 ：客户端由数据端口创建一个和服务器 20 号端口的连接，然后向服务器发送一个应答，告知连接创建完成。</p>
+
+<h5 id="服务器端的防火墙配置">服务器端的防火墙配置</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>用途</th>
+      <th>方向</th>
+      <th>源端口</th>
+      <th>目标端口</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>客户端初始化的连接</td>
+      <td>入站</td>
+      <td>&gt;1024</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <td>服务器响应客户端的控制端口</td>
+      <td>出站</td>
+      <td>21</td>
+      <td>&gt;1024</td>
+    </tr>
+    <tr>
+      <td>服务器初始化数据连接到客户端的数据端口</td>
+      <td>出站</td>
+      <td>20</td>
+      <td>&gt;1024</td>
+    </tr>
+    <tr>
+      <td>客户端发送 ACK 响应到服务器的数据端口</td>
+      <td>入站</td>
+      <td>&gt;1024</td>
+      <td>20</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>主动模式有利于服务器的管理，不利于客户端的管理。因为数据连接由服务器发起，要连接到客户端的高位随机端口，客户端的防火墙必须打开这些端口。</p>
+
+<h4 id="被动模式">被动模式</h4>
+
+<p>为了防止由服务器发起的、到客户端的连接被客户端防火墙挡住，开发了被动模式。当客户端通知服务器它处于被动模式时才会启用。</p>
+
+<p>在被动模式中，命令连接和数据连接 <strong>都由客户端发起</strong>。</p>
+
+<p><img src="/assets/images/ftp.passive.gif" alt="image-center" class="align-center" /></p>
+
+<h5 id="被动模式连接过程">被动模式连接过程</h5>
+
+<p>客户端打开端口：客户端打开 <strong>两个</strong> 大于 1024 的任意非特权端口 C 和 C+1。</p>
+
+<p>客户端发起命令连接：端口 C 连接服务器的端口 21，提交 <strong><code class="highlighter-rouge">PASV</code></strong> 命令，告知服务器自己使用被动模式。。</p>
+
+<blockquote>
+  <p>主动模式中，此时客户端会提交 <code class="highlighter-rouge">PORT</code> 命令，告知自己用主动模式，以允许服务器回连它的数据端口。</p>
+</blockquote>
+
+<p>服务器打开数据端口：服务器开启任意一个大于 1024 的非特权端口 S，发送 <code class="highlighter-rouge">PORT P</code> 命令给客户端。</p>
+
+<p>客户端发起数据连接：客户端发起连接，从端口 C+1 到服务器端口 S，用于传输数据。</p>
+
+<h5 id="服务器端的防火墙配置-1">服务器端的防火墙配置</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>用途</th>
+      <th>方向</th>
+      <th>源端口</th>
+      <th>目标端口</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>客户端发起命令连接</td>
+      <td>入站</td>
+      <td>&gt;1024</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <td>服务器响应命令连接</td>
+      <td>出站</td>
+      <td>21</td>
+      <td>&gt;1024</td>
+    </tr>
+    <tr>
+      <td>客户端发起数据连接</td>
+      <td>入站</td>
+      <td>&gt;1024</td>
+      <td>&gt;1024</td>
+    </tr>
+    <tr>
+      <td>服务器发送 ACK 响应和数据到客户端的数据端口</td>
+      <td>出站</td>
+      <td>&gt;1024</td>
+      <td>&gt;1024</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>被动模式有利于客户端的管理，不利于服务器端的管理。因为连接由客户端发起，其中一个连接到服务器高位随机端口，服务器的防火墙必须打开这些端口。</p>
+
+<h4 id="两种模式如何选择">两种模式如何选择</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>模式</th>
+      <th>连接名称</th>
+      <th>客户端端口</th>
+      <th>服务器端口</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>主动模式</td>
+      <td>命令连接</td>
+      <td>C</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <td>主动模式</td>
+      <td>数据连接</td>
+      <td>C+1</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <td>被动模式</td>
+      <td>命令连接</td>
+      <td>C</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <td>被动模式</td>
+      <td>数据连接</td>
+      <td>C+1</td>
+      <td>S</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>C 为客户端大于 1024 的端口，S 为服务端大于 1024 的端口。</p>
+
+<p>如果企业的网络环境不同，两个操作模式的应用效果是不同的。主要是因为 <strong>数据连接的建立方式</strong> 有所不同。在主动模式中，FTP 服务器的 20 号端口是 <strong>主动</strong> 同客户端联系，建立数据传输通道的。而被动模式中，服务器则是 <strong>被动</strong> 的等待客户端与其端口 20 建立连接。这个差异决定了两者应用环境的不同。</p>
+
+<p>一般来说，如果 FTP 服务器只对企业的内部局域网用户提供文件传输的服务，那么基本上两者的应用效果没有很大的差异。</p>
+
+<p>但是，如果企业网络以外的用户也需要通过互联网与 FTP 服务器进行文件传输的话，就会有很大的不同。</p>
+
+<p><strong>企业网络环境</strong>：</p>
+
+<p>假设企业由于公网 IP 地址有限，在 <strong>边界路由器</strong> 上通过 <strong>NAT</strong> 服务向外部用户提供 FTP 连接。边界路由器会将 FTP 服务器的内网 IP 地址转换为合法的公网 IP 地址。</p>
+
+<h5 id="主动模式-1">主动模式</h5>
+
+<p>客户端可以成功创建命令连接，然后打开数据端口，通过命令连接告知服务器其数据端口号。</p>
+
+<p>由于地址转换，在 FTP 服务器看来，客户端的源 IP 地址是路由器的内网接口地址，于是它会直接和边界路由器的端口进行通信，因为它以为路由器是 FTP 客户端，但实际上不是。</p>
+
+<p>服务器要负责发起数据连接，于是它尝试连接到路由器的 “数据端口”，而该端口在路由器上极有可能没有开放。</p>
+
+<p>因此，如果客户端用主动模式，FTP 服务器与客户端之间只能够建立命令连接，<strong>无法建立数据连接</strong>。如果 FTP 服务器与客户端之间还有防火墙的话，也有可能如此。</p>
+
+<h5 id="被动模式-1">被动模式</h5>
+
+<p>被动模式中的数据连接是由客户端发起的，即使中间有 NAT 服务器或防火墙，也会准确无误的连接到 FTP 服务器的数据传输接口，建立起数据连接。</p>
+
+<p>因此，如果在客户端与 FTP 服务器之间存在防火墙或 NAT 服务器等设备，最好采用 <strong>被动模式</strong>。</p>
+
+<p>如果企业中通过互联网来访问企业内部 FTP 服务器的员工比较多，最好能够一劳永逸的解决这个问题，即在 FTP 服务器上进行设置，<strong>强制</strong> 客户端在连接的时候采用 <strong>被动</strong> 模式。</p>
+
+<p>如果用户比较少，而且用户又具有一定的计算机知识，那么可以不在服务器上进行设置。而是在连接的过程中，通过 FTP 客户端来设置，采用 <strong>主动</strong> 模式来进行连接。</p>
+
+<p>如果部署完 FTP 服务器后，系统管理员发现用户可以连接上 FTP 服务器，可以查看目录下的文件，但是却无法下载或者上传文件，如果排除权限方面的限制外，那么很有可能就是这个操作模式选择错误。系统管理员告诉用户选择合适的操作模式，基本上就可以解决文件传输的问题了。</p>
+
+<h3 id="用户类型">用户类型</h3>
+
+<p class="notice">vsftpd 默认开启本地用户和匿名用户。</p>
+
+<h4 id="本地用户">本地用户</h4>
+
+<p>通过添加 Linux 系统用户来访问 FTP 服务，即 <code class="highlighter-rouge">/etc/passwd</code> 中的用户，登录目录为自己的家目录 <code class="highlighter-rouge">$HOME</code>。</p>
+
+<h4 id="虚拟用户">虚拟用户</h4>
+
+<p>虚拟用户没有使用真实的系统账户，而是把虚拟用户的权限映射到系统用户上。虚拟用户的权限是有系统用户对目录的控制达到的。虚拟用户无法登陆系统。</p>
+
+<p>FTP 专有用户，有两种方式来实现：PAM 和数据库服务器。</p>
+
+<p>虚拟用户是 FTP 服务器的专有用户，使用虚拟用户登录 FTP，只能访问 FTP 服务器提供的资源，有利于保证系统的安全。</p>
+
+<h4 id="匿名用户">匿名用户</h4>
+
+<p>anonymous</p>
+
+<p>用户在 FTP 服务器上没有账号，在登录 FTP 时使用默认的用户名，通常是 ftp 或 anonymous，登录目录为 <code class="highlighter-rouge">/var/ftp</code>。</p>
+
+<h3 id="缺点">缺点</h3>
+
+<ol>
+  <li>密码和文件内容都使用明文传输，可能发生窃听</li>
+  <li>因为必须开放一个随机的端口以创建连接，当防火墙存在时，客户端很难过滤处于主动模式下的 FTP 流量。这个问题，通过使用被动模式的 FTP，得到了很大解决。</li>
+  <li>服务器可能会被告知连接一个第三方计算机的保留端口</li>
+  <li>传输大量小文件时性能不好</li>
+</ol>
+
+<h2 id="安装-vsftpd">安装 vsftpd</h2>
+
+<p>查看当前是否已安装：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rpm <span class="nt">-qa</span> | <span class="nb">grep </span>vsftpd
+</code></pre></div></div>
+
+<p>安装 vsftpd：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum <span class="nb">install</span> <span class="nt">-y</span> vsftpd
+systemctl <span class="nb">enable </span>vsftpd
+systemctl start vsftpd
+</code></pre></div></div>
+
+<h2 id="配置-vsftpd">配置 vsftpd</h2>
+
+<p>本范例使用 Berkeley DB + PAM 进行身份认证，使用被动模式。</p>
+
+<p>vsftpd 默认没有开启被动模式，必须手动开启。</p>
+
+<h3 id="匿名访问">匿名访问</h3>
+
+<p>修改配置文件 <code class="highlighter-rouge">vsftpd.conf</code>：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 默认部分可保持不动</span>
+<span class="nv">anonymous_enable</span><span class="o">=</span>YES
+<span class="nv">local_enable</span><span class="o">=</span>YES
+<span class="nv">write_enable</span><span class="o">=</span>YES
+<span class="nv">local_umask</span><span class="o">=</span>022
+<span class="nv">dirmessage_enable</span><span class="o">=</span>YES
+<span class="nv">xferlog_enable</span><span class="o">=</span>YES
+<span class="nv">connect_from_port_20</span><span class="o">=</span>YES
+<span class="nv">xferlog_std_format</span><span class="o">=</span>YES
+<span class="nv">listen</span><span class="o">=</span>YES
+
+<span class="nv">pam_service_name</span><span class="o">=</span>vsftpd
+<span class="nv">userlist_enable</span><span class="o">=</span>YES
+<span class="nv">tcp_wrappers</span><span class="o">=</span>YES
+
+<span class="c"># 增加匿名访问目录</span>
+<span class="nv">anon_root</span><span class="o">=</span>/var/ftp
+
+<span class="c"># 打开匿名用户上传/建目录/删除、重命名权限</span>
+<span class="nv">anon_upload_enable</span><span class="o">=</span>YES
+<span class="nv">anon_mkdir_write_enable</span><span class="o">=</span>YES
+<span class="nv">anon_other_write_enable</span><span class="o">=</span>YES
+
+<span class="c"># 匿名用户的掩码</span>
+<span class="nv">anon_umask</span><span class="o">=</span>022
+
+<span class="c"># 支持ASCII模式的上传和下载功能</span>
+<span class="nv">ascii_upload_enable</span><span class="o">=</span>YES
+<span class="nv">ascii_download_enable</span><span class="o">=</span>YES
+
+<span class="c"># 日志记录</span>
+<span class="nv">xferlog_file</span><span class="o">=</span>/var/log/xferlog
+<span class="nv">dual_log_enable</span><span class="o">=</span>YES
+<span class="nv">vsftpd_log_file</span><span class="o">=</span>/var/log/vsftpd.log
+</code></pre></div></div>
+
+<p>重启 vsftpd 服务并修改目录权限：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>systemctl restart vsftpd
+cd /var/ftp
+mkdir pub
+chmod 777 pub/
+</code></pre></div></div>
+
+<p>默认情况下，FTP 的根目录为 <code class="highlighter-rouge">/var/ftp</code>，为了安全，该目录默认不有写权限，否则 FTP 将无法访问。</p>
+
+<p>为了允许匿名用户上传，可以在 <code class="highlighter-rouge">/var/ftp</code> 中建立一个子目录，如 upload，根据需要修改其权限，如 777。</p>
+
+<p>在该目录中，匿名用户可以上传文件、创建文件夹、删除文件等。</p>
+
+<h3 id="使用虚拟用户">使用虚拟用户</h3>
+
+<p>根据实际需要，每个虚拟用户可以共用统一配置，也可以有各自独立的配置。</p>
+
+<h4 id="使用统一配置">使用统一配置</h4>
+
+<p>例如，把 <code class="highlighter-rouge">/var/ftp</code> 做为 FTP 全局根目录，则各虚拟用户的根目录为 <code class="highlighter-rouge">/var/ftp/user1</code>、<code class="highlighter-rouge">/var/ftp/user2</code>、<code class="highlighter-rouge">/var/ftp/user3</code>。</p>
+
+<p>这种情况比较简单，只需配置 <code class="highlighter-rouge">vsftpd.conf</code> 一个文件即可。在用户名的位置用 <code class="highlighter-rouge">$USER</code> 代替。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 全局配置 --------------
+</span><span class="n">anonymous_enable</span>=<span class="n">NO</span>
+<span class="n">ascii_upload_enable</span>=<span class="n">YES</span>
+<span class="n">ascii_download_enable</span>=<span class="n">YES</span>
+<span class="n">ftpd_banner</span>=<span class="n">Welcome</span> <span class="n">to</span> <span class="n">this</span> <span class="n">fucking</span> <span class="n">world</span>.
+<span class="n">chroot_list_enable</span>=<span class="n">YES</span>
+<span class="n">listen</span>=<span class="n">YES</span>
+<span class="n">pam_service_name</span>=<span class="n">vsftpd</span>
+<span class="n">chroot_local_user</span>=<span class="n">YES</span>
+
+<span class="c"># 被动模式 --------------
+</span><span class="n">pasv_enable</span>=<span class="n">YES</span>
+<span class="n">pasv_min_port</span>=<span class="m">40000</span>
+<span class="n">pasv_max_port</span>=<span class="m">40080</span>
+
+<span class="c"># 虚拟用户 --------------
+</span><span class="n">guest_enable</span>=<span class="n">YES</span>
+<span class="n">guest_username</span>=<span class="n">ftp</span>
+<span class="n">user_sub_token</span>=$<span class="n">USER</span>
+<span class="n">local_root</span>=/<span class="n">var</span>/<span class="n">ftp</span>/$<span class="n">USER</span>
+<span class="n">virtual_use_local_privs</span>=<span class="n">YES</span>
+<span class="n">write_enable</span>=<span class="n">YES</span>
+
+<span class="c"># 日志 -------------------
+</span><span class="n">local_enable</span>=<span class="n">YES</span>
+<span class="n">xferlog_enable</span>=<span class="n">YES</span>
+<span class="n">xferlog_file</span>=/<span class="n">var</span>/<span class="n">log</span>/<span class="n">xferlog</span>
+<span class="n">xferlog_std_format</span>=<span class="n">YES</span>
+<span class="n">dual_log_enable</span>=<span class="n">YES</span>
+<span class="n">vsftpd_log_file</span>=/<span class="n">var</span>/<span class="n">log</span>/<span class="n">vsftpd</span>.<span class="n">log</span>
+</code></pre></div></div>
+
+<h4 id="使用独立配置">使用独立配置</h4>
+
+<p>这种稍微麻烦一些，除 <code class="highlighter-rouge">vsftpd.conf</code> 以外，还需要为 <strong>每个用户单独建立配置文件</strong>，统一放置某个目录中，并在 <code class="highlighter-rouge">vsftpd.conf</code> 标示出该目录，以便 vsftpd 解析。</p>
+
+<h5 id="修改全局配置">修改全局配置</h5>
+
+<p>因为每个虚拟用户可以有独立的配置文件，所以此时 <code class="highlighter-rouge">vsftpd.conf</code> 越 <strong>简单</strong> 越好。更多的配置可以放到用户独立配置文件中。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 全局配置 -------------------------------
+# 服务器独立运行
+</span><span class="n">listen</span>=<span class="n">YES</span>
+
+<span class="c"># 禁止匿名访问
+</span><span class="n">anonymous_enable</span>=<span class="n">NO</span>
+
+<span class="c"># 允许本地用户访问
+</span><span class="n">local_enable</span>=<span class="n">YES</span>
+
+<span class="c"># 用户不能离开主目录
+</span><span class="n">chroot_local_user</span>=<span class="n">YES</span>
+
+<span class="c"># 支持ASCII模式的上传和下载功能
+</span><span class="n">ascii_upload_enable</span>=<span class="n">YES</span>
+<span class="n">ascii_download_enable</span>=<span class="n">YES</span>
+
+<span class="c"># PAM认证文件名
+</span><span class="n">pam_service_name</span>=<span class="n">vsftpd</span>
+
+<span class="c"># 虚拟用户 ---------------------------
+# 启用虚拟用户
+</span><span class="n">guest_enable</span>=<span class="n">YES</span>
+
+<span class="c"># 虚拟用户的宿主用户，用的是CentOS内置ftp用户
+</span><span class="n">guest_username</span>=<span class="n">ftp</span>
+
+<span class="c"># 虚拟用户配置文件目录 *******************
+# 目录中保存与各用户同名的配置文件
+</span><span class="n">user_config_dir</span>=/<span class="n">etc</span>/<span class="n">vsftpd</span>/<span class="n">vuser_conf</span>
+
+<span class="c"># 被动模式 ---------------------------
+</span>
+<span class="c">#开启被动模式
+</span><span class="n">pasv_enable</span>=<span class="n">YES</span>
+
+<span class="c">#最小端口号
+</span><span class="n">pasv_min_port</span>=<span class="m">40000</span>
+
+<span class="c">#最大端口号
+</span><span class="n">pasv_max_port</span>=<span class="m">40080</span>
+
+<span class="c"># 日志 ---------------------------------
+</span><span class="n">xferlog_enable</span>=<span class="n">YES</span>
+<span class="n">xferlog_std_format</span>=<span class="n">YES</span>
+<span class="n">xferlog_file</span>=/<span class="n">var</span>/<span class="n">log</span>/<span class="n">xfer</span>.<span class="n">log</span>
+<span class="n">dual_log_enable</span>=<span class="n">YES</span>
+<span class="n">vsftpd_log_file</span>=/<span class="n">var</span>/<span class="n">log</span>/<span class="n">vsftpd</span>.<span class="n">log</span>
+</code></pre></div></div>
+
+<h5 id="创建虚拟用户独立配置文件">创建虚拟用户独立配置文件</h5>
+
+<p>在 <code class="highlighter-rouge">/etc/vsftpd/vuser_conf</code> 目录中，生成与用户同名的虚拟用户配置文件。很多配置可以在这里进行细化。</p>
+
+<p class="notice--success">值得注意的是，虚拟用户的默认权限是等同于 <strong>匿名用户</strong> 的，通常没有写权限。而 <code class="highlighter-rouge">anon_</code> 开头的配置参数原本是用于匿名用户的配置，所以如果没有使用 <code class="highlighter-rouge">virtual_use_local_privs=YES</code> 的情况下，可以在虚拟用户独立配置文件中使用 <strong><code class="highlighter-rouge">anon_</code></strong> 开头的参数来 <strong>细化配置</strong> 虚拟用户的 <strong>权限</strong>。</p>
+
+<p><code class="highlighter-rouge">write_enable=YES</code> 相关于一个写入权限的 <strong>总开关</strong>，启用即代表允许 FTP 命令对文件系统进行修改，但单独使用没有任何意义，必须要配合 <code class="highlighter-rouge">anon_</code> 系列参数来细化权限的分配。</p>
+
+<p>如果使用了 <code class="highlighter-rouge">virtual_use_local_privs=YES</code>，则无需再使用 <code class="highlighter-rouge">anon_</code> 参数，会直接拥有本地用户权限。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir /etc/vsftpd/vuser_conf/
+vi /etc/vsftpd/vuser_conf/neo
+</code></pre></div></div>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 虚拟用户根目录
+</span><span class="n">local_root</span>=/<span class="n">var</span>/<span class="n">ftp</span>/<span class="n">neo</span>
+
+<span class="c"># 打开修改文件系统的总开关
+</span><span class="n">write_enable</span>=<span class="n">YES</span>
+
+<span class="c"># 权限细化 -----------------------------
+# 默认新建文件掩码
+</span><span class="n">anon_umask</span>=<span class="m">022</span>
+
+<span class="c"># 默认匿名用户只能下载权限码为 **4 的文件
+# 关掉该限制
+</span><span class="n">anon_world_readable_only</span>=<span class="n">NO</span>
+
+<span class="c"># 允许上传
+</span><span class="n">anon_upload_enable</span>=<span class="n">YES</span>
+
+<span class="c"># 允许建目录
+</span><span class="n">anon_mkdir_write_enable</span>=<span class="n">YES</span>
+
+<span class="c"># 允许删除、重命名
+</span><span class="n">anon_other_write_enable</span>=<span class="n">YES</span>
+</code></pre></div></div>
+
+<p>其它虚拟用户可以按此方法自定义配置。</p>
+
+<h4 id="配置身份认证">配置身份认证</h4>
+
+<h5 id="安装-db_load">安装 <code class="highlighter-rouge">db_load</code></h5>
+
+<p>安装 Berkeley DB 工具，才能使用 <code class="highlighter-rouge">db_load</code>。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum install db4 db4-utils
+</code></pre></div></div>
+
+<h5 id="创建密码文件">创建密码文件</h5>
+
+<p>创建用户密码文本文件，奇行为用户名，偶行为密码。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vi /etc/vsftpd/vuser_passwd.txt
+
+neo
+123456
+trinity
+123456
+</code></pre></div></div>
+
+<h5 id="转换密码文件">转换密码文件</h5>
+
+<p>用 <code class="highlighter-rouge">db_load</code> 把密码文件转换为 <code class="highlighter-rouge">.db</code>，生成数据库文件，用于虚拟用户的认证。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db_load -T -t hash -f /etc/vsftpd/vuser_passwd.txt /etc/vsftpd/vuser_passwd.db
+</code></pre></div></div>
+
+<p class="notice">每次对密码文件修改之后，都必须重新转换一次，修改才能生效。</p>
+
+<h5 id="修改-pam-配置">修改 PAM 配置</h5>
+
+<p>编辑 vsftpd 的 PAM 配置文件，注释掉原有语句，增加两行：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vi /etc/pam.d/vsftpd
+
+auth required pam_userdb.so db=/etc/vsftpd/vuser_passwd
+account required pam_userdb.so db=/etc/vsftpd/vuser_passwd
+</code></pre></div></div>
+
+<h4 id="修改用户根目录权限">修改用户根目录权限</h4>
+
+<p>vsftpd 要求对 FTP 用户的根目录不能有写的权限，子目录可以有。因此，管理员通常提前在用户根目录下要新建一个子目录，方便用户使用。</p>
+
+<p>以用户 neo 为例：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# <span class="nb">chmod</span> <span class="nt">-R</span> 755 /var/ftp/neo
+
+~]# <span class="nb">mkdir</span> <span class="nt">-p</span> /var/ftp/neo/pub
+~]# <span class="nb">chown </span>ftp:ftp /var/ftp/neo/pub
+~]# <span class="nb">chmod</span> <span class="nt">-R</span> 777 /var/ftp/neo/pub
+</code></pre></div></div>
+
+<h4 id="创建日志文件">创建日志文件</h4>
+
+<p>如果启用 vsftpd 日志，需手动生成日志文件：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# <span class="nb">touch</span> /var/log/xferlog
+~]# <span class="nb">touch</span> /var/log/vsftpd.log
+</code></pre></div></div>
+
+<h4 id="添加防火墙规则">添加防火墙规则</h4>
+
+<p>被动模式下，服务器端只需要开启端口 21 和 40000 ~ 40080：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# iptables <span class="nt">-A</span> INPUT <span class="nt">-p</span> tcp <span class="nt">--dport</span> 21 <span class="nt">-j</span> ACCEPT
+~]# iptables <span class="nt">-A</span> INPUT <span class="nt">-p</span> tcp <span class="nt">--dport</span> 40000:40080 <span class="nt">-j</span> ACCEPT
+~]# service iptables save
+~]# systemctl restart iptables
+</code></pre></div></div>
+
+<h4 id="重启-vsftpd-服务">重启 vsftpd 服务</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# systemctl restart vsftpd
+</code></pre></div></div>
+
+<p>至此，vsftpd 应该可以正常使用了。</p>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/ftp" class="page__taxonomy-item" rel="tag">ftp</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/vsftpd" class="page__taxonomy-item" rel="tag">vsftpd</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://linotes.netlify.com/categories/#server" class="page__taxonomy-item" rel="tag">server</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2016-01-04T00:00:00+08:00">January 04, 2016</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="https://linotes.netlify.com/server/nginx.security/" class="pagination--pager" title="上一页
+">Nginx 安全控制</a>
+    
+    
+      <a href="https://linotes.netlify.com/framework/lamp_intro/" class="pagination--pager" title="下一页
+">LAMP 架构工作原理</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">相关文章</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/kernel/filedescriptor/" rel="permalink">文件描述符简介
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash03/" rel="permalink">Bash 入门 03
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">循环，变量，函数，捕捉信号
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash02/" rel="permalink">Bash 入门 02
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">正则表达式，SED，AWK，条件结构，交互式脚本
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash01/" rel="permalink">Bash 入门 01
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">Bash 与 Bash 脚本，脚本的编写与调试，Bash 环境
+</p>
+-->
+
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+    
+    
+    
+    
+    <li><a href="https://linotes.netlify.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="https://linotes.netlify.com/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

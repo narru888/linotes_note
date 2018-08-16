@@ -1,0 +1,1315 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>MySQL 的备份与恢复 - LINOTES</title>
+<meta name="description" content="用简洁清晰的语言讨论技术">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="MySQL 的备份与恢复">
+<meta property="og:url" content="https://linotes.netlify.com/database/backup/">
+
+
+  <meta property="og:description" content="用简洁清晰的语言讨论技术">
+
+
+
+  <meta property="og:image" content="https://linotes.netlify.com/assets/images/header/mysql.jpg">
+
+
+
+
+
+  <meta property="article:published_time" content="2016-03-01T00:00:00+08:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://linotes.netlify.com/database/backup/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="https://linotes.netlify.com/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="https://linotes.netlify.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="https://linotes.netlify.com/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('https://linotes.netlify.com/assets/images/header/mysql.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          MySQL 的备份与恢复
+
+        
+      </h1>
+      
+        <p class="page__lead">
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="https://linotes.netlify.com/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:imhawkz@gmail.com">
+            <meta itemprop="email" content="imhawkz@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="MySQL 的备份与恢复">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="March 01, 2016">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-copy"></i> MySQL 的备份与恢复</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#备份与恢复的类型">备份与恢复的类型</a>
+    <ul>
+      <li><a href="#物理备份与逻辑备份">物理备份与逻辑备份</a></li>
+      <li><a href="#在线备份与离线备份">在线备份与离线备份</a></li>
+      <li><a href="#本地备份与远程备份">本地备份与远程备份</a></li>
+      <li><a href="#快照备份">快照备份</a></li>
+      <li><a href="#完全备份与增量备份">完全备份与增量备份</a></li>
+      <li><a href="#完全恢复与时间点恢复">完全恢复与时间点恢复</a></li>
+    </ul>
+  </li>
+  <li><a href="#数据库的备份方法">数据库的备份方法</a>
+    <ul>
+      <li><a href="#用企业版备份工具进行热备">用企业版备份工具进行热备</a></li>
+      <li><a href="#用-mysqldump-进行逻辑备份">用 mysqldump 进行逻辑备份</a></li>
+    </ul>
+  </li>
+  <li><a href="#用二进制日志进行时间点增量恢复">用二进制日志进行时间点增量恢复</a>
+    <ul>
+      <li><a href="#时间点恢复的原则">时间点恢复的原则</a></li>
+      <li><a href="#处理多个日志文件">处理多个日志文件</a></li>
+      <li><a href="#包含-gtid-的日志">包含 GTID 的日志</a></li>
+      <li><a href="#使用事件时间来恢复">使用事件时间来恢复</a></li>
+      <li><a href="#使用事件位置来恢复">使用事件位置来恢复</a></li>
+    </ul>
+  </li>
+  <li><a href="#myisam-表的维护及灾难恢复">MyISAM 表的维护及灾难恢复</a>
+    <ul>
+      <li><a href="#使用-myisamchk-进行崩溃恢复">使用 myisamchk 进行崩溃恢复</a></li>
+      <li><a href="#如何检测-myisam-表的错误">如何检测 MyISAM 表的错误</a></li>
+      <li><a href="#如何修复-myisam-表">如何修复 MyISAM 表</a></li>
+      <li><a href="#myisam-表的优化">MyISAM 表的优化</a></li>
+      <li><a href="#设置-myisam-表维护计划">设置 MyISAM 表维护计划</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="备份与恢复的类型">备份与恢复的类型</h2>
+
+<p>本节内容主要引自 <a href="https://dev.mysql.com/doc/refman/8.0/en/"> MySQL 8.0 Reference Manual </a></p>
+
+<h3 id="物理备份与逻辑备份">物理备份与逻辑备份</h3>
+
+<h4 id="物理备份">物理备份</h4>
+
+<p>备份目录或文件的原始副本，数据库的内容就保存在这些文件中。适用于大型的、重要的数据库，发生问题时需要快速恢复。</p>
+
+<h5 id="物理备份的特点">物理备份的特点</h5>
+
+<ul>
+  <li>备份由数据库目录及文件的副本组成。通常是 MySQL 数据目录的完整副本。</li>
+  <li>物理备份的速度比逻辑备份更快，因为备份过程只需复制，不用转换。</li>
+  <li>输出比逻辑备份更简洁</li>
+  <li>备份和恢复的粒度从整个数据目录到独立的文件。</li>
+  <li>除了备份数据库以外，还可以备份相关文件，如日志及配置文件。</li>
+  <li>无法备份 <code class="highlighter-rouge">MEMORY</code> 表中的数据，因为其内容没有保存在磁盘中。</li>
+  <li>便携性不好，其他主机需要有相同或类似的硬件。</li>
+  <li>备份时最好离线，否则服务端需要进行适当的锁定，以便在备份过程中不会修改数据库的内容。</li>
+</ul>
+
+<h5 id="常用物理备份工具">常用物理备份工具</h5>
+
+<p>物理备份的常用工具包括 <code class="highlighter-rouge">mysqlbackup</code>，这是 MySQL 企业版的备份工具，用于 <code class="highlighter-rouge">InnoDB</code> 或任何其他表。</p>
+
+<p>当然还有其它的文件系统级别的命令：如 <code class="highlighter-rouge">cp</code>、<code class="highlighter-rouge">scp</code>、<code class="highlighter-rouge">tar</code>、<code class="highlighter-rouge">rsync</code>，用于 <code class="highlighter-rouge">MyISAM</code> 表。</p>
+
+<p><code class="highlighter-rouge">ndb_restore</code> 用于恢复 <code class="highlighter-rouge">NDB</code> 表。</p>
+
+<h4 id="逻辑备份">逻辑备份</h4>
+
+<p>以逻辑数据库结构和内容的方式来表示备份的信息。适用于少量数据，有时需要编辑数据或表格结构，或在其它平台上重建数据。</p>
+
+<h5 id="逻辑备份的特点">逻辑备份的特点</h5>
+
+<ul>
+  <li>通过查询 MySQL 服务端来获取数据库的结构和内容。</li>
+  <li>备份速度比物理备份要慢，因为需要访问数据库并转换为逻辑格式。如果输出需要写到客户端一侧，服务端还要将其发送给备份程序。</li>
+  <li>输出更占空间，尤其是以文本格式保存时。</li>
+  <li>备份和恢复的粒度有：所有数据库、数据库中所有表、某个表，与存储引擎无关。</li>
+  <li>无法备份日志、配置文件及其它相关文件</li>
+  <li>备份以逻辑格式保存，高便携性</li>
+  <li>备份时允许服务端运行，无需离线</li>
+</ul>
+
+<h5 id="常用逻辑备份工具">常用逻辑备份工具</h5>
+
+<p>常用的逻辑备份工具包括 <code class="highlighter-rouge">mysqldump</code> 程序，<code class="highlighter-rouge">SELECT ... INTO OUTFILE</code> 语句，它们可用于任何存储引擎，包括 <code class="highlighter-rouge">MEMORY</code>。</p>
+
+<p>逻辑备份的恢复，对于 SQL 格式的备份可以用 <code class="highlighter-rouge">mysql</code> 客户端来处理。</p>
+
+<p>如果要处理文本文件，可用 <code class="highlighter-rouge">LOAD DATA INFILE</code> 语句，或使用 <code class="highlighter-rouge">mysqlimport</code> 客户端。</p>
+
+<h3 id="在线备份与离线备份">在线备份与离线备份</h3>
+
+<h4 id="热备温备冷备">热备、温备、冷备</h4>
+
+<p>根据数据库在备份期间的运行状态，常见的备份方式有三种：</p>
+
+<h5 id="热备">热备：</h5>
+
+<p>数据库运行时进行备份，期间程序可以对数据库进行读、写。</p>
+
+<p>它比直接复制数据文件要复杂一些：</p>
+
+<ul>
+  <li>备份期间插入和更新的数据必须备份</li>
+  <li>备份期间删除的数据必须排除</li>
+  <li>没有提交的修改必须忽略</li>
+</ul>
+
+<h6 id="热备的特点">热备的特点</h6>
+
+<p>在线备份时可以从服务端获取数据库的信息，但无法修改数据。</p>
+
+<ul>
+  <li>备份对客户端的打扰较弱，备份期间，客户端可以连接到服务端，并可访问某些数据。</li>
+  <li>必须进行适当的锁定，以防止数据的修改，避免影响备份的完整性。企业版的备份工具会自动锁定。</li>
+</ul>
+
+<h5 id="温备">温备：</h5>
+
+<p>数据库运行时进行备份，期间要限制某些数据库的操作。</p>
+
+<p>如，备份期间，某些表可能变成只读。</p>
+
+<h5 id="冷备">冷备：</h5>
+
+<p>数据库停止运行以后进行备份。对于繁忙的应用程序和网站来说，冷备不太现实，更适合温备或热备。</p>
+
+<h6 id="冷备的特点">冷备的特点</h6>
+
+<ul>
+  <li>备份期间，客户端无法访问服务端。因此，冷备经常是在复制从属服务器进行的，它的离线不会影响服务端的可用性。</li>
+  <li>备份的流程更简单，因为不会受到客户端的影响。</li>
+</ul>
+
+<h4 id="数据的恢复">数据的恢复</h4>
+
+<p>热备与冷备的区别，同样体现在数据的恢复操作上。</p>
+
+<p>不过，在线恢复的操作要比在线备份的操作对客户端影响更大，因为进行数据恢复时，需要更强的锁定。</p>
+
+<p>备份时，客户端还可以读取一些数据，而在恢复时，还会修改一些数据，因此恢复某些数据期间，客户端对其是无法读取的。</p>
+
+<h3 id="本地备份与远程备份">本地备份与远程备份</h3>
+
+<p>本地备份是在 MySQL 服务端所在的主机上进行的，而远程备份是发生在其他主机上。备份可以由远程主机发起，甚至可以把输出保存在服务端本地。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">mysqldump</code> 可以连接到本地主机或远程服务端。如果是使用 <code class="highlighter-rouge">CREATE</code> 和 <code class="highlighter-rouge">INSERT</code> 语句生成的 SQL 格式的输出，备份可以保存在本地，也可以保存到远程主机；如果使用的是 <code class="highlighter-rouge">--tab</code> 选项生成的纯文本输出，数据文件会保存在服务端主机中。</li>
+  <li><code class="highlighter-rouge">SELECT ... INTO OUTFILE</code> 语句可以来自本地或远程客户端，但输出文件会保存在服务端主机。</li>
+  <li>物理备份通常是从服务端本地发起，以便让服务端离线，文件可以复制到远程主机。</li>
+</ul>
+
+<h3 id="快照备份">快照备份</h3>
+
+<p>有些文件系统会使用快照的功能，它会生成特定时间点的整个文件系统的逻辑副本，无需对整个文件系统进行物理复制。</p>
+
+<p>如，可以使用写时复制（copy-on-write）技术，只有快照之后的改动才需复制。</p>
+
+<p>MySQL 自身没有快照的功能，需要通过第三方工具来实现，如 Veritas、VLM、ZFS 等。</p>
+
+<h3 id="完全备份与增量备份">完全备份与增量备份</h3>
+
+<p>完全备份包含了 MySQL 服务端在某个时间点所管理的所有数据，而增量备份所包含的是在两个时间点之间数据所发生的变化。</p>
+
+<p>MySQL 有多种办法可以进行完全备份，开启服务端二进制日志以后，就可以进行增量备份了，因为服务端需要使用日志来记录数据的变化。</p>
+
+<h3 id="完全恢复与时间点恢复">完全恢复与时间点恢复</h3>
+
+<p>完全恢复会把所有数据从完全备份中恢复出来，同时会把服务端实例恢复成备份时的状态，如果该状态不够新，则完全恢复之后可以恢复自完整备份以来进行的增量备份, 让便服务器达到最新的状态。</p>
+
+<p>增量恢复所恢复的数据是在某个时间跨度内发生的改变，也称为时间点恢复，因为它会使服务端恢复为它在某个时间点的状态。时间点恢复是基于二进制日志的，通常是在完整恢复之后进行。</p>
+
+<h2 id="数据库的备份方法">数据库的备份方法</h2>
+
+<h3 id="用企业版备份工具进行热备">用企业版备份工具进行热备</h3>
+
+<p>企业版备份工具可以进行物理备份，备份对象可以是所有实例、特定数据库、表等。它可进行增量备份、压缩备份。</p>
+
+<p>物理备份比 <code class="highlighter-rouge">mysqldump</code> 这样的逻辑备份更快。复制 InnoDB 表使用的是热备机制，理想情况下，InnoDB 表应代表大部分数据。其它存储引擎的表是使用温备机制。</p>
+
+<h3 id="用-mysqldump-进行逻辑备份">用 <code class="highlighter-rouge">mysqldump</code> 进行逻辑备份</h3>
+
+<p>应用程序 <code class="highlighter-rouge">mysqldump</code> 可以进行备份，它可以备份各种表。</p>
+
+<p>对于 InnoDB 来说，使用 <code class="highlighter-rouge">mysqldump --single-transaction</code> 可以进行在线备份，而无需锁定表。</p>
+
+<p><code class="highlighter-rouge">mysqldump</code> 可以生成两类输出，取决于是否使用了 <code class="highlighter-rouge">--tab</code> 选项。</p>
+
+<ul>
+  <li>不使用 <code class="highlighter-rouge">--tab</code> 选项 ：mysqldump 会把 SQL 语句写入标准输出。该输出使用使用 <code class="highlighter-rouge">CREATE</code> 语句来备份数据库、表、存储例程等，用 <code class="highlighter-rouge">INSERT</code> 语句把数据加载到表中。输出可以保存成一个文件，随后需要时可用 mysql 来重新构建备份的对象。可以通过启用一些选项来定义 SQL 语句，从而选择要备份哪些对象。</li>
+  <li>使用 <code class="highlighter-rouge">--tab</code> 选项 ：mysqldump 会为每个备份的表格生成 <strong>两个</strong> 输出文件。
+    <ul>
+      <li>一个文件名为 <code class="highlighter-rouge">tbl_name.txt</code>，是用 tab 分隔的文本文件，表中的每个记录对应文件中的一行</li>
+      <li>另一个文件名是 <code class="highlighter-rouge">tbl_name.sql</code>，是由服务端使用 <code class="highlighter-rouge">CREATE TABLE</code> 语句生成的</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="以-sql-格式备份数据">以 SQL 格式备份数据</h4>
+
+<p>mysqldump 默认会把 SQL 语句的输出写到标准输出中，需要时可以重定向到文件：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysqldump <span class="o">[</span>arguments] <span class="o">&gt;</span> file_name
+</code></pre></div></div>
+
+<p>备份所有数据库：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysqldump <span class="nt">--all-databases</span> <span class="o">&gt;</span> dump.sql
+</code></pre></div></div>
+
+<p>备份指定数据库：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysqldump <span class="nt">--databases</span> db1 db2 db3 <span class="o">&gt;</span> dump.sql
+shell&gt; mysqldump <span class="nt">--databases</span> <span class="nb">test</span> <span class="o">&gt;</span> dump.sql
+shell&gt; mysqldump <span class="nb">test</span> <span class="o">&gt;</span> dump.sql
+</code></pre></div></div>
+
+<p>备份指定表：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysqldump <span class="nb">test </span>t1 t3 t7 <span class="o">&gt;</span> dump.sql
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">test</code> 为数据库，t1、t2、t3 为表。</p>
+
+<p><code class="highlighter-rouge">--databases</code> 选项后面跟的所有名字都会当作数据库名字来对待。如果不用该选项，mysqldump 会把其后的第一个名字作为数据库名字，其后的作为表的名字。如果只有一个数据库，可以省略 <code class="highlighter-rouge">--databases</code>。</p>
+
+<p>如果使用了 <code class="highlighter-rouge">--all-databases</code> 或 <code class="highlighter-rouge">--databases</code> 选项，mysqldump 为每个数据库创建备份前，会先使用 <code class="highlighter-rouge">CREATE DATABASE</code> 和 <code class="highlighter-rouge">USE</code> 语句，以确保在恢复数据时，如果不存在会先创建这些数据库，并将其做为默认数据库，以保证数据恢复的准确。</p>
+
+<h4 id="恢复-sql-格式备份">恢复 SQL 格式备份</h4>
+
+<p>恢复由 mysqldump 备份的文件时，将其做为 mysql 客户端的输入。</p>
+
+<h5 id="自动创建数据库">自动创建数据库</h5>
+
+<p>如果备份文件创建时使用了 <code class="highlighter-rouge">--all-databases</code> 或 <code class="highlighter-rouge">--databases</code> 选项，它会包含 <code class="highlighter-rouge">CREATE DATABASE</code> 和 <code class="highlighter-rouge">USE</code> 语句，因此恢复时无需指定将其加载到哪个数据库：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysql &lt; dump.sql
+</code></pre></div></div>
+
+<p>另一种方法是进入 mysql 之后，用 <code class="highlighter-rouge">source</code> 命令来导入：</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="k">source</span> <span class="n">dump</span><span class="p">.</span><span class="k">sql</span>
+</code></pre></div></div>
+
+<h5 id="手动创建数据库">手动创建数据库</h5>
+
+<p>如果备份文件是单一数据库的备份，而且备份时没有使用 <code class="highlighter-rouge">CREATE DATABASE</code> 和 <code class="highlighter-rouge">USE</code> 语句，恢复时则需要先手动创建数据库：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysqladmin create db1
+</code></pre></div></div>
+
+<p>然后加载备份文件时，指定数据库：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysql db1 &lt; dump.sql
+</code></pre></div></div>
+
+<p>另一种方法，进入 mysql 之后，创建数据库，设为默认数据库，导入备份文件：</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="k">CREATE</span> <span class="k">DATABASE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">db1</span><span class="p">;</span>
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">USE</span> <span class="n">db1</span><span class="p">;</span>
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="k">source</span> <span class="n">dump</span><span class="p">.</span><span class="k">sql</span>
+</code></pre></div></div>
+
+<h4 id="备份为分隔文本格式">备份为分隔文本格式</h4>
+
+<p>调用 mysqldump 时，如果使用 <code class="highlighter-rouge">--tab=dir_name</code> 选项，它会把 dir_name 做为输出目录，然后把表格备份到该目录中，每个表格输出 <code class="highlighter-rouge">.sql</code> 和 <code class="highlighter-rouge">.txt</code> 两个文件。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysqldump <span class="nt">--tab</span><span class="o">=</span>/tmp db1
+</code></pre></div></div>
+
+<p>数据库 <code class="highlighter-rouge">db1</code> 的内容将会备份到 <code class="highlighter-rouge">/tmp</code> 目录中。</p>
+
+<p><code class="highlighter-rouge">.txt</code> 文件包含表数据，是由服务端写入的，因此其所有者为运行服务端的系统帐户。</p>
+
+<p>服务端使用 <code class="highlighter-rouge">SELECT ... INTO OUTFILE</code> 语句来写入该文件，因此，恢复时必须有 <code class="highlighter-rouge">FILE</code> 权限才能进行此操作。</p>
+
+<p><code class="highlighter-rouge">.sql</code> 文件的所有者是备份时执行 mysqldump 的用户。</p>
+
+<p>建议 <code class="highlighter-rouge">--tab</code> 选项只用于备份本地服务端，如果要用于备份远程服务端，该选项所指定的目录必须在服务端和客户端主机中同时存在，<code class="highlighter-rouge">.txt</code> 文件将被服务端保存在服务端主机上，而 <code class="highlighter-rouge">.sql</code> 文件将被　mysqldump 保存在客户端主机上。</p>
+
+<p>针对 <code class="highlighter-rouge">mysqldump --tab</code> ，服务端默认会把表中的数据输入 <code class="highlighter-rouge">.txt</code> 文件中，每条记录写在一行，字段之间用 tab 分隔。字段值外面没有引号，每行由换行符做为结束符。</p>
+
+<h5 id="自定义输出格式">自定义输出格式</h5>
+
+<p>mysqldump 支持以下选项：</p>
+
+<p><code class="highlighter-rouge">--fields-terminated-by=str</code> ：指定 <strong>分隔字段</strong> 的字符串，默认为 tab。</p>
+
+<p><code class="highlighter-rouge">--fileds-enclosed-by=char</code> ：用什么字符来 <strong>包围字段值</strong>，默认没有字符。</p>
+
+<p><code class="highlighter-rouge">--fields-optionaly-enclosed-by=char</code> ：用什么字符来 <strong>包围非数字</strong> 的字段值，默认没有字符。</p>
+
+<p><code class="highlighter-rouge">--fields-escaped-by=char</code> ：用什么字符来 <strong>转义特殊字符</strong>，默认没有转义。</p>
+
+<p><code class="highlighter-rouge">--lines-terminated-by=str</code> ：用什么字符来 <strong>结束行</strong>，默认为换行符。</p>
+
+<p>使用这些选项来自定义输出的格式时，可能会需要在命令行中 <strong>引用</strong> 或 <strong>转义</strong> 某些字符，或者使用 <strong>十六进制表示法</strong>。</p>
+
+<p>用双引号包围字段值：</p>
+
+<p>在 Linux 中可以这样用：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--fields-enclosed-by='"'
+</code></pre></div></div>
+
+<p>在所有平台可以这样用：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--fields-enclosed-by=0x22
+</code></pre></div></div>
+
+<p>可以同时使用多个选项，如用逗号分隔字段值，用 <code class="highlighter-rouge">\r\n</code> 做为行的结束符：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysqldump <span class="nt">--tab</span><span class="o">=</span>/tmp <span class="nt">--fields-terminated-by</span><span class="o">=</span>, <span class="nt">--fields-enclosed-by</span><span class="o">=</span><span class="s1">'"'</span> <span class="nt">--lines-terminated-by</span><span class="o">=</span>0x0d0a db1
+</code></pre></div></div>
+
+<h4 id="恢复分隔文本格式的备份">恢复分隔文本格式的备份</h4>
+
+<p>对于使用 <code class="highlighter-rouge">mysqldump --tab</code> 生成的备份来说，每个表有两个文件：</p>
+
+<p><code class="highlighter-rouge">.sql</code> 文件就代表一个表，其中包含 <code class="highlighter-rouge">CREATE TABLE</code> 语句，<code class="highlighter-rouge">.txt</code> 文件包含了表的数据。</p>
+
+<p>要想重新加载表，要把工作路径切换到输出目录，先用 mysql 来处理 <code class="highlighter-rouge">.sql</code> 文件，<strong>生成一个空表</strong>，再处理 <code class="highlighter-rouge">.txt</code> 文件，以便把数据 <strong>导入</strong> 表中。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysql db1 &lt; t1.sql
+shell&gt; mysqlimport db1 t1.txt
+</code></pre></div></div>
+
+<p>另一种方法：</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">USE</span> <span class="n">db1</span><span class="p">;</span>
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="k">LOAD</span> <span class="k">DATA</span> <span class="n">INFILE</span> <span class="s1">'t1.txt'</span> <span class="k">INTO</span> <span class="k">TABLE</span> <span class="n">t1</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p class="notice--success">备份时使用了什么格式选项，恢复时也必须使用相同的选项，这样才能保证数据被正确恢复。</p>
+
+<h4 id="mysqldump-tips"><code class="highlighter-rouge">mysqldump</code> TIPS</h4>
+
+<h5 id="生成数据库的副本">生成数据库的副本</h5>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysqldump db1 <span class="o">&gt;</span> dump.sql
+shell&gt; mysqladmin create db2
+shell&gt; mysql db2 &lt; dump.sql
+</code></pre></div></div>
+
+<p>此时不要在 mysqldump 命令行中使用 <code class="highlighter-rouge">--databases</code> 选项，因为它会使得备份文件中包含 <code class="highlighter-rouge">USE db1</code>，这将会覆盖对 <code class="highlighter-rouge">db2</code> 的命名。</p>
+
+<h5 id="把数据库从一台服务器复制到另一台">把数据库从一台服务器复制到另一台</h5>
+
+<p>在服务器 1 上：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysqldump <span class="nt">--databases</span> db1 <span class="o">&gt;</span> dump.sql
+</code></pre></div></div>
+
+<p>把备份文件复制到服务器 2 中，然后在服务器 2 上：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysql &lt; dump.sql
+</code></pre></div></div>
+
+<h5 id="备份保存的程序">备份保存的程序</h5>
+
+<blockquote>
+  <p>保存的程序：保存的流程、函数、触发器、事件。</p>
+</blockquote>
+
+<p>有一些选项是用来控制 mysqldump 如何处理保存的程序的：</p>
+
+<p><code class="highlighter-rouge">--events</code> ：备份事件计划，默认禁用</p>
+
+<p><code class="highlighter-rouge">--routines</code> ：备份保存的流程和函数，默认禁用</p>
+
+<p><code class="highlighter-rouge">--triggers</code> ：备份表的触发器，默认启用，因此在备份表时，同时都会备份其中的触发器。</p>
+
+<p>需要时，可以用 <code class="highlighter-rouge">--skip-events</code>、<code class="highlighter-rouge">--skip-routines</code>、<code class="highlighter-rouge">--skip-triggers</code> 来显式禁用这些选项。</p>
+
+<h5 id="把表结构和内容分开备份">把表结构和内容分开备份</h5>
+
+<p>使用 <code class="highlighter-rouge">--no-data</code> 选项，可以让 mysqldump 不要复制表中的数据，备份文件只包含创建表的语句。</p>
+
+<p>使用 <code class="highlighter-rouge">--no-create-info</code> 选项，可以让 mysqldump 在输出中不要使用创建表的语句，于是备份文件中只有表的数据。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysqldump <span class="nt">--no-data</span> <span class="nb">test</span> <span class="o">&gt;</span> dump-defs.sql
+shell&gt; mysqldump <span class="nt">--no-create-info</span> <span class="nb">test</span> <span class="o">&gt;</span> dump-data.sql
+</code></pre></div></div>
+
+<p>在备份文件中包含保存的例程及事件定义：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysqldump <span class="nt">--no-data</span> <span class="nt">--routines</span> <span class="nt">--events</span> <span class="nb">test</span> <span class="o">&gt;</span> dump-defs.sql
+</code></pre></div></div>
+
+<h5 id="用-mysqldump-来测试升级的兼容性">用 mysqldump 来测试升级的兼容性</h5>
+
+<p>如果要进行 MySQL 升级，比较明智的做法是把新版本单独安装，与当前版本隔离开。然后从当前服务端把数据库及其对象的定义备份出来，将其加载到新版本中，以确认新版是否能正常工作。</p>
+
+<p>备份当前服务端：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysqldump <span class="nt">--all-databases</span> <span class="nt">--no-data</span> <span class="nt">--routines</span> <span class="nt">--events</span> <span class="o">&gt;</span> dump-defs.sql
+</code></pre></div></div>
+
+<p>在新服务端：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysql &lt; dump-defs.sql
+</code></pre></div></div>
+
+<p>备份文件不包含表的数据，因此处理起来非常快。不用等太久就能观察到是否有潜在的兼容性问题，备份文件处理期间，仔细查找是否有警告或错误信息。</p>
+
+<p>在确认各种定义都被正确处理时，再把数据备份下来，加载到新服务端。</p>
+
+<p>当前服务端：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysqldump <span class="nt">--all-databases</span> <span class="nt">--no-create-info</span> <span class="o">&gt;</span> dump-data.sql
+</code></pre></div></div>
+
+<p>新服务端：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysql &lt; dump-data.sql
+</code></pre></div></div>
+
+<h2 id="用二进制日志进行时间点增量恢复">用二进制日志进行时间点增量恢复</h2>
+
+<p>时间点恢复是指对某个时间点之后的数据变化进行恢复。这种恢复通常是在一个完整恢复之后进行的。时间点恢复将服务器的状态恢复到完整备份之后某个更近的时间点。</p>
+
+<p class="notice">本小节的范例中，使用 mysql 客户端来处理由 mysqlbinlog 生成的二进制日志。如果你的二进制日志中含有 <code class="highlighter-rouge">\0</code> 字符，即空字符，不能直接用 mysql 来分析，需要启用 <code class="highlighter-rouge">--binary-mode</code> 选项。</p>
+
+<h3 id="时间点恢复的原则">时间点恢复的原则</h3>
+
+<h4 id="确定二进制日志文件名">确定二进制日志文件名</h4>
+
+<p>完整备份之后生成的累积备份保存在二进制日志中，时间点恢复是按照其中的信息来完成的。服务端启动时必须使用 <code class="highlighter-rouge">--log-bin</code> 选项才能生成二进制日志。</p>
+
+<p>要想从二进制日志中恢复数据，必须了解当前的二进制日志文件的文件名和位置。服务端默认将其保存在数据目录中，但也可能使用 <code class="highlighter-rouge">--log-bin</code> 选项时指定了其他位置。</p>
+
+<p>查看所有二进制日志列表：</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="k">SHOW</span> <span class="n">BINARY</span> <span class="n">LOGS</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>查看当前使用的二进制日志：</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="k">SHOW</span> <span class="n">MASTER</span> <span class="n">STATUS</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h4 id="日志格式转换">日志格式转换</h4>
+
+<p>mysqlbinlog 程序会把二进制日志文件中的事件从二进制格式 <strong>转换</strong> 为文本，然后这些事件才能被执行或查看。</p>
+
+<p>通过 mysqlbinlog 的一些选项，可以基于事件的时间或其在日志中的位置，来选择日志中的特定部分。</p>
+
+<h4 id="执行日志中的事件">执行日志中的事件</h4>
+
+<p>执行日志中的事件可以重复这些对数据的操作，使得恢复某个时间跨度内的数据修改成为可能。</p>
+
+<p>通过使用 mysql 客户端来处理 mysqlbinlog 的输出，来执行日志中的事件：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysqlbinlog binlog_files | mysql <span class="nt">-u</span> root <span class="nt">-p</span>
+</code></pre></div></div>
+
+<h4 id="查看日志">查看日志</h4>
+
+<p>要想确定事件的时间或位置以选择部分日志，需要查看日志的内容，把 mysqlbinlog 的输出发送给支持翻页阅读的程序：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysqlbinlog binlog_files | more
+</code></pre></div></div>
+
+<p>或者，重定向到文件：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysqlbinlog binlog_files <span class="o">&gt;</span> tmpfile
+</code></pre></div></div>
+
+<h4 id="把日志保存为文件">把日志保存为文件</h4>
+
+<p>在执行日志内容之前，先把日志另存为文件，然后删除一些不需要执行的内容，用该文件做为 mysql 的标准输入来执行日志。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysql <span class="nt">-u</span> root <span class="nt">-p</span> &lt; tmpfile
+</code></pre></div></div>
+
+<h3 id="处理多个日志文件">处理多个日志文件</h3>
+
+<p>如果有多个二进制日志要执行，最安全的方法是使用一个连接一起来处理。</p>
+
+<p>这种分别处理是不安全的：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysqlbinlog binlog.000001 | mysql <span class="nt">-u</span> root <span class="nt">-p</span> <span class="c"># DANGER!!</span>
+shell&gt; mysqlbinlog binlog.000002 | mysql <span class="nt">-u</span> root <span class="nt">-p</span> <span class="c"># DANGER!!</span>
+</code></pre></div></div>
+
+<p>这是用不同的连接来处理多个日志。如果第一个日志中包含了 <code class="highlighter-rouge">CREATE TEMPORARY TABLE</code> 语句，第二个日志中含有使用这个临时表的语句，这种方法就会出问题。因为第一个 mysql 进程结束时，服务端会删除临时表，第二个 mysql 进程是找不到这个临时表的。</p>
+
+<p>为了避免这样的问题发生，一定要使用同一个连接来执行所有的日志：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysqlbinlog binlog.000001 binlog.000002 | mysql <span class="nt">-u</span> root <span class="nt">-p</span>
+</code></pre></div></div>
+
+<p>另一个方法是把所有日志写到一个文件中，然后处理这个文件：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysqlbinlog binlog.000001 <span class="o">&gt;</span>  /tmp/statements.sql
+shell&gt; mysqlbinlog binlog.000002 <span class="o">&gt;&gt;</span> /tmp/statements.sql
+shell&gt; mysql <span class="nt">-u</span> root <span class="nt">-p</span> <span class="nt">-e</span> <span class="s2">"source /tmp/statements.sql"</span>
+</code></pre></div></div>
+
+<h3 id="包含-gtid-的日志">包含 GTID 的日志</h3>
+
+<p>如果二进制日志中含有 GTID（Global Transaction Identifier），在用 mysqlbinlog 读取日志时要使用 <code class="highlighter-rouge">--skip-gtids</code> 选项：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysqlbinlog <span class="nt">--skip-gtids</span> binlog.000001 <span class="o">&gt;</span>  /tmp/dump.sql
+shell&gt; mysqlbinlog <span class="nt">--skip-gtids</span> binlog.000002 <span class="o">&gt;&gt;</span> /tmp/dump.sql
+shell&gt; mysql <span class="nt">-u</span> root <span class="nt">-p</span> <span class="nt">-e</span> <span class="s2">"source /tmp/dump.sql"</span>
+</code></pre></div></div>
+
+<h3 id="使用事件时间来恢复">使用事件时间来恢复</h3>
+
+<p>在确定了要恢复的日志中哪个时间段的内容后，用 <code class="highlighter-rouge">--start-datetime</code> 来指定开始时间，用  <code class="highlighter-rouge">--stop-datetime</code> 指定结束时间。需要使用 <code class="highlighter-rouge">DATETIME</code> 格式来表示时间，即 <code class="highlighter-rouge">YYYY-MM-DD HH:MM:SS</code>。</p>
+
+<p>假设在 2005年4月20日 上午 10 点整，执行了一条 SQL 语句，导致一个大表被删除，要想恢复这个表及其中的数据，可以先恢复前一晚上的备份，然后执行以下命令：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysqlbinlog <span class="nt">--stop-datetime</span><span class="o">=</span><span class="s2">"2005-04-20 9:59:59"</span> <span class="se">\</span>
+         /var/log/mysql/bin.123456 | mysql <span class="nt">-u</span> root <span class="nt">-p</span>
+</code></pre></div></div>
+
+<p>该命令会恢复该时间点之前的所有数据。如果直到几个小时之后才发现错误语句的执行，可能还需要恢复在此之后发生的操作：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysqlbinlog <span class="nt">--start-datetime</span><span class="o">=</span><span class="s2">"2005-04-20 10:01:00"</span> <span class="se">\</span>
+         /var/log/mysql/bin.123456 | mysql <span class="nt">-u</span> root <span class="nt">-p</span>
+</code></pre></div></div>
+
+<p>至此，原则上就可以把 10 点之前的数据，以及 10 点以后的数据全部恢复了。</p>
+
+<h3 id="使用事件位置来恢复">使用事件位置来恢复</h3>
+
+<p>可以指定日志中两个位置之间的部分来恢复，使用选项 <code class="highlighter-rouge">--start-position</code> 和 <code class="highlighter-rouge">--stop-position</code> 来指定起始和结束的位置。工作原理与用时间点恢复差不多。这种方式可以更精确地选择恢复哪部分日志，尤其是错误语句执行的同一时刻发生了许多事务的情况下。要想确定位置编号，先在在大概时间范围内运行 mysqlbinlog，重定向到文件中仔细检查：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysqlbinlog <span class="nt">--start-datetime</span><span class="o">=</span><span class="s2">"2005-04-20 9:55:00"</span> <span class="se">\</span>
+         <span class="nt">--stop-datetime</span><span class="o">=</span><span class="s2">"2005-04-20 10:05:00"</span> <span class="se">\</span>
+         /var/log/mysql/bin.123456 <span class="o">&gt;</span> /tmp/mysql_restore.sql
+</code></pre></div></div>
+
+<p>用文本编辑器打开 <code class="highlighter-rouge">.sql</code> 文件，查找事故语句，确定其在日志中的位置。位置标签为 <code class="highlighter-rouge">log_pos</code> ，后面跟一个数字，即位置编号。在恢复之前的备份文件之后，再用位置编号来处理二进制日志文件：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysqlbinlog <span class="nt">--stop-position</span><span class="o">=</span>368312 /var/log/mysql/bin.123456 <span class="se">\</span>
+         | mysql <span class="nt">-u</span> root <span class="nt">-p</span>
+</code></pre></div></div>
+
+<p>该语句恢复该位置之前的所有事务。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysqlbinlog <span class="nt">--start-position</span><span class="o">=</span>368315 /var/log/mysql/bin.123456 <span class="se">\</span>
+         | mysql <span class="nt">-u</span> root <span class="nt">-p</span>
+</code></pre></div></div>
+
+<p>该语句恢复该位置之后的所有事务。</p>
+
+<p>因为在记录每条语句之前， mysqlbinlog 的输出中会包含 <code class="highlighter-rouge">SET TIMSTAMP</code> 语句，因此恢复的数据和相关的日志会反映事务执行的原始时间。</p>
+
+<h2 id="myisam-表的维护及灾难恢复">MyISAM 表的维护及灾难恢复</h2>
+
+<h3 id="使用-myisamchk-进行崩溃恢复">使用 <code class="highlighter-rouge">myisamchk</code> 进行崩溃恢复</h3>
+
+<p>运行 mysqld 时默认是禁用外部锁的，当 mysqld 正在使用某个表时，无法同时使用 <code class="highlighter-rouge">myisamchk</code> 来对这个表进行检查，必须先执行 <code class="highlighter-rouge">mysqladmin flush-tables</code>，然后再检查。如果不能做到这一点，那检查表的时候就必须停止 mysqld 的运行。</p>
+
+<p>如果服务端运行时启用了外部锁，就可以在任何时候使用 <code class="highlighter-rouge">myisamchk</code> 来对表进行检查了。这种情况下，如果检查期间，服务端尝试更新同一个表，它会等待，直到检查结束才继续其更新。</p>
+
+<p>如果要使用 <code class="highlighter-rouge">myisamchk</code> 来修复或优化表，则 <strong>必须</strong> 要确保 mysqld 服务端没有使用该表。如果没有停止运行 mysqld，至少也要先运行 <code class="highlighter-rouge">mysqladmin flush-tables</code>，然后再运行 <code class="highlighter-rouge">myisamchk</code>。如果服务端和 <code class="highlighter-rouge">myisamchk</code> 同时访问这个表，有可能会损坏该表。</p>
+
+<p>进行崩溃恢复时，一定要记住：数据库中的每个 MyISAM 表都对应数据库目录中的三个文件，<code class="highlighter-rouge">.frm</code> 文件用于保存表的定义，<code class="highlighter-rouge">.MYD</code> 文件为数据文件，<code class="highlighter-rouge">.MYI</code> 为索引文件。崩溃通常会导致数据文件和索引文件损坏。</p>
+
+<p>myisamchk 会逐行地生成数据文件的副本，修复之后它会删除原数据文件，把新生成的文件重命名为原数据文件。</p>
+
+<p>如果使用 <code class="highlighter-rouge">--quick</code> 选项，myisamchk 就不会生成临时的数据文件，它会认为数据文件没有损坏，只生成一个新的索引文件。这种做法比较安全，因为 myisamchk 会自动检测数据文件是否损坏，如果损坏，会退出。</p>
+
+<p>还可以使用 <code class="highlighter-rouge">--quick</code> 选项两次，此时，myisamchk 遇到错误不会退出，而会尝试通过修改数据文件来解决。只有当可用磁盘空间不多时才建议使用两次该选项。但在修复之前，还是应该把表备份一下。</p>
+
+<h3 id="如何检测-myisam-表的错误">如何检测 MyISAM 表的错误</h3>
+
+<p>要想检查 MyISAM 表，可用以下命令：</p>
+
+<h4 id="myisamchk-tbl_name"><code class="highlighter-rouge">myisamchk tbl_name</code></h4>
+
+<p>该命令会找到 99.99% 的错误，它找不到的是只涉及数据文件的错误，这种很少见。</p>
+
+<p>如果要检查一个表，通常应该不用选项，直接运行 mysiamchk，或只用 <code class="highlighter-rouge">-s</code> 选项，安静模式。</p>
+
+<h4 id="myisamchk--m-tbl_name"><code class="highlighter-rouge">myisamchk -m tbl_name</code></h4>
+
+<p>该命令会找到 99.99% 的错误。它首先会检查所有的索引条目，然后检查所有的行，它会为行中所有的键值计算一个校验码，确认该校验码与索引树中各键的校验码相匹配。</p>
+
+<h4 id="myisamchk--e-tbl_name"><code class="highlighter-rouge">myisamchk -e tbl_name</code></h4>
+
+<p><code class="highlighter-rouge">-e</code> 表示 extended check。该命令会对所有数据进行一个彻底的检查</p>
+
+<p>它会对每个键都进行读测试，以确认它们都指向正确的记录。如果表很大，索引很多，这可能会需要很长时间。</p>
+
+<p>myisamchk 通常在发现第一个错误时会暂停，如果要获得更多的信息，可以加一个  <code class="highlighter-rouge">-v</code>  选项。</p>
+
+<h4 id="myisamchk--e--i-tbl_name"><code class="highlighter-rouge">myisamchk -e -i tbl_name</code></h4>
+
+<p>与上一个命令类似，但 <code class="highlighter-rouge">-i</code> 选项告诉 myisamchk 打印额外的统计信息。</p>
+
+<h3 id="如何修复-myisam-表">如何修复 MyISAM 表</h3>
+
+<p>表损坏的症状，可以是查询被意外取消，以及各类错误，如：</p>
+
+<ul>
+  <li>Can’t find file tbl_name.MYI (Errcode: nnn)</li>
+  <li>Unexpected end of file</li>
+  <li>Record file is crashed</li>
+  <li>Got error nnn from table handler</li>
+</ul>
+
+<p>nnn 代表错误编号，通过 <code class="highlighter-rouge">perror nnn</code> 可以查看更多关于该错误的信息。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; perror 126 127 132 134 135 136 141 144 145
+MySQL error code 126 <span class="o">=</span> Index file is crashed
+MySQL error code 127 <span class="o">=</span> Record-file is crashed
+MySQL error code 132 <span class="o">=</span> Old database file
+MySQL error code 134 <span class="o">=</span> Record was already deleted <span class="o">(</span>or record file crashed<span class="o">)</span>
+MySQL error code 135 <span class="o">=</span> No more room <span class="k">in </span>record file
+MySQL error code 136 <span class="o">=</span> No more room <span class="k">in </span>index file
+MySQL error code 141 <span class="o">=</span> Duplicate unique key or constraint on write or update
+MySQL error code 144 <span class="o">=</span> Table is crashed and last repair failed
+MySQL error code 145 <span class="o">=</span> Table was marked as crashed and should be repaired
+</code></pre></div></div>
+
+<h4 id="表空间不够用">表空间不够用</h4>
+
+<p>其中，编号为 135 和 136 的错误，无法仅通过简单的修复来解决。必须使用 <code class="highlighter-rouge">ALTER TABLE</code> 来提升最大行数和平均行长度：</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">tbl_name</span> <span class="n">MAX_ROWS</span><span class="o">=</span><span class="n">xxx</span> <span class="n">AVG_ROW_LENGTH</span><span class="o">=</span><span class="n">yyy</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>如果不知道当前的设置，用 <code class="highlighter-rouge">SHOW CREATE TABLE</code> 查看。</p>
+
+<h4 id="其它错误">其它错误</h4>
+
+<p>对于其它的错误，必须对表进行修复。myisamchk 通常可以检测并修复多数错误。</p>
+
+<p>开始之前，把工作目录切换到数据库目录，并检查表文件的权限。确保其对运行 mysqld 的用户及当前用户是可读的。如果要修改文件，还需要可写。</p>
+
+<p>开始修复表之前，需要先停止运行 mysqld 服务端。如果在远程服务器上运行 <code class="highlighter-rouge">mysqladmin shutdown</code>，在 mysqladmin 返回之后，mysqld 服务端还会继续运行一段时间，直到所有运行中的语句停止运行，所有发生变化的索引全部冲洗到磁盘中，才会彻底停止。</p>
+
+<p>修复的过程主要有三个阶段：</p>
+
+<h5 id="第一步检查表">第一步：检查表</h5>
+
+<p>运行 <code class="highlighter-rouge">myisamchk *.MYI</code>。</p>
+
+<p>如果时间充足，则运行 <code class="highlighter-rouge">myisamchk -e *.MYI</code>。</p>
+
+<p>用 <code class="highlighter-rouge">-s</code> 隐藏不必要的信息。</p>
+
+<p>如果 mysqld 已经停止运行，应该使用 <code class="highlighter-rouge">--update-state</code> 选项，myisamchk 会把表标记为 “已检测”。</p>
+
+<p>如果 myisamchk 发现了某些表的错误，跳转到第二步。</p>
+
+<p>检查如果遇到意外错误，如 <code class="highlighter-rouge">out of memory</code> 等，或 myisamchk 崩溃了，跳转到第三步。</p>
+
+<h5 id="第二步简单安全地修复">第二步：简单安全地修复</h5>
+
+<p>首先，用 <code class="highlighter-rouge">myisamchk -r -q tbl_name</code> 尝试一下，<code class="highlighter-rouge">-r -q</code> 表示快速恢复模式。</p>
+
+<p>该模式会尝试在不修改数据文件的情况下修复索引文件。如果数据文件是完整的，该有的都有，而且删除链接都指向数据文件正确的位置，该模式应该会修复表。否则进入以下流程：</p>
+
+<ul>
+  <li>为数据文件做个备份</li>
+  <li>运行 <code class="highlighter-rouge">myisamchk -r tbl_name</code>，会把错误的行和删除的行从数据文件中清除掉，然后重建索引文件</li>
+  <li>如果上步失败，则运行 <code class="highlighter-rouge">myisamchk --safe-recover tbl_name</code>，安全恢复模式会用一个较老的恢复办法，能处理一些普通恢复模式无法处理的问题，但更费时间</li>
+</ul>
+
+<p class="notice">运行 myisamchk 时，如果希望修复操作能更快一些，可以把变量 <code class="highlighter-rouge">sort_buffer_size</code> 和 <code class="highlighter-rouge">key_buffer_size</code> 的值设置为可用内存的 25% 左右。</p>
+
+<p>修复期间如果遇到意外错误，如 <code class="highlighter-rouge">out of memory</code> 等，或 myisamchk 崩溃了，跳转到第三步。</p>
+
+<h5 id="第三步难度大的修复">第三步：难度大的修复</h5>
+
+<p>如果索引文件的前 16KB 被破坏，或包含错误信息，或索引文件丢失，才会第这一步。此时，很有必要重新创建一个索引文件：</p>
+
+<ul>
+  <li>把数据文件移动到安全的位置</li>
+  <li>用表格描述文件来创建新的空的数据文件和索引文件：</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; mysql db_name
+</code></pre></div></div>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="k">SET</span> <span class="n">autocommit</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="k">TRUNCATE</span> <span class="k">TABLE</span> <span class="n">tbl_name</span><span class="p">;</span>
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="n">quit</span>
+</code></pre></div></div>
+
+<ul>
+  <li>把原数据文件复制到新数据文件中，同时建议保存原数据文件副本，以备不时之需。</li>
+</ul>
+
+<p class="notice--warning">如果使用了主从复制，应该先将其暂停，然后再进行上面的操作。因为涉及到文件系统的操作，这些不会保存到 MySQL 日志中。</p>
+
+<p>返回第二步，<code class="highlighter-rouge">myisamchk -r -q</code> 此时应该能正常进行了。</p>
+
+<p>也可以使用 <code class="highlighter-rouge">REPAIRE TABLE tbl_name USE_FRM</code> 语句，会自动进行整个流程。</p>
+
+<h3 id="myisam-表的优化">MyISAM 表的优化</h3>
+
+<p>若要合并零碎的行，并消除因删除或更新行导致的空间浪费，请在恢复模式下运行 myisamchk：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; myisamchk <span class="nt">-r</span> tbl_name
+</code></pre></div></div>
+
+<p>使用 <code class="highlighter-rouge">OPTIMIZE TABLE</code> 语句，也能以同样的方式优化表格，该语句会修复表格，并对键进行分析，还会排序索引树，以便键的查找能更快速。</p>
+
+<h3 id="设置-myisam-表维护计划">设置 MyISAM 表维护计划</h3>
+
+<p>经常对表格进行检查是非常有必要的，以免出现问题造成措手不及。</p>
+
+<h4 id="方法一">方法一</h4>
+
+<p>检查 MyISAM 表格的一种方法是使用 <code class="highlighter-rouge">CHECK TABLE</code> 和 <code class="highlighter-rouge">REPAIR TABLE</code> 语句。</p>
+
+<h4 id="方法二">方法二</h4>
+
+<p>另一种方法是使用 myisamchk，如果是用于维护，可使用静默模式，即开启 <code class="highlighter-rouge">-s</code> 选项，只有发生错误时才会显示信息。</p>
+
+<h4 id="方法三">方法三</h4>
+
+<p>还可以考虑在启动服务端时启用 <code class="highlighter-rouge">--myisam-recover-options</code> 选项，以启用对 MyISAM 表的自动检查。假如在更新期间，如果重启系统了，通常需要先检查一下表，然后再开始使用。</p>
+
+<h4 id="方法四">方法四</h4>
+
+<p>使用 <code class="highlighter-rouge">cron</code> 来添加计划任务：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>35 0 <span class="k">*</span> <span class="k">*</span> 0 /path/to/myisamchk <span class="nt">--fast</span> <span class="nt">--silent</span> /path/to/datadir/<span class="k">*</span>/<span class="k">*</span>.MYI
+</code></pre></div></div>
+
+<p>如果观察一段时间发现很少出错，可以考虑适当减小检查的频率。</p>
+
+<p>通常来说，MySQL 的表不太需要维护。</p>
+
+<p>如果对 MyISAM 表进行大量的更新，如使用动态大小的行（含有 <code class="highlighter-rouge">VARCHAR</code>、<code class="highlighter-rouge">BLOB</code>、<code class="highlighter-rouge">TEXT</code> 字段的表），或某些表中有许多被删除的行，时不时地需要整理碎片以清理表空间，这种情况下可以使用 <code class="highlighter-rouge">OPTIMIZE TABLE</code> 来处理这些表。</p>
+
+<p>或者，如果可以把 mysqld 服务端停止一段时间，切换到数据目录，然后使用以下命令：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell&gt; myisamchk <span class="nt">-r</span> <span class="nt">-s</span> <span class="nt">--sort-index</span> <span class="nt">--myisam_sort_buffer_size</span><span class="o">=</span>16M <span class="k">*</span>/<span class="k">*</span>.MYI
+</code></pre></div></div>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/mysql" class="page__taxonomy-item" rel="tag">mysql</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/备份" class="page__taxonomy-item" rel="tag">备份</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://linotes.netlify.com/categories/#database" class="page__taxonomy-item" rel="tag">database</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2016-03-01T00:00:00+08:00">March 01, 2016</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="https://linotes.netlify.com/database/account.managemt/" class="pagination--pager" title="上一页
+">MySQL 的帐户管理</a>
+    
+    
+      <a href="https://linotes.netlify.com/database/intro/" class="pagination--pager" title="下一页
+">MySQL 入门</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">相关文章</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/kernel/filedescriptor/" rel="permalink">文件描述符简介
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash03/" rel="permalink">Bash 入门 03
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">循环，变量，函数，捕捉信号
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash02/" rel="permalink">Bash 入门 02
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">正则表达式，SED，AWK，条件结构，交互式脚本
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash01/" rel="permalink">Bash 入门 01
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">Bash 与 Bash 脚本，脚本的编写与调试，Bash 环境
+</p>
+-->
+
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+    
+    
+    
+    
+    <li><a href="https://linotes.netlify.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="https://linotes.netlify.com/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

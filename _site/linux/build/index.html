@@ -1,0 +1,1717 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Linux 基础 - 16. 程序的构建 - LINOTES</title>
+<meta name="description" content="用简洁清晰的语言讨论技术">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Linux 基础 - 16. 程序的构建">
+<meta property="og:url" content="https://linotes.netlify.com/linux/build/">
+
+
+  <meta property="og:description" content="用简洁清晰的语言讨论技术">
+
+
+
+  <meta property="og:image" content="https://linotes.netlify.com/assets/images/header/linux.jpg">
+
+
+
+
+
+  <meta property="article:published_time" content="2015-01-16T00:00:00+08:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://linotes.netlify.com/linux/build/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="https://linotes.netlify.com/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="https://linotes.netlify.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="https://linotes.netlify.com/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://linotes.netlify.com/assets/images/header/linux.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Linux 基础 - 16. 程序的构建
+
+        
+      </h1>
+      
+        <p class="page__lead">
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="https://linotes.netlify.com/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:imhawkz@gmail.com">
+            <meta itemprop="email" content="imhawkz@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Linux 基础 - 16. 程序的构建">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="January 16, 2015">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-code-branch"></i> 16. 程序的构建</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#161-程序的构建">16.1 程序的构建</a>
+    <ul>
+      <li><a href="#1611-配置">16.1.1 配置</a></li>
+      <li><a href="#1612-确定标准库和头文件的位置">16.1.2 确定标准库和头文件的位置</a></li>
+      <li><a href="#1613-确定信赖关系">16.1.3 确定信赖关系</a></li>
+      <li><a href="#1614-头文件的预编译">16.1.4 头文件的预编译</a></li>
+      <li><a href="#1615-预处理">16.1.5 预处理</a></li>
+      <li><a href="#1616-编译">16.1.6 编译</a></li>
+      <li><a href="#1617-链接">16.1.7 链接</a></li>
+      <li><a href="#1618-安装">16.1.8 安装</a></li>
+      <li><a href="#1619-链接到操作系统">16.1.9 链接到操作系统</a></li>
+      <li><a href="#16110-生成安装包">16.1.10 生成安装包</a></li>
+    </ul>
+  </li>
+  <li><a href="#162-自动化构建工具-make">16.2 自动化构建工具 make</a>
+    <ul>
+      <li><a href="#1621-makefile">16.2.1 makefile</a></li>
+      <li><a href="#1622-configure">16.2.2 configure</a></li>
+      <li><a href="#1623-使用-make">16.2.3 使用 make</a></li>
+    </ul>
+  </li>
+  <li><a href="#163-tarball-程序的构建与安装流程">16.3 Tarball 程序的构建与安装流程</a>
+    <ul>
+      <li><a href="#1631-tarball">16.3.1 Tarball</a></li>
+      <li><a href="#1632-经典的安装三步曲">16.3.2 经典的安装三步曲</a></li>
+      <li><a href="#1633-安装路径">16.3.3 安装路径</a></li>
+      <li><a href="#1624-更新源代码">16.2.4 更新源代码</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="161-程序的构建">16.1 程序的构建</h2>
+
+<p>通常的开发环境都是流行的集成开发环境（IDE），一般都将编译和链接的过程一步完成，通常将这种 <strong>编译</strong> 和 <strong>链接</strong> 合并到一起的过程称为 <strong>构建</strong>（Build）。即使使用命令行来编译一个源代码文件，简单的一句 <code class="highlighter-rouge">gcc hello.c</code> 命令就包含了非常复杂的过程。</p>
+
+<p>构建程序的过程可以大致分解为预处理、编译、汇编和链接。但本节将其之前和之后的相关工作也加入进来，力图全面地讨论一个程序构建的全过程。在此要特别感谢<a href="http://www.ruanyifeng.com/blog/2014/11/compiler.html">阮一峰老师的文章</a>以及<a href="https://book.douban.com/subject/3652388/">《程序员的自我修养》这本书</a>。</p>
+
+<p><img src="/assets/images/gcc.build.png" alt="image-center" class="align-center" /></p>
+
+<p><img src="/assets/images/compile.process2.png" alt="image-center" class="align-center" /></p>
+
+<p>源代码也称源程序，是指一系列人类可读的计算机语言指令。C 语言的源代码文件后缀为 <code class="highlighter-rouge">.c</code>。</p>
+
+<h3 id="1611-配置">16.1.1 配置</h3>
+
+<p>Configure</p>
+
+<p>编译器在开始工作之前，需要知道当前的系统环境，比如标准库在哪里、软件的安装位置在哪里、需要安装哪些组件等等。这是因为不同计算机的系统环境不一样，通过指定编译参数，编译器就可以灵活适应环境，编译出各种环境都能运行的机器码。这个确定编译参数的步骤，就叫做 “配置”（configure）。</p>
+
+<p>这些配置信息保存在一个配置文件之中，约定俗成是一个叫做 <code class="highlighter-rouge">configure</code> 的脚本文件。通常它是由 <code class="highlighter-rouge">autoconf</code> 工具生成的。编译器通过运行这个脚本，获知编译参数。</p>
+
+<p><code class="highlighter-rouge">configure</code> 脚本已经尽量考虑到不同系统的差异，并且对各种编译参数给出了默认值。如果用户的系统环境比较特别，或者有一些特定的需求，就需要手动向 <code class="highlighter-rouge">configure</code> 脚本提供编译参数。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./configure <span class="nt">--prefix</span><span class="o">=</span>/www <span class="nt">--with-mysql</span>
+</code></pre></div></div>
+
+<p>上面代码是 php 源码的一种编译配置，用户指定安装后的文件保存在 www 目录，并且编译时加入 mysql 模块的支持。</p>
+
+<h3 id="1612-确定标准库和头文件的位置">16.1.2 确定标准库和头文件的位置</h3>
+
+<p>源码肯定会用到标准库函数（standard library）和头文件（header）。它们可以存放在系统的任意目录中，编译器实际上没办法自动检测它们的位置，只有通过配置文件才能知道。</p>
+
+<p>编译的第二步，就是从配置文件中了解标准库和头文件的位置。一般来说，配置文件会给出一个清单，列出几个具体的目录。等到编译时，编译器就按顺序到这几个目录中，寻找目标。</p>
+
+<h3 id="1613-确定信赖关系">16.1.3 确定信赖关系</h3>
+
+<p>对于大型项目来说，源码文件之间往往存在依赖关系，编译器需要确定编译的先后顺序。假定 A 文件依赖于 B 文件，编译器应该保证做到下面两点。</p>
+
+<ul>
+  <li>只有在 B 文件编译完成后，才开始编译 A 文件。</li>
+  <li>当 B 文件发生变化时，A 文件会被重新编译。</li>
+</ul>
+
+<p>编译顺序保存在一个叫做 <code class="highlighter-rouge">makefile</code> 的文件中，里面列出哪个文件先编译，哪个文件后编译。而 <code class="highlighter-rouge">makefile</code> 文件由 <code class="highlighter-rouge">configure</code> 脚本运行生成，这就是为什么编译时 <code class="highlighter-rouge">configure</code> 必须首先运行的原因。</p>
+
+<p>在确定依赖关系的同时，编译器也确定了，编译时会用到哪些头文件。</p>
+
+<h3 id="1614-头文件的预编译">16.1.4 头文件的预编译</h3>
+
+<p>PreCompilation</p>
+
+<p>不同的源码文件，可能引用同一个头文件（比如 <code class="highlighter-rouge">stdio.h</code>）。编译的时候，头文件也必须一起编译。为了节省时间，编译器会在编译源码之前，先编译头文件。这保证了头文件只需编译一次，不必每次用到的时候，都重新编译了。</p>
+
+<p>不过，并不是头文件的所有内容，都会被预编译。用来声明宏的 <code class="highlighter-rouge">#define</code> 命令，就不会被预编译。</p>
+
+<h3 id="1615-预处理">16.1.5 预处理</h3>
+
+<p>PreProcessing</p>
+
+<p>C 预处理器不是编译器的组成部分，但是它是编译过程中一个单独的步骤。C 预处理器只不过是一个 <strong>文本替换工具</strong> 而已，它们会指示编译器在实际编译之前完成所需的预处理。C 预处理器（C Preprocessor）简写为 CPP。它用于在编译器处理程序之前 <strong>预扫描源代码</strong>，完成头文件的包含, 宏扩展, 条件编译, 行控制（line control）等操作。</p>
+
+<p>C 源代码文件扩展名为 <code class="highlighter-rouge">.c</code>，预处理之后的扩展名为 <code class="highlighter-rouge">.i</code>。</p>
+
+<p>经过预处理后的 <code class="highlighter-rouge">.i</code> 文件不包含任何宏定义，因为所有的宏已经被 <strong>展开</strong>，并且包含的文件也已经被 <strong>插入</strong> 到 <code class="highlighter-rouge">.i</code> 文件中。所以当我们无法判断宏定义是否正确或头文件包含是否正确时，可以查看预处理后的文件来确定问题。</p>
+
+<h4 id="编译阶段">编译阶段</h4>
+
+<p>C 语言标准规定，编译共分 8 个阶段，预处理是指前 4 个编译阶段（phases of translation）。</p>
+
+<ul>
+  <li>三字符组与双字符组的替换</li>
+  <li>行拼接（Line splicing）: 把物理源码行（Physical source line）中的换行符转义字符处理为普通的换行符，从而把源程序处理为逻辑行的顺序集合。</li>
+  <li>单词化（Tokenization）: 把处理结果变成 token 和空格，把注释替换为空格。</li>
+  <li>宏扩展与预处理指令（directive）处理.</li>
+</ul>
+
+<h4 id="处理头文件">处理头文件</h4>
+
+<p>include 包含文件，即头文件，扩展名为 <code class="highlighter-rouge">.h</code>。</p>
+
+<p>处理 <code class="highlighter-rouge">#include</code> 预编译指令，将被包含的文件 <strong>插入</strong> 到该预编译指令的位置。注意，这个过程是 <strong>递归</strong> 进行的，也就是说被包含的文件可能还包含其他文件。</p>
+
+<h4 id="处理条件预编译指令">处理条件预编译指令</h4>
+
+<p>处理所有条件预编译指令，如 <code class="highlighter-rouge">#if</code>、<code class="highlighter-rouge">#ifdef</code>、<code class="highlighter-rouge">#elif</code>、<code class="highlighter-rouge">#else</code>、<code class="highlighter-rouge">#endif</code>。</p>
+
+<h4 id="处理宏定义与扩展">处理宏定义与扩展</h4>
+
+<p>将所有的 <code class="highlighter-rouge">#define</code> 删除，并且展开所有的宏定义。</p>
+
+<h4 id="特殊宏与指令">特殊宏与指令</h4>
+
+<p><code class="highlighter-rouge">__FILE__</code> 与 <code class="highlighter-rouge">__LINE__</code>, 扩展为当前文件与行号。以便于编译时编译器产生调试用的行号信息及用于编译时产生编译错误或警告时能够显示行号。</p>
+
+<h4 id="token-字符串化">Token 字符串化</h4>
+
+<p><code class="highlighter-rouge">#</code> 运算符把随后的 token（记号） 转化为 C 语言的字符串。</p>
+
+<h4 id="token-连接">Token 连接</h4>
+
+<p><code class="highlighter-rouge">##</code> 运算符连接两个 token 为一个 token.</p>
+
+<p><code class="highlighter-rouge">##</code> 运算符左侧或右侧如果是另一个宏名，这个宏名将不会被宏展开，而是按照字面值被当作一个 token。因此，如果需要 <code class="highlighter-rouge">##</code> 运算符左右的宏名做宏展开，需要使用两层宏的嵌套使用，其中外层的宏展开时也一并把 <code class="highlighter-rouge">##</code> 运算符左右的宏名做宏展开。</p>
+
+<h4 id="用户定义的编译错误与警告">用户定义的编译错误与警告</h4>
+
+<h4 id="编译器相关的预处理特性">编译器相关的预处理特性</h4>
+
+<p><code class="highlighter-rouge">#pragma</code> 指令提供了编译器特定的预处理功能。</p>
+
+<h3 id="1616-编译">16.1.6 编译</h3>
+
+<p>Compilation</p>
+
+<p>预处理的输出通常是轻微扩展过的 C，包含对于标准库所有相关部分的声明，下一步的构建流程是编译和汇编，它们把预处理的输出转换成目标文件。</p>
+
+<p>预处理之后，编译器就开始生成机器码。有两种基本的方法把 C 转成机器码，一种是直接进行转换，另一种是先转换为汇编码（介于 C 与机器码之间，易于阅读），再转换为机器码。</p>
+
+<p>编译过程就是把预处理完的文件进行一系列 “词法分析、语法分析、语义分析及优化” 后生产相应的 <strong>汇编代码文件</strong>，这个过程往往是我们所说的整个程序构建的核心部分，也是最复杂的部分之一。</p>
+
+<h4 id="基础概念">基础概念</h4>
+
+<h5 id="编译器">编译器</h5>
+
+<p>编译器（compiler），是一种计算机程序，可以把（某种编程语言写成的）源代码转换成另一种编程语言。</p>
+
+<p>常用的编译器为 <strong>GCC</strong>，即 GNU Compiler Collection。</p>
+
+<h5 id="原始语言与目标语言">原始语言与目标语言</h5>
+
+<p>对于编译器来说，原始的编程语言称原始语言，转换后的语言称目标语言。</p>
+
+<p>对于程序员来说，原始语言往往更便于编写、阅读、维护，是高级计算机语言。而目标语言往往是计算机可以解读、运行的低级语言。</p>
+
+<p>源代码一般为高阶语言，如 Pascal、C、C++、C# 、Java 等，而目标语言则是汇编语言或目标机器的目标代码，有时也称作机器代码（Machine code）。</p>
+
+<p>编译器的目的在于把源代码程序翻译为目标语言程序。</p>
+
+<h4 id="编译的基本过程">编译的基本过程</h4>
+
+<p>编译在把源语言编译为目标语言的过程中，通常包括以下几个步骤：</p>
+
+<ul>
+  <li>扫描</li>
+  <li>语法分析；</li>
+  <li>语义分析；</li>
+  <li>源代码优化</li>
+  <li>中间代码生成和优化；</li>
+  <li>目标代码生成和优化；</li>
+</ul>
+
+<p><img src="/assets/images/compile.process.png" alt="image-center" class="align-center" /></p>
+
+<p>现在版本的 GCC 把预处理和编译两个步骤 <strong>合并</strong> 成一个步骤，使用一个叫做 <strong><code class="highlighter-rouge">cc1</code></strong> 的程序来完成这两个步骤。这个程序位于 <code class="highlighter-rouge">/usr/lib/gcc/i486-linux-gnu/4.1/</code>，也可以直接调用 <code class="highlighter-rouge">cc1</code> 来完成它：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ /usr/lib/gcc/i486-linux-gnu/4.1/cc1 hello.c
+ main
+Execution times (seconds)
+ preprocessing  :0.01(100%)usr  0.01(33%)sys  0.00( 0%)wall 77 kB( 8%)ggc
+ lexical analysis :0.00( 0%)usr 0.00( 0%)sys  0.02(50%)wall 0 kB(0%)ggc
+ parser         :0.00( 0%)usr 0.00( 0%)sys  0.01(25%)wall 125 kB(13%)ggc
+ expand         :0.00( 0%)usr 0.01(33%)sys  0.00( 0%)wall 6 kB(1%)ggc
+ TOTAL            :0.01         0.03        0.04          982 kB
+</code></pre></div></div>
+
+<p>或者使用 gcc：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ gcc –S hello.c –o hello.s
+</code></pre></div></div>
+
+<p>以上两种方法都可以得到汇编输出文件 <code class="highlighter-rouge">hello.s</code>。对于 C 语言的代码来说，这个预编译和编译的程序是 <code class="highlighter-rouge">cc1</code>。</p>
+
+<p class="notice--info">所以实际上 <code class="highlighter-rouge">gcc</code> 这个命令只是这些后台程序的包装，它会根据不同的参数要求去调用预编译编译程序 <code class="highlighter-rouge">cc1</code>、汇编器 <code class="highlighter-rouge">as</code>、链接器 <code class="highlighter-rouge">ld</code>。</p>
+
+<h4 id="汇编">汇编</h4>
+
+<p>对于某些编译器来说，还存在一个中间步骤，会先把源码转为汇编码（assembly），然后再把汇编码转为机器码。</p>
+
+<p>汇编器是将汇编代码转变成机器可以执行的指令，每一个汇编语句几乎都对应一条机器指令。</p>
+
+<p>所以汇编器的汇编过程相对于编译器来讲比较简单，它没有复杂的语法，也没有语义，也不需要做指令优化，只是根据汇编指令和机器指令的对照表一一翻译就可以了，“汇编” 这个名字也来源于此。</p>
+
+<p>上面的汇编过程我们可以调用汇编器 <code class="highlighter-rouge">as</code> 来完成：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$as hello.s –o hello.o
+</code></pre></div></div>
+
+<p>或者使用 <code class="highlighter-rouge">gcc</code> 命令从 C 源代码文件开始，经过预编译、编译和汇编直接输出目标文件（Object File）：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$gcc –c hello.c –o hello.o
+</code></pre></div></div>
+
+<h4 id="目标文件">目标文件</h4>
+
+<p>Object file</p>
+
+<p>程序的源代码经过 <strong>编译后生成的文件</strong>，称为目标文件，其实如果叫 <strong>中间目标文件</strong> 会更容易理解其作用。</p>
+
+<p>目标文件从结构上讲，它是已经编译后的 <strong>可执行文件格式</strong>，只是还没有经过链接的过程，其中可能有些符号或有些地址还没有被调整。其实它本身就是按照可执行文件格式存储的，只是跟真正的可执行文件在结构上稍有不同。</p>
+
+<h5 id="目标文件的格式">目标文件的格式</h5>
+
+<p>当今可执行文件格式主要是 Windows 中的 <strong>PE</strong>（Portable Executable）和 Linux 中的 <strong>ELF</strong>（Executable Linkable Format），它们都是 <strong>COFF</strong>（Common file format）格式的变种。</p>
+
+<p>目标文件就是源代码编译后，但未进行链接的那些 <strong>中间文件</strong>（Windows 的 <code class="highlighter-rouge">.obj</code> 和 Linux 的 <code class="highlighter-rouge">.o</code>），它跟可执行文件的内容与结构很相似，所以一般 <strong>与可执行文件采用相同的格式</strong> 存储。</p>
+
+<p>从广义上看，目标文件与可执行文件的格式其实几乎是一样的，所以我们可以广义地将目标文件与可执行文件看成是一种类型的文件，在 Windows 中，我们可以统称它们为 <code class="highlighter-rouge">PE-COFF</code> 文件格式。在 Linux 中，我们可以将它们统称为 <code class="highlighter-rouge">ELF</code> 文件。</p>
+
+<p>其他不太常见的可执行文件格式还有 Intel/Microsoft 的 <code class="highlighter-rouge">OMF</code>（Object Module Format）、Unix <code class="highlighter-rouge">a.​out</code> 格式和 MS-DOS <code class="highlighter-rouge">.com</code> 格式等。</p>
+
+<p>目标文件一般有以下几类：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>文件类型</th>
+      <th>英文名</th>
+      <th>说明</th>
+      <th>实例</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>可重定位文件</td>
+      <td>Relocatable File</td>
+      <td>包含 <strong>代码和数据</strong>，可以被链接成可执行文件或共享目标文件，<strong>静态链接库</strong> 属于这一类</td>
+      <td>Linux 的 <code class="highlighter-rouge">.o</code></td>
+    </tr>
+    <tr>
+      <td>可执行文件</td>
+      <td>Executable File</td>
+      <td>包含了 <strong>可以直接执行的程序</strong>，一般 <strong>没有扩展名</strong></td>
+      <td><code class="highlighter-rouge">/bin/bash</code></td>
+    </tr>
+    <tr>
+      <td>共享目标文件</td>
+      <td>Shared Object File</td>
+      <td>包含 <strong>代码和数据</strong>，可以跟其他可重定位文件和共享目标文件链接产生新的目标文件，也可以跟可执行文件结合作为进程映像的一部分来运行</td>
+      <td><code class="highlighter-rouge">.so</code> 文件</td>
+    </tr>
+    <tr>
+      <td>核心转储文件</td>
+      <td>Core Dump File</td>
+      <td>当进程意外终止时，系统可以将该进程的地址空间的内容及终止时的一些其他信息转储到核心转储文件</td>
+      <td>core dump</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>可以用 <code class="highlighter-rouge">file</code> 命令来查看相应的类型：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ file foobar.o
+foobar.o: ELF 32-bit LSB relocatable, Intel 80386, version 1 (SYSV), not stripped
+#                        ^^^^^^^^^^^
+$ file /bin/bash
+/bin/bash: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), for GNU/Linux 2.6.8, dynamically linked (uses shared libs), stripped
+#                         ^^^^^^^^^^
+$ file /lib/ld-​2.​6.​1.​so
+/lib/libc-2.​6.​1.​so: ELF 32-bit LSB shared object, Intel 80386, version 1 (SYSV), for GNU/Linux 2.6.8, stripped
+#                                  ^^^^^^^^^^^^^
+</code></pre></div></div>
+
+<h5 id="可执行文件格式的演变">可执行文件格式的演变</h5>
+
+<p>目标文件与可执行文件格式跟操作系统和编译器密切相关，所以不同的系统平台下会有不同的格式，但这些格式又大同小异，目标文件格式与可执行文件格式的历史几乎是操作系统的发展史。</p>
+
+<p><strong>COFF</strong> 是由 Unix System V Release 3 首先提出并且使用的格式规范，后来微软公司基于 <code class="highlighter-rouge">COFF</code> 格式，制定了 <code class="highlighter-rouge">PE</code> 格式标准，并将其用于当时的 Windows NT 系统。System V Release 4 在 <code class="highlighter-rouge">COFF</code> 的基础上引入了 <code class="highlighter-rouge">ELF</code> 格式，目前流行的 Linux 系统也以 <code class="highlighter-rouge">ELF</code> 作为基本可执行文件格式。这也就是目前 PE 和 ELF 如此相似的主要原因，它们都源于同一种可执行文件格式 <code class="highlighter-rouge">COFF。</code></p>
+
+<p>Unix 最早的可执行文件格式为 <code class="highlighter-rouge">a.​out</code> 格式，它的设计非常简单，以至于后来共享库这个概念出现的时候，<code class="highlighter-rouge">a.​out</code> 格式就变得捉襟见肘了。于是人们设计了 <code class="highlighter-rouge">COFF</code> 格式来解决这些问题，这个设计非常通用，以至于 COFF 的继承者到目前还在被广泛地使用。</p>
+
+<p>COFF 的主要贡献是在目标文件里面引入了 “<strong>段</strong>” 的机制，不同的目标文件可以拥有不同数量及不同类型的 “段”。另外，它还定义了调试数据格式。</p>
+
+<h5 id="目标文件结构">目标文件结构</h5>
+
+<p>目标文件中的内容除了编译后的机器指令代码、数据以外，还包括链接时所须要的符号表、调试信息、字符串等。一般目标文件将这些信息按不同的属性，以 “节”（Section）的形式存储，有时候也叫 “段”（Segment），在一般情况下，它们都表示一个一定长度的区域，基本上不加以区别，唯一的区别是在 ELF 的链接视图和加载视图的时候，默认情况下统一将它们称为 “段”。</p>
+
+<p>目标文件由许多段组成，其中主要的段包括：</p>
+
+<ul>
+  <li><strong>代码段</strong>：<code class="highlighter-rouge">.code</code> 或 <code class="highlighter-rouge">.text</code>，保存编译后得到的 <strong>机器指令</strong>。</li>
+  <li><strong>数据段</strong>：<code class="highlighter-rouge">.data</code>，保存 <strong>已初始化的全局静态变量和局部静态变量</strong>。</li>
+  <li><strong>只读数据段</strong>：<code class="highlighter-rouge">.rodata</code>，保存 <strong>只读变量和字符串常量</strong>，有些编译器会把字符串常量放到 <code class="highlighter-rouge">.data</code> 段。</li>
+  <li><strong>BSS 段</strong>：<code class="highlighter-rouge">.bss</code>，保存 <strong>未初始化的全局变量和局部静态变量</strong>。</li>
+</ul>
+
+<p>未初始化的全局变量和局部静态变量默认值都为 0，本来它们也可以被放在 <code class="highlighter-rouge">.data</code> 段的，但是因为它们都是 0，所以为它们在 <code class="highlighter-rouge">.data</code> 段分配空间并且存放数据 0 是没有必要的。程序运行的时候它们的确是要占内存空间的，并且可执行文件必须记录所有未初始化的全局变量和局部静态变量的大小总和，记为 <code class="highlighter-rouge">.bss</code> 段。所以 <code class="highlighter-rouge">.bss</code> 段只是为未初始化的全局变量和局部静态变量 <strong>预留位置</strong> 而已，它并没有内容，所以它在文件中也 <strong>不占据空间</strong>。</p>
+
+<figure class="">
+  <img src="https://linotes.netlify.com/assets/images/obj.file.png" alt="目标文件的结构" />
+  
+</figure>
+
+<p>从图中可以看到，ELF 文件的开头是一个 “文件头”，它描述了整个文件的文件属性，包括文件是否可执行、是静态链接还是动态链接及入口地址（如果是可执行文件）、目标硬件、目标操作系统等信息，文件头还包括一个段表（Section Table），段表其实是一个描述文件中各个段的数组。段表描述了文件中各个段在文件中的偏移位置及段的属性等，从段表里面可以得到每个段的所有信息。文件头后面就是各个段的内容，比如代码段保存的就是程序的指令，数据段保存的就是程序的静态变量等。</p>
+
+<p class="notice--info">总体来说，程序源代码被编译以后主要分成两种段：<strong>程序指令</strong> 和 <strong>程序数据</strong>。代码段属于程序指令，而数据段和 <code class="highlighter-rouge">.bss</code> 段属于程序数据。</p>
+
+<h3 id="1617-链接">16.1.7 链接</h3>
+
+<p>Linking</p>
+
+<p>目标文件还不能运行，必须进一步转成可执行文件。</p>
+
+<p>编译器的下一步工作，就是把外部函数的代码（通常是后缀名为 <code class="highlighter-rouge">.lib</code> 和 <code class="highlighter-rouge">.a</code> 的文件），添加到可执行文件中。</p>
+
+<p><code class="highlighter-rouge">make</code> 命令的作用，就是从头文件预编译开始，一直到做完这一步。</p>
+
+<h4 id="基础概念-1">基础概念</h4>
+
+<h5 id="链接器">链接器</h5>
+
+<p>链接器是一个独立程序，用于将一个或多个库或目标文件链接到一起，生成可执行程序。</p>
+
+<p>gcc 中的链接器为 <code class="highlighter-rouge">ld</code>。</p>
+
+<p><img src="/assets/images/Linker.png" alt="image-center" class="align-center" /></p>
+
+<p>链接器不仅可以把源代码编译成的目标文件链接成为可执行文件，还可以用于生成库文件。</p>
+
+<h5 id="重定位">重定位</h5>
+
+<p>Relocation</p>
+
+<p>重定位是指给部分程序源代码 <strong>分配加载地址</strong>，但该部分代码在整体源代码中的位置不是固定的。这个工作通常由链接器来完成。它会在文件或运行库中搜索特定的符号或运行库的名称，用真实可用的内存地址来替换。只有经过该过程，程序才能正常运行。</p>
+
+<p>重定位通常由链接器在链接时完成，但也可以由重定位加载器在加载时完成，或者由运行时程序在运行时完成。</p>
+
+<h5 id="符号">符号</h5>
+
+<p>Symbol</p>
+
+<p>在重定位时，汇编语言使用特定的字符串来标记位置，以便于定位。该字符串称为符号。</p>
+
+<p>汇编语言使用接近人类的各种符号和标记来帮助记忆，比如指令采用两个或三个字母的缩写。</p>
+
+<p>符号这个概念随着汇编语言的普及迅速被使用，它用来表示一个 <strong>地址</strong>，这个地址可能是一段 <strong>子程序</strong>（后来发展成函数）的起始地址，也可以是一个 <strong>变量</strong> 的起始地址。</p>
+
+<p>汇编器在每次汇编程序的时候，会重新计算符号的地址，然后把所有引用到该符号的指令修正到这个正确的地址。</p>
+
+<p>符号相当于链接中的粘合剂，整个链接过程正是基于符号才能够正确完成。链接过程中很关键的一部分就是符号的管理，每一个目标文件都会有一个相应的符号表（Symbol Table），这个表里面记录了目标文件中所用到的所有符号。每个定义的符号有一个对应的值，叫做符号值（Symbol Value），对于变量和函数来说，符号值就是它们的地址。</p>
+
+<h5 id="模块">模块</h5>
+
+<p>随着软件的规模日渐庞大，程序的代码量快速膨胀，于是人们开始将代码 <strong>按照功能或性质划分</strong>，分别形成不同的功能模块，不同的模块之间按照 <strong>层次结构</strong> 或其他结构来组织。C语言中，最小的单位是变量和函数，若干个变量和函数组成一个模块，存放在一个 <code class="highlighter-rouge">.c</code> 的源代码文件里，然后这些源代码文件按照目录结构来组织。</p>
+
+<p>现代的大型软件往往拥有成千上万个模块，它们相互依赖又相对独立。这种按照层次化及模块化存储和组织源代码有很多好处，比如代码更容易阅读、理解、重用，每个模块可以单独开发、编译、测试，改变部分代码不需要编译整个程序等。</p>
+
+<p>在一个程序被分割成多个模块以后，就要实现 <strong>模块之间的通信</strong>：</p>
+
+<p>最常见的属于静态语言的 C/C++ 模块之间通信有两种方式，一种是模块间的 <strong>函数调用</strong>，另外一种是模块间的 <strong>变量访问</strong>。函数调用须知道目标函数的地址，变量访问也须知道目标变量的地址，所以这两种方式都可以归结为一种方式，那就是 <strong>模块间符号的引用</strong>。</p>
+
+<h5 id="链接">链接</h5>
+
+<p>程序设计的模块化使得复杂的软件其源代码模块能够独立地编译，然后按照需要将它们 “组装” 起来，这个组装模块的过程就是链接（Linking）。链接的主要内容就是把各个模块之间 <strong>相互引用的部分</strong> 都处理好，使得各个模块之间能够正确地衔接。从原理上来讲，就是把一些指令对其他符号地址的引用加以修正。</p>
+
+<p>链接过程主要包括了地址和空间分配（Address and Storage Allocation）、符号解析（Symbol Resolution）和重定位（Relocation）等这些步骤。</p>
+
+<h5 id="符号解析">符号解析</h5>
+
+<p><strong>Symbol Resolution</strong>，也叫 Symbol Binding，Name Binding，Name Resolution，Address Binding，Instruction Binding。变态！</p>
+
+<p>符号解析就是将目标文件中的 <strong>符号引用</strong> 与其它目标文件中的 <strong>符号定义</strong> <strong>绑定</strong> 起来</p>
+
+<p>最常见的简单解析方式需要将一个目标文件中的符号引用与另一个目标文件中的符号定义绑定起来。此种绑定可用于两个可重定位目标文件之间，也可用于一个可重定位目标文件与在共享目标文件依赖项中找到的第一个定义之间。复杂解析方式通常用于两个或多个可重定位目标文件之间。</p>
+
+<h5 id="库">库</h5>
+
+<p>库（library）是用于开发软件的 <strong>子程序集合</strong>。库和可执行文件的区别是，库不是独立程序，他们是向其他程序提供服务的代码。</p>
+
+<p><strong>链接库</strong> 是指把一个或多个库包括到程序中，有两种链接形式：<strong>静态链接</strong> 和 <strong>动态链接</strong>，相应的，前者链接的库叫做静态链接库，后者叫动态链接库。</p>
+
+<p>Linux 内核提供很多内核相关的函数库与外部参数，这些核心功能在设计硬件驱动程序时相当有用，多位于 <code class="highlighter-rouge">/usr/include</code>，<code class="highlighter-rouge">/usr/lib</code> ，<code class="highlighter-rouge">/usr/lib64</code> 里面。</p>
+
+<h4 id="静态链接">静态链接</h4>
+
+<p>静态链接是由链接器在链接时 <strong>将库的内容加入到可执行程序中</strong> 的做法。对于链接器来说，静态链接的过程，就是将几个输入文件加工后 <strong>合并</strong> 成一个输出文件。输入为目标文件、库文件，输出为可执行文件。</p>
+
+<p>静态链接的最大缺点是生成的 <strong>可执行文件体积过大</strong>，需要更多的系统资源，在载入内存时也会消耗更多的时间。</p>
+
+<h5 id="链接基本流程">链接基本流程</h5>
+
+<p>静态链接的主要工作包括空间和地址分配、符号决议、重定位。链接完毕后，数据访问、指令跳转的目标虚拟地址就都确定了。</p>
+
+<p>链接器首先扫描输入的目标文件，计算输出文件各段大小，合并同类段，分配虚拟地址。再根据重定位表（记录哪些指令需要调整、如何调整）和符号表（记录所有的符号及地址），确定编译时无法确定的符号地址，修改机器指令，这一步可以概括为 “把什么修改为什么”。如果最后仍有符号无法确定地址，就报告 “undefined reference” 错误。</p>
+
+<h5 id="合并文件">合并文件</h5>
+
+<p>几个目标文件进行链接时，每个目标文件都有其自身的代码段、数据段等，链接器需要将它们各个段的合并到输出文件中，具体有两种合并方法：</p>
+
+<ul>
+  <li>按序叠加：将输入的目标文件按照次序叠加起来。</li>
+  <li>相似段合并：将相同性质的段合并到一起，比如将所有输入文件的 <code class="highlighter-rouge">.text</code> 合并到输出文件的 <code class="highlighter-rouge">.text</code> 段，接着是 <code class="highlighter-rouge">.data</code> 段、<code class="highlighter-rouge">.bss</code> 段等。</li>
+</ul>
+
+<p>第一种方法会产生很多零散的段，而且每个段有一定的地址和空间对齐要求，会造成内存空间大量的内部碎片。所以现在的链接器空间分配基本采用 <strong>第二种方法</strong>，而且一般采用一种称为 <strong>两部链接</strong> 的方法：</p>
+
+<ol>
+  <li>空间与地址分配。扫描所有输入的目标文件，获得他们各个段的长度、属性和位置，收集它们符号表中所有的符号定义和符号引用，统一放到一个全局符号表中。此时，链接器可以获得所有输入目标文件的段长度，将他们合并，计算出输出文件中各个段合并后的长度与位置并建立映射关系。</li>
+  <li>符号解析与重定位。使用上面收集到的信息，读取输入文件中段的数据、重定位信息，并且进行符号解析与重定位、调整代码中的地址等。</li>
+</ol>
+
+<p>经过第一步后，输入文件中的各个段在链接后的虚拟地址已经确定了，链接器开始计算各个符号的虚拟地址。各个符号在段内的相对地址是固定的，链接器只需要给他们加上一个偏移量，调整到正确的虚拟地址即可。</p>
+
+<h5 id="重定位-1">重定位</h5>
+
+<p>ELF 中每个需要重定位的段都有一个对应的重定位表，也称为重定位段。重定位表中每个需要重定位的地方叫一个重定位入口，包含：</p>
+
+<ul>
+  <li>重定位入口的偏移：对于可重定位文件来说，偏移指该重定位入口所要修正的位置的第一个字节相对于该段的起始偏移。</li>
+  <li>重定位入口的类型和符号：低8位表示重定位入口的类型，高24位表示重定位入口的符号在符号表的下标。</li>
+</ul>
+
+<p>不同的处理器指令对于地址的格式和方式都不一样，对于每一个重定位入口，根据其重定位类型使用对应的指令修正方式修改其指令地址，完成重定位过程。</p>
+
+<h4 id="动态链接">动态链接</h4>
+
+<p>静态链接的问题</p>
+
+<ul>
+  <li>同时运行多个静态链接的进程时，如果其中包含多个相同的模块，会级大地浪费内存空间。</li>
+  <li>一旦程序中有任何模块更新，整个程序就要重新链接、发布给用户</li>
+</ul>
+
+<p>为解决以上问题，可以把程序的模块相互分割开，开成独立的文件，等到程序要运行时才进行链接。</p>
+
+<p>动态链接是指在可执行文件加载或运行时，<strong>由操作系统的加载程序动态加载库</strong>。</p>
+
+<p>现实中，大部分软件采用动态连接，共享库文件。这种动态共享的库文件，Linux 平台扩展名为 <code class="highlighter-rouge">.so</code>，Windows 平台是 <code class="highlighter-rouge">.dll</code>，Mac 平台是 <code class="highlighter-rouge">.dylib</code>。</p>
+
+<h5 id="动态链接原理">动态链接原理</h5>
+
+<p>使用了动态链接之后，当我们运行一个程序时，系统会首先加载该程序依赖的其他的目标文件，如果其他目标文件还有依赖，系统会按照同样方法将它们 <strong>全部加载到内存</strong>。</p>
+
+<p>当所需要的所有目标文件加载完毕之后，如果依赖关系满足，系统开始进行链接操作，包括符号解析及地址重定位等。</p>
+
+<p>完成之后，系统把控制权交回给原程序，程序开始运行。</p>
+
+<p>此时如果运行第二个程序，它依赖于一个已经加载过的目标文件，则系统不需要重新加载目标文件，而只要将它们连接起来即可。</p>
+
+<p>对于静态链接的可执行文件来说，整个进程只有一个文件要被映射，那就是可执行文件本身。但是对于动态链接来说，除了可执行文件本身，还有它所依赖的共享目标文件（库），此时，它们都是被操作系统用同样的方法映射进进程的虚拟地址空间，只是它们占用的虚拟地址和长度不同。另外，动态链接器也和普通共享对象一样被映射到进程的地址空间。</p>
+
+<p>系统开始运行程序之前，会把控制权交给动态链接器，由它完成所有的动态链接工作，然后再把控制权交回给程序，程序就开始执行。</p>
+
+<h5 id="动态链接优点">动态链接优点</h5>
+
+<p>模块化的好处不仅仅是节省内存，它还可以 <strong>减少物理页面的换入换出</strong>，也可以 <strong>增加 CPU 缓存的命中率</strong>，因为不同进程间的数据和指令访问都集中在了同一个共享模块上。</p>
+
+<p>动态链接方案也可以使程序的升级变得更加容易，当我们要升级程序库或程序共享的某个模块时，理论上只要简单地将旧的目标文件覆盖掉，而无须将所有的程序再重新链接一遍。当程序下一次运行的时候，新版本的目标文件会被自动加载到内存并且链接起来，程序就完成了升级的目标。</p>
+
+<h5 id="程序可扩展性和兼容性">程序可扩展性和兼容性</h5>
+
+<p>动态链接还有一个特点就是程序在运行时可以动态地选择加载各种程序模块，这个优点就是后来被人们用来制作程序的插件。</p>
+
+<h5 id="加载时重定位">加载时重定位</h5>
+
+<p>动态链接的共享对象在被加载时，其在进程虚拟地址空间的位置是不确定的，为了使共享对象能够在任意地址加载，可以参考静态链接时的重定位（Link Time Relocation）思想，在链接时对所有的绝对地址的引用不做重定位，把这一步推迟到加载时再完成。一旦模块加载完毕，其地址就确定了，即目标地址确定，系统就对程序中所有的绝对地址引用进行重定位。这种加载时重定位（Load Time Relocation）又称为基址重置（Rebasing）。</p>
+
+<p>但是动态链接模块被加载映射至虚拟空间后，指令部分是在多个进程之间共享的，由于加载时重定位的方法需要修改指令，所以没有办法做到同一份指令被多个进程共享，因为指令被重定位之后对于每个进程来讲是不同的。当然，动态链接库中的可修改的数据部分对于不同的进程来说有多个副本，所以它们可以采用加载时重定位的方法来解决。</p>
+
+<h3 id="1618-安装">16.1.8 安装</h3>
+
+<p>Installation</p>
+
+<p>安装就是指把生成的可执行文件与相关数据文件复制到安装目录。</p>
+
+<p>经过链接，链接器在内存中生成了可执行文件。下一步，必须将可执行文件保存到用户事先指定的安装目录。</p>
+
+<p>此时可执行文件与目标文件、源文件都放在一起，非常没有条理。这种情况，很难把程序传递给别人。当然，在编译时可以把生成的可执行文件保存到指定的路径。但是这两种情况都需要复制一些文件，再重新组织一下文件，程序才能正常使用。</p>
+
+<h4 id="提升权限">提升权限</h4>
+
+<p>要说最简单的安装，可以把源文件、目标文件、可执行文件一股脑统统复制到安装路径，在概念上没有什么难点。但往往需要单独的一步：<strong>提升权限</strong>。因为安装路径往往是系统目录，普通用户是无权写入的，如 <code class="highlighter-rouge">/usr/bin</code>。</p>
+
+<h4 id="细节操作">细节操作</h4>
+
+<p>在此步骤中，构建系统还有一些细微的细节。例如：</p>
+
+<ul>
+  <li>在把程序安装到目标路径之前，构建系统需要首先 <strong>创建目录</strong></li>
+  <li>安装程序时往往需要 “<strong>轻量化</strong>” 可执行文件：放弃符号表、调试信息等，程序运行时不需要它们</li>
+  <li>把 <strong>调试符号</strong> 单独 <strong>分割</strong> 也来，保存为一个单独的文件，通常保存在网络上，需要调试信息时再下载</li>
+</ul>
+
+<h4 id="设定文件的权限">设定文件的权限</h4>
+
+<p>为要安装的文件设定权限，很容易弄错，尤其是需要与默认权限不同的时候。在 Linux 中，需要设定精细的权限来避免危及系统安全。</p>
+
+<h3 id="1619-链接到操作系统">16.1.9 链接到操作系统</h3>
+
+<p>单纯的一个可执行文件文件没什么用，它只有一个文件名而已。此时需要的是一种元数据：比文件名更长的描述、图标、版本号诸如此类的东西。操作系统系统需要把程序的所有这些元数据都登记下来。在 Linux 中，这些信息通常保存在 <code class="highlighter-rouge">/usr/share/applications</code> 目录中的 <code class="highlighter-rouge">.desktop</code> 文件中。在 windows 中还要在开始菜单中创建快捷方式。</p>
+
+<p>这些操作就是 “链接到操作系统”。<code class="highlighter-rouge">make install</code>  所做的就是 “安装” 和 “链接到操作系统” 这两步操作。</p>
+
+<h3 id="16110-生成安装包">16.1.10 生成安装包</h3>
+
+<p>可执行文件只有做成可以分发的安装包，才便于程序的传播和使用。</p>
+
+<p>所以，编译器还必须有生成安装包的功能。通常是将可执行文件（连带相关的数据文件），以某种目录结构，保存成压缩文件包，交给用户。</p>
+
+<h2 id="162-自动化构建工具-make">16.2 自动化构建工具 <code class="highlighter-rouge">make</code></h2>
+
+<p>以上所讨论的是程序编译的理论步骤，但实际使用中不可能每一步都需要人为地干预，更不可能每一步都用 <code class="highlighter-rouge">gcc</code> 命令去人工运行，往往会使用更有效率的自动化工具。</p>
+
+<p><code class="highlighter-rouge">make</code> 是一个用于程序构建的 <strong>自动化</strong> 工具，它会从源代码自动地构建可执行文件和库。它需要借助 <code class="highlighter-rouge">makefile</code> 来设定构建过程要遵守的 <strong>规则</strong>。它可用于任何涉及把命令变成目标文件的场景。</p>
+
+<p><code class="highlighter-rouge">gcc</code> 虽然可以编译、链接单个的文件，但它不知道如何把 <strong>多个</strong> 源文件组合成一个可执行文件，通常需要至少两个 gcc（编译和链接）调用来创建最简单的程序。</p>
+
+<p><code class="highlighter-rouge">makefile</code> 中的规则详细描述了如何从源代码一步一步地变成目标程序。<code class="highlighter-rouge">make</code> 会解析 <code class="highlighter-rouge">makefile</code>，确定哪些文件需要编译，然后调用 <code class="highlighter-rouge">gcc</code> 进行对应的操作。<code class="highlighter-rouge">make</code> 非常适用于 <strong>大型</strong> 的开发项目，成百上千的源文件，可以持续追踪编译选项、包含路径等，还可以追踪源文件与目标文件的信赖关系，根据规则 <strong>只编译最近发生变化的部分</strong>。</p>
+
+<p>make 会去读取 <code class="highlighter-rouge">makefile</code> 中的设置，创建目标文件，链接函数库进行编译。类似于批处理的效果。如果修改了某一个文件之后，重新使用 make 来编译，make 只会更新修改过的文件。</p>
+
+<p><code class="highlighter-rouge">make</code> 使用 <strong>目标</strong> 做为 <strong>参数</strong> 来构建程序。如果不加参数，它会构建在 makefile 中第一个出现的目标文件，通常是一个名为 <code class="highlighter-rouge">all</code> 的伪目标文件。</p>
+
+<p>但如果修改文件后，其 mtime 未发生变化，此时 <code class="highlighter-rouge">make</code> 就检测不到。在还原一个旧版本的源文件时很有可能会发生这样的情况，或者源文件在 NFS 上，其时钟或时区没有与运行 <code class="highlighter-rouge">make</code> 的主机同步，也会发生。面对这种情况，必须强制进行一次彻底的重新构建。</p>
+
+<p>相反地，如果文件的时间为未来时间，会造成不必要的重新构建。</p>
+
+<p><code class="highlighter-rouge">make</code> 主要用于自动判断一个大组程序中哪一块需要重新编译，仅针对这一小部分执行命令来编译。只要编译器可以用命令来执行的，都可以用该命令。而且 <code class="highlighter-rouge">make</code> 不限于程序代码，可以用它来描述任何任务，只要是需要自动判断部分文件更新的情况就可以。</p>
+
+<p>以 Tarball 方式发布的软件，通常使用 <code class="highlighter-rouge">make</code> 命令进行编译。</p>
+
+<h3 id="1621-makefile">16.2.1 makefile</h3>
+
+<p>makefile 是用于自动编译和链接的，可以看成是一个 <strong>配置文件</strong>，专门给 <code class="highlighter-rouge">make</code> 命令使用。</p>
+
+<p>一个工程有很多文件组成，每一个文件的改变都会导致工程的重新链接，但不是所有的文件都需要重新编译，makefile 中记录着文件的信息，在 make 时会决定在链接的时候需要重新编译哪些文件。</p>
+
+<p>makefile 的宗旨就是：让编译器知道要编译一个文件需要依赖其他的哪些文件。当那些依赖文件有了改变，编译器会自动的发现最终的生成文件已经过时，而重新编译相应的模块。</p>
+
+<p><code class="highlighter-rouge">make</code> 必须配合 <code class="highlighter-rouge">makefile</code> 一起使用，它会在当前目录搜索 <code class="highlighter-rouge">makefile</code>，然后根据文件的设定运行特定目标。</p>
+
+<p><code class="highlighter-rouge">makefile</code> 中，可以调用 <code class="highlighter-rouge">gcc</code> 等工具，把源代码转换成可执行文件。</p>
+
+<h4 id="规则">规则</h4>
+
+<p>程序构建的规则都写在 <code class="highlighter-rouge">makefile</code> 中。每条规则的形式如下：</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">&lt;target&gt; </span><span class="o">:</span> <span class="nf">&lt;prerequisites&gt;</span>
+<span class="err">[tab]</span>  <span class="err">&lt;commands&gt;</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">target</code>  <strong>目标</strong>，必需，不可省略</p>
+
+<p><code class="highlighter-rouge">prerequisites</code>  <strong>前置条件</strong>，可选</p>
+
+<p>第二行必须由 tab 开头，后面跟着 <strong>命令</strong>，可选。</p>
+
+<p>前置条件和命令至少要有一个。</p>
+
+<p class="notice--info">每条规则是为了明确：构建目标的 <strong>前置条件</strong> 是什么，<strong>如何构建</strong></p>
+
+<h5 id="目标">目标</h5>
+
+<p>一个目标（target）就构成一条规则。</p>
+
+<ul>
+  <li>目标通常是 <strong>文件名</strong>，指明 make 命令所要构建的对象，可以是 <strong>一个</strong> 文件名，也可以是 <strong>多个</strong> 文件名，之间用 <strong>空格</strong> 分隔。</li>
+  <li>目标还可以是某个 <strong>操作</strong> 的名字，这称为 “<strong>伪目标</strong>”（phony target）。</li>
+</ul>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">clean</span><span class="o">:</span>
+  <span class="err">rm</span> <span class="err">*.o</span>
+</code></pre></div></div>
+
+<p>上面代码的目标是 clean，它不是文件名，而是一个操作的名字，属于 “伪目标”，作用是删除对象文件。</p>
+
+<p>以目标为参数运行 <code class="highlighter-rouge">make</code>：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ make clean
+</code></pre></div></div>
+
+<p>但是，如果当前目录中，正好有一个文件叫做 <code class="highlighter-rouge">clean</code>，那么这个命令不会执行。因为 <code class="highlighter-rouge">make</code> 发现 <code class="highlighter-rouge">clean</code> 文件已经存在，会认为没有必要重新构建了，就不会执行指定的 <code class="highlighter-rouge">rm</code> 命令。</p>
+
+<p>为了避免这种情况，可以使用内置目标 <code class="highlighter-rouge">.PHONY</code> 来显示声明 clean 是 “伪目标”，写法如下：</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">.PHONY</span><span class="o">:</span> <span class="nf">clean</span>
+<span class="nl">clean</span><span class="o">:</span>
+    <span class="err">rm</span> <span class="err">*.o</span> <span class="err">temp</span>
+</code></pre></div></div>
+
+<p>声明 clean 是 “伪目标” 之后，make 就不会去检查是否存在一个叫做 clean 的文件，而是每次运行都执行对应的命令。像 <code class="highlighter-rouge">.PHONY</code> 这样的 <strong>内置目标名</strong> 还有不少，可以查看<a href="http://www.gnu.org/software/make/manual/html_node/Special-Targets.html#Special-Targets">手册</a>。</p>
+
+<p>如果 make 命令运行时没有指定目标，默认会执行 <code class="highlighter-rouge">makefile</code> 文件的第一个目标。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>make
+</code></pre></div></div>
+
+<p>上面代码执行 <code class="highlighter-rouge">makefile</code> 文件的第一个目标。</p>
+
+<h5 id="前置条件">前置条件</h5>
+
+<p>前置条件通常是 <strong>一组文件名</strong>，之间用 <strong>空格</strong> 分隔。它指定了 “目标” 是否重新构建的 <strong>判断标准</strong>：只要有一个前置文件不存在，或前置文件的 mtime 比目标的新，目标就需要重新构建。</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">result.txt</span><span class="o">:</span> <span class="nf">source.txt</span>
+    <span class="err">cp</span> <span class="err">source.txt</span> <span class="err">result.txt</span>
+</code></pre></div></div>
+
+<p>上面代码中，构建 <code class="highlighter-rouge">result.txt</code> 的前置条件是 <code class="highlighter-rouge">source.txt</code> 。如果当前目录中，<code class="highlighter-rouge">source.txt</code> 已经存在，那么 <code class="highlighter-rouge">make result.txt</code> 可以正常运行，否则必须再写一条规则，来生成 <code class="highlighter-rouge">source.txt</code> 。将以下代码加在上面代码之后：</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">source.txt</span><span class="o">:</span>
+    <span class="err">echo</span> <span class="s2">"this is the source"</span> <span class="err">&gt;</span> <span class="err">source.txt</span>
+</code></pre></div></div>
+
+<p>上面代码中，source.txt 后面 <strong>没有前置条件</strong>，就意味着它 <strong>跟其他文件都无关</strong>，只要这个文件还不存在，每次调用 <code class="highlighter-rouge">make source.txt</code>，它都会生成。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>make result.txt
+<span class="nv">$ </span>make result.txt
+</code></pre></div></div>
+
+<p>上面命令连续执行两次 <code class="highlighter-rouge">make result.txt</code>。第一次执行会先新建 <code class="highlighter-rouge">source.txt</code>，然后再新建 <code class="highlighter-rouge">result.txt</code>。第二次执行，Make 发现 source.txt 没有变动，就不会执行任何操作，result.txt 也不会重新生成。</p>
+
+<p>如果需要生成多个文件，往往采用下面的写法。</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">source</span><span class="o">:</span> <span class="nf">file1 file2 file3</span>
+<span class="nl">file1</span><span class="o">:</span>
+    <span class="err">echo</span> <span class="s2">"this is the file1"</span> <span class="err">&gt;</span> <span class="err">file1</span>
+<span class="nl">file2</span><span class="o">:</span>
+    <span class="err">echo</span> <span class="s2">"this is the file2"</span> <span class="err">&gt;</span> <span class="err">file2</span>
+<span class="nl">file3</span><span class="o">:</span>
+    <span class="err">echo</span> <span class="s2">"this is the file3"</span> <span class="err">&gt;</span> <span class="err">file3</span>
+</code></pre></div></div>
+
+<p>上面代码中，source 是一个伪目标，只有三个前置文件，没有任何对应的命令。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>make <span class="nb">source</span>
+</code></pre></div></div>
+
+<p>执行 <code class="highlighter-rouge">make source</code> 命令后，就会一次性生成 file1，file2，file3 三个文件。这比下面的写法要方便很多。</p>
+
+<h5 id="命令">命令</h5>
+
+<p>命令（commands）表示如何更新目标文件，由一行或多行的 Shell 命令组成。它是构建目标的具体指令，它的运行结果通常就是生成目标文件。</p>
+
+<p>每行命令之前 <strong>必须</strong> 有一个 <strong>tab</strong> 键。如果想用其他键，可以用内置变量 <code class="highlighter-rouge">.RECIPEPREFIX</code> 声明。</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">.RECIPEPREFIX</span> <span class="o">=</span> <span class="o">&gt;</span>
+<span class="nl">all</span><span class="o">:</span>
+<span class="err">&gt;</span> <span class="err">echo</span> <span class="err">Hello,</span> <span class="err">world</span>
+</code></pre></div></div>
+
+<p>上面代码用 <code class="highlighter-rouge">.RECIPEPREFIX</code> 指定，大于号（&gt;）替代 tab 键。所以，每一行命令的起首变成了大于号，而不是 tab 键。</p>
+
+<p>需要注意的是，每行命令在一个 <strong>单独的 shell</strong> 中执行，属于不同的进程。这些 Shell 之间 <strong>没有继承关系</strong>。</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">var-lost</span><span class="o">:</span>
+    <span class="k">export </span><span class="nv">foo</span><span class="o">=</span>bar
+    <span class="err">echo</span> <span class="s2">"foo=[$$foo]"</span>
+</code></pre></div></div>
+
+<p>上面代码执行后 <code class="highlighter-rouge">make var-lost</code>，取不到 <code class="highlighter-rouge">foo</code> 的值。</p>
+
+<p>一个解决办法是将两行命令写在一行，中间用 <strong>分号</strong> 分隔：</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">var-kept</span><span class="o">:</span>
+    <span class="k">export </span><span class="nv">foo</span><span class="o">=</span>bar<span class="p">;</span> <span class="nb">echo</span> <span class="s2">"foo=[</span><span class="nv">$$</span><span class="s2">foo]"</span>
+</code></pre></div></div>
+
+<p>另一个解决办法是在换行符前加反斜杠 <strong>转义</strong>：</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">var-kept</span><span class="o">:</span>
+    <span class="k">export </span><span class="nv">foo</span><span class="o">=</span>bar<span class="p">;</span> <span class="se">\</span>
+    <span class="nb">echo</span> <span class="s2">"foo=[</span><span class="nv">$$</span><span class="s2">foo]"</span>
+</code></pre></div></div>
+
+<p>最后一个方法是使用内置目标 <code class="highlighter-rouge">.ONESHELL:</code> ：</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">.ONESHELL</span><span class="o">:</span>
+<span class="nl">var-kept</span><span class="o">:</span>
+    <span class="k">export </span><span class="nv">foo</span><span class="o">=</span>bar<span class="p">;</span>
+    <span class="err">echo</span> <span class="s2">"foo=[$$foo]"</span>
+</code></pre></div></div>
+
+<h4 id="makefile-文件的语法">makefile 文件的语法</h4>
+
+<h5 id="注释">注释</h5>
+
+<p><code class="highlighter-rouge">#</code> 在 makefile 中表示注释，用法与 bash 中的注释一样。</p>
+
+<h5 id="回显">回显</h5>
+
+<p>echoing</p>
+
+<p>正常情况下，make 会回显每条命令及注释，然后再执行，如果在命令前加上 <code class="highlighter-rouge">@</code>，就可以关闭该条命令的回显。</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">test</span><span class="o">:</span>
+	<span class="p">@</span><span class="c"># comment</span>
+	<span class="p">@</span><span class="nb">echo </span>TODO
+</code></pre></div></div>
+
+<p>由于在构建过程中，需要了解当前在执行哪条命令，所以通常只会关闭注释和 echo 的回显。</p>
+
+<h5 id="通配符">通配符</h5>
+
+<p>通配符用来指定一组符合条件的文件名。makefile 的通配符与 Bash 一致，主要有 <code class="highlighter-rouge">*</code>，<code class="highlighter-rouge">？</code>，<code class="highlighter-rouge">[...]</code> 。</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">clean</span><span class="o">:</span>
+        <span class="err">rm</span> <span class="err">-f</span> <span class="err">*.o</span>
+</code></pre></div></div>
+
+<h5 id="模式匹配">模式匹配</h5>
+
+<p><code class="highlighter-rouge">make</code> 命令允许对文件名，进行类似正则运算的匹配，使用匹配符 <code class="highlighter-rouge">%</code>，可以将大量同类型的文件，只用一条规则就完成构建。</p>
+
+<p>比如，假定当前目录下有 <code class="highlighter-rouge">f1.c</code> 和 <code class="highlighter-rouge">f2.c</code> 两个源码文件，需要将它们编译为对应的对象文件。</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">%.o</span><span class="o">:</span> <span class="nf">%.c</span>
+</code></pre></div></div>
+
+<p>等同于：</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">f1.o</span><span class="o">:</span> <span class="nf">f1.c</span>
+<span class="nl">f2.o</span><span class="o">:</span> <span class="nf">f2.c</span>
+</code></pre></div></div>
+
+<h5 id="变量和赋值符">变量和赋值符</h5>
+
+<p>makefile 允许使用等号 <strong><code class="highlighter-rouge">=</code></strong> 为变量赋值。</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">txt</span> <span class="o">=</span> Hello World
+<span class="nl">test</span><span class="o">:</span>
+    <span class="err">@echo</span> <span class="err">$(txt)</span>
+</code></pre></div></div>
+
+<p>上面代码中，变量 txt 等于 Hello World。调用时，变量需要放在 $( ) 之中。</p>
+
+<p>调用 Shell 变量，需要在美元符号前，再加一个美元符号，这是因为 make 命令会对美元符号转义。</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">test</span><span class="o">:</span>
+    <span class="err">@echo</span> <span class="err">$$HOME</span>
+</code></pre></div></div>
+
+<p>有时，变量的值可以是另一个变量。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>v1 = $(v2)
+</code></pre></div></div>
+
+<p>上面代码中，变量 v1 的值是另一个变量 v2。这时会产生一个问题，v1 的值到底在定义时扩展（<strong>静态扩展</strong>），还是在运行时扩展（<strong>动态扩展</strong>）？如果 v2 的值是动态的，这两种扩展方式的结果可能会差异很大。</p>
+
+<p>为了解决类似问题，Makefile一共提供了四个 <strong>赋值运算符</strong> ：</p>
+
+<h6><code class="highlighter-rouge">=</code></h6>
+
+<p><code class="highlighter-rouge">VARIABLE = value</code></p>
+
+<p>在 <strong>执行时扩展</strong>，允许递归扩展。</p>
+
+<h6 id="-1"><code class="highlighter-rouge">:=</code></h6>
+
+<p><code class="highlighter-rouge">VARIABLE := value</code></p>
+
+<p>在 <strong>定义时扩展</strong>。</p>
+
+<h6 id="-2"><code class="highlighter-rouge">?=</code></h6>
+
+<p><code class="highlighter-rouge">VARIABLE ?= value</code></p>
+
+<p>只有在该变量 <strong>为空时才赋值</strong>。</p>
+
+<h6 id="-3"><code class="highlighter-rouge">+=</code></h6>
+
+<p><code class="highlighter-rouge">VARIABLE += value</code></p>
+
+<p>将值 <strong>追加</strong> 到变量的尾端。</p>
+
+<h5 id="内建变量">内建变量</h5>
+
+<p>Implicit Variables</p>
+
+<p>make 命令提供一系列内建变量，比如，<code class="highlighter-rouge">$(CC)</code> 指向当前使用的编译器，<code class="highlighter-rouge">$(MAKE)</code> 指向当前使用的 make 工具。这主要是为了跨平台的兼容性。</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">output</span><span class="o">:</span>
+    <span class="err">$(CC)</span> <span class="err">-o</span> <span class="err">output</span> <span class="err">input.c</span>
+</code></pre></div></div>
+
+<h5 id="自动变量">自动变量</h5>
+
+<p>Automatic Variables</p>
+
+<p>make 命令还提供一些自动变量，它们的值与当前规则有关。主要有以下几个。</p>
+
+<h6 id="-4"><code class="highlighter-rouge">$@</code></h6>
+
+<p><code class="highlighter-rouge">$@</code> 指代 <strong>当前目标</strong>。</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">a.txt b.txt</span><span class="o">:</span>
+    <span class="err">touch</span> <span class="err">$@</span>
+</code></pre></div></div>
+
+<p>等同于：</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">a.txt</span><span class="o">:</span>
+    <span class="err">touch</span> <span class="err">a.txt</span>
+<span class="nl">b.txt</span><span class="o">:</span>
+    <span class="err">touch</span> <span class="err">b.txt</span>
+</code></pre></div></div>
+
+<h6 id="-5"><code class="highlighter-rouge">$&lt;</code></h6>
+
+<p><code class="highlighter-rouge">$&lt;</code> 指代 <strong>第一个前置条件</strong>。比如，规则为 <code class="highlighter-rouge">t: p1 p2</code>，那么 <code class="highlighter-rouge">$&lt;</code> 就指代 p1。</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">a.txt</span><span class="o">:</span> <span class="nf">b.txt c.txt</span>
+    <span class="err">cp</span> <span class="err">$&lt;</span> <span class="err">$@</span>
+</code></pre></div></div>
+
+<p>等同于：</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">a.txt</span><span class="o">:</span> <span class="nf">b.txt c.txt</span>
+    <span class="err">cp</span> <span class="err">b.txt</span> <span class="err">a.txt</span>
+</code></pre></div></div>
+
+<h6 id="-6"><code class="highlighter-rouge">$?</code></h6>
+
+<p><code class="highlighter-rouge">$?</code> 指代 <strong>比目标更新的所有前置条件</strong>，之间以空格分隔。比如，规则为 <code class="highlighter-rouge">t: p1 p2</code>，其中 <code class="highlighter-rouge">p2</code> 的时间戳比 <code class="highlighter-rouge">t</code> 新，<code class="highlighter-rouge">$?</code> 就指代 <code class="highlighter-rouge">p2</code>。</p>
+
+<h6 id="-7"><code class="highlighter-rouge">$^</code></h6>
+
+<p><code class="highlighter-rouge">$^</code> 指代 <strong>所有前置条件</strong>，之间以空格分隔。比如，规则为 <code class="highlighter-rouge">t: p1 p2</code>，那么 <code class="highlighter-rouge">$^</code> 就指代 <code class="highlighter-rouge">p1 p2</code> 。</p>
+
+<h6 id="-8"><code class="highlighter-rouge">$*</code></h6>
+
+<p><code class="highlighter-rouge">$*</code> 指代匹配符 <code class="highlighter-rouge">%</code> <strong>匹配的部分</strong>， 比如 <code class="highlighter-rouge">%</code> 匹配 <code class="highlighter-rouge">f1.txt</code> 中的 <code class="highlighter-rouge">f1</code> ，<code class="highlighter-rouge">$*</code> 就表示 <code class="highlighter-rouge">f1</code>。</p>
+
+<h6 id="d--f"><code class="highlighter-rouge">$(@D)</code> ， <code class="highlighter-rouge">$(@F)</code></h6>
+
+<p><code class="highlighter-rouge">$(@D)</code> 和 <code class="highlighter-rouge">$(@F)</code> 分别指向 <strong>当前目标</strong> <code class="highlighter-rouge">$@</code> 的 <strong>目录名</strong> 和 <strong>文件名</strong>。比如，<code class="highlighter-rouge">$@</code> 是 <code class="highlighter-rouge">src/input.c</code>，那么 <code class="highlighter-rouge">$(@D)</code> 的值为 <code class="highlighter-rouge">src</code> ，<code class="highlighter-rouge">$(@F)</code> 的值为 <code class="highlighter-rouge">input.c</code>。</p>
+
+<h6 id="d--f-1"><code class="highlighter-rouge">$(&lt;D)</code> ， <code class="highlighter-rouge">$(&lt;F)</code></h6>
+
+<p><code class="highlighter-rouge">$(&lt;D)</code> 和 <code class="highlighter-rouge">$(&lt;F)</code> 分别指向 <strong>第一个前置条件</strong> <code class="highlighter-rouge">$&lt;</code> 的 <strong>目录名</strong> 和 <strong>文件名</strong>。</p>
+
+<h5 id="判断和循环">判断和循环</h5>
+
+<p>makefile 使用 Bash 语法完成判断和循环。</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">ifeq</span> <span class="err">($(CC),gcc)</span>
+  <span class="nv">libs</span><span class="o">=</span><span class="nv">$(libs_for_gcc)</span>
+<span class="err">else</span>
+  <span class="nv">libs</span><span class="o">=</span><span class="nv">$(normal_libs)</span>
+<span class="err">endif</span>
+</code></pre></div></div>
+
+<p>上面代码判断当前编译器是否 gcc ，然后指定不同的库文件。</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">LIST</span> <span class="o">=</span> one two three
+<span class="nl">all</span><span class="o">:</span>
+    <span class="err">for</span> <span class="err">i</span> <span class="err">in</span> <span class="err">$(LIST);</span> <span class="err">do</span> <span class="err">\</span>
+        <span class="err">echo</span> <span class="err">$$i;</span> <span class="err">\</span>
+    <span class="err">done</span>
+</code></pre></div></div>
+
+<p>运行结果为：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>one
+two
+three
+</code></pre></div></div>
+
+<h5 id="函数">函数</h5>
+
+<p>makefile 还可以使用函数，格式如下。</p>
+
+<p><code class="highlighter-rouge">$(function arguments)</code> 或 <code class="highlighter-rouge">${function arguments}</code></p>
+
+<p>makefile 提供了许多内置函数，可供调用。下面是几个常用的内置函数。</p>
+
+<h6 id="shell-函数">shell 函数</h6>
+
+<p>shell 函数用来 <strong>执行 shell 命令</strong></p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">srcfiles</span> <span class="o">:=</span> <span class="nf">$(</span><span class="nb">shell</span> <span class="nb">echo </span>src/<span class="o">{</span>00..99<span class="o">}</span>.txt<span class="nv">)</span>
+</code></pre></div></div>
+
+<h6 id="wildcard-函数">wildcard 函数</h6>
+
+<p>wildcard 函数用来 <strong>替换 Bash 的通配符</strong>。</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">srcfiles</span> <span class="o">:=</span> <span class="err">$</span><span class="o">(</span>wildcard src/<span class="k">*</span>.txt<span class="o">)</span>
+</code></pre></div></div>
+
+<h6 id="subst-函数">subst 函数</h6>
+
+<p>subst 函数用来 <strong>文本替换</strong>，格式如下：</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$(subst</span> <span class="err">from,to,text)</span>
+</code></pre></div></div>
+
+<p>下面的例子将字符串 <code class="highlighter-rouge">feet on the street</code> 替换成 <code class="highlighter-rouge">fEEt on the strEEt</code>。</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$(subst</span> <span class="err">ee,EE,feet</span> <span class="err">on</span> <span class="err">the</span> <span class="err">street)</span>
+</code></pre></div></div>
+
+<p>下面是一个稍微复杂的例子：</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">comma</span><span class="o">:=</span> ,
+<span class="nv">empty</span><span class="o">:=</span>
+<span class="c"># space 变量用两个空变量作为标识符，用空格分隔
+</span><span class="nv">space</span><span class="o">:=</span> <span class="nv">$(empty)</span> <span class="nv">$(empty)</span>
+<span class="nv">foo</span><span class="o">:=</span> a b c
+<span class="nv">bar</span><span class="o">:=</span> <span class="err">$</span><span class="o">(</span>subst <span class="nv">$(space)</span>,<span class="nv">$(comma)</span>,<span class="nv">$(foo)</span><span class="o">)</span>
+<span class="c"># bar is now `a,b,c'.
+</span></code></pre></div></div>
+
+<h6 id="patsubst-函数">patsubst 函数</h6>
+
+<p>patsubst 函数用于 <strong>模式匹配的替换</strong>，格式如下：</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$(patsubst</span> <span class="err">pattern,replacement,text)</span>
+</code></pre></div></div>
+
+<p>下面的例子将文件名 <code class="highlighter-rouge">x.c.c bar.c</code>，替换成 <code class="highlighter-rouge">x.c.o bar.o</code>。</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$(patsubst</span> <span class="err">%.c,%.o,x.c.c</span> <span class="err">bar.c)</span>
+</code></pre></div></div>
+
+<h6 id="替换后缀名">替换后缀名</h6>
+
+<p>替换后缀名函数的写法是：</p>
+
+<p><code class="highlighter-rouge">变量名 + 冒号 + 后缀名替换规则</code>。</p>
+
+<p>它实际上是 <code class="highlighter-rouge">patsubst</code> 函数的一种简写形式。</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">min</span><span class="o">:</span> <span class="nf">$(OUTPUT:.js=.min.js)</span>
+</code></pre></div></div>
+
+<p>上面代码的意思是，将变量 OUTPUT 中的后缀名 <code class="highlighter-rouge">.js</code> 全部替换成 <code class="highlighter-rouge">.min.js</code> 。</p>
+
+<h4 id="makefile-范例">makefile 范例</h4>
+
+<h5 id="执行多个目标">执行多个目标</h5>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">.PHONY</span><span class="o">:</span> <span class="nf">cleanall cleanobj cleandiff</span>
+
+<span class="nl">cleanall </span><span class="o">:</span> <span class="nf">cleanobj cleandiff</span>
+        <span class="err">rm</span> <span class="err">program</span>
+
+<span class="nl">cleanobj </span><span class="o">:</span>
+        <span class="err">rm</span> <span class="err">*.o</span>
+
+<span class="nl">cleandiff </span><span class="o">:</span>
+        <span class="err">rm</span> <span class="err">*.diff</span>
+</code></pre></div></div>
+
+<h5 id="编译-c-语言项目">编译 C 语言项目</h5>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">edit </span><span class="o">:</span> <span class="nf">main.o kbd.o command.o display.o</span>
+    <span class="err">gcc</span> <span class="err">-o</span> <span class="err">edit</span> <span class="err">main.o</span> <span class="err">kbd.o</span> <span class="err">command.o</span> <span class="err">display.o</span>
+
+<span class="nl">main.o </span><span class="o">:</span> <span class="nf">main.c defs.h</span>
+    <span class="err">gcc</span> <span class="err">-c</span> <span class="err">main.c</span>
+<span class="nl">kbd.o </span><span class="o">:</span> <span class="nf">kbd.c defs.h command.h</span>
+    <span class="err">gcc</span> <span class="err">-c</span> <span class="err">kbd.c</span>
+<span class="nl">command.o </span><span class="o">:</span> <span class="nf">command.c defs.h command.h</span>
+    <span class="err">gcc</span> <span class="err">-c</span> <span class="err">command.c</span>
+<span class="nl">display.o </span><span class="o">:</span> <span class="nf">display.c defs.h</span>
+    <span class="err">gcc</span> <span class="err">-c</span> <span class="err">display.c</span>
+
+<span class="nl">clean </span><span class="o">:</span>
+     <span class="err">rm</span> <span class="err">edit</span> <span class="err">main.o</span> <span class="err">kbd.o</span> <span class="err">command.o</span> <span class="err">display.o</span>
+
+<span class="nl">.PHONY</span><span class="o">:</span> <span class="nf">edit clean</span>
+</code></pre></div></div>
+
+<p>另一个：</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">TARGET</span> <span class="o">=</span> prog
+<span class="nv">LIBS</span> <span class="o">=</span> <span class="nt">-lm</span>
+<span class="nv">CC</span> <span class="o">=</span> gcc
+<span class="nv">CFLAGS</span> <span class="o">=</span> <span class="nt">-g</span> <span class="nt">-Wall</span>
+
+<span class="nl">.PHONY</span><span class="o">:</span> <span class="nf">default all clean</span>
+
+<span class="nl">default</span><span class="o">:</span> <span class="nf">$(TARGET)</span>
+<span class="nl">all</span><span class="o">:</span> <span class="nf">default</span>
+
+<span class="nv">OBJECTS</span> <span class="o">=</span> <span class="err">$</span><span class="o">(</span>patsubst %.c, %.o, <span class="err">$</span><span class="o">(</span>wildcard <span class="k">*</span>.c<span class="o">))</span>
+<span class="nv">HEADERS</span> <span class="o">=</span> <span class="err">$</span><span class="o">(</span>wildcard <span class="k">*</span>.h<span class="o">)</span>
+
+<span class="nl">%.o</span><span class="o">:</span> <span class="nf">%.c $(HEADERS)</span>
+    <span class="err">$(CC)</span> <span class="err">$(CFLAGS)</span> <span class="err">-c</span> <span class="err">$&lt;</span> <span class="err">-o</span> <span class="err">$@</span>
+
+<span class="nl">.PRECIOUS</span><span class="o">:</span> <span class="nf">$(TARGET) $(OBJECTS)</span>
+
+<span class="nl">$(TARGET)</span><span class="o">:</span> <span class="nf">$(OBJECTS)</span>
+    <span class="err">$(CC)</span> <span class="err">$(OBJECTS)</span> <span class="err">-Wall</span> <span class="err">$(LIBS)</span> <span class="err">-o</span> <span class="err">$@</span>
+
+<span class="nl">clean</span><span class="o">:</span>
+    <span class="err">-rm</span> <span class="err">-f</span> <span class="err">*.o</span>
+    <span class="err">-rm</span> <span class="err">-f</span> <span class="err">$(TARGET)</span>
+</code></pre></div></div>
+
+<p class="notice--info">注：最后两行的 <code class="highlighter-rouge">-rm</code> 中的减号 <code class="highlighter-rouge">-</code> 表示如果该命令返回错误，不要停止，继续运行下一条命令。如果不加该修饰符，make 遇到错误会中止运行。</p>
+
+<h3 id="1622-configure">16.2.2 configure</h3>
+
+<p>上面提到的 <code class="highlighter-rouge">makefile</code> 这么有用，每次都要手动编写吗？不用。</p>
+
+<p><code class="highlighter-rouge">configure</code> 是指一个 <strong>可执行脚本</strong>，它是专门为了帮助程序开发而设计的，在编译之前，它会检查编译环境，判断哪些库是可以用的。作为惯例，所有的这种脚本都命名为 <code class="highlighter-rouge">configure</code>，通常是为 Bourne Shell 编写的，基本上可以在任何 shell 中执行。</p>
+
+<p class="notice"><code class="highlighter-rouge">configure</code> 用于 <strong>生成 <code class="highlighter-rouge">makefile</code></strong>，以便使用 <code class="highlighter-rouge">make</code> 来实现自动化构建程序。</p>
+
+<p><code class="highlighter-rouge">configure</code> 脚本有成千上万条代码，也无需手动编写，它是由名为 <code class="highlighter-rouge">autotools</code> 的一系列程序产生的，其中包括 <code class="highlighter-rouge">autoconf</code>，<code class="highlighter-rouge">automake</code> 及其它程序，它们为软件的维护带来很大的便利，最终的使用用户基本上看不到这些工具，但这些工具却最终帮助他们在不同发行版上可以顺利地安装软件。</p>
+
+<p><code class="highlighter-rouge">configure</code> 脚本会 <strong>检查</strong> 当前系统，使用它收集到的信息把 <code class="highlighter-rouge">Makefile.in</code> <strong>模板</strong> 文件 <strong>转换</strong> 成一个 <code class="highlighter-rouge">makefile</code>。</p>
+
+<p><code class="highlighter-rouge">configure</code> 所检查的内容：</p>
+
+<ul>
+  <li>编译器</li>
+  <li>函数库或其他信赖</li>
+  <li>操作系统，Linux 内核版本</li>
+  <li>内核的表头定义文件（header include）</li>
+</ul>
+
+<h3 id="1623-使用-make">16.2.3 使用 make</h3>
+
+<p>只有简单的软件才会使用一个比较通用的、简单的 <code class="highlighter-rouge">makefile</code>，更加复杂的安装需要根据库、头文件及其它资源的位置来裁剪 <code class="highlighter-rouge">makefile</code>。</p>
+
+<h4 id="make-如何解析参数">make 如何解析参数</h4>
+
+<p><code class="highlighter-rouge">make shit</code></p>
+
+<p><code class="highlighter-rouge">make</code> 首先会在 <code class="highlighter-rouge">makefile</code> 中查找名为 <code class="highlighter-rouge">shit</code> 的 <strong>目标</strong> 及其规则，如果没找到，它会在其内置规则中查找，其中有一条内置规则会告诉 make，如果在当前目录发现了名为 <code class="highlighter-rouge">shit</code>、<strong>扩展名为 <code class="highlighter-rouge">.o</code> 的文件</strong>，即 <code class="highlighter-rouge">shit.o</code>，可以运行 <code class="highlighter-rouge">ld</code> 等链接器，用其构建可执行文件。</p>
+
+<p>如果找到了 <code class="highlighter-rouge">shit.o</code>，make 还要确认它是否是最新的，即其 mtime 是否比源文件 <code class="highlighter-rouge">shit.c</code> 新。</p>
+
+<p>如果 make 也发现了源文件 <code class="highlighter-rouge">shit.c</code>，它会检查其时间戳，以确保 <code class="highlighter-rouge">shit.o</code> 比较新一些。如果 <code class="highlighter-rouge">shit.o</code> 不存在，或比 <code class="highlighter-rouge">shit.c</code> 要旧，make 会使用另一个内置的规则，使用 <code class="highlighter-rouge">gcc</code> 等工具把 <code class="highlighter-rouge">shit.c</code> 编译成一个新的 <code class="highlighter-rouge">shit.o</code>。</p>
+
+<p>于是 make 运行的结果，就是保证构建可执行文件，并是最新版的。</p>
+
+<h4 id="make-常用参数">make 常用参数</h4>
+
+<p>调用 <code class="highlighter-rouge">make</code> 时如果不使用任何参数，通常会执行 <code class="highlighter-rouge">makefile</code> 中第一个目标。</p>
+
+<p><code class="highlighter-rouge">make</code> 还可以完成许多其他任务：</p>
+
+<p><code class="highlighter-rouge">make install</code>  把文件安装到正确的路径，此时 <code class="highlighter-rouge">install</code> 是 <code class="highlighter-rouge">makefile</code> 中的一个目标。</p>
+
+<p><code class="highlighter-rouge">make clean</code>  删除无用的目标文件，同样 <code class="highlighter-rouge">clean</code> 也是一个目标</p>
+
+<p><code class="highlighter-rouge">make -n</code>  预览构建过程，会把所有将要运行的命令全部打印出来</p>
+
+<h2 id="163-tarball-程序的构建与安装流程">16.3 Tarball 程序的构建与安装流程</h2>
+
+<p>以上所有文字都是为了帮助理解程序构建的过程，但实际工作中空间要如何一步步地操作呢？</p>
+
+<p>许多软件包是以源代码压缩包的形式传递的，同一个软件包在生成程序以后，可以运行于多种不同的主机上，节省了作者的精力，不用花时间去对不同的系统做不同的版本。只不过这个任务落在了你我的身上。</p>
+
+<h3 id="1631-tarball">16.3.1 Tarball</h3>
+
+<p>Tar 是压缩打包工具，可以将多个文件合并为一个文件，打包后的后缀为 <code class="highlighter-rouge">.tar</code>。已压缩的 tar 文件也叫 “<strong>Tarball</strong>”。大部分开源软件的源代码采用 tarball 的形式发布。被压缩的 tar 文件则追加压缩文件的扩展名，如经过 gzip 压缩后的 tar 文件，扩展名为 “.tar.gz”，其它的如 <code class="highlighter-rouge">.tar.bz2</code>，<code class="highlighter-rouge"> .tar.xz</code>。</p>
+
+<p>开源软件的 <code class="highlighter-rouge">Tarball</code> 中通常有：</p>
+
+<ul>
+  <li>源代码文件</li>
+  <li>检测程序文件（configure 脚本）</li>
+  <li>简介与安装说明（INSTALL 或README）</li>
+</ul>
+
+<p>以 Tarball 方式发布的软件，通常使用 <code class="highlighter-rouge">make</code> 命令进行编译。</p>
+
+<h3 id="1632-经典的安装三步曲">16.3.2 经典的安装三步曲</h3>
+
+<ul>
+  <li><code class="highlighter-rouge">./configure</code></li>
+  <li><code class="highlighter-rouge">make</code></li>
+  <li><code class="highlighter-rouge">make install</code></li>
+</ul>
+
+<p>多数人习惯性地用了多年，也不明白这三步曲的意义所在，现在我们都懂了：</p>
+
+<p>首先，如果 Tarball 中提供了帮助文档 README 或 INSTALL，可以先阅读一下。</p>
+
+<p><code class="highlighter-rouge">./configure</code>  是为了生成 <code class="highlighter-rouge">makefile</code> 文件。</p>
+
+<p>如果帮助文档中有说明，此时可能需要运行一下 <code class="highlighter-rouge">make clean</code> 来删除现有的目标文件，以便下一步生成新的目标文件。</p>
+
+<p><code class="highlighter-rouge">make</code>  不带参数地执行 make，默认会执行 <code class="highlighter-rouge">makefile</code> 中的第一个目标，通常会进行一系列的编译、链接的操作，生成可执行文件。</p>
+
+<p><code class="highlighter-rouge">make install</code>  install 为 <code class="highlighter-rouge">makefile</code> 中的一个目标。编译生成的可执行文件和相关配置文件与源代码在同一目录，install 目标的命令会把这些文件安装（移动）到正确的目录。</p>
+
+<h3 id="1633-安装路径">16.3.3 安装路径</h3>
+
+<p>发行版安装的软件大多在 <code class="highlighter-rouge">/usr/</code> 目录中，用户自行安装的软件建议位于 <code class="highlighter-rouge">/usr/local/</code> 中。</p>
+
+<p>以软件名 ABC 为例：</p>
+
+<ul>
+  <li>总目录：<code class="highlighter-rouge">/usr/local/ABC/</code></li>
+  <li>源代码：<code class="highlighter-rouge">/usr/local/ABC/src/</code></li>
+  <li>配置文件：<code class="highlighter-rouge">/usr/local/ABC/etc/</code></li>
+  <li>可执行文件：<code class="highlighter-rouge">/usr/local/ABC/bin/</code></li>
+  <li>函数库：<code class="highlighter-rouge">/usr/local/ABC/lib/</code></li>
+  <li>说明文档：<code class="highlighter-rouge">/usr/local/ABC/man/</code></li>
+</ul>
+
+<p>默认情况下，<code class="highlighter-rouge">man</code> 程序会检查 <code class="highlighter-rouge">/usr/local/</code> 中的说明文档。</p>
+
+<p>需要把 <code class="highlighter-rouge">/usr/local/ABC/man</code> 加入 man page 的查找路径中。<code class="highlighter-rouge">/etc/man_db.conf</code> 中约 40~50 行处，插入：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MANPATH_MAP /usr/local/software/bin /usr/local/software/man
+</code></pre></div></div>
+
+<h3 id="1624-更新源代码">16.2.4 更新源代码</h3>
+
+<p>很多软件开发商在更新了源代码之后，会发布更新文件。</p>
+
+<p><code class="highlighter-rouge">patch -pN &lt; patch_file</code></p>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/构建" class="page__taxonomy-item" rel="tag">构建</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/编译" class="page__taxonomy-item" rel="tag">编译</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/linux" class="page__taxonomy-item" rel="tag">linux</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://linotes.netlify.com/categories/#linux" class="page__taxonomy-item" rel="tag">linux</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2015-01-16T00:00:00+08:00">January 16, 2015</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="https://linotes.netlify.com/linux/log/" class="pagination--pager" title="上一页
+">Linux 基础 - 15. 日志</a>
+    
+    
+      <a href="https://linotes.netlify.com/linux/apploading/" class="pagination--pager" title="下一页
+">Linux 基础 - 17. 程序的加载</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">相关文章</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/kernel/filedescriptor/" rel="permalink">文件描述符简介
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash03/" rel="permalink">Bash 入门 03
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">循环，变量，函数，捕捉信号
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash02/" rel="permalink">Bash 入门 02
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">正则表达式，SED，AWK，条件结构，交互式脚本
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash01/" rel="permalink">Bash 入门 01
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">Bash 与 Bash 脚本，脚本的编写与调试，Bash 环境
+</p>
+-->
+
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+    
+    
+    
+    
+    <li><a href="https://linotes.netlify.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="https://linotes.netlify.com/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,1828 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Bash 入门 03 - LINOTES</title>
+<meta name="description" content="循环，变量，函数，捕捉信号">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Bash 入门 03">
+<meta property="og:url" content="https://linotes.netlify.com/programming/bash03/">
+
+
+  <meta property="og:description" content="循环，变量，函数，捕捉信号">
+
+
+
+  <meta property="og:image" content="https://linotes.netlify.com/assets/images/header/backup.jpg">
+
+
+
+
+
+  <meta property="article:published_time" content="2017-05-03T00:00:00+08:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://linotes.netlify.com/programming/bash03/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="https://linotes.netlify.com/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="https://linotes.netlify.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="https://linotes.netlify.com/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://linotes.netlify.com/assets/images/header/backup.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Bash 入门 03
+
+        
+      </h1>
+      
+        <p class="page__lead">循环，变量，函数，捕捉信号
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="https://linotes.netlify.com/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:imhawkz@gmail.com">
+            <meta itemprop="email" content="imhawkz@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Bash 入门 03">
+    <meta itemprop="description" content="循环，变量，函数，捕捉信号">
+    <meta itemprop="datePublished" content="May 03, 2017">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-code"></i> Bash 入门 03</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#9-重复性任务">9. 重复性任务</a>
+    <ul>
+      <li><a href="#91-for-循环">9.1 for 循环</a></li>
+      <li><a href="#92-while-循环">9.2 while 循环</a></li>
+      <li><a href="#93--until-循环">9.3  until 循环</a></li>
+      <li><a href="#94-io-重定向和循环">9.4 I/O 重定向和循环</a></li>
+      <li><a href="#95-break-与-continue">9.5 break 与 continue</a></li>
+      <li><a href="#96-用-select-命令做选择菜单">9.6 用 select 命令做选择菜单</a></li>
+      <li><a href="#97-shift">9.7 shift</a></li>
+    </ul>
+  </li>
+  <li><a href="#10-变量">10. 变量</a>
+    <ul>
+      <li><a href="#101-变量的类别">10.1 变量的类别</a></li>
+      <li><a href="#102-数组变量">10.2 数组变量</a></li>
+      <li><a href="#103-对变量的操作">10.3 对变量的操作</a></li>
+    </ul>
+  </li>
+  <li><a href="#11-函数">11. 函数</a>
+    <ul>
+      <li><a href="#111-函数简介">11.1 函数简介</a></li>
+      <li><a href="#112-范例脚本中的函数">11.2 范例：脚本中的函数</a></li>
+    </ul>
+  </li>
+  <li><a href="#12-捕捉信号">12. 捕捉信号</a>
+    <ul>
+      <li><a href="#121-信号">12.1 信号</a></li>
+      <li><a href="#122-trap">12.2 Trap</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="9-重复性任务">9. 重复性任务</h2>
+
+<h3 id="91-for-循环">9.1 <code class="highlighter-rouge">for</code> 循环</h3>
+
+<h4 id="911-工作方式">9.1.1 工作方式</h4>
+
+<p><code class="highlighter-rouge">for NAME [in LIST ]; do COMMANDS; done</code></p>
+
+<p>按照 LIST 列表，逐次执行 COMMANDS，直到 LIST 结束。</p>
+
+<p>如果 [in LIST ] 不存在，则会用 <code class="highlighter-rouge">in $@</code> 替换，并用每个位置参数来执行一次 COMMANDS。</p>
+
+<p>执行的最后一条命令的退出状态作为该循环的返回状态。如果因为 LIST 没扩展出任何条目，而导致没有执行任何命令，返回状态为 0。</p>
+
+<p>NAME 可以是变量名，经常习惯地使用 <code class="highlighter-rouge">i</code> 做变量名。</p>
+
+<p>LIST 可以是任何字段的列表，列表也可以由命令生成。</p>
+
+<p>COMMANDS 可以是任何命令、脚本、程序、语句。</p>
+
+<h4 id="912-范例">9.1.2 范例</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for </span>i <span class="k">in</span> <span class="o">{</span>1..100..2<span class="o">}</span>
+<span class="k">do  
+    </span><span class="nb">let</span> <span class="s2">"sum+=i"</span>  
+<span class="k">done  
+
+</span><span class="nb">echo</span> <span class="s2">"sum=</span><span class="nv">$sum</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<p>i 按步数 2 不断递增，计算 sum 值。</p>
+
+<h5 id="用命令替换来指定列表条目">用命令替换来指定列表条目</h5>
+
+<p><code class="highlighter-rouge">for i in </code>cat list<code class="highlighter-rouge">; do cp "$i" "$i".bak ; done</code></p>
+
+<p><code class="highlighter-rouge">for i in </code>ls /sbin<code class="highlighter-rouge">; do file /sbin/$i | grep ASCII; done</code></p>
+
+<h5 id="使用变量内容来指定列表条目">使用变量内容来指定列表条目</h5>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">LIST</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span><span class="nb">ls</span> <span class="k">*</span>.html<span class="k">)</span><span class="s2">"</span>
+<span class="k">for </span>i <span class="k">in</span> <span class="s2">"</span><span class="nv">$LIST</span><span class="s2">"</span><span class="p">;</span> <span class="k">do
+     </span><span class="nv">NEWNAME</span><span class="o">=</span><span class="k">$(</span><span class="nb">ls</span> <span class="s2">"</span><span class="nv">$i</span><span class="s2">"</span> | <span class="nb">sed</span> <span class="nt">-e</span> <span class="s1">'s/html/php/'</span><span class="k">)</span>
+     <span class="nb">cat </span>beginfile <span class="o">&gt;</span> <span class="s2">"</span><span class="nv">$NEWNAME</span><span class="s2">"</span>
+     <span class="nb">cat</span> <span class="s2">"</span><span class="nv">$i</span><span class="s2">"</span> | <span class="nb">sed</span> <span class="nt">-e</span> <span class="s1">'1,25d'</span> | <span class="nb">tac</span> | <span class="nb">sed</span> <span class="nt">-e</span> <span class="s1">'1,21d'</span>| <span class="nb">tac</span> <span class="o">&gt;&gt;</span> <span class="s2">"</span><span class="nv">$NEWNAME</span><span class="s2">"</span>
+     <span class="nb">cat </span>endfile <span class="o">&gt;&gt;</span> <span class="s2">"</span><span class="nv">$NEWNAME</span><span class="s2">"</span>
+<span class="k">done</span>
+</code></pre></div></div>
+
+<h5 id="计次循环">计次循环</h5>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span><span class="o">((</span> i <span class="o">=</span> 1<span class="p">;</span> i &lt;<span class="o">=</span> 100<span class="p">;</span> i <span class="o">=</span> i + 2 <span class="o">))</span>  
+<span class="k">do  
+     </span><span class="nb">let</span> <span class="s2">"sum += i"</span>  
+<span class="k">done  
+</span><span class="nb">echo</span> <span class="s2">"sum=</span><span class="nv">$sum</span><span class="s2">"</span>  
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">i = 1</code> ：循环变量赋初值</p>
+
+<p><code class="highlighter-rouge">i &lt;= 100</code> ：条件表达式，退出状态为 0 则继续循环，否则退出循环</p>
+
+<p><code class="highlighter-rouge">i = i + 2</code> ：循环变量自增</p>
+
+<h3 id="92-while-循环">9.2 <code class="highlighter-rouge">while</code> 循环</h3>
+
+<p>也称为 <strong>前测试循环语句</strong>，利用一个 <strong>条件</strong> 来 <strong>控制</strong> 是否继续 <strong>重复</strong> 执行这个语句。</p>
+
+<h4 id="921-工作方式">9.2.1 工作方式</h4>
+
+<p><code class="highlighter-rouge">while CONTROL-COMMAND; do CONSEQUENT-COMMANDS; done</code></p>
+
+<p>只要 CONTROL-COMMAND 条件为真，就不停地执行执行 CONSEQUENT-COMMANDS。一旦条件为假，立即退出循环，继续执行 done 之后，即循环之外的命令。</p>
+
+<p>为了 <strong>避免死循环</strong>，必须保证循环体中包含 <strong>循环出口条件</strong>，即表达式存在退出状态为非 0 的情况。</p>
+
+<h4 id="922-范例">9.2.2 范例</h4>
+
+<h5 id="一般用法">一般用法</h5>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">i</span><span class="o">=</span><span class="s2">"0"</span>
+
+<span class="k">while</span> <span class="o">[</span> <span class="nv">$i</span> <span class="nt">-lt</span> 4 <span class="o">]</span>
+<span class="k">do
+</span>xterm &amp;
+<span class="nv">i</span><span class="o">=</span><span class="nv">$[$i</span>+1]
+<span class="k">done</span>
+</code></pre></div></div>
+
+<h5 id="嵌套">嵌套</h5>
+
+<p>以下脚本目的是把网络摄像头拍摄的照片自动归档。摄像头每 5 分钟会拍一张照片。</p>
+
+<p>每天创建一个当天的目录，每小时新建一个目录，用于保存这一小时内拍摄的照片。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">PICSDIR</span><span class="o">=</span>/home/carol/pics
+<span class="nv">WEBDIR</span><span class="o">=</span>/var/www/carol/webcam
+
+<span class="k">while </span><span class="nb">true</span><span class="p">;</span> <span class="k">do
+	</span><span class="nv">DATE</span><span class="o">=</span><span class="sb">`</span><span class="nb">date</span> +%Y%m%d<span class="sb">`</span>
+	<span class="nv">HOUR</span><span class="o">=</span><span class="sb">`</span><span class="nb">date</span> +%H<span class="sb">`</span>
+	<span class="nb">mkdir</span> <span class="nv">$WEBDIR</span>/<span class="s2">"</span><span class="nv">$DATE</span><span class="s2">"</span>
+
+	<span class="k">while</span> <span class="o">[</span> <span class="nv">$HOUR</span> <span class="nt">-ne</span> <span class="s2">"00"</span> <span class="o">]</span><span class="p">;</span> <span class="k">do
+		</span><span class="nv">DESTDIR</span><span class="o">=</span><span class="nv">$WEBDIR</span>/<span class="s2">"</span><span class="nv">$DATE</span><span class="s2">"</span>/<span class="s2">"</span><span class="nv">$HOUR</span><span class="s2">"</span>
+		<span class="nb">mkdir</span> <span class="s2">"</span><span class="nv">$DESTDIR</span><span class="s2">"</span>
+		<span class="nb">mv</span> <span class="nv">$PICDIR</span>/<span class="k">*</span>.jpg <span class="s2">"</span><span class="nv">$DESTDIR</span><span class="s2">"</span>/
+		<span class="nb">sleep </span>3600
+		<span class="nv">HOUR</span><span class="o">=</span><span class="sb">`</span><span class="nb">date</span> +%H<span class="sb">`</span>
+	<span class="k">done
+done</span>
+</code></pre></div></div>
+
+<p>使用 <code class="highlighter-rouge">true</code> 语句时，代表无条件执行，直到被强制中断，也许是被 <code class="highlighter-rouge">kill</code> 信号，或 <code class="highlighter-rouge">^C</code>。</p>
+
+<p>下面的脚本可以用于生成测试文件：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">while </span><span class="nb">true</span><span class="p">;</span> <span class="k">do
+</span><span class="nb">touch </span>pic-<span class="sb">`</span><span class="nb">date</span> +%s<span class="sb">`</span>.jpg
+<span class="nb">sleep </span>300
+<span class="k">done</span>
+</code></pre></div></div>
+
+<p>每 5 分钟生成一个 <code class="highlighter-rouge">.jpg</code> 文件。</p>
+
+<h5 id="用键盘输入来控制循环">用键盘输入来控制循环</h5>
+
+<p>以下脚本可以用 <code class="highlighter-rouge">^C</code> 来终止运行：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">FORTUNE</span><span class="o">=</span>/usr/games/fortune
+
+<span class="k">while </span><span class="nb">true</span><span class="p">;</span> <span class="k">do
+</span><span class="nb">echo</span> <span class="s2">"On which topic do you want advice?"</span>
+<span class="nb">cat</span> <span class="o">&lt;&lt;</span> <span class="no">topics</span><span class="sh">
+politics
+startrek
+kernelnewbies
+sports
+bofh-excuses
+magic
+love
+literature
+drugs
+education
+</span><span class="no">topics
+
+</span><span class="nb">echo
+echo</span> <span class="nt">-n</span> <span class="s2">"Make your choice: "</span>
+<span class="nb">read </span>topic
+<span class="nb">echo
+echo</span> <span class="s2">"Free advice on the topic of </span><span class="nv">$topic</span><span class="s2">: "</span>
+<span class="nb">echo</span>
+<span class="nv">$FORTUNE</span> <span class="nv">$topic</span>
+<span class="nb">echo
+
+</span><span class="k">done</span>
+</code></pre></div></div>
+
+<h5 id="计算平均值">计算平均值</h5>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">SCORE</span><span class="o">=</span><span class="s2">"0"</span>
+<span class="nv">AVERAGE</span><span class="o">=</span><span class="s2">"0"</span>
+<span class="nv">SUM</span><span class="o">=</span><span class="s2">"0"</span>
+<span class="nv">NUM</span><span class="o">=</span><span class="s2">"0"</span>
+
+<span class="k">while </span><span class="nb">true</span><span class="p">;</span> <span class="k">do
+
+  </span><span class="nb">echo</span> <span class="nt">-n</span> <span class="s2">"Enter your score [0-100%] ('q' for quit): "</span><span class="p">;</span> <span class="nb">read </span>SCORE<span class="p">;</span>
+
+  <span class="k">if</span> <span class="o">((</span><span class="s2">"</span><span class="nv">$SCORE</span><span class="s2">"</span> &lt; <span class="s2">"0"</span><span class="o">))</span>  <span class="o">||</span> <span class="o">((</span><span class="s2">"</span><span class="nv">$SCORE</span><span class="s2">"</span> <span class="o">&gt;</span> <span class="s2">"100"</span><span class="o">))</span><span class="p">;</span> <span class="k">then
+    </span><span class="nb">echo</span> <span class="s2">"Be serious.  Common, try again: "</span>
+  <span class="k">elif</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$SCORE</span><span class="s2">"</span> <span class="o">==</span> <span class="s2">"q"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+    </span><span class="nb">echo</span> <span class="s2">"Average rating: </span><span class="nv">$AVERAGE</span><span class="s2">%."</span>
+    <span class="nb">break
+  </span><span class="k">else
+    </span><span class="nv">SUM</span><span class="o">=</span><span class="nv">$[$SUM</span> + <span class="nv">$SCORE</span><span class="o">]</span>
+    <span class="nv">NUM</span><span class="o">=</span><span class="nv">$[$NUM</span> + 1]
+    <span class="nv">AVERAGE</span><span class="o">=</span><span class="nv">$[$SUM</span> / <span class="nv">$NUM</span><span class="o">]</span>
+  <span class="k">fi
+
+done
+
+</span><span class="nb">echo</span> <span class="s2">"Exiting."</span>
+</code></pre></div></div>
+
+<h3 id="93--until-循环">9.3  <code class="highlighter-rouge">until</code> 循环</h3>
+
+<p><code class="highlighter-rouge">until TEST-COMMAND; do CONSEQUENT-COMMANDS; done</code></p>
+
+<p>只要条件不满足，就一直循环运行，一旦满足，退出循环。</p>
+
+<h4 id="范例">范例</h4>
+
+<p>还是网络摄像头那个例子，加上磁盘空间的检测，一于磁盘空间不够用（占用率 &gt; 90%），就自动转移图片。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">while </span><span class="nb">true</span><span class="p">;</span> <span class="k">do
+	</span><span class="nv">DISKFUL</span><span class="o">=</span><span class="k">$(</span><span class="nb">df</span> <span class="nt">-h</span> <span class="nv">$WEBDIR</span> | <span class="nb">grep</span> <span class="nt">-v</span> File | <span class="nb">awk</span> <span class="s1">'{print $5 }'</span> | <span class="nb">cut</span> <span class="nt">-d</span> <span class="s2">"%"</span> <span class="nt">-f1</span> -<span class="k">)</span>
+
+	<span class="k">until</span> <span class="o">[</span> <span class="nv">$DISKFUL</span> <span class="nt">-ge</span> <span class="s2">"90"</span> <span class="o">]</span><span class="p">;</span> <span class="k">do
+
+        	</span><span class="nv">DATE</span><span class="o">=</span><span class="sb">`</span><span class="nb">date</span> +%Y%m%d<span class="sb">`</span>
+        	<span class="nv">HOUR</span><span class="o">=</span><span class="sb">`</span><span class="nb">date</span> +%H<span class="sb">`</span>
+        	<span class="nb">mkdir</span> <span class="nv">$WEBDIR</span>/<span class="s2">"</span><span class="nv">$DATE</span><span class="s2">"</span>
+
+        	<span class="k">while</span> <span class="o">[</span> <span class="nv">$HOUR</span> <span class="nt">-ne</span> <span class="s2">"00"</span> <span class="o">]</span><span class="p">;</span> <span class="k">do
+                	</span><span class="nv">DESTDIR</span><span class="o">=</span><span class="nv">$WEBDIR</span>/<span class="s2">"</span><span class="nv">$DATE</span><span class="s2">"</span>/<span class="s2">"</span><span class="nv">$HOUR</span><span class="s2">"</span>
+                	<span class="nb">mkdir</span> <span class="s2">"</span><span class="nv">$DESTDIR</span><span class="s2">"</span>
+                	<span class="nb">mv</span> <span class="nv">$PICDIR</span>/<span class="k">*</span>.jpg <span class="s2">"</span><span class="nv">$DESTDIR</span><span class="s2">"</span>/
+                	<span class="nb">sleep </span>3600
+                	<span class="nv">HOUR</span><span class="o">=</span><span class="sb">`</span><span class="nb">date</span> +%H<span class="sb">`</span>
+        	<span class="k">done
+
+	</span><span class="nv">DISKFULL</span><span class="o">=</span><span class="k">$(</span><span class="nb">df</span> <span class="nt">-h</span> <span class="nv">$WEBDIR</span> | <span class="nb">grep</span> <span class="nt">-v</span> File | <span class="nb">awk</span> <span class="s1">'{ print $5 }'</span> | <span class="nb">cut</span> <span class="nt">-d</span> <span class="s2">"%"</span> <span class="nt">-f1</span> -<span class="k">)</span>
+	<span class="k">done
+
+	</span><span class="nv">TOREMOVE</span><span class="o">=</span><span class="k">$(</span>find <span class="nv">$WEBDIR</span> <span class="nt">-type</span> d <span class="nt">-a</span> <span class="nt">-mtime</span> +30<span class="k">)</span>
+	<span class="k">for </span>i <span class="k">in</span> <span class="nv">$TOREMOVE</span><span class="p">;</span> <span class="k">do
+		</span><span class="nb">rm</span> <span class="nt">-rf</span> <span class="s2">"</span><span class="nv">$i</span><span class="s2">"</span><span class="p">;</span>
+	<span class="k">done
+
+done</span>
+</code></pre></div></div>
+
+<h3 id="94-io-重定向和循环">9.4 I/O 重定向和循环</h3>
+
+<h4 id="941-输入重定向">9.4.1 输入重定向</h4>
+
+<p>除了通过一条命令的测试结果或用户的输入来控制循环以外，还可以指定一个文件，通过它来读取输入，借此控制循环。这种情况下，<code class="highlighter-rouge">read</code> 通常是控制命令。只要有输入行的数据交给循环，循环的命令就一直执行。读完所有输入行以后，循环退出。</p>
+
+<p>因为循环结构基本上可以看作是一条命令的结构，因此重定向应该放在 <code class="highlighter-rouge">done</code> 语句之后。</p>
+
+<p><code class="highlighter-rouge">command &lt; file</code></p>
+
+<blockquote>
+  <p>what the fuck????</p>
+</blockquote>
+
+<h4 id="942-输出重定向">9.4.2 输出重定向</h4>
+
+<p>下例中，<code class="highlighter-rouge">find</code> 命令的输出作为 <code class="highlighter-rouge">read</code> 命令的输入，用来控制 <code class="highlighter-rouge">while</code> 循环：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">ARCHIVENR</span><span class="o">=</span><span class="sb">`</span><span class="nb">date</span> +%Y%m%d<span class="sb">`</span>
+<span class="nv">DESTDIR</span><span class="o">=</span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">/archive-</span><span class="nv">$ARCHIVENR</span><span class="s2">"</span>
+
+<span class="nb">mkdir</span> <span class="s2">"</span><span class="nv">$DESTDIR</span><span class="s2">"</span>
+
+find <span class="s2">"</span><span class="nv">$PWD</span><span class="s2">"</span> <span class="nt">-type</span> f <span class="nt">-a</span> <span class="nt">-mtime</span> +5 | <span class="k">while </span><span class="nb">read</span> <span class="nt">-d</span> <span class="s1">$'</span><span class="se">\0</span><span class="s1">00'</span> file
+
+<span class="k">do
+</span><span class="nb">gzip</span> <span class="s2">"</span><span class="nv">$file</span><span class="s2">"</span><span class="p">;</span> <span class="nb">mv</span> <span class="s2">"</span><span class="nv">$file</span><span class="s2">"</span>.gz <span class="s2">"</span><span class="nv">$DESTDIR</span><span class="s2">"</span>
+<span class="nb">echo</span> <span class="s2">"</span><span class="nv">$file</span><span class="s2"> archived"</span>
+<span class="k">done</span>
+</code></pre></div></div>
+
+<p>在当前目录创建子目录，把旧文件都移到那里。</p>
+
+<h3 id="95-break-与-continue">9.5 <code class="highlighter-rouge">break</code> 与 <code class="highlighter-rouge">continue</code></h3>
+
+<h4 id="951-break">9.5.1 <code class="highlighter-rouge">break</code></h4>
+
+<p><code class="highlighter-rouge">break</code> 语句用于在正常结束之前退出当前循环。</p>
+
+<p class="notice--info">注意：<code class="highlighter-rouge">break</code> 只是退出当前循环，而非脚本。</p>
+
+<p>在嵌套循环中，可以指定要退出哪个循环。</p>
+
+<h4 id="952-continue">9.5.2 <code class="highlighter-rouge">continue</code></h4>
+
+<p><code class="highlighter-rouge">continue</code> 语句用于继续迭代循环。</p>
+
+<p>在 <code class="highlighter-rouge">for</code> 循环中使用时，控制变量会取列表中下一个元素的值。</p>
+
+<p>在 <code class="highlighter-rouge">while</code> 或 <code class="highlighter-rouge">until</code> 中使用时，则继续执行 TEST-COMMAND。</p>
+
+<p>以下脚本会把当前目录中所有文件名有含有大写字母的，一律修改为小写字母：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">LIST</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span><span class="nb">ls</span><span class="k">)</span><span class="s2">"</span>
+
+<span class="k">for </span>name <span class="k">in</span> <span class="s2">"</span><span class="nv">$LIST</span><span class="s2">"</span><span class="p">;</span> <span class="k">do
+
+if</span> <span class="o">[[</span> <span class="s2">"</span><span class="nv">$name</span><span class="s2">"</span> <span class="o">!=</span> <span class="k">*</span><span class="o">[[</span>:upper:]]<span class="k">*</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then
+continue</span>  
+<span class="c"># 如果文件名中不含大写字母，循环运行到这一步就不再往下运行，</span>
+<span class="c"># 而是直接取列表中下一个文件名</span>
+<span class="k">fi
+
+</span><span class="nv">ORIG</span><span class="o">=</span><span class="s2">"</span><span class="nv">$name</span><span class="s2">"</span>
+<span class="nv">NEW</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> <span class="nv">$name</span> | <span class="nb">tr</span> <span class="s1">'A-Z'</span> <span class="s1">'a-z'</span><span class="sb">`</span>
+
+<span class="nb">mv</span> <span class="s2">"</span><span class="nv">$ORIG</span><span class="s2">"</span> <span class="s2">"</span><span class="nv">$NEW</span><span class="s2">"</span>
+<span class="nb">echo</span> <span class="s2">"new name for </span><span class="nv">$ORIG</span><span class="s2"> is </span><span class="nv">$NEW</span><span class="s2">"</span>
+<span class="k">done</span>
+</code></pre></div></div>
+
+<h3 id="96-用-select-命令做选择菜单">9.6 用 <code class="highlighter-rouge">select</code> 命令做选择菜单</h3>
+
+<h4 id="select-命令"><code class="highlighter-rouge">select</code> 命令</h4>
+
+<p><code class="highlighter-rouge">select</code> 结构可以生成菜单：</p>
+
+<p><code class="highlighter-rouge">select WORD [in LIST]; do RESPECTIVE-COMMANDS; done</code></p>
+
+<p>LIST 会被扩展开，生成一个项目列表。该扩展会被输出到标准错误，每个项目前面会自动加上一个序号。如果 <code class="highlighter-rouge">in LIST</code> 不存在，则会把位置参数做为项目打印出来。</p>
+
+<p>在打印出所有项目后，会打印 <code class="highlighter-rouge">PS3</code> 提示符，并且会从标准输入读取一行。如果该行包含与项目对应的数字之一，WORD 的值会被设置成该项目的名称。如果读取到的输入是空行，这些项目列表和提示符会重新显示一次。</p>
+
+<p>如果读取到 EOF 字符，循环会退出。</p>
+
+<p>因为大部分用户都不了解什么组合键是用来产生 EOF 的，因此，如果能单独添加一个含有 <code class="highlighter-rouge">break</code> 命令的项目，算是对用户比较友好了。</p>
+
+<p>读取到的所有其它的值都会把 WORD 设置为空字符串。</p>
+
+<p>读取到的这一行内容被保存到变量 <code class="highlighter-rouge">REPLY</code> 中。</p>
+
+<p>用户每次做出选择，都会执行 RESPECTIVE-COMMANDS 中的命令，直到做出的选择导致了 <code class="highlighter-rouge">break</code> 语句的运行，才会退出循环。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+<span class="nb">echo</span> <span class="s2">"This script can make any of the files in this directory private."</span>
+<span class="nb">echo</span> <span class="s2">"Enter the number of the file you want to protect:"</span>
+
+<span class="nv">PS3</span><span class="o">=</span><span class="s2">"Your choice: "</span>
+<span class="nv">QUIT</span><span class="o">=</span><span class="s2">"QUIT THIS PROGRAM - I feel safe now."</span>
+<span class="nb">touch</span> <span class="s2">"</span><span class="nv">$QUIT</span><span class="s2">"</span>
+
+<span class="k">select </span>FILENAME <span class="k">in</span> <span class="k">*</span><span class="p">;</span>
+<span class="k">do
+  case</span> <span class="nv">$FILENAME</span> <span class="k">in</span>
+        <span class="s2">"</span><span class="nv">$QUIT</span><span class="s2">"</span><span class="p">)</span>
+          <span class="nb">echo</span> <span class="s2">"Exiting."</span>
+          <span class="nb">break</span>
+          <span class="p">;;</span>
+        <span class="k">*</span><span class="p">)</span>
+          <span class="nb">echo</span> <span class="s2">"You picked </span><span class="nv">$FILENAME</span><span class="s2"> (</span><span class="nv">$REPLY</span><span class="s2">)"</span>
+          <span class="nb">chmod </span>go-rwx <span class="s2">"</span><span class="nv">$FILENAME</span><span class="s2">"</span>
+          <span class="p">;;</span>
+  <span class="k">esac</span>
+<span class="k">done
+</span><span class="nb">rm</span> <span class="s2">"</span><span class="nv">$QUIT</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<h4 id="子菜单">子菜单</h4>
+
+<p>通过 <code class="highlighter-rouge">select</code> 结构的嵌套就可以实现子菜单。</p>
+
+<p>默认情况下，进行嵌套 <code class="highlighter-rouge">select</code> 循环时，<code class="highlighter-rouge">PS3</code> 变量不会改变，如果需要，可以在子 <code class="highlighter-rouge">select</code> 结构中单独设定。</p>
+
+<h3 id="97-shift">9.7 <code class="highlighter-rouge">shift</code></h3>
+
+<h4 id="971-shift-简介">9.7.1 <code class="highlighter-rouge">shift</code> 简介</h4>
+
+<p><code class="highlighter-rouge">shift</code> 为 bash 内建命令，接受一个数字 N 做为参数。所有的位置参数会由于这个数字 N 而整体向左移动。于是原来的位置参数 <code class="highlighter-rouge">$#</code> 变成了 <code class="highlighter-rouge">$# - N+1</code>。</p>
+
+<p>假如有个命令使用了 10 个参数，而且 N=4，则 <code class="highlighter-rouge">$4</code> 变成了 <code class="highlighter-rouge">$1</code>，<code class="highlighter-rouge">$5</code> 变成了 <code class="highlighter-rouge">$2</code> 等等。而原来的 <code class="highlighter-rouge">$1</code>、<code class="highlighter-rouge">$2</code>、<code class="highlighter-rouge">$3</code> 被 <strong>丢弃</strong>。</p>
+
+<p>如果 N 为 0 或大于 <code class="highlighter-rouge">$#</code>，位置参数则不会改变，<code class="highlighter-rouge">shift</code> 命令也没有什么效果。如果 N 不存在，会假定 N=1。</p>
+
+<p>如果 N 介于 0 和 <code class="highlighter-rouge">$#</code> 之间，则返回状态为 0，否则为非 0。</p>
+
+<p><code class="highlighter-rouge">shift</code> 应用的场合主要是某个命令要使用的参数不能提前预知时，用户则可以提前准备许多参数。这种情况下，通常使用 <code class="highlighter-rouge">while</code> 循环来处理这些参数，把 <code class="highlighter-rouge">(( $# ))</code> 做为测试条件。只要参数的总数大于 0，条件就为真。<code class="highlighter-rouge">$1</code> 变量和 <code class="highlighter-rouge">shift</code> 语句会处理每一个参数。每次执行 <code class="highlighter-rouge">shift</code> 以后，参数的总数就会减少，直到最终为 0，<code class="highlighter-rouge">while</code> 循环就会退出。</p>
+
+<h5 id="范例-1">范例</h5>
+
+<p>以下脚本用于删除超过一年以上未访问的文件，使用 <code class="highlighter-rouge">shift</code> 语句来处理由 <code class="highlighter-rouge">find</code> 生成的文件列表中的每个文件。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">USAGE</span><span class="o">=</span><span class="s2">"Usage: </span><span class="nv">$0</span><span class="s2"> dir1 dir2 dir3 ... dirN"</span>
+
+<span class="k">if</span> <span class="o">[</span> <span class="s2">"$#"</span> <span class="o">==</span> <span class="s2">"0"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+	</span><span class="nb">echo</span> <span class="s2">"</span><span class="nv">$USAGE</span><span class="s2">"</span>
+	<span class="nb">exit </span>1
+<span class="k">fi
+
+while</span> <span class="o">((</span> <span class="s2">"$#"</span> <span class="o">))</span><span class="p">;</span> <span class="k">do
+
+if</span> <span class="o">[[</span> <span class="k">$(</span><span class="nb">ls</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span><span class="k">)</span> <span class="o">==</span> <span class="s2">""</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then
+	</span><span class="nb">echo</span> <span class="s2">"Empty directory, nothing to be done."</span>
+  <span class="k">else
+	</span>find <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="nt">-type</span> f <span class="nt">-a</span> <span class="nt">-atime</span> +365 | xargs <span class="nb">rm</span> <span class="nt">-i</span>
+<span class="k">fi
+
+</span><span class="nb">shift
+
+</span><span class="k">done</span>
+</code></pre></div></div>
+
+<p>以下脚本用于安装软件包：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="o">[</span> <span class="nv">$# </span><span class="nt">-lt</span> 1 <span class="o">]</span><span class="p">;</span> <span class="k">then
+        </span><span class="nb">echo</span> <span class="s2">"Usage: </span><span class="nv">$0</span><span class="s2"> package(s)"</span>
+        <span class="nb">exit </span>1
+<span class="k">fi
+while</span> <span class="o">((</span><span class="nv">$#)</span><span class="o">)</span><span class="p">;</span> <span class="k">do
+	</span>yum <span class="nb">install</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="o">&lt;&lt;</span> <span class="no">CONFIRM</span><span class="sh">
+y
+</span><span class="no">CONFIRM
+</span><span class="nb">shift
+</span><span class="k">done</span>
+</code></pre></div></div>
+
+<h2 id="10-变量">10. 变量</h2>
+
+<h3 id="101-变量的类别">10.1 变量的类别</h3>
+
+<h4 id="1011-一般的赋值方法">10.1.1 一般的赋值方法</h4>
+
+<p><code class="highlighter-rouge">VARIABLE=string</code></p>
+
+<p>通常在脚本开始处对常量进行赋值，以便整个脚本中可以引用变量名。</p>
+
+<h4 id="1012-delcare-命令">10.1.2 <code class="highlighter-rouge">delcare</code> 命令</h4>
+
+<p><code class="highlighter-rouge">declare</code> 为内建命令，用于限制为该变量赋值的范围。一旦使用了 <code class="highlighter-rouge">delcare</code> 对变量的赋值范围进行限定，它就只能接受这类的数据了。</p>
+
+<p>常用的限制为整数、常量或数组。</p>
+
+<p><code class="highlighter-rouge">declare OPTION(s) VARIABLE=value</code></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>选项</th>
+      <th>用途</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">-a</code></td>
+      <td>变量是数组</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">-f</code></td>
+      <td>仅使用函数名做变量</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">-i</code></td>
+      <td>变量会被作为整数处理</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">-p</code></td>
+      <td>显示每个变量的属性和值，只要使用了 <code class="highlighter-rouge">-p</code> 选项，其它所有选项都会被忽略</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">-r</code></td>
+      <td>让变量为只读。不能被后续命令所赋值，也不能被 unset</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">-t</code></td>
+      <td>为变量设置 trace 属性</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">-x</code></td>
+      <td>标记变量，用于通过环境变量导出到后续命令</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>以上选项，如果把 <code class="highlighter-rouge">-</code> 变成 <code class="highlighter-rouge">+</code> 就会关闭该选项。</p>
+
+<p>如果 <code class="highlighter-rouge">declare</code> 是在函数中进行的，会创建局部变量。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">declare</span> <span class="nt">-i</span> <span class="nv">VARIABLE</span><span class="o">=</span>12
+<span class="nv">$ VARIABLE</span><span class="o">=</span>string
+<span class="nv">$ </span><span class="nb">echo</span> <span class="nv">$VARIABLE</span>
+0
+<span class="nv">$ </span><span class="nb">declare</span> <span class="nt">-p</span> VARIABLE
+<span class="nb">declare</span> <span class="nt">-i</span> <span class="nv">VARIABLE</span><span class="o">=</span><span class="s2">"0"</span>
+</code></pre></div></div>
+
+<p>bash 可以用 <code class="highlighter-rouge">-i</code> 声明数字变量，但没有选项可以声明字符串变量。因为每个变量默认可以赋予任何数据。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ OTHERVAR</span><span class="o">=</span>blah
+<span class="nv">$ </span><span class="nb">declare</span> <span class="nt">-p</span> OTHERVAR
+<span class="nb">declare</span> <span class="nt">--</span> <span class="nv">OTHERVAR</span><span class="o">=</span><span class="s2">"blah"</span>
+</code></pre></div></div>
+
+<h4 id="1013-常量">10.1.3 常量</h4>
+
+<p>bash 中，通过 <code class="highlighter-rouge">readonly</code> 命令来创建只读变量，来创建常量。</p>
+
+<p><code class="highlighter-rouge">readonly OPTION VARIABLE(s)</code></p>
+
+<p>一经该命令的赋值，该变量的值就再也无法被后续命令修改。</p>
+
+<p>如果使用了 <code class="highlighter-rouge">-f</code> 选项，则每个变量都是指一个 shell 函数。</p>
+
+<p>如果使用了 <code class="highlighter-rouge">-a</code> 选项，每个变量都是指一个数组变量。</p>
+
+<p>如果使用了 <code class="highlighter-rouge">-p</code> 选项，输出可以被当作输入来重用。</p>
+
+<p>如果没有使用参数，或使用了 <code class="highlighter-rouge">-p</code> 选项，会列出所有只读变量。</p>
+
+<h3 id="102-数组变量">10.2 数组变量</h3>
+
+<h4 id="1021-创建数组">10.2.1 创建数组</h4>
+
+<p>数组变量包含多个值，所有的变量都可以做为数组来使用。没有数组大小的限制，也不必连续赋值。</p>
+
+<p>数组是从 0 开始索引的。</p>
+
+<h5 id="为数组的某个索引赋值">为数组的某个索引赋值</h5>
+
+<p>间接声明数组的一种方式。</p>
+
+<p><code class="highlighter-rouge">ARRAY[INDEXNR]=value</code>   如 <code class="highlighter-rouge">SHIT[0]=thor</code></p>
+
+<p><code class="highlighter-rouge">INDEXNR</code> 会以算术表达式被对待，必须最终算出一个正数。</p>
+
+<h5 id="显式声明数组">显式声明数组</h5>
+
+<p>可以用 <code class="highlighter-rouge">declare</code> 显式声明一个数组：</p>
+
+<p><code class="highlighter-rouge">declare -a SHIT</code></p>
+
+<p>声明时如果使用了索引编号，会被忽略。</p>
+
+<p>可以使用 <code class="highlighter-rouge">declare</code> 和 <code class="highlighter-rouge">readonly</code> 来为数组设定属性。属性会应用到数组中的所有变量中。</p>
+
+<h5 id="为数组全部索引赋值">为数组全部索引赋值</h5>
+
+<p>间接声明数组的另一种方式。</p>
+
+<p><code class="highlighter-rouge">ARRAY=(value1 value2 ... valueN)</code></p>
+
+<p>赋值时如果没有指定索引值，则索引会从 0 开始。</p>
+
+<h4 id="1022-引用数组变量">10.2.2 引用数组变量</h4>
+
+<p>要想引用数组中某个项目的内容，需要用大括号 <code class="highlighter-rouge">{ARRAY[5]}</code>。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ ARRAY</span><span class="o">=(</span>one two three<span class="o">)</span>
+<span class="nv">$ </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">ARRAY</span><span class="p">[*]</span><span class="k">}</span>
+one two three
+
+<span class="nv">$ </span><span class="nb">echo</span> <span class="nv">$ARRAY</span><span class="o">[</span><span class="k">*</span><span class="o">]</span>
+one[<span class="k">*</span><span class="o">]</span>
+
+<span class="nv">$ </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">ARRAY</span><span class="p">[2]</span><span class="k">}</span>
+three
+</code></pre></div></div>
+
+<p>如果索引号为 <code class="highlighter-rouge">@</code> 或 <code class="highlighter-rouge">*</code> 则相当于引用了数组中所有成员。</p>
+
+<p>如果没有索引号，则相当于引用第一个索引，即 ARRAY[0]。</p>
+
+<h4 id="1023-删除数据变量">10.2.3 删除数据变量</h4>
+
+<p>使用 <code class="highlighter-rouge">unset</code> 可以清除整个数组或某个变量成员。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">unset </span>ARRAY[1]
+<span class="nv">$ </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">ARRAY</span><span class="p">[*]</span><span class="k">}</span>
+one three four
+
+<span class="nv">$ </span><span class="nb">unset </span>ARRAY
+<span class="nv">$ </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">ARRAY</span><span class="p">[*]</span><span class="k">}</span>
+&lt;<span class="nt">--no</span> output--&gt;
+</code></pre></div></div>
+
+<h4 id="1024-范例">10.2.4 范例</h4>
+
+<p>把 Apache 配置文件分发到各主机。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="o">[</span> <span class="k">$(</span><span class="nb">whoami</span><span class="k">)</span> <span class="o">!=</span> <span class="s1">'root'</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+        </span><span class="nb">echo</span> <span class="s2">"Must be root to run </span><span class="nv">$0</span><span class="s2">"</span>
+        <span class="nb">exit </span>1<span class="p">;</span>
+<span class="k">fi
+if</span> <span class="o">[</span> <span class="nt">-z</span> <span class="nv">$1</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+        </span><span class="nb">echo</span> <span class="s2">"Usage: </span><span class="nv">$0</span><span class="s2"> &lt;/path/to/httpd.conf&gt;"</span>
+        <span class="nb">exit </span>1
+<span class="k">fi
+
+</span><span class="nv">httpd_conf_new</span><span class="o">=</span><span class="nv">$1</span>
+<span class="nv">httpd_conf_path</span><span class="o">=</span><span class="s2">"/usr/local/apache/conf"</span>
+<span class="nv">login</span><span class="o">=</span>htuser
+
+<span class="nv">farm_hosts</span><span class="o">=(</span>web03 web04 web05 web06 web07<span class="o">)</span>
+
+<span class="k">for </span>i <span class="k">in</span> <span class="k">${</span><span class="nv">farm_hosts</span><span class="p">[@]</span><span class="k">}</span><span class="p">;</span> <span class="k">do
+        </span>su <span class="nv">$login</span> <span class="nt">-c</span> <span class="s2">"scp </span><span class="nv">$httpd_conf_new</span><span class="s2"> </span><span class="k">${</span><span class="nv">i</span><span class="k">}</span><span class="s2">:</span><span class="k">${</span><span class="nv">httpd_conf_path</span><span class="k">}</span><span class="s2">"</span>
+        su <span class="nv">$login</span> <span class="nt">-c</span> <span class="s2">"ssh </span><span class="nv">$i</span><span class="s2"> sudo /usr/local/apache/bin/apachectl graceful"</span>
+
+<span class="k">done
+</span><span class="nb">exit </span>0
+</code></pre></div></div>
+
+<p>某公司网站上有一些演示程序，每周要由人对所有这些程序进程测试。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="c"># This is get-tester-address.sh</span>
+<span class="c">#</span>
+<span class="c"># First, we test whether bash supports arrays.</span>
+<span class="c"># (Support for arrays was only added recently.)</span>
+<span class="c">#</span>
+whotest[0]<span class="o">=</span><span class="s1">'test'</span> <span class="o">||</span> <span class="o">(</span><span class="nb">echo</span> <span class="s1">'Failure: arrays not supported in this version of
+bash.'</span> <span class="o">&amp;&amp;</span> <span class="nb">exit </span>2<span class="o">)</span>
+
+<span class="c">#</span>
+<span class="c"># Our list of candidates. (Feel free to add or</span>
+<span class="c"># remove candidates.)</span>
+<span class="c">#</span>
+<span class="nv">wholist</span><span class="o">=(</span>
+     <span class="s1">'Bob Smith &lt;bob@example.com&gt;'</span>
+     <span class="s1">'Jane L. Williams &lt;jane@example.com&gt;'</span>
+     <span class="s1">'Eric S. Raymond &lt;esr@example.com&gt;'</span>
+     <span class="s1">'Larry Wall &lt;wall@example.com&gt;'</span>
+     <span class="s1">'Linus Torvalds &lt;linus@example.com&gt;'</span>
+   <span class="o">)</span>
+<span class="c">#</span>
+<span class="c"># Count the number of possible testers.</span>
+<span class="c"># (Loop until we find an empty string.)</span>
+<span class="c">#</span>
+<span class="nv">count</span><span class="o">=</span>0
+<span class="k">while</span> <span class="o">[</span> <span class="s2">"x</span><span class="k">${</span><span class="nv">wholist</span><span class="p">[count]</span><span class="k">}</span><span class="s2">"</span> <span class="o">!=</span> <span class="s2">"x"</span> <span class="o">]</span>
+<span class="k">do
+   </span><span class="nv">count</span><span class="o">=</span><span class="k">$((</span> <span class="nv">$count</span> <span class="o">+</span> <span class="m">1</span> <span class="k">))</span>
+<span class="k">done</span>
+
+<span class="c">#</span>
+<span class="c"># Now we calculate whose turn it is.</span>
+<span class="c">#</span>
+<span class="nv">week</span><span class="o">=</span><span class="sb">`</span><span class="nb">date</span> <span class="s1">'+%W'</span><span class="sb">`</span>    	<span class="c"># The week of the year (0..53).</span>
+<span class="nv">week</span><span class="o">=</span><span class="k">${</span><span class="nv">week</span><span class="p">#0</span><span class="k">}</span>       	<span class="c"># Remove possible leading zero.</span>
+
+<span class="nb">let</span> <span class="s2">"index = </span><span class="nv">$week</span><span class="s2"> % </span><span class="nv">$count</span><span class="s2">"</span>   <span class="c"># week modulo count = the lucky person</span>
+
+<span class="nv">email</span><span class="o">=</span><span class="k">${</span><span class="nv">wholist</span><span class="p">[index]</span><span class="k">}</span>     <span class="c"># Get the lucky person's e-mail address.</span>
+
+<span class="nb">echo</span> <span class="nv">$email</span>     	<span class="c"># Output the person's e-mail address.</span>
+</code></pre></div></div>
+
+<h3 id="103-对变量的操作">10.3 对变量的操作</h3>
+
+<h4 id="1031-变量长度">10.3.1 变量长度</h4>
+
+<p>用 <code class="highlighter-rouge">${#VAR}</code> 来表示变量的字符总数。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="nv">$SHELL</span>
+/bin/bash
+
+<span class="nv">$ </span><span class="nb">echo</span> <span class="k">${#</span><span class="nv">SHELL</span><span class="k">}</span>
+9
+</code></pre></div></div>
+
+<p>如果变量是 <code class="highlighter-rouge">*</code> 或 <code class="highlighter-rouge">@</code>，其变量值会用位置参数的总数或数组元素的数量来替换。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ ARRAY</span><span class="o">=(</span>one two three<span class="o">)</span>
+<span class="nv">$ </span><span class="nb">echo</span> <span class="k">${#</span><span class="nv">ARRAY</span><span class="k">}</span>
+3
+</code></pre></div></div>
+
+<h4 id="1032-变量的转换">10.3.2 变量的转换</h4>
+
+<h5 id="变量替换">变量替换</h5>
+
+<h6 id="var-word--或--varword"><code class="highlighter-rouge">${VAR:-WORD}</code>  或  <code class="highlighter-rouge">${VAR:=WORD}</code></h6>
+
+<p>如果 VAR 未定义或为空，就用 WORD 的扩展来替换，否则用变量值替换。即 <strong>只替换空变量</strong>。</p>
+
+<p>常用来做条件测试。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ TEST</span><span class="o">=</span><span class="s1">'mother fucker!'</span>
+<span class="nv">$ </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">TEST</span><span class="k">}</span>
+mother fucker!
+<span class="nv">$ </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">TEST</span><span class="k">:-</span><span class="nv">hello</span><span class="k">}</span>
+mother fucker!
+<span class="nv">$ </span><span class="nb">unset </span>TEST
+<span class="nv">$ </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">TEST</span><span class="k">:-</span><span class="nv">hello</span><span class="k">}</span>
+hello
+<span class="nv">$ </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">TEST</span><span class="k">}</span>
+
+</code></pre></div></div>
+
+<p>如果 <code class="highlighter-rouge">TEST</code> 未定义或为空，则结果会显示 shit，否则显示 <code class="highlighter-rouge">TEST</code> 变量的值。</p>
+
+<h6 id="varother-或-varother"><code class="highlighter-rouge">${var+$OTHER}</code> 或 <code class="highlighter-rouge">${var:+$OTHER}</code></h6>
+
+<p>如果变量已定义，表达式求值结果为 <code class="highlighter-rouge">$OTHER</code>，否则为空。即 <strong>只替换非空变量</strong>。</p>
+
+<h5 id="删除子串">删除子串</h5>
+
+<h6 id="varoffsetlength"><code class="highlighter-rouge">${VAR:OFFSET:LENGTH}</code></h6>
+
+<p>😈 想像在 WORD 中编辑文字，光标在该字符串最前面，现在你想从字符串中截取一部分留下，其余的删除。该语法是指光标向右移动 OFFSET 个字符，从新位置向右保留 LENGTH 个字符。其余的删除。如果 LENGTH 被省略，则从新光标处到字符串结尾的字符都保留。</p>
+
+<p><img src="/assets/images/2017.3.3.bash03.strip.substring.png" alt="image-center" class="align-center" /></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">export </span><span class="nv">STRING</span><span class="o">=</span><span class="s2">"thisisaverylongname"</span>
+<span class="nv">$ </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">STRING</span>:4<span class="k">}</span>
+isaverylongname
+<span class="nv">$ </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">STRING</span>:11:4<span class="k">}</span>
+long
+</code></pre></div></div>
+
+<h6 id="varword-及-varword"><code class="highlighter-rouge">${VAR#WORD}</code> 及 <code class="highlighter-rouge">${VAR##WORD}</code></h6>
+
+<p>在 <code class="highlighter-rouge">VAR</code> 中删除子串 <code class="highlighter-rouge">WORD</code>，<code class="highlighter-rouge">WORD</code> 会被扩展以生成一个模板，用来匹配子串。</p>
+
+<p><code class="highlighter-rouge">${VAR#WORD}</code> ：从 VAR 的开头删除 WORD 的最短匹配</p>
+
+<p><code class="highlighter-rouge">${VAR##WORD}</code> ：从 VAR 的开头删除 WORD 的最长匹配</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ VAR</span><span class="o">=</span>abcdefg
+<span class="nv">$ </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">VAR</span><span class="p">#a*</span><span class="k">}</span>
+bcdefg
+<span class="nv">$ </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">VAR</span><span class="p">##a*</span><span class="k">}</span>
+
+</code></pre></div></div>
+
+<p>如果 VAR 是 <code class="highlighter-rouge">*</code> 或 <code class="highlighter-rouge">@</code>，则删除模板的操作符被依次应用于每个位置参数。</p>
+
+<p>如果 VAR 是用 <code class="highlighter-rouge">*</code> 或 <code class="highlighter-rouge">@</code> 表示的数组变量，操作符则依次应用于数组中的每个成员。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">ARRAY</span><span class="p">[*]</span><span class="k">}</span>
+one two one three one four
+
+<span class="nv">$ </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">ARRAY</span><span class="p">[*]#one</span><span class="k">}</span>
+two three four
+
+<span class="nv">$ </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">ARRAY</span><span class="p">[*]#t</span><span class="k">}</span>
+one wo one hree one four
+
+<span class="nv">$ </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">ARRAY</span><span class="p">[*]#t*</span><span class="k">}</span>
+one wo one hree one four
+
+<span class="nv">$ </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">ARRAY</span><span class="p">[*]##t*</span><span class="k">}</span>
+one one one four
+</code></pre></div></div>
+
+<h6 id="varword-及-varword-1"><code class="highlighter-rouge">${VAR%WORD}</code> 及 <code class="highlighter-rouge">${VAR%%WORD}</code></h6>
+
+<p>与上面相反，这是从字符串的尾部开始匹配的。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="nv">$STRING</span>
+thisisaverylongname
+
+<span class="nv">$ </span><span class="nb">echo</span> <span class="k">${</span><span class="nv">STRING</span><span class="p">%name</span><span class="k">}</span>
+thisisaverylong
+</code></pre></div></div>
+
+<h5 id="对变量值进行部分替换">对变量值进行部分替换</h5>
+
+<p><code class="highlighter-rouge">${VAR/PATTERN/STRING}</code>  替换第一个匹配</p>
+
+<p><code class="highlighter-rouge">${VAR//PATTERN/STRING}</code>  替换所有匹配</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">STRING</span><span class="o">=</span><span class="s2">"thisisaverylongname"</span>
+<span class="nb">echo</span> <span class="k">${</span><span class="nv">STRING</span><span class="p">/name/string</span><span class="k">}</span>
+thisisaverylongstring
+</code></pre></div></div>
+
+<h2 id="11-函数">11. 函数</h2>
+
+<h3 id="111-函数简介">11.1 函数简介</h3>
+
+<p>函数就是把命令组合在一起，便于随后执行。给组合（即 routine）起个名字。函数的名字在 shell 或脚本内必须是 <strong>唯一</strong> 的。</p>
+
+<p class="notice">函数比别名使用起来更灵活，而且适应用户的环境也更加简单和容易。</p>
+
+<p>组成函数的所有命令都像一般命令一样地执行。用简单命令名调用一个函数时，与该函数关联的命令列表即被执行。</p>
+
+<p>如果函数是在当前 shell 被声明，它也会仅在当前 shell 执行，不会产生新进程。</p>
+
+<p>在进行命令查找时，这些内建命令会先于函数被查找：</p>
+
+<p><code class="highlighter-rouge">break</code>、<code class="highlighter-rouge">:</code>、<code class="highlighter-rouge">.</code>、<code class="highlighter-rouge">continue</code>、<code class="highlighter-rouge">eval</code>、<code class="highlighter-rouge">exec</code>、<code class="highlighter-rouge">exit</code>、<code class="highlighter-rouge">export</code>、<code class="highlighter-rouge">readonly</code>、<code class="highlighter-rouge">return</code>、<code class="highlighter-rouge">set</code>、<code class="highlighter-rouge">shift</code>、<code class="highlighter-rouge">trap</code>、<code class="highlighter-rouge">unset</code>。</p>
+
+<h4 id="1111-函数的语法">11.1.1 函数的语法</h4>
+
+<p><code class="highlighter-rouge">function TEST { COMMANDS; }</code>  <code class="highlighter-rouge">function</code> 为内建命令</p>
+
+<p>或</p>
+
+<p><code class="highlighter-rouge">TEST () { COMMANDS; }</code>  不使用 <code class="highlighter-rouge">function</code> 命令，就必须要使用括号</p>
+
+<p>以上语法都可以定义函数 TEST。</p>
+
+<p>括号左右都要有 <strong>空格</strong>。</p>
+
+<p>大括号中的命令列表构成了函数的主体，只要 TEST 作为命令名称被指定，这些命令就会执行。</p>
+
+<p>函数主体必须以 <strong>分号</strong> 或 <strong>换行符</strong> 结束。</p>
+
+<p>退出状态以函数中最后一个命令为准。</p>
+
+<h4 id="1112-函数中的位置参数">11.1.2 函数中的位置参数</h4>
+
+<p>函数很像迷你的脚本，它们可以 <strong>接受参数</strong>、使用 <strong>内部变量</strong>，还可以向调用它的 shell <strong>返回值</strong>。</p>
+
+<p>函数也会解析位置参数，但其位置参数与传递给命令或脚本的有些不同。</p>
+
+<p>函数被执行时，传递给函数的参数成为位置参数。<code class="highlighter-rouge">$#</code> 扩展成位置参数的总个数，<code class="highlighter-rouge">$0</code> 不变，bash 变量 <code class="highlighter-rouge">FUNCNAME</code> 更新为该函数名称。</p>
+
+<p>如果在函数中执行了 <code class="highlighter-rouge">return</code> 内建命令，则函数立即结束。返回继续执行调用该函数命令的下一个命令。</p>
+
+<p>函数结束时，其位置参数的值与参数的个数被恢复成调用函数之前的值。</p>
+
+<p>函数的返回值经常保存在变量里，以便之后可以引用。函数的返回值经常做为整个脚本的退出码来使用。如 <code class="highlighter-rouge">exit $RETVAL</code>。</p>
+
+<p>如果随 <code class="highlighter-rouge">return</code> 命令给了一个数字，则将其作为返回值。</p>
+
+<p>范例：以下为脚本 <code class="highlighter-rouge">showparams.sh</code> 的内容：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="s2">"Positional parameter 1 for the script is </span><span class="nv">$1</span><span class="s2">."</span>
+
+
+<span class="nb">test</span> <span class="o">()</span>
+<span class="o">{</span>
+<span class="nb">echo</span> <span class="s2">"Positional parameter 1 in the function is </span><span class="nv">$1</span><span class="s2">."</span>
+<span class="nv">RETURN_VALUE</span><span class="o">=</span><span class="nv">$?</span>
+<span class="nb">echo</span> <span class="s2">"The exit code of this function is </span><span class="nv">$RETURN_VALUE</span><span class="s2">."</span>
+<span class="o">}</span>
+
+<span class="nb">test </span>FUNCPARA
+</code></pre></div></div>
+
+<p>运行脚本以测试：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./showparams.sh SCRPARA
+Positional parameter 1 for the script is SCRPARA.
+Positional parameter 1 in the function is FUNCPARA.
+The exit code of this function is 0.
+</code></pre></div></div>
+
+<h4 id="1114-查看函数">11.1.4 查看函数</h4>
+
+<p>所有当前 shell 已知的函数都可以通过 <code class="highlighter-rouge">set</code> 命令查看。这些函数通常在 <strong>启动配置文件</strong> 中定义。</p>
+
+<p>默认情况下，函数被使用后仍然存在，除非用 <code class="highlighter-rouge">unset</code> 来取消定义。</p>
+
+<p>用 <code class="highlighter-rouge">which</code> 可以查看具体的函数内容。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>which zless
+zless is a <span class="k">function
+</span>zless <span class="o">()</span>
+<span class="o">{</span>
+    zcat <span class="s2">"</span><span class="nv">$@</span><span class="s2">"</span> | <span class="s2">"</span><span class="nv">$PAGER</span><span class="s2">"</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="112-范例脚本中的函数">11.2 范例：脚本中的函数</h3>
+
+<h4 id="1121-循环使用">11.2.1 循环使用</h4>
+
+<p>系统中有很多脚本是 把使用函数作为一个结构化的方法 来管理一系列的命令的。</p>
+
+<p>例如，在某些 Linux 中，会使用 <code class="highlighter-rouge">/etc/rc.d/init.d/functions</code> 文件来专门定义函数，该文件会在所有初始化脚本中被调用。通过这种方法，类似于 “检查进程是否在运行、启动或暂停服务” 等比较通用的任务就只需编写一次就可以了，平时在需要时尽可循环使用。</p>
+
+<p>用户可以创建自己的 <code class="highlighter-rouge">/etc/functions</code> 文件，把自己会用到的函数写到其中，使用时，只需在脚本的开始处加上 <code class="highlighter-rouge">. /etc/functions</code> 即可循环使用这些函数了。</p>
+
+<h4 id="1122-设置路径">11.2.2 设置路径</h4>
+
+<p>这个例子取自 <code class="highlighter-rouge">/etc/profile</code>，<code class="highlighter-rouge">pathmunge</code> 函数用于为 root 和其他用户设置路径。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pathmunge <span class="o">()</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">!</span> <span class="nb">echo</span> <span class="nv">$PATH</span> | /bin/egrep <span class="nt">-q</span> <span class="s2">"(^|:)</span><span class="nv">$1</span><span class="s2">(</span><span class="nv">$|</span><span class="s2">:)"</span> <span class="p">;</span> <span class="k">then
+           if</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$2</span><span class="s2">"</span> <span class="o">=</span> <span class="s2">"after"</span> <span class="o">]</span> <span class="p">;</span> <span class="k">then
+              </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$1</span>
+           <span class="k">else
+              </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$1</span>:<span class="nv">$PATH</span>
+           <span class="k">fi
+        fi</span>
+<span class="o">}</span>
+
+<span class="c"># Path manipulation</span>
+<span class="k">if</span> <span class="o">[</span> <span class="sb">`</span><span class="nb">id</span> <span class="nt">-u</span><span class="sb">`</span> <span class="o">=</span> 0 <span class="o">]</span><span class="p">;</span> <span class="k">then
+        </span>pathmunge /sbin
+        pathmunge /usr/sbin
+        pathmunge /usr/local/sbin
+<span class="k">fi
+
+</span>pathmunge /usr/X11R6/bin after
+
+<span class="nb">unset </span>pathmunge
+</code></pre></div></div>
+
+<p>该函数将其第一个参数做为路径名。如果在当前路径尚未加入 <code class="highlighter-rouge">PATH</code>，则会加进去。</p>
+
+<p>第二个参数用来指定要加到 <code class="highlighter-rouge">PATH</code> 的前面还是后面。</p>
+
+<p>如果是超级用户，则加入 4 个路径，如果是普通用户，只加入最后那个路径。</p>
+
+<h4 id="1123-远程备份">11.2.3 远程备份</h4>
+
+<p>本例使用 SSH 密钥来进行远程连接，定义了两个函数 <code class="highlighter-rouge">buplinux</code> 和 <code class="highlighter-rouge">bupbash</code>，各自都会生成一个 <code class="highlighter-rouge">.tar</code> 文件，然后会进一步压缩，发送给远程服务端。最后删除本地副本。</p>
+
+<p>星期天的时候只执行 <code class="highlighter-rouge">bupbash</code>。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#/bin/bash</span>
+
+<span class="nv">LOGFILE</span><span class="o">=</span><span class="s2">"/nethome/tille/log/backupscript.log"</span>
+<span class="nb">echo</span> <span class="s2">"Starting backups for </span><span class="sb">`</span><span class="nb">date</span><span class="sb">`</span><span class="s2">"</span> <span class="o">&gt;&gt;</span> <span class="s2">"</span><span class="nv">$LOGFILE</span><span class="s2">"</span>
+
+buplinux<span class="o">()</span>
+<span class="o">{</span>
+<span class="nv">DIR</span><span class="o">=</span><span class="s2">"/nethome/tille/xml/db/linux-basics/"</span>
+<span class="nv">TAR</span><span class="o">=</span><span class="s2">"Linux.tar"</span>
+<span class="nv">BZIP</span><span class="o">=</span><span class="s2">"</span><span class="nv">$TAR</span><span class="s2">.bz2"</span>
+<span class="nv">SERVER</span><span class="o">=</span><span class="s2">"rincewind"</span>
+<span class="nv">RDIR</span><span class="o">=</span><span class="s2">"/var/www/intra/tille/html/training/"</span>
+
+<span class="nb">cd</span> <span class="s2">"</span><span class="nv">$DIR</span><span class="s2">"</span>
+<span class="nb">tar </span>cf <span class="s2">"</span><span class="nv">$TAR</span><span class="s2">"</span> src/<span class="k">*</span>.xml src/images/<span class="k">*</span>.png src/images/<span class="k">*</span>.eps
+<span class="nb">echo</span> <span class="s2">"Compressing </span><span class="nv">$TAR</span><span class="s2">..."</span> <span class="o">&gt;&gt;</span> <span class="s2">"</span><span class="nv">$LOGFILE</span><span class="s2">"</span>
+bzip2 <span class="s2">"</span><span class="nv">$TAR</span><span class="s2">"</span>
+<span class="nb">echo</span> <span class="s2">"...done."</span> <span class="o">&gt;&gt;</span> <span class="s2">"</span><span class="nv">$LOGFILE</span><span class="s2">"</span>
+<span class="nb">echo</span> <span class="s2">"Copying to </span><span class="nv">$SERVER</span><span class="s2">..."</span> <span class="o">&gt;&gt;</span> <span class="s2">"</span><span class="nv">$LOGFILE</span><span class="s2">"</span>
+scp <span class="s2">"</span><span class="nv">$BZIP</span><span class="s2">"</span> <span class="s2">"</span><span class="nv">$SERVER</span><span class="s2">:</span><span class="nv">$RDIR</span><span class="s2">"</span> <span class="o">&gt;</span> /dev/null 2&gt;&amp;1
+<span class="nb">echo</span> <span class="s2">"...done."</span> <span class="o">&gt;&gt;</span> <span class="s2">"</span><span class="nv">$LOGFILE</span><span class="s2">"</span>
+<span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"Done backing up Linux course:</span><span class="se">\n</span><span class="s2">Source files, PNG and EPS images.</span><span class="se">\n</span><span class="s2">Rubbish removed."</span> <span class="o">&gt;&gt;</span> <span class="s2">"</span><span class="nv">$LOGFILE</span><span class="s2">"</span>
+<span class="nb">rm</span> <span class="s2">"</span><span class="nv">$BZIP</span><span class="s2">"</span>
+<span class="o">}</span>
+
+bupbash<span class="o">()</span>
+<span class="o">{</span>
+<span class="nv">DIR</span><span class="o">=</span><span class="s2">"/nethome/tille/xml/db/"</span>
+<span class="nv">TAR</span><span class="o">=</span><span class="s2">"Bash.tar"</span>
+<span class="nv">BZIP</span><span class="o">=</span><span class="s2">"</span><span class="nv">$TAR</span><span class="s2">.bz2"</span>
+<span class="nv">FILES</span><span class="o">=</span><span class="s2">"bash-programming/"</span>
+<span class="nv">SERVER</span><span class="o">=</span><span class="s2">"rincewind"</span>
+<span class="nv">RDIR</span><span class="o">=</span><span class="s2">"/var/www/intra/tille/html/training/"</span>
+
+<span class="nb">cd</span> <span class="s2">"</span><span class="nv">$DIR</span><span class="s2">"</span>
+<span class="nb">tar </span>cf <span class="s2">"</span><span class="nv">$TAR</span><span class="s2">"</span> <span class="s2">"</span><span class="nv">$FILES</span><span class="s2">"</span>
+<span class="nb">echo</span> <span class="s2">"Compressing </span><span class="nv">$TAR</span><span class="s2">..."</span> <span class="o">&gt;&gt;</span> <span class="s2">"</span><span class="nv">$LOGFILE</span><span class="s2">"</span>
+bzip2 <span class="s2">"</span><span class="nv">$TAR</span><span class="s2">"</span>
+<span class="nb">echo</span> <span class="s2">"...done."</span> <span class="o">&gt;&gt;</span> <span class="s2">"</span><span class="nv">$LOGFILE</span><span class="s2">"</span>
+<span class="nb">echo</span> <span class="s2">"Copying to </span><span class="nv">$SERVER</span><span class="s2">..."</span> <span class="o">&gt;&gt;</span> <span class="s2">"</span><span class="nv">$LOGFILE</span><span class="s2">"</span>
+scp <span class="s2">"</span><span class="nv">$BZIP</span><span class="s2">"</span> <span class="s2">"</span><span class="nv">$SERVER</span><span class="s2">:</span><span class="nv">$RDIR</span><span class="s2">"</span> <span class="o">&gt;</span> /dev/null 2&gt;&amp;1
+<span class="nb">echo</span> <span class="s2">"...done."</span> <span class="o">&gt;&gt;</span> <span class="s2">"</span><span class="nv">$LOGFILE</span><span class="s2">"</span>
+
+<span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"Done backing up Bash course:</span><span class="se">\n</span><span class="nv">$FILES</span><span class="se">\n</span><span class="s2">Rubbish removed."</span> <span class="o">&gt;&gt;</span> <span class="s2">"</span><span class="nv">$LOGFILE</span><span class="s2">"</span>
+<span class="nb">rm</span> <span class="s2">"</span><span class="nv">$BZIP</span><span class="s2">"</span>
+<span class="o">}</span>
+
+<span class="nv">DAY</span><span class="o">=</span><span class="sb">`</span><span class="nb">date</span> +%w<span class="sb">`</span>
+
+<span class="k">if</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$DAY</span><span class="s2">"</span> <span class="nt">-lt</span> <span class="s2">"2"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+  </span><span class="nb">echo</span> <span class="s2">"It is </span><span class="sb">`</span><span class="nb">date</span> +%A<span class="sb">`</span><span class="s2">, only backing up Bash course."</span> <span class="o">&gt;&gt;</span> <span class="s2">"</span><span class="nv">$LOGFILE</span><span class="s2">"</span>
+  bupbash
+<span class="k">else
+  </span>buplinux
+  bupbash
+<span class="k">fi
+
+
+</span><span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"Remote backup </span><span class="sb">`</span><span class="nb">date</span><span class="sb">`</span><span class="s2"> SUCCESS</span><span class="se">\n</span><span class="s2">----------"</span> <span class="o">&gt;&gt;</span> <span class="s2">"</span><span class="nv">$LOGFILE</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<p>把脚本交给 <code class="highlighter-rouge">cron</code> 来定期运行，无需用户干预，因此把标准错误重定向给 <code class="highlighter-rouge">/dev/null</code>。</p>
+
+<p>虽然完全可以压缩成一条命令：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">tar </span>c dir_to_backup/ | bzip2 | ssh server <span class="s2">"cat &gt; backup.tar.bz2"</span>
+</code></pre></div></div>
+
+<p>但是，把命令分解会得到更详细的中间记录，有利于排错。</p>
+
+<h2 id="12-捕捉信号">12. 捕捉信号</h2>
+
+<h3 id="121-信号">12.1 信号</h3>
+
+<h4 id="1211-信号简介">12.1.1 信号简介</h4>
+
+<h5 id="查阅信号帮助文档">查阅信号帮助文档</h5>
+
+<p>一般的 Linux 系统都会有所有可用信号的帮助文档列表，多数情况可以用 <code class="highlighter-rouge">man 7 signal</code> 来查阅。</p>
+
+<p>用 <code class="highlighter-rouge">kill -l</code> 可以查看所有信号的名字。</p>
+
+<h5 id="给-bash-发送的信号">给 bash 发送的信号</h5>
+
+<p>如果交互式 bash shell 不包含任何的 <code class="highlighter-rouge">trap</code> 命令，则会忽略 <code class="highlighter-rouge">SIGTERM</code> 和 <code class="highlighter-rouge">SIGQUIT</code> 信号。</p>
+
+<p>如果启用了作业控制，会捕捉并处理 <code class="highlighter-rouge">SIGINT</code> 信号，忽略 <code class="highlighter-rouge">SIGTTIN</code>、<code class="highlighter-rouge">SIGTTOU</code>、<code class="highlighter-rouge">SIGTSTP</code>。</p>
+
+<p>如果是键盘产生的信号，作为命令替换的结果来运行的命令，也会忽略它们。</p>
+
+<p><code class="highlighter-rouge">SIGHUP</code> 信号默认会 <strong>退出 shell</strong>。交互式 shell 会给所有运行和暂停的作业发送一个 <code class="highlighter-rouge">SIGHUP</code> 信号，如果希望为了某个进程而禁用该默认行为，可以查看 <code class="highlighter-rouge">disown</code> 命令的帮助文档。</p>
+
+<p><code class="highlighter-rouge">shopt -s huponexit</code> 可以实现收到 <code class="highlighter-rouge">SIGHUP</code> 信号时杀掉所有作业。</p>
+
+<h5 id="用-shell-发信号">用 shell 发信号</h5>
+
+<p>用 bash shell 可以发送以下信号：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>快捷键</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">^C</code></td>
+      <td>中断信号，发送 <code class="highlighter-rouge">SIGINT</code> 给前台运行的作业</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">^Y</code></td>
+      <td>延迟休眠信号，运行的进程要从终端读取数据时会被暂停，把控制权交还 shell，然后用户可以把进程放到前台或后台运行，或杀掉。</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">^Z</code></td>
+      <td>休眠信号，给运行中进程发送 <code class="highlighter-rouge">SIGTSTP</code> 信号，将其暂停，把控制权交还 shell。</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="1212-用-kill-发送信号">12.1.2 用 <code class="highlighter-rouge">kill</code> 发送信号</h4>
+
+<p>现今大多数 shell，包括 bash，都有 <code class="highlighter-rouge">kill</code> 这个内建命令。在 bash 中，信号的名称和编号都可以做为选项，可以把作业或进程 ID 做为参数。启用 <code class="highlighter-rouge">-l</code> 选项可以反馈退出状态，只要有一个信号成功发送就会返回 0，否则返回非 0。</p>
+
+<p>如果以 <code class="highlighter-rouge">/usr/bin/kill</code> 绝对路径运行，可以启用一些额外的选项，如可以杀掉不属于你的进程，可以用进程的名称来做参数。</p>
+
+<p>执行 <code class="highlighter-rouge">kill</code> 命令时，如果不指定信号，则默认会发送 <code class="highlighter-rouge">SIGTERM</code> 信号。</p>
+
+<p>常用的信号：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>信号名</th>
+      <th>编号</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">SIGHUP</code></td>
+      <td>1</td>
+      <td>告诉进程其控制终端已关闭</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">SIGINT</code></td>
+      <td>2</td>
+      <td>中断进程</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">SIGKILL</code></td>
+      <td>9</td>
+      <td>杀掉进程</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">SIGTERM</code></td>
+      <td>15</td>
+      <td>优雅终止进程</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">SIGSTOP</code></td>
+      <td>17, 19, 23</td>
+      <td>暂停进程</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><a href="https://liloli.github.io/basic/signal/#2223-linux-%E4%BF%A1%E5%8F%B7%E5%88%97%E8%A1%A8">更多信号的解释</a></p>
+
+<p class="notice">杀掉一个或一系列进程时，普通的认知是先用危险性最小的信号 <code class="highlighter-rouge">SIGTERM</code> 来尝试。于是，那些比较在意 <strong>按特定顺序关闭</strong> 的程序，收到 <code class="highlighter-rouge">SIGTERM</code> 信号时，就有机会按照其设计的流程有序地执行。比如 <strong>清除临时文件、关闭打开的文件</strong> 等操作。</p>
+
+<p>反之，如果直接给进程发送 <code class="highlighter-rouge">SIGKILL</code> 信号，就会剥夺了它清除临时文件再关闭的机会，有可能会造成不可预期的后果。</p>
+
+<p>如果用 <code class="highlighter-rouge">SIGTERM</code> 信号无法优雅地结束进程，也许只能用 <code class="highlighter-rouge">SIGINT</code> 或 <code class="highlighter-rouge">SIGKILL</code> 了。例如，当进程对 <code class="highlighter-rouge">^C</code> 没有响应时，最好用 <code class="highlighter-rouge">kill -9</code> 来结束。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ps <span class="nt">-ef</span> | <span class="nb">grep </span>stuck_process
+maud    5607   2214  0 20:05 pts/5    00:00:02 stuck_process
+
+<span class="nv">$ </span><span class="nb">kill</span> <span class="nt">-9</span> 5607
+
+<span class="nv">$ </span>ps <span class="nt">-ef</span> | <span class="nb">grep </span>stuck_process
+maud    5614    2214 0 20:15 pts/5    00:00:00 <span class="nb">grep </span>stuck_process
+</code></pre></div></div>
+
+<p>如果同一个进程启动了多个实例，更适合用 <code class="highlighter-rouge">killall</code> 来干掉。它会作用于指定进程的所有实例。</p>
+
+<h3 id="122-trap">12.2 Trap</h3>
+
+<h4 id="1221-trap-简介">12.2.1 <code class="highlighter-rouge">trap</code> 简介</h4>
+
+<p>在某些情况下，你可能不希望使用脚本的用户过早地用快捷键退出，例如因为要接受一些输入，或清理临时文件等。<code class="highlighter-rouge">trap</code> 语句会捕捉这些信号，并可以设计成根据捕捉到的信号执行不同的命令。</p>
+
+<p><code class="highlighter-rouge">trap [COMMANDS] [SIGNALS]</code></p>
+
+<p><code class="highlighter-rouge">trap</code> 会捕捉 SIGNALS 信号，信号的表示可以用标准的信号名称或编号。</p>
+
+<ul>
+  <li>如果信号是 <code class="highlighter-rouge">EXIT</code> 或 0，shell 退出时会执行 COMMANDS。</li>
+  <li>如果其中一个信号是 <code class="highlighter-rouge">DEBUG</code>，则 COMMANDS 会在每个简单命令之后执行。</li>
+  <li>如果信号是 <code class="highlighter-rouge">ERR</code>，则每当一个简单命令的退出状态为非 0 时才会执行 COMMANDS。</li>
+  <li>如果非 0 的退出状态是从 <code class="highlighter-rouge">if</code>、<code class="highlighter-rouge">while</code>、<code class="highlighter-rouge">until</code> 语句内部得到的，COMMANDS 不会执行。</li>
+  <li>如果逻辑与 <code class="highlighter-rouge">&amp;&amp;</code> 或逻辑或 <code class="highlighter-rouge">||</code> 得到的是非 0 退出状态，COMMANDS 也不会执行。</li>
+</ul>
+
+<p><code class="highlighter-rouge">trap</code> 命令自身的退出状态是 0，除非指定了无效的信号。</p>
+
+<p class="notice">脚本中可以有多个 <code class="highlighter-rouge">trap</code> ，可以为不同的信号定义不同的行为，也可以修改、删除已定义的 <code class="highlighter-rouge">trap</code> 。每个 <code class="highlighter-rouge">trap</code> 也有其作用范围，如果把它放在函数中，它将只在这个函数里有效。</p>
+
+<h4 id="1222-exit">12.2.2 <code class="highlighter-rouge">EXIT</code></h4>
+
+<p>虽然 <code class="highlighter-rouge">EXIT</code> 通常被当作信号来使用，但实际上它不是真正意义上的信号。</p>
+
+<p>一个针对 <code class="highlighter-rouge">EXIT</code> 定义的 trap 会在 <strong>脚本因任何原因退出</strong> 时被执行。</p>
+
+<p><code class="highlighter-rouge">EXIT</code> 这个特殊的名字是 POSIX 定义的，可以被任何信号处理器解析，其作用仅仅是在退出脚本时进行一些 <strong>清理</strong> 工作，它不会做复杂的操作。</p>
+
+<p>要想退出前进行清理，只需针对 <code class="highlighter-rouge">EXIT</code> 定义一个 trap，调用一个清理函数。虽然 bash 支持，也不要一次 trap 太多信号，其它 shell 中，只有在其它信号都无法促成退出时才会使用它。</p>
+
+<p class="notice--warning">警告：<code class="highlighter-rouge">EXIT</code> 只支持 <strong>非交互式 shell</strong>，即脚本，在交互式 shell 中是不会被调用的。</p>
+
+<h4 id="1223-trap-是捕捉信号的时机">12.2.3 <code class="highlighter-rouge">trap</code> 是捕捉信号的时机</h4>
+
+<p class="notice--success">当 bash 收到一个被 trap 定义的信号时，如果当前正有一个外部命令在 <strong>前台</strong> 执行，那么 trap 会等待当前命令 <strong>结束以后</strong> 再处理信号队列中的信号。如果 bash 正通过 <code class="highlighter-rouge">wait</code> 命令在等待一个 <strong>异步</strong> 命令，则该信号会促使 <code class="highlighter-rouge">wait</code> <strong>立即返回</strong>，退出状态会大于 128。</p>
+
+<h5 id="外部命令前台运行完才处理信号">外部命令前台运行完才处理信号</h5>
+
+<p>当 bash 在 <strong>前台</strong> 执行一个外部命令时，直到 <strong>进程终止</strong>，它才会处理接收到的信号。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">trap</span> <span class="s1">'echo "doing some cleaning"'</span> EXIT
+<span class="nb">echo</span> <span class="s2">"waiting a bit"</span>
+<span class="nb">sleep </span>10000
+</code></pre></div></div>
+
+<p>该脚本执行后，如果在终端上直接按 <code class="highlighter-rouge">^C</code> 会立即退出脚本。</p>
+
+<p>但，如果登陆另一终端，用 <code class="highlighter-rouge">kill -SIGINT pid</code> 来尝试终止该进程，bash 会一直等到 <code class="highlighter-rouge">sleep 10000</code> 运行完毕，才肯调用 <code class="highlighter-rouge">trap</code> 退出脚本，这可能不是你希望看到的结果。</p>
+
+<blockquote>
+  <p>【 为什么同一信号会出现不同的结果？】
+使用 <code class="highlighter-rouge">^C</code> 按键组合会向进程组发送 <code class="highlighter-rouge">SIGINT</code> 信号，因此在同一个进程组中的子进程 sleep 也会收到信号，所以它会退出，返回主进程后 trap 捕捉到了信号，脚本退出。
+而使用 <code class="highlighter-rouge">kill -SIGINT pid</code> 只会针对脚本这个进程发信号，需要等到 sleep 这个外部命令运行完毕，才能捕捉到信号。</p>
+</blockquote>
+
+<p>针对这个问题，一个解决办法是把 sleep 切割成 1 秒的 <strong>小 sleep 循环</strong>。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">trap</span> <span class="s1">'echo "doing some cleaning"'</span> EXIT
+<span class="nb">echo</span> <span class="s2">"waiting a bit"</span>
+<span class="k">while</span> :
+<span class="k">do
+	</span><span class="nb">sleep </span>1
+<span class="k">done</span>
+</code></pre></div></div>
+
+<p>这样一来，脚本对信号做出反应的机会就大了很多。</p>
+
+<h5 id="内部命令立即处理信号">内部命令立即处理信号</h5>
+
+<p>所有的 <strong>bash 内部命令</strong> 都会被非忽略的信号所中断。</p>
+
+<p>若想实现对信号能立即做出反应，另一个解决办法是使用可被中断的内建命令，比如 <strong><code class="highlighter-rouge">wait</code></strong>：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">trap</span> <span class="s1">'echo "doing some cleaning"'</span> EXIT
+<span class="nb">echo </span>waiting a bit
+<span class="nb">sleep </span>10000 &amp; <span class="nb">wait</span> <span class="nv">$!</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">$!</code> 扩展为新放入后台的进程 ID。把 sleep 放到后台运行，再用内建的 <code class="highlighter-rouge">wait</code> 去等待其执行结束。</p>
+
+<p>注意：虽然这样一来 <code class="highlighter-rouge">^C</code> 终于可以让脚本退出了，但此时 <code class="highlighter-rouge">sleep 10000</code> 还在后台运行呢，不会被杀掉，而是继续运行。如果希望脚本被终止时，<code class="highlighter-rouge">sleep</code> 这样的 <strong>后台作业也能够被杀掉</strong>：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">pid</span><span class="o">=</span>
+<span class="nb">trap</span> <span class="s1">'[[ $pid ]] &amp;&amp; kill $pid'</span> EXIT
+<span class="nb">sleep </span>10000 &amp; <span class="nv">pid</span><span class="o">=</span><span class="nv">$!</span>
+<span class="nb">wait
+</span><span class="nv">pid</span><span class="o">=</span>
+</code></pre></div></div>
+
+<p>这样，当脚本无论因何退出时，不仅会立即退出，而且会终止后台运行的 <code class="highlighter-rouge">sleep</code> 作业。</p>
+
+<p>如果不喜欢 <code class="highlighter-rouge">wait</code>，还可以使用 <code class="highlighter-rouge">read</code>。可以通过从一个永远不会给出任何数据的 <strong>管道</strong> 中读取数据，来实现一个 <strong>无休止的睡眠</strong>。<code class="highlighter-rouge">read</code> 会一直阻塞下去，无需像外部命令 <code class="highlighter-rouge">sleep</code> 一样还得持续跟踪。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">trap</span> <span class="s1">'echo "we get signal"; rm -f ~/fifo'</span> EXIT
+<span class="nb">mkfifo</span> ~/fifo <span class="o">||</span> <span class="nb">exit
+chmod </span>400 ~/fifo
+<span class="nb">echo</span> <span class="s2">"sleeping"</span>
+<span class="nb">read</span> &lt; ~/fifo
+</code></pre></div></div>
+
+<p>用 <code class="highlighter-rouge">mkfifo</code> 创建临时管道，然后将其重定向给标准输入，交给 <code class="highlighter-rouge">read</code>。退出时自动删除临时管道。</p>
+
+<h4 id="1224-sigint-注意事项">12.2.4 <code class="highlighter-rouge">SIGINT</code> 注意事项</h4>
+
+<p>如果选择不用 <code class="highlighter-rouge">EXIT</code> 来 trap，而是用 <code class="highlighter-rouge">SIGINT</code>，应该要注意的是，进程收到该信号退出时，应该把自己杀掉，而不是单纯的退出，以防止对其调用者造成问题。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">trap</span> <span class="s1">'rm -f "$tempfile"; trap - INT; kill -INT $$'</span> INT
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">rm</code> 删除临时文件，<code class="highlighter-rouge">trap - INT</code> 恢复 INT 默认动作，<code class="highlighter-rouge">kill</code> 杀掉自己。</p>
+
+<h4 id="1225-其它范例">12.2.5 其它范例</h4>
+
+<h5 id="检测变量什么时候被使用了">检测变量什么时候被使用了</h5>
+
+<p>在调试比较长的脚本时，可能会需要给变量赋予 trace 属性，以便追踪该变量的调试信息。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">declare</span> <span class="nt">-t</span> <span class="nv">VARIABLE</span><span class="o">=</span>value
+
+<span class="nb">trap</span> <span class="s2">"echo VARIABLE is being used here."</span> DEBUG
+</code></pre></div></div>
+
+<h5 id="退出时删除垃圾文件">退出时删除垃圾文件</h5>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">LOCKFILE</span><span class="o">=</span>/var/lock/makewhatis.lock
+
+<span class="o">[</span> <span class="nt">-f</span> <span class="nv">$LOCKFILE</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">exit </span>0
+
+<span class="nb">trap</span> <span class="s2">"{ rm -f </span><span class="nv">$LOCKFILE</span><span class="s2"> ; exit 255; }"</span> EXIT
+
+<span class="nb">touch</span> <span class="nv">$LOCKFILE</span>
+makewhatis <span class="nt">-u</span> <span class="nt">-w</span>
+<span class="nb">exit </span>0
+</code></pre></div></div>
+
+<p>……….</p>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/bash" class="page__taxonomy-item" rel="tag">bash</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/for" class="page__taxonomy-item" rel="tag">for</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/while" class="page__taxonomy-item" rel="tag">while</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/until" class="page__taxonomy-item" rel="tag">until</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/变量" class="page__taxonomy-item" rel="tag">变量</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://linotes.netlify.com/categories/#programming" class="page__taxonomy-item" rel="tag">programming</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2017-05-03T00:00:00+08:00">May 03, 2017</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="https://linotes.netlify.com/programming/bash02/" class="pagination--pager" title="上一页
+">Bash 入门 02</a>
+    
+    
+      <a href="https://linotes.netlify.com/kernel/filedescriptor/" class="pagination--pager" title="下一页
+">文件描述符简介</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">相关文章</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/kernel/filedescriptor/" rel="permalink">文件描述符简介
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash02/" rel="permalink">Bash 入门 02
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">正则表达式，SED，AWK，条件结构，交互式脚本
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash01/" rel="permalink">Bash 入门 01
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">Bash 与 Bash 脚本，脚本的编写与调试，Bash 环境
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/progr.intro/" rel="permalink">Python 编程导论
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">以 Python 为例，学习编程基础。
+</p>
+-->
+
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+    
+    
+    
+    
+    <li><a href="https://linotes.netlify.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="https://linotes.netlify.com/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

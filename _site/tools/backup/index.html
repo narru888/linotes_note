@@ -1,0 +1,930 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Linux 的使用 - 备份 - LINOTES</title>
+<meta name="description" content="用简洁清晰的语言讨论技术">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Linux 的使用 - 备份">
+<meta property="og:url" content="https://linotes.netlify.com/tools/backup/">
+
+
+  <meta property="og:description" content="用简洁清晰的语言讨论技术">
+
+
+
+  <meta property="og:image" content="https://linotes.netlify.com/assets/images/header/linux.jpg">
+
+
+
+
+
+  <meta property="article:published_time" content="2015-02-01T00:00:00+08:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://linotes.netlify.com/tools/backup/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="https://linotes.netlify.com/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="https://linotes.netlify.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="https://linotes.netlify.com/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://linotes.netlify.com/assets/images/header/linux.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Linux 的使用 - 备份
+
+        
+      </h1>
+      
+        <p class="page__lead">
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="https://linotes.netlify.com/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:imhawkz@gmail.com">
+            <meta itemprop="email" content="imhawkz@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Linux 的使用 - 备份">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="February 01, 2015">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-bitbucket"></i> Linux 的使用 - 备份</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#完整备份">完整备份</a>
+    <ul>
+      <li><a href="#增量备份">增量备份</a></li>
+      <li><a href="#差异备份">差异备份</a></li>
+    </ul>
+  </li>
+  <li><a href="#选择备份">选择备份</a>
+    <ul>
+      <li><a href="#tar-1">tar</a></li>
+      <li><a href="#cpio">cpio</a></li>
+      <li><a href="#wodim">wodim</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="完整备份">完整备份</h2>
+
+<p>对整个 <strong>文件系统</strong> 做一次完整的备份。</p>
+
+<p>完整备份常用的工具有 dd，cpio，xfsdump，xfsrestore 等，这些工具都能够备份 <strong>设备文件</strong> 与 <strong>特殊文件</strong>。</p>
+
+<h3 id="增量备份">增量备份</h3>
+
+<p>只有做过完全备份以后才能做增量备份。</p>
+
+<p>增量备份，是在进行完第一次完整备份后，经过一段时间的运行，比较当前系统与备份文件之间的差异，仅备份有差异的文件。</p>
+
+<h4 id="xfsdump"><code class="highlighter-rouge">xfsdump</code></h4>
+
+<p><code class="highlighter-rouge">xfsdump</code> 可以备份 XFS 文件系统中的文件及其属性。文件可备份到 <strong>存储介质、普通文件、标准输出</strong>。可进行 <strong>全部备份、增量备份、选择备份</strong>。</p>
+
+<blockquote>
+  <p>每次对 <code class="highlighter-rouge">xfsdump</code> 的调用都是 <strong>转储</strong> 一个文件系统，该调用称为 <strong>转储会话</strong>，dump session。转储会话会将文件系统分割成一个或多个转储流，dump streams，每目标一个。分割的顺序是依照文件系统的 inode 编号完成的，确定分割边界时，会均衡每个转储流的大小。不同转储流的分割点有可能是在某个非常大的文件中的中间，当然是在 extent 的边界。一个转储流可以跨越多个介质，一个介质可以包含多个转储流。介质对象会把转储流记录为一个或多个介质文件，<strong>介质文件</strong> 是一个独立的部分转储，旨在最大限度地减少介质丢失对整个转储流的影响，但会增加完成转储所需的时间。默认全部写到一个介质文件中，除非使用 <code class="highlighter-rouge">-d</code> 参数指定介质文件大小。其它的技术，如生成转储镜像的第二个副本，比 “分割成多个介质文件的方法” 能提供更好的保护。然而，Linux 中当前的实现 <strong>仅支持单一目标，运行单一线程</strong>。因此，所谓多转储流只是描述未来的 <strong>可能性</strong>。</p>
+</blockquote>
+
+<p>备份完成后，系统会把备份的文件系统、时间、Session ID 等信息保存在 <code class="highlighter-rouge">/var/lib/xfsdump/inventory</code> 中，以便下次备份时作为 <strong>参考依据</strong>。查看备份信息时，也需要读取该文件。</p>
+
+<h5 id="xfsdump-的限制">xfsdump 的限制</h5>
+
+<ul>
+  <li>只能备份 <strong>已挂载</strong> 的文件系统</li>
+  <li>必须使用 <code class="highlighter-rouge">root</code> 的权限才能操作</li>
+  <li>只能备份 <strong>XFS</strong> 文件系统</li>
+  <li>备份的数据只能由 <code class="highlighter-rouge">xfsrestore</code> 解析</li>
+  <li>不能备份相同 UUID 的文件系统</li>
+</ul>
+
+<h5 id="语法">语法</h5>
+
+<p><code class="highlighter-rouge">xfsdump [-L S_label] [-M M_label] [-l #] [-f 目标文件] 原文件</code></p>
+
+<p><code class="highlighter-rouge">-L</code>  本次转储会话标签</p>
+
+<p><code class="highlighter-rouge">-M</code>  储存介质标签</p>
+
+<p><code class="highlighter-rouge">-l</code>  备份等级，0~9，默认为 0，即全部备份</p>
+
+<p><code class="highlighter-rouge">-f</code>  目标文件</p>
+
+<p><code class="highlighter-rouge">-I</code>  查看当前备份状态</p>
+
+<p><code class="highlighter-rouge">-s</code>  指定要备份的子目录</p>
+
+<h5 id="备份整个分区">备份整个分区</h5>
+
+<p>先确认备份对象是独立的文件系统：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># df -h /boot
+</code></pre></div></div>
+
+<p>备份 <code class="highlighter-rouge">/boot</code> 分区：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># xfsdump -l 0 -L "boot_all" -M "boot_all" -f /srv/boot.dump /boot
+</code></pre></div></div>
+
+<p>查看当前 xfsdump 备份信息：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># xfsdump -I
+</code></pre></div></div>
+
+<h5 id="1-级增量备份">1 级增量备份：</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># xfsdump -l 1 -L "boot_2" -M "boot_2" -f /srv/boot.dump1 /boot
+</code></pre></div></div>
+
+<p>查看 xfsdump 记录是否更新：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># xfsdump -I
+</code></pre></div></div>
+
+<h5 id="备份特定目录">备份特定目录</h5>
+
+<p>只备份指定目录：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># sudo xfsdump -f /tmp/neo -v silent -J -s neo/a /home
+</code></pre></div></div>
+
+<p>备份目录时要使用 <strong>相对路径</strong>，此处被备份的目录为 <code class="highlighter-rouge">/home/neo/a</code>，在命令中要拆开，<code class="highlighter-rouge">-s</code> 后面跟的是相对路径。</p>
+
+<h4 id="xfsrestore"><code class="highlighter-rouge">xfsrestore</code></h4>
+
+<h5 id="语法-1">语法</h5>
+
+<p>xfsrestore [-f 备份文件] -i 目标目录</p>
+
+<p><code class="highlighter-rouge">-I</code>  查看备份数据</p>
+
+<p><code class="highlighter-rouge">-f</code>  备份文件</p>
+
+<p><code class="highlighter-rouge">-L</code>  进程标签</p>
+
+<p><code class="highlighter-rouge">-s</code>  恢复部分文件或目录</p>
+
+<p><code class="highlighter-rouge">-r</code>  磁带内有多个文件时，实现累积恢复</p>
+
+<p><code class="highlighter-rouge">-i</code>  进入互动模式</p>
+
+<h5 id="查看备份数据">查看备份数据</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># xfsrestore -I
+</code></pre></div></div>
+
+<p>返回的信息与 <code class="highlighter-rouge">xfsdump -I</code> 相同，都来自 <code class="highlighter-rouge">/var/lib/xfsdump/inventory/</code>。</p>
+
+<h5 id="恢复完整备份直接覆盖">恢复完整备份，直接覆盖</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># xfsrestore -f /srv/boot.dump -L boot_all /boot
+</code></pre></div></div>
+
+<h5 id="恢复到指定目录">恢复到指定目录</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># xfsrestore -f /srv/boot.dump -L boot_all /tmp/boot
+</code></pre></div></div>
+
+<h5 id="恢复部分文件">恢复部分文件：</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># xfsrestore -f /srv/boot.dump -L boot_all -s grub2 /tmp/boot2
+</code></pre></div></div>
+
+<h5 id="恢复增量备份">恢复增量备份</h5>
+
+<p>恢复备份时，应按照备份的顺序逐级进行。通过互动模式，允许先查看备份文件，再有选择地恢复。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># xfsrestore -f /srv/boot.dump -i /tmp/boot3
+</code></pre></div></div>
+
+<h4 id="dd"><code class="highlighter-rouge">dd</code></h4>
+
+<p><code class="highlighter-rouge">dd</code> 可以 <strong>直接读取扇区</strong>，然后将整个设备备份成一个文件，非常适合做文件系统备份。</p>
+
+<p>无论是否识别磁盘内的文件系统，它都可以备份、还原。</p>
+
+<h5 id="语法-2">语法</h5>
+
+<p><code class="highlighter-rouge">dd if="input_file" of="output_file" bs="block_size" count="number"</code></p>
+
+<p><code class="highlighter-rouge">if</code>  输入文件</p>
+
+<p><code class="highlighter-rouge">of</code>  输出文件</p>
+
+<p><code class="highlighter-rouge">bs</code>  块大小，默认 512 Bytes</p>
+
+<p><code class="highlighter-rouge">count</code> 块数量</p>
+
+<h5 id="备份文件">备份文件</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># dd if=/etc/passwd of=/tmp/passwd.back
+</code></pre></div></div>
+
+<h5 id="抓取光盘镜像">抓取光盘镜像</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># dd if=/dev/sr0 of=/tmp/system.iso
+</code></pre></div></div>
+
+<h5 id="镜像刻录到-u-盘">镜像刻录到 U 盘</h5>
+
+<p>把可引导镜像刻录到U盘，实现 <strong>U盘引导</strong>。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># dd if=/tmp/system.iso of=/dev/sda
+</code></pre></div></div>
+
+<h5 id="备份整个文件系统">备份整个文件系统</h5>
+
+<p>dd 是 <strong>逐个扇区</strong> 读/写的，即使没用到的扇区也会被写入备份文件中，因此备份文件会 <strong>和分区一样大</strong>。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># dd if=/dev/vda2 of=/tmp/vda2.img
+</code></pre></div></div>
+
+<h5 id="对拷整个分区">对拷整个分区</h5>
+
+<p>把一个分区完整地复制到另一个分区。目标分区必须大于源分区。</p>
+
+<p>目标分区无需格式化，因为 dd 可以把扇区的数据逐个复制过来，连同 superblock, boot sector, meta data 等。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># dd if=/dev/vda2 of=/dev/sda1
+</code></pre></div></div>
+
+<p class="notice--danger">因为 dd 会把 UUID 也完全复制，必须先清除新分区 XFS 文件系统内的日志，为其重新分配 UUID，才能顺利挂载：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># xfs_repair -L /dev/sda1　　# 清除所有 log
+# uuidgen　　				# 生成新的 UUID
+896c38d1-bcb5-475f-83f1-172ab38c9a0c
+# xfs_admin -U 896c38d1-bcb5-475f-83f1-172ab38c9a0c /dev/sda1 　# 分配新 UUID
+</code></pre></div></div>
+
+<h3 id="差异备份">差异备份</h3>
+
+<p>差异备份进行之前，需要先进行一次完整备份，之后每次的备份都是与原始的完整备份的差异部分。</p>
+
+<p>差异备份比增量备份占用的磁盘空间更大，但 <strong>差异备份还原速度更快</strong>，因为只需要还原完整备份与最近一次的差异备份即可。</p>
+
+<h4 id="xfsdump-1"><code class="highlighter-rouge">xfsdump</code></h4>
+
+<p>用 <code class="highlighter-rouge">xfsdump</code> 进行差异备份，<strong>每次备份的等级都使用 level 1</strong> 即可</p>
+
+<h4 id="tar"><code class="highlighter-rouge">tar</code></h4>
+
+<p>用 tar 的 <code class="highlighter-rouge">-N</code> 参数来进行差异备份。</p>
+
+<p>在 <code class="highlighter-rouge">-N</code> 后面指定日期或文件，则 <strong>只备份比该日期或文件新的数据</strong>。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]# tar -N '2015-09-01' -jpcv -f /backupdata/home.tar.bz2 /home
+</code></pre></div></div>
+
+<h4 id="rsync"><code class="highlighter-rouge">rsync</code></h4>
+
+<p><code class="highlighter-rouge">rsync -av 来源目录 目标目录</code></p>
+
+<p>如果数据更新不大，第二次执行会比第一次快很多。</p>
+
+<h2 id="选择备份">选择备份</h2>
+
+<p>仅备份文件系统中的 <strong>部分目录和文件</strong>。</p>
+
+<h3 id="tar-1"><code class="highlighter-rouge">tar</code></h3>
+
+<p>可以用 tar 打包整个根目录，同时指定要排除的子目录：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># tar --exclude /proc --exclude /mnt --exclude /tmp \
+&gt; --exclude /backupdata -jcvp -f /backupdata/system.tar.bz2 /
+</code></pre></div></div>
+
+<h3 id="cpio"><code class="highlighter-rouge">cpio</code></h3>
+
+<p>Copy In and Out，归档工具。</p>
+
+<p>cpio 最早是 UNIX 上的文件备份程序。最初用于 <strong>备份磁带</strong>。</p>
+
+<p>cpio 可以备份 <strong>任何文件</strong>，包括设备文件。可以从 cpio 或 tar 格式的归档包中存取文件，备份目标可以是归档文件、磁带或管道。</p>
+
+<p>如果 cpio 在打包备份的时候用的是绝对路径，那么在恢复的时候会恢复到这些绝对路径下；如果在打包备份用的是相对路径，还原时也将恢复到相对路径下。</p>
+
+<p class="notice--success">cpio 无法直接读取文件，它 <strong>需要每个文件或者目录的完整路径名</strong> 才能识别读取。因此，<code class="highlighter-rouge">cpio</code> 一般 <strong>结合 <code class="highlighter-rouge">find</code> 使用</strong>。</p>
+
+<h4 id="语法-3">语法</h4>
+
+<h5 id="备份">备份</h5>
+
+<p><code class="highlighter-rouge">cpio -ovcB &gt; /path/archive.cpio</code></p>
+
+<p><code class="highlighter-rouge">-o </code> 备份到文件或设备</p>
+
+<p><code class="highlighter-rouge">-B</code>  将块大小设置为 5120 Bytes</p>
+
+<h5 id="还原">还原</h5>
+
+<p><code class="highlighter-rouge">cpio -ivcdu &lt; [file|device]</code></p>
+
+<p><code class="highlighter-rouge">-i</code>  从文件或设备还原</p>
+
+<p><code class="highlighter-rouge">-d</code>  还原时自动创建目录</p>
+
+<p><code class="highlighter-rouge">-u</code>  覆盖旧文件</p>
+
+<h5 id="查看">查看</h5>
+
+<p><code class="highlighter-rouge">cpio -ivct &lt; [file|device]</code></p>
+
+<p><code class="highlighter-rouge">-t</code>  查看备份文件内容</p>
+
+<h5 id="通用参数">通用参数</h5>
+
+<p><code class="highlighter-rouge">-v</code>  显示操作过程</p>
+
+<p><code class="highlighter-rouge">-c</code>  以 ASCII 字符格式读写头文件信息。</p>
+
+<h4 id="备份目录">备份目录</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>find boot | cpio -ocvB &gt; /tmp/boot.cpio
+</code></pre></div></div>
+
+<h4 id="备份到磁带机">备份到磁带机</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>find / | cpio -ocvB &gt; /dev/st0
+</code></pre></div></div>
+
+<h4 id="从磁带机还原">从磁带机还原</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cpio -idvc &lt; /dev/st0
+</code></pre></div></div>
+
+<h3 id="wodim"><code class="highlighter-rouge">wodim</code></h3>
+
+<p><code class="highlighter-rouge">wodim</code>  用于 <strong>刻录光盘</strong>。</p>
+
+<p>CentOS 7 之前使用 <code class="highlighter-rouge">cdrecord</code> 刻录光盘，CentOS 7 使用 <code class="highlighter-rouge">wodim</code>。</p>
+
+<h4 id="语法-4">语法</h4>
+
+<p><code class="highlighter-rouge">wodim [options] track1...trackn</code></p>
+
+<p><code class="highlighter-rouge">--devices</code>  扫瞄磁盘总线，找出可用的刻录机</p>
+
+<p><code class="highlighter-rouge">-v </code> 显示过程</p>
+
+<p><code class="highlighter-rouge">dev=</code>	设定刻录机的 SCSI 目标，通常用 Major/Minor 的数字方式来描述，也可以用文件名 <code class="highlighter-rouge">/dev/sr0</code>  。</p>
+
+<p><code class="highlighter-rouge">blank=[fast&amp;|all]</code>  擦除可重复写入的 CD/DVD-RW，fast较快，all较完整</p>
+
+<p><code class="highlighter-rouge">-format </code> 对光盘进行格式化，仅针对 DVD+RW</p>
+
+<p>[ 可选参数 ]</p>
+
+<p><code class="highlighter-rouge">-data</code>  以数据格式写入，而非 CD 音轨</p>
+
+<p><code class="highlighter-rouge">speed=X</code>  指定刻录速度</p>
+
+<p><code class="highlighter-rouge">-eject</code>  刻录完毕自动退出光盘</p>
+
+<p><code class="highlighter-rouge">fs=Ym</code>  指定缓冲内存大小，镜像文件先暂存至缓冲内存。默认为 4m，一般建议可增加到 8m，视刻录机而定。</p>
+
+<p><code class="highlighter-rouge">driveropts=burnfree</code>  针对 DVD 打开 Buffer Underrun Free 模式的写入功能</p>
+
+<p><code class="highlighter-rouge">-sa</code>  支持 DVD-RW 的格式</p>
+
+<h4 id="查询刻录机的总线地址">查询刻录机的总线地址</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wodim --devices dev=/dev/sr0
+</code></pre></div></div>
+
+<h4 id="擦除可重复写入的-dvd-rw">擦除可重复写入的 DVD-RW</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wodim -v dev=/dev/sr0 blank=fast
+</code></pre></div></div>
+
+<h4 id="格式化-dvdrw">格式化 DVD+RW</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wodim -v dev=/dev/sr0 -format
+</code></pre></div></div>
+
+<h4 id="刻录">刻录</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wodim -v dev=/dev/sr0 [可用选项功能] file.iso
+</code></pre></div></div>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/备份" class="page__taxonomy-item" rel="tag">备份</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/linux" class="page__taxonomy-item" rel="tag">linux</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://linotes.netlify.com/categories/#tools" class="page__taxonomy-item" rel="tag">tools</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2015-02-01T00:00:00+08:00">February 01, 2015</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="https://linotes.netlify.com/tools/appackage/" class="pagination--pager" title="上一页
+">Linux 的使用 - 软件包</a>
+    
+    
+      <a href="https://linotes.netlify.com/tools/cron/" class="pagination--pager" title="下一页
+">Linux 的使用 - 任务计划</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">相关文章</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/kernel/filedescriptor/" rel="permalink">文件描述符简介
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash03/" rel="permalink">Bash 入门 03
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">循环，变量，函数，捕捉信号
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash02/" rel="permalink">Bash 入门 02
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">正则表达式，SED，AWK，条件结构，交互式脚本
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash01/" rel="permalink">Bash 入门 01
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">Bash 与 Bash 脚本，脚本的编写与调试，Bash 环境
+</p>
+-->
+
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+    
+    
+    
+    
+    <li><a href="https://linotes.netlify.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="https://linotes.netlify.com/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

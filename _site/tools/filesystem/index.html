@@ -1,0 +1,1001 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Linux 的使用 - 文件系统 - LINOTES</title>
+<meta name="description" content="文件系统对象的空间占用，文件的属性，文件的内容，文件的操作，文件的比较">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Linux 的使用 - 文件系统">
+<meta property="og:url" content="https://linotes.netlify.com/tools/filesystem/">
+
+
+  <meta property="og:description" content="文件系统对象的空间占用，文件的属性，文件的内容，文件的操作，文件的比较">
+
+
+
+  <meta property="og:image" content="https://linotes.netlify.com/assets/images/header/linux.jpg">
+
+
+
+
+
+  <meta property="article:published_time" content="2015-02-01T00:00:00+08:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://linotes.netlify.com/tools/filesystem/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="https://linotes.netlify.com/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="https://linotes.netlify.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="https://linotes.netlify.com/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/app/rsync/">Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/server/vsftpd/">Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/kernel/filedescriptor/">文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/tools/tools.datastream/">数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay" style=" background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://linotes.netlify.com/assets/images/header/linux.jpg');">
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Linux 的使用 - 文件系统
+
+        
+      </h1>
+      
+        <p class="page__lead">文件系统对象的空间占用，文件的属性，文件的内容，文件的操作，文件的比较
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="https://linotes.netlify.com/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:imhawkz@gmail.com">
+            <meta itemprop="email" content="imhawkz@gmail.com">
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox">
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Linux 的使用 - 文件系统">
+    <meta itemprop="description" content="文件系统对象的空间占用，文件的属性，文件的内容，文件的操作，文件的比较">
+    <meta itemprop="datePublished" content="February 01, 2015">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title">
+<i class="fas fa-laptop"></i> Linux 的使用 - 文件系统</h4></header>
+              <ul class="toc__menu">
+  <li>
+<a href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F">文件系统</a>
+    <ul>
+      <li><a href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%8C%82%E8%BD%BD">文件系统的挂载</a></li>
+    </ul>
+  </li>
+  <li>
+<a href="#%E5%AD%98%E5%82%A8%E7%A9%BA%E9%97%B4%E5%8D%A0%E7%94%A8">存储空间占用</a>
+    <ul>
+      <li><a href="#df--h">df -H</a></li>
+    </ul>
+  </li>
+  <li>
+<a href="#%E8%B7%AF%E5%BE%84">路径</a>
+    <ul>
+      <li><a href="#%E8%8E%B7%E5%8F%96%E7%BB%9D%E5%AF%B9%E8%B7%AF%E5%BE%84">获取绝对路径</a></li>
+    </ul>
+  </li>
+  <li>
+<a href="#%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9">文件内容</a>
+    <ul>
+      <li><a href="#%E6%8D%A2%E8%A1%8C%E7%AC%A6">换行符</a></li>
+    </ul>
+  </li>
+  <li>
+<a href="#%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7">文件属性</a>
+    <ul>
+      <li><a href="#%E6%96%87%E4%BB%B6%E5%90%8D">文件名</a></li>
+    </ul>
+  </li>
+  <li>
+<a href="#%E6%96%87%E4%BB%B6%E7%9A%84%E6%AF%94%E8%BE%83">文件的比较</a>
+    <ul>
+      <li><a href="#diff">diff</a></li>
+      <li><a href="#cmp">cmp</a></li>
+      <li><a href="#patch">patch</a></li>
+    </ul>
+  </li>
+  <li>
+<a href="#%E6%96%87%E4%BB%B6%E7%9A%84%E8%BD%AC%E6%8D%A2">文件的转换</a>
+    <ul>
+      <li><a href="#%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E8%BD%AC%E6%8D%A2">字符编码转换</a></li>
+      <li><a href="#%E6%8D%A2%E8%A1%8C%E7%AC%A6%E7%9A%84%E8%BD%AC%E6%8D%A2">换行符的转换</a></li>
+    </ul>
+  </li>
+  <li>
+<a href="#%E6%96%87%E4%BB%B6%E7%9A%84%E6%93%8D%E4%BD%9C">文件的操作</a>
+    <ul>
+      <li><a href="#split">SPLIT</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="文件系统">文件系统</h2>
+
+<h3 id="文件系统的挂载">文件系统的挂载</h3>
+
+<p>SMB ：Server Message Block。SMB 是文件共享协议，由 IBM 创建。</p>
+
+<p>CIFS ：Common Internet File System。CIFS 是 SMB 协议的一个特殊的实现，由微软创建。</p>
+
+<p>确认系统安装了 CIFS 工具：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> /proc/filesystems | <span class="nb">grep </span>cifs
+nodev   cifs
+</code></pre></div></div>
+
+<h4 id="windows-共享文件夹挂载">windows 共享文件夹挂载</h4>
+
+<p>交互式输入密码：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>mount <span class="nt">-t</span> cifs <span class="nt">-o</span> <span class="nv">username</span><span class="o">=</span>neo //192.168.1.124/share /mnt/win
+Password <span class="k">for </span>neo@//192.168.1.124/share:  <span class="k">******</span>
+</code></pre></div></div>
+
+<p>直接键入密码：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>mount <span class="nt">-t</span> cifs <span class="nt">-o</span> <span class="nv">username</span><span class="o">=</span>neo,password<span class="o">=</span>matrix //192.168.1.124/share /mnt/win
+</code></pre></div></div>
+
+<p>编辑 <code class="highlighter-rouge">/etc/fstab</code>：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>vi /etc/fstab
+//192.168.1.124/share /mnt/win cifs <span class="nv">username</span><span class="o">=</span>neo,password<span class="o">=</span>matrix,rw 0 0
+</code></pre></div></div>
+
+<p>这样直接把用户名和密码直接写在多人可见的配置文件中终归不够安全。</p>
+
+<p>最安全的办法：</p>
+
+<p>把用户名和密码保存在单独的文件中，然后在 <code class="highlighter-rouge">fstab</code> 中指定其位置。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>vi /root/.smbcred
+<span class="nv">$ </span><span class="nb">sudo cat</span> /root/.smbcred
+<span class="nv">username</span><span class="o">=</span>neo
+<span class="nv">password</span><span class="o">=</span>matrix
+
+<span class="nv">$ </span><span class="nb">sudo chmod </span>400 /root/.smbcred
+
+<span class="nv">$ </span><span class="nb">cat</span> /etc/fstab|grep /mnt
+//192.168.1.124/share /mnt/win cifs <span class="nv">credentials</span><span class="o">=</span>/root/.smbcred,rw 0 0
+</code></pre></div></div>
+
+<blockquote>
+  <p>如果挂载失败，有可能是 <code class="highlighter-rouge">mount.cifs</code> 没有安装，可以 <code class="highlighter-rouge">yum install -y cifs-utils</code> 重新安装试一下。</p>
+</blockquote>
+
+<h2 id="存储空间占用">存储空间占用</h2>
+
+<h3 id="df--h"><code class="highlighter-rouge">df -H</code></h3>
+
+<p>查看文件系统磁盘空间占用情况。<code class="highlighter-rouge">-H</code> 参数以易于阅读的方式显示，按 1G=1000M 计。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~]$ df -H
+Filesystem             Size  Used Avail Use% Mounted on
+/dev/mapper/zion-root   11G  5.2G  5.6G  48% /
+devtmpfs               496M     0  496M   0% /dev
+tmpfs                  512M     0  512M   0% /dev/shm
+tmpfs                  512M  1.1M  511M   1% /run
+tmpfs                  512M     0  512M   0% /sys/fs/cgroup
+/dev/sda2              1.1G  221M  843M  21% /boot
+/dev/mapper/zion-home  5.4G   40M  5.4G   1% /home
+tmpfs                  103M   13k  103M   1% /run/user/42
+tmpfs                  103M     0  103M   0% /run/user/1004
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">du -sh /tmp/test</code>  查看 <strong>目录所占磁盘空间</strong></p>
+
+<p><code class="highlighter-rouge">mount | column -t</code>  查看 <strong>已挂载的分区状态</strong></p>
+
+<p><code class="highlighter-rouge">swapon -s</code>  查看 <strong>所有交换分区</strong></p>
+
+<p><code class="highlighter-rouge">dmesg | grep IDE</code>  查看 <strong>启动时 IDE 设备监测状况</strong></p>
+
+<h2 id="路径">路径</h2>
+
+<h3 id="获取绝对路径">获取绝对路径</h3>
+
+<h4 id="command--v"><code class="highlighter-rouge">command -v</code></h4>
+
+<p>使用 <code class="highlighter-rouge">command -v</code>，杜绝使用 <code class="highlighter-rouge">which</code>，它已经过时，有时可能返回不准确的信息。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="sb">`</span><span class="nb">command</span> <span class="nt">-v</span> jekyll<span class="sb">`</span>
+/home/neo/gems/bin/jekyll
+</code></pre></div></div>
+
+<h4 id="realpath"><code class="highlighter-rouge">realpath</code></h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~ <span class="nv">$ </span><span class="nb">realpath </span>example.txt
+/home/username/example.txt
+</code></pre></div></div>
+
+<h4 id="readlink"><code class="highlighter-rouge">readlink</code></h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">readlink</span> <span class="nt">-f</span> linotes
+/home/neo/linotes
+</code></pre></div></div>
+
+<h2 id="文件内容">文件内容</h2>
+
+<h3 id="换行符">换行符</h3>
+
+<p>换行符 CR 和 LF 均来自于打字机时代。</p>
+
+<ul>
+  <li>CR 表示把打字机的打字部件移动到最左侧，以便准备从 <strong>最左侧</strong> 开始打字</li>
+  <li>LF 表示 <strong>向上</strong> 卷纸，以便准备开始打新的一行</li>
+</ul>
+
+<p>最早的软件开发完全模拟打字机的这两个操作，到后来有些人觉得有点麻烦，干脆只留了一个。但由于没有统一的标准，所以结果是有的平台上仍沿用两个控制符来换行，即 CR + LF，有的平台只用一个，即 LF。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>简写</th>
+      <th>原文</th>
+      <th>十进制 ASCII 码</th>
+      <th>转义序列</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>LF</td>
+      <td>Line-Feed</td>
+      <td>10</td>
+      <td><code class="highlighter-rouge">\n</code></td>
+    </tr>
+    <tr>
+      <td>CR</td>
+      <td>Carriage-Return</td>
+      <td>13</td>
+      <td><code class="highlighter-rouge">\r</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="unix-换行符">UNIX 换行符</h4>
+
+<p>UNIX 为 LF，即 <code class="highlighter-rouge">\n</code>。</p>
+
+<h4 id="dos-换行符">DOS 换行符</h4>
+
+<p>Windows 或 DOS 换行为 CR + LF，即 <code class="highlighter-rouge">\r\n</code>。</p>
+
+<h2 id="文件属性">文件属性</h2>
+
+<h3 id="文件名">文件名</h3>
+
+<h4 id="提取路径中的文件名">提取路径中的文件名</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">basename</span> /etc/sysconfig/network
+network
+</code></pre></div></div>
+
+<h4 id="提取目录名">提取目录名</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">dirname</span> /etc/sysconfig/network
+/etc/sysconfig
+</code></pre></div></div>
+
+<h2 id="文件的比较">文件的比较</h2>
+
+<h3 id="diff"><code class="highlighter-rouge">diff</code></h3>
+
+<p>diff 用于以行为单位，对比两个文件之间 <strong>内容的差异</strong>。</p>
+
+<p>通常用于比较 <strong>同一文件</strong>（或软件）的新旧 <strong>版本差异</strong>。</p>
+
+<p>如果用 diff 对 <strong>目录</strong> 进行比较，则会比较该目录中具有 <strong>相同文件名的文件</strong>，而不会对其子目录文件进行任何比较操作。</p>
+
+<h4 id="语法">语法</h4>
+
+<p><code class="highlighter-rouge">diff [-bBi] from-file to-file</code></p>
+
+<p><code class="highlighter-rouge">from-file</code>  原始文件，可用 - 代替</p>
+
+<p><code class="highlighter-rouge">to-file</code>  对比文件，可用 - 代替</p>
+
+<p><code class="highlighter-rouge">-b</code>  忽略空格数量的差异</p>
+
+<p><code class="highlighter-rouge">-B</code>  忽略空白行的差异</p>
+
+<p><code class="highlighter-rouge">-i</code>  忽略大小写</p>
+
+<p><code class="highlighter-rouge">-u</code>  以合并的方式显示差异</p>
+
+<h4 id="对比文件的差异">对比文件的差异</h4>
+
+<p>准备两个练习文件</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cp</span> /etc/passwd passwd.old
+<span class="nv">$ </span><span class="nb">cat</span> /etc/passwd | <span class="nb">sed</span> <span class="nt">-e</span> <span class="s1">'4d'</span> <span class="nt">-e</span> <span class="s1">'6c no six line'</span> <span class="o">&gt;</span> passwd.new
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ diff passwd.old passwd.new
+
+4d3        # 左边第四行被删除了，基准是右边的第三行
+&lt; adm:x:3:4:adm:/var/adm:/sbin/nologin   # 左边文件被删除的那一行
+6c5 # 左边文件的第六行被替换成右边文件的第五行
+&lt; sync:x:5:0:sync:/sbin:/bin/sync  # 左边第六行内容
+---
+&gt; no six line  # 右边第五行内容
+</code></pre></div></div>
+
+<h4 id="对比目录的差异">对比目录的差异</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>diff /etc/rc0.d/ /etc/rc5.d/
+Only <span class="k">in</span> /etc/rc0.d/: K90network
+Only <span class="k">in</span> /etc/rc5.d/: S10network
+</code></pre></div></div>
+
+<h3 id="cmp"><code class="highlighter-rouge">cmp</code></h3>
+
+<p><code class="highlighter-rouge">cmp</code> <strong>逐个字节</strong> 地对比两文件，也可以对比二进制文件。</p>
+
+<p><code class="highlighter-rouge">cmp [-l] file1 file2</code></p>
+
+<p><code class="highlighter-rouge">-l</code>  将所有的不同点都列出来</p>
+
+<p>默认仅输出第一处差异。</p>
+
+<ul>
+  <li>范例</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cmp passwd.old passwd.new
+passwd.old passwd.new differ: char 106, line 4
+</code></pre></div></div>
+
+<h3 id="patch"><code class="highlighter-rouge">patch</code></h3>
+
+<p>patch 命令需要 <strong>与 diff 配合使用</strong>，可以把由 diff 生成的文件差异做成 <strong>补丁</strong> 文件。</p>
+
+<h4 id="语法-1">语法</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>patch [−blNR] [−c|−e|−n|−u] [−d dir] [−D define] [−i patchfile] [−o outfile] [−p num] [−r rejectfile] [file]
+</code></pre></div></div>
+
+<h5 id="给旧文件打补丁">给旧文件打补丁</h5>
+
+<p><code class="highlighter-rouge">patch -pN &lt; patch_file</code> 更新</p>
+
+<p><code class="highlighter-rouge">patch -R -pN &lt; patch_file</code> 还原</p>
+
+<p>选项与参数：</p>
+
+<p><code class="highlighter-rouge">-p</code>  剥掉几层目录</p>
+
+<p>…<code class="highlighter-rouge">-p0</code>  不剥目录，/aa/bb/cc/dd/fl.c</p>
+
+<p>…<code class="highlighter-rouge">-p1</code>  剥掉一层，aa/bb/cc/dd/fl.c</p>
+
+<p>…<code class="highlighter-rouge">-p4</code>  剥掉4层，dd/fl.c</p>
+
+<p><code class="highlighter-rouge">-R</code>  把新文件还原成原来版本</p>
+
+<h5 id="更新旧版文件">更新旧版文件</h5>
+
+<p><code class="highlighter-rouge">patch -p0 &lt; passwd.patch</code></p>
+
+<h5 id="恢复旧文件的内容">恢复旧文件的内容</h5>
+
+<p><code class="highlighter-rouge">patch -R -p0 &lt; passwd.patch</code></p>
+
+<h4 id="用-diff-生成差异文件">用 <code class="highlighter-rouge">diff</code> 生成差异文件</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>diff <span class="nt">-u</span> passwd.old passwd.new <span class="o">&gt;</span> passwd.patch
+</code></pre></div></div>
+
+<p>查看一下差异文件的内容：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>passwd.patch
+
+<span class="nt">---</span> passwd.old 2015-07-14 22:37:43.322535054 +0800 <span class="c"># 新旧文件的信息</span>
++++ passwd.new 2015-07-14 22:38:03.010535054 +0800
+@@ <span class="nt">-1</span>,9 +1,8 @@
+<span class="c"># 新旧文件要修改数据的界定范围，旧文件在 1-9 行，新文件在 1-8 行</span>
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:/sbin/nologin
+daemon:x:2:2:daemon:/sbin:/sbin/nologin
+<span class="nt">-adm</span>:x:3:4:adm:/var/adm:/sbin/nologin <span class="c"># 左侧文件删除</span>
+lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin
+<span class="nt">-sync</span>:x:5:0:sync:/sbin:/bin/sync <span class="c"># 左侧文件删除</span>
++no six line <span class="c"># 右侧新文件加入</span>
+shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown
+halt:x:7:0:halt:/sbin:/sbin/halt
+mail:x:8:12:mail:/var/spool/mail:/sbin/nologin
+</code></pre></div></div>
+
+<p class="notice">一般来说，用 diff 生成的差异文件通常使用扩展名 <code class="highlighter-rouge">.patch</code> 。以行为单位，看到 <code class="highlighter-rouge">-</code> 就删除，看到 <code class="highlighter-rouge">+</code> 就添加。</p>
+
+<h2 id="文件的转换">文件的转换</h2>
+
+<h3 id="字符编码转换">字符编码转换</h3>
+
+<p><code class="highlighter-rouge">iconv -f big5 -t utf8 vi.big5 -o vi.utf8</code>	繁体转 UTF8</p>
+
+<p><code class="highlighter-rouge">iconv -f big5 -t gb2312 vi.big5 -o vi.gb</code>	繁体转简体</p>
+
+<p><code class="highlighter-rouge">iconv --list</code>	查看支持的所有语系</p>
+
+<h3 id="换行符的转换">换行符的转换</h3>
+
+<p><code class="highlighter-rouge">dos2unix</code> 工具用于转换 DOS 换行符。软件包含 <code class="highlighter-rouge">dos2unix</code> 和 <code class="highlighter-rouge">unix2dos</code> 两个工具。</p>
+
+<p><code class="highlighter-rouge">-k</code>  保留原 mtime</p>
+
+<p><code class="highlighter-rouge">-n</code>  另存为新文件</p>
+
+<h4 id="unix-转-dos">UNIX 转 DOS</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>unix2dos <span class="nt">-k</span> textfile
+</code></pre></div></div>
+
+<p>转换后直接覆盖原文件。</p>
+
+<h4 id="dos-转-unix">DOS 转 UNIX</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>dos2unix <span class="nt">-k</span> <span class="nt">-n</span> textfile textfile.linux
+</code></pre></div></div>
+
+<p>转换后另存为新文件。</p>
+
+<h2 id="文件的操作">文件的操作</h2>
+
+<h3 id="split">SPLIT</h3>
+
+<p>把大文件切割成为若干小文件。</p>
+
+<p><code class="highlighter-rouge">split [-bl] file PREFIX</code></p>
+
+<p><code class="highlighter-rouge">-b</code>  按容量切割，可加单位，b, k, m</p>
+
+<p><code class="highlighter-rouge">-l</code>  按行数切割</p>
+
+<p><code class="highlighter-rouge">PREFIX</code>  切块文件名</p>
+
+<h4 id="范例">范例</h4>
+
+<ul>
+  <li>切割成 300k 的文件</li>
+</ul>
+
+<p><code class="highlighter-rouge">cd /tmp; split -b 300k /etc/services services</code></p>
+
+<ul>
+  <li>合成一个文件，文件名为 servicesback</li>
+</ul>
+
+<p><code class="highlighter-rouge">cat services\* &gt;&gt; servicesback</code></p>
+
+<ul>
+  <li>把 ls -al / 输出的信息，每十行存成一个文件</li>
+</ul>
+
+<p><code class="highlighter-rouge">ls -al / | split -l 10 - lsroot</code></p>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	</p>
+<hr>
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/linux" class="page__taxonomy-item" rel="tag">linux</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F" class="page__taxonomy-item" rel="tag">文件系统</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/%E6%A0%BC%E5%BC%8F%E5%8C%96" class="page__taxonomy-item" rel="tag">格式化</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/xfs" class="page__taxonomy-item" rel="tag">xfs</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/ext" class="page__taxonomy-item" rel="tag">ext</a>
+    
+    </span>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://linotes.netlify.com/categories/#tools" class="page__taxonomy-item" rel="tag">tools</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2015-02-01T00:00:00+08:00">February 01, 2015</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="https://linotes.netlify.com/tools/datastream/" class="pagination--pager" title="上一页
+">Linux 的使用 - 数据流处理</a>
+    
+    
+      <a href="https://linotes.netlify.com/tools/log/" class="pagination--pager" title="下一页
+">Linux 的使用 - 日志管理</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">相关文章</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/kernel/filedescriptor/" rel="permalink">文件描述符简介
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash03/" rel="permalink">Bash 入门 03
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">循环，变量，函数，捕捉信号
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash02/" rel="permalink">Bash 入门 02
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">正则表达式，SED，AWK，条件结构，交互式脚本
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash01/" rel="permalink">Bash 入门 01
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">Bash 与 Bash 脚本，脚本的编写与调试，Bash 环境
+</p>
+-->
+
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+    
+    
+    
+    
+    <li><a href="https://linotes.netlify.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">© 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="https://linotes.netlify.com/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

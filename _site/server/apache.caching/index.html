@@ -1,0 +1,949 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Apache 缓存 - LINOTES</title>
+<meta name="description" content="本节内容来自 Apache HTTP Server 2.4 官方文档。">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Apache 缓存">
+<meta property="og:url" content="https://linotes.netlify.com/server/apache.caching/">
+
+
+  <meta property="og:description" content="本节内容来自 Apache HTTP Server 2.4 官方文档。">
+
+
+
+  <meta property="og:image" content="https://linotes.netlify.com/assets/images/header/datacenter-3.jpg">
+
+
+
+
+
+  <meta property="article:published_time" content="2016-01-02T00:00:00+08:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://linotes.netlify.com/server/apache.caching/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="https://linotes.netlify.com/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="https://linotes.netlify.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="https://linotes.netlify.com/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('https://linotes.netlify.com/assets/images/header/datacenter-3.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Apache 缓存
+
+        
+      </h1>
+      
+        <p class="page__lead">本节内容来自 Apache HTTP Server 2.4 <a href="https://httpd.apache.org/docs/2.4/zh-cn/">官方文档</a>。
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="https://linotes.netlify.com/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:imhawkz@gmail.com">
+            <meta itemprop="email" content="imhawkz@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Apache 缓存">
+    <meta itemprop="description" content="本节内容来自 Apache HTTP Server 2.4 官方文档。">
+    <meta itemprop="datePublished" content="January 02, 2016">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-copy"></i> Apache 缓存</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#apache-缓存指南">Apache 缓存指南</a>
+    <ul>
+      <li><a href="#简介">简介</a></li>
+      <li><a href="#三状态-rfc2616-http-缓存-1">三状态 RFC2616 HTTP 缓存</a></li>
+      <li><a href="#缓存设置范例">缓存设置范例</a></li>
+      <li><a href="#普通的双状态键值共享对象缓存">普通的双状态键/值共享对象缓存</a></li>
+      <li><a href="#缓存专用文件">缓存专用文件</a></li>
+      <li><a href="#安全考量">安全考量</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="apache-缓存指南">Apache 缓存指南</h2>
+
+<h3 id="简介">简介</h3>
+
+<p>Apache HTTP Server 拥有一系列缓存功能，旨在以各种方式改进服务器的性能。</p>
+
+<h4 id="三状态-rfc2616-http-缓存">三状态 RFC2616 HTTP 缓存</h4>
+
+<p><code class="highlighter-rouge">mod_cache</code> 及其提供模块 <code class="highlighter-rouge">mod_cache_disk</code> 可实现智能的、HTTP 感知的缓存功能。内容本身保存在缓存中，<code class="highlighter-rouge">mod_cache</code> 的目标是尊重所有控制可缓存性内容的 HTTP 标头和选项。<code class="highlighter-rouge">mod_cache</code> 的目标是兼顾简单和复杂的缓存配置，用它来处理代理内容、动态本地内容，或加速本地文件的访问。</p>
+
+<h4 id="双状态键值共享对象缓存">双状态键/值共享对象缓存</h4>
+
+<p>共享对象缓存 API 及其提供模块可以实现整个服务端的、基于键/值的共享对象缓存。这些模块旨在缓存低阶数据，如 SSL 会话及身份验证凭据。后台允许将数据存储在共享内存中的服务器范围内，或在高速缓存 (如 memcache 或 distcache) 中的大数据中心中。</p>
+
+<h4 id="专用文件缓存">专用文件缓存</h4>
+
+<p><code class="highlighter-rouge">mod_file_cache</code> 可实现在服务端启动时将文件预加载到内存中，并且可以加速访问，在经常访问的文件上保存文件句柄，因为没必要为每个请求都去访问磁盘。</p>
+
+<h3 id="三状态-rfc2616-http-缓存-1">三状态 RFC2616 HTTP 缓存</h3>
+
+<p>相关模块 ：<code class="highlighter-rouge">mod_cache</code>，<code class="highlighter-rouge">mod_cache_disk</code></p>
+
+<p>相关指令 ：<code class="highlighter-rouge">CacheEnable</code>，<code class="highlighter-rouge">CacheDisable</code>，<code class="highlighter-rouge">UseCanonicalName</code>，<code class="highlighter-rouge">CacheNegotiatedDocs</code></p>
+
+<p>HTTP 协议支持在线缓存机制，而且是内置的，<code class="highlighter-rouge">mod_cache</code> 模块可用于使用该机制。</p>
+
+<p>在简单的双状态键/值缓存中，当内容过期时会彻底消失掉。而 HTTP 缓存与之不同，它有一种保留过期内容的机制，先是询问源服务端该过期内容是否发生了改变，如果没变则让其重新生效。</p>
+
+<h4 id="http-缓存中的条目的状态">HTTP 缓存中的条目的状态</h4>
+
+<h5 id="新鲜">新鲜</h5>
+
+<p>如果内容足够新，在使用期之内，则认为它是新鲜的。HTTP 缓存可以提供新鲜的内容，而无需对源服务端进行任何调用。</p>
+
+<h5 id="过期">过期</h5>
+
+<p>如果内容太旧，过了使用期，则认为它是过期的。在把过期内容提供给客户端之前，HTTP 缓存应该联系源服务端，以检查该内容是否仍然新鲜。如果不再新鲜，源服务端会返回替换的内容；如果仍然新鲜，服务端会返回一个代码告知缓存，无需重新生成内容，也无需把原内容重发一遍。内容重新变成新鲜的，循环继续。</p>
+
+<p>在某些情况下，HTTP 协议不允许缓存提供过期数据。比如，当对源服务端刷新数据的尝试失败时，返回 5xx 错误；或者，当另一个对相同条目刷新的请求正在进行中时，在这些情况下，回复中会加入一个 <code class="highlighter-rouge">Warning</code> 标头。</p>
+
+<h5 id="不存在">不存在</h5>
+
+<p>如果缓存满了，它会从中删除内容来腾出空间。什么时候都可以删除内容，删除的可以是过期的，也可以是新鲜的。</p>
+
+<p><code class="highlighter-rouge">htcacheclean</code> 程序可以在需要时使用，也可以部署为服务，使缓存始终保持在特定大小之内，或特定数量的 inode 之内。该程序会尽量先删除过期内容，不得以才会删除新鲜内容。</p>
+
+<h4 id="缓存与服务端的交互">缓存与服务端的交互</h4>
+
+<p>根据 <code class="highlighter-rouge">CacheQuickHandler</code> 指令的值，<code class="highlighter-rouge">mod_cache</code> 模块在两个可能的位置挂钩到服务器。</p>
+
+<h5 id="快速处理程序阶段">快速处理程序阶段</h5>
+
+<p>此阶段在请求处理过程中很早就发生，就在请求被解析之后。如果在缓存中找到了内容，它将立即送达，几乎所有请求处理都会被绕过。</p>
+
+<p>在这种情况下，缓存的行为就好像它被锚到服务器前面一样。</p>
+
+<p>此模式提供了最佳性能，因为大多数服务端处理都被绕过了。但是，此模式也绕过服务器处理的身份验证和授权阶段，因此，如果安全是特别要考虑的因素时，应谨慎选择此模式。</p>
+
+<p>当 <code class="highlighter-rouge">mod_cache</code> 在此阶段运行时，具有 “授权” 标头 (例如，HTTP 基本身份验证) 的请求既不会被缓存，也不能用缓存来完成。</p>
+
+<h5 id="一般处理阶段">一般处理阶段</h5>
+
+<p>此阶段在请求处理后期发生，在所有请求阶段完成之后。</p>
+
+<p>此时，缓存的行为就好像它被锚到服务器后面一样。</p>
+
+<p>此模式提供了最大的灵活性，因为在筛选链中的精确控制点上存在缓存的可能性。在发送给客户端之前，可以对缓存内容进行筛选或个性化。</p>
+
+<p>…</p>
+
+<p>如果缓存中没有找到 URL，<code class="highlighter-rouge">mod_cache</code> 会在过滤栈中添加一个过滤器，以便将响应记录到缓存中，然后退出，允许正常请求处理继续进行。如果将内容确定为可缓存，则内容将保存到缓存中以供使用，否则内容会被忽略。</p>
+
+<p>如果在缓存中找到的内容陈旧，则 <code class="highlighter-rouge">mod_cache</code> 模块将请求转换为条件请求。如果源服务端正常响应，则缓存正常响应，替换已缓存的内容。如果源服务器响应的是 304 未修改的响应，则内容将再次标记为新鲜，而缓存内容则由筛选器提供，无需保存。</p>
+
+<h4 id="提升缓存命中率">提升缓存命中率</h4>
+
+<p>如果某个虚拟主机有许多不同的服务端的别名，确保 <code class="highlighter-rouge">UseCanonicalName</code> 设置为 <code class="highlighter-rouge">On</code> 可以显著提高缓存命中的比率。这是因为提供内容的虚拟主机，其主机名在缓存键中被使用。设置为 <code class="highlighter-rouge">On</code>，有多个服务端名字或别名的虚拟主机不会生成不同的缓存条目，缓存内容是基于标准主机名而生成的。</p>
+
+<h4 id="新鲜度的使用期">新鲜度的使用期</h4>
+
+<p>新鲜度的使用期，以下简称使用期。</p>
+
+<p>拟缓存的格式良好的内容应该显式声明其使用期，可使用 <code class="highlighter-rouge">Cache-Control</code> 标头中的 <code class="highlighter-rouge">max-age</code> 或 <code class="highlighter-rouge">s-maxage</code> 字段，也可以包含一个 <code class="highlighter-rouge">Expires</code> 标头。</p>
+
+<p>同时，当客户端在请求中提供了自己的 <code class="highlighter-rouge">Cache-Control</code> 标头时，源服务端定义的使用期可以被客户端覆盖。这种情况下，在请求和响应中，最短的使用期会获胜。</p>
+
+<p>如果请求或响应中使用期缺失，则使用默认的使用期，即一小时。可以用 <code class="highlighter-rouge">CacheDefaultExpire</code>指令来修改。</p>
+
+<p>如果响应中不包含 <code class="highlighter-rouge">Expires</code> 标头，但包含 <code class="highlighter-rouge">Last-Modified</code> 标头，<code class="highlighter-rouge">mod_cache</code> 会自己推算一个使用期，其基于的启发式算法可以由 <code class="highlighter-rouge">CacheLastModifiedFactor</code> 指令控制。</p>
+
+<p>对于本地内容，或没有定义其 <code class="highlighter-rouge">Expires</code> 标头的远程内容，可以使用 <code class="highlighter-rouge">mod_expires</code> 来调整使用期，具体方法是添加 <code class="highlighter-rouge">max-age</code> 和 <code class="highlighter-rouge">Expires</code> 。</p>
+
+<p>最大的使用期也用 <code class="highlighter-rouge">CacheMaxExpire</code> 来控制。</p>
+
+<h4 id="条件请求">条件请求</h4>
+
+<p>当缓存中的内容过期时，httpd 并不会把直接传递源请求，而是会把它并成条件请求。</p>
+
+<ul>
+  <li>如果源缓存响应中有 <code class="highlighter-rouge">Etag</code> 标头，<code class="highlighter-rouge">mod_cache</code> 会向针对源服务端的请求中添加一个 <code class="highlighter-rouge">If-None-Match</code> 标头。</li>
+  <li>如果源缓存响应中有 <code class="highlighter-rouge">Last-Modified</code> 标头，<code class="highlighter-rouge">mod_cache</code> 会向针对源服务端的请求中添加一个 <code class="highlighter-rouge">If-Modified-Since</code> 标头。</li>
+</ul>
+
+<p>执行上述任一操作将使请求变成条件请求。</p>
+
+<h5 id="如何应对条件请求">如何应对条件请求</h5>
+
+<p>当源服务端接收到一个条件请求时，它应该检查 <code class="highlighter-rouge">Etag</code> 或 <code class="highlighter-rouge">Last-Modified</code> 参数是否发生了改变：</p>
+
+<ul>
+  <li>如果没变，源服务端应该响应 “304 Not Modifed”。这会给缓存一个信号，告知其过期的内容依然新鲜，应该继续为后续的请求服务，直到其使用期再次结束。</li>
+  <li>如果内容发生了改变，则当作一开始不是条件请求来发送内容。</li>
+</ul>
+
+<h5 id="条件请求带来两个好处">条件请求带来两个好处：</h5>
+
+<ul>
+  <li>对服务端进行这样的请求时，如果源内容与缓存中内容匹配，可以轻松判断，无需传输全部源内容。</li>
+  <li>好的服务端设计就当如此，条件请求的开销比完整响应要小的多。</li>
+</ul>
+
+<p>对于静态文件来说，通常只需要调用 <code class="highlighter-rouge">stat()</code> 或类似的系统调用，就可以知道文件大小和时间是否发生了改变。因此，即使是本地内容，如果没有改变，也仍然可以用缓存更快地传送。</p>
+
+<p>源服务端应尽全力来支持条件请求，这是切实可行的，但是，如果条件请求不被支持，源服务端会将该请求看作非条件请求，缓存会认为内容已过期，然后把新内容保存到缓存中。这种情况下，缓存会按简易的双状态缓存方式工作，即内容要么新鲜，要么被删除。</p>
+
+<h4 id="哪些内容可以缓存">哪些内容可以缓存</h4>
+
+<ol>
+  <li>由 <code class="highlighter-rouge">CacheEnable</code> 指令设定的 URL。</li>
+  <li>响应必须包含 HTTP 状态码 200，203，300，301，410。</li>
+  <li>必须是 HTTP GET 请求。</li>
+  <li>如果响应包含 “授权” 标头，则在 <code class="highlighter-rouge">Cache-Control:</code> 标头中也必须包含 <code class="highlighter-rouge">s-maxage</code>，<code class="highlighter-rouge">must-revalidate</code> 或 <code class="highlighter-rouge">public</code> 选项，否则不会被缓存。</li>
+  <li>如果 URL 包含一个查询字符串，则不会被缓存，除非响应中用 <code class="highlighter-rouge">Expires</code> 标头显式指定了有效期，或在 <code class="highlighter-rouge">Cache-Control:</code> 标头中指定了 <code class="highlighter-rouge">max-age</code> 或 <code class="highlighter-rouge">s-maxage</code> 指令。</li>
+  <li>如果响应状态码为 200，即 OK，该响应也应该至少包含 <code class="highlighter-rouge">Etag</code>，<code class="highlighter-rouge">Last-Modified</code>，<code class="highlighter-rouge">Expires</code> 标头中的一个，或 <code class="highlighter-rouge">Cache-Control:</code> 标头中的 <code class="highlighter-rouge">max-age</code> 或 <code class="highlighter-rouge">s-maxage</code>，除非使用了 <code class="highlighter-rouge">CacheIgnoreNoLastMod</code> 指令。</li>
+  <li>如果响应的 <code class="highlighter-rouge">Cache-Control:</code> 标头中包含 <code class="highlighter-rouge">private</code> 选项，不会被缓存，除非使用了 <code class="highlighter-rouge">CacheStorePrivate</code> 指令。</li>
+  <li>类似地，如果响应的 <code class="highlighter-rouge">Cache-Control:</code> 标头中包含 <code class="highlighter-rouge">no-store</code> 选项，不会被缓存，除非使用了 <code class="highlighter-rouge">CacheStoreNoStore</code> 指令。</li>
+  <li>如果响应的 <code class="highlighter-rouge">Vary:</code> 标头中包含 <code class="highlighter-rouge">*</code>，也不会缓存。</li>
+</ol>
+
+<h4 id="哪些不应该缓存">哪些不应该缓存</h4>
+
+<p>对时间敏感的内容，或者针对特定请求会有所不同的内容都不应该被缓存。这些内容应该用 <code class="highlighter-rouge">Cache-Control</code> 标头来自己声明不可缓存。</p>
+
+<p>如果内容改变频繁，使用期只有几分钟或几秒钟，内容也仍然可以缓存。然而，建议让源服务端支持条件请求，以保证无需经常生成完整的响应。</p>
+
+<p>针对客户端请求标头而有所区别的内容，可以通过智能使用 <code class="highlighter-rouge">Vary</code> 响应标头来进行缓存。</p>
+
+<h4 id="可变内容">可变内容</h4>
+
+<p>如果源服务端会基于请求中不同的标头来响应不同的内容，如为同一个 URL 提供多种语言，HTTP 的缓存机制可以实现对同一 URL，缓存同一页面的多个变体。</p>
+
+<p>这是由源服务端增加一个 <code class="highlighter-rouge">Vary</code> 标头来实现的，在判断两个变体是否相同时，用来表示哪些标头需要被缓存。</p>
+
+<p>如，收到如下包含 <code class="highlighter-rouge">Vary</code> 标头的响应：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Vary: negotiate,accept-language,accept-charset
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">mod_cache</code> 只会把那些 <code class="highlighter-rouge">accept-language</code> 及 <code class="highlighter-rouge">accept-charset</code> 匹配的缓存内容发给请求方。</p>
+
+<p>内容的多个变体可以并排保存，<code class="highlighter-rouge">mod_cache</code> 用 <code class="highlighter-rouge">Vary</code> 标头和由它指定的请求标头的对应值来决定给客户端返回哪个变体。</p>
+
+<h3 id="缓存设置范例">缓存设置范例</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>相关模块</th>
+      <th>相关指令</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">mod_cache</code><br /><code class="highlighter-rouge">mod_cache_disk</code><br /><code class="highlighter-rouge">mod_cache_socache</code><br /><code class="highlighter-rouge">mod_socache_memcache</code></td>
+      <td><code class="highlighter-rouge">CacheEnable</code><br /><code class="highlighter-rouge">CacheRoot</code><br /><code class="highlighter-rouge">CacheDirLevels</code><br /><code class="highlighter-rouge">CacheDirLength</code><br /><code class="highlighter-rouge">CacheSocache</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="缓存到磁盘">缓存到磁盘</h4>
+
+<p><code class="highlighter-rouge">mod_cache</code> 模块依赖于特定的后端存储部署来管理缓存，用 <code class="highlighter-rouge">mod_cache_disk</code> 来实现缓存到磁盘。</p>
+
+<p>通常该模块按如下配置：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">CacheRoot</span>   <span class="s2">"/var/cache/apache/"</span>
+<span class="n">CacheEnable</span> <span class="n">disk</span> /
+<span class="n">CacheDirLevels</span> <span class="m">2</span>
+<span class="n">CacheDirLength</span> <span class="m">1</span>
+</code></pre></div></div>
+
+<p>很重要的一点，因为缓存文件是保存在本地，操作系统的内存缓存也会应用到对它们的访问上。因此，虽然这些文件保存在磁盘中，如果被频繁访问，操作系统也会将其放到内存。</p>
+
+<h4 id="缓存是如何保存的">缓存是如何保存的</h4>
+
+<p>为了在缓存中保存数据，<code class="highlighter-rouge">mod_cache_disk</code> 会为请求的 URL 创建一个 22 字符的哈希，这个哈希把主机名、协议、端口、路径及所有 CGI 参数都合并到 URL 中，也包括 <code class="highlighter-rouge">Vary</code> 标头所定义的元素，以确保多个 URL 不会互相混淆。</p>
+
+<p>共有 64 个不同的字符备选，每个字符都是其中的一个，也就意味着总共有 64<sup>22</sup> 种可能的哈希值，混淆的机率相当小。</p>
+
+<p>例如，某个 URL 可能被哈希为 <code class="highlighter-rouge">xyTGxSMO2b68mBCykqkp1w</code>，该哈希值做为前缀，为缓存中专属于该 URL 的文件来命名，不过，先要依据 <code class="highlighter-rouge">CacheDireLevels</code> 和 <code class="highlighter-rouge">CacheDirLength</code> 分割成目录名。</p>
+
+<p><code class="highlighter-rouge">CacheDirLevels</code> 用于指定需要几层子目录，<code class="highlighter-rouge">CacheDirLength</code> 用于指定每层目录使用几个字符。按上行范例，该哈希值会被转换成如下的文件名前缀：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/var/cache/apache/x/y/TGxSMO2b68mBCykqkp1w
+</code></pre></div></div>
+
+<p>该技术的根本目的是想减少子目录或文件的数量，因为该数量的增加会导致文件系统变慢。把 <code class="highlighter-rouge">CacheDirLength</code> 设定为 <code class="highlighter-rouge">1</code> 的话，每一层就可以最多有 64 个子目录。如果设置成 <code class="highlighter-rouge">2</code>，则会有 64*64 个子目录，等等。通常建议设定为 <code class="highlighter-rouge">1</code>。</p>
+
+<p>对 <code class="highlighter-rouge">CacheDirLevels</code> 的设定取决于在缓存中要保存多少文件，如果设定为 <code class="highlighter-rouge">2</code>，总共可以创建 4096 个子目录。如果缓存了一百万个文件，每个目录大约有 245 个缓存的 URL。</p>
+
+<p>每个 URL 在缓存中至少要使用两个文件，通常一个是 <code class="highlighter-rouge">.header</code> 文件，其中包含 URL 相关的元信息，如何时过期；另一个是 <code class="highlighter-rouge">.data</code> 文件，即缓存内容。</p>
+
+<p>如果通过 <code class="highlighter-rouge">Vary</code> 标头协商得到了内容，会为该 URL 生成一个 <code class="highlighter-rouge">.vary</code> 目录，该目录中会包含多个 <code class="highlighter-rouge">.data</code> 文件，对应不同的协商内容。</p>
+
+<h4 id="磁盘缓存的维护">磁盘缓存的维护</h4>
+
+<p><code class="highlighter-rouge">mod_cache_disk</code> 模块不会尝试对缓存使用的磁盘空间量进行调节，但是如果发生了任何磁盘错误，它就会优雅地退出，好像从未有过缓存一样。</p>
+
+<p>httpd 内建的工具 <code class="highlighter-rouge">htcacheclean</code> 可以周期性地清理缓存。它有两种操作模式，可以做为服务运行，也可以借助 cron 来周期运行。几十个 G 的缓存，<code class="highlighter-rouge">htcacheclean</code> 要花费一个小时或更久来处理。如果用 cron 来运行，建议把时间适当拉长，以避免同时运行多个实例。</p>
+
+<p>同时还建议为 <code class="highlighter-rouge">htcacheclean</code> 选择一个合适的 nice 值，以避免它占用过多的磁盘 I/O。</p>
+
+<p>因为 <code class="highlighter-rouge">mod_cache_disk</code> 自己不会留意缓存占用了多少磁盘空间，因此要确保正确配置 <code class="highlighter-rouge">htcacheclean</code>，以为缓存的生长留出足够的空间。</p>
+
+<h4 id="缓存到-memcached">缓存到 memcached</h4>
+
+<p>通过使用 <code class="highlighter-rouge">mod_cache_socache</code> 模块，<code class="highlighter-rouge">mod_cache</code> 可以缓存来自多个提供程序的数据。例如，使用 <code class="highlighter-rouge">mod_socache_memcache</code> 模块，可以设定把 memcached 做为后端的存储机制。</p>
+
+<p>通常如下设置模块：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">CacheEnable</span> <span class="n">socache</span> /
+<span class="n">CacheSocache</span> <span class="n">memcache</span>:<span class="n">memcd</span>.<span class="n">example</span>.<span class="n">com</span>:<span class="m">11211</span>
+</code></pre></div></div>
+
+<p>通过把服务端追加在 <code class="highlighter-rouge">CacheSocache memcache:</code> 的行尾，可以指定额外的 <code class="highlighter-rouge">memcached</code> 服务端，用逗号分隔：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">CacheEnable</span> <span class="n">socache</span> /
+<span class="n">CacheSocache</span> <span class="n">memcache</span>:<span class="n">mem1</span>.<span class="n">example</span>.<span class="n">com</span>:<span class="m">11211</span>,<span class="n">mem2</span>.<span class="n">example</span>.<span class="n">com</span>:<span class="m">11212</span>
+</code></pre></div></div>
+
+<p>这种格式也可用在其它的各种 <code class="highlighter-rouge">mod_cache_socache</code> 提供程序上：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">CacheEnable</span> <span class="n">socache</span> /
+<span class="n">CacheSocache</span> <span class="n">shmcb</span>:/<span class="n">path</span>/<span class="n">to</span>/<span class="n">datafile</span>(<span class="m">512000</span>)
+</code></pre></div></div>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">CacheEnable</span> <span class="n">socache</span> /
+<span class="n">CacheSocache</span> <span class="n">dbm</span>:/<span class="n">path</span>/<span class="n">to</span>/<span class="n">datafile</span>
+</code></pre></div></div>
+
+<h3 id="普通的双状态键值共享对象缓存">普通的双状态键/值共享对象缓存</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>相关模块</th>
+      <th>相关指令</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">mod_authn_socache</code><br /><code class="highlighter-rouge">mod_socache_dbm</code><br /><code class="highlighter-rouge">mod_socache_dc</code><br /><code class="highlighter-rouge">mod_socache_memcache</code><br /><code class="highlighter-rouge">mod_socache_shmcb</code><br /><code class="highlighter-rouge">mod_ssl</code></td>
+      <td><code class="highlighter-rouge">AuthnCacheSOCache</code><br /><code class="highlighter-rouge">SSLSessionCache</code><br /><code class="highlighter-rouge">SSLStaplingCache</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Apache HTTP Server 拥有一个低阶共享对象缓存，用于在 <code class="highlighter-rouge">socache</code> 接口中缓存如 SSL 会话、或身份验证凭据等信息。</p>
+
+<h4 id="缓存身份验证凭据">缓存身份验证凭据</h4>
+
+<p>通过 <code class="highlighter-rouge">mod_authn_socache</code> 模块，可以缓存验证凭据，以减轻后端的验证负载。</p>
+
+<h4 id="缓存-ssl-会话">缓存 SSL 会话</h4>
+
+<p><code class="highlighter-rouge">mod_ssl</code> 模块使用  <code class="highlighter-rouge">socache</code> 接口来提供会话缓存和 stapling 缓存。</p>
+
+<h3 id="缓存专用文件">缓存专用文件</h3>
+
+<p>在有些平台上，文件系统比较慢，或文件句柄比较宝贵，可以考虑在系统启动时把文件预加载到内存中。</p>
+
+<p>如果某些系统中打开文件比较慢，可以在启动时就打开文件，并缓存文件句柄。</p>
+
+<h4 id="缓存文件句柄">缓存文件句柄</h4>
+
+<p>打开一个文件的行为本身就是延迟的来源之一，尤其是网络文件系统。针对常用的文件，httpd 会为其文件描述符维护一个缓存，以避免这类延迟。</p>
+
+<h5 id="cachefile"><code class="highlighter-rouge">CacheFile</code></h5>
+
+<p>httpd 支持的最基本的缓存形式是由 <code class="highlighter-rouge">mod_file_cache</code> 实现的文件句柄缓存。与缓存文件内容不同，句柄缓存会为打开文件维护一个描述符表。需要用这种方式缓存的文件会在配置文件中用 <code class="highlighter-rouge">CacheFile</code> 指令来指定。</p>
+
+<p><code class="highlighter-rouge">CacheFile</code> 指令用于告知 httpd 在启动时打开特定文件，然后为之后对该文件的访问重用该文件句柄。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">CacheFile</span> /<span class="n">usr</span>/<span class="n">local</span>/<span class="n">apache2</span>/<span class="n">htdocs</span>/<span class="n">index</span>.<span class="n">html</span>
+</code></pre></div></div>
+
+<p>如果希望用此方式缓存一大批文件，必须确保提前正确设置操作系统对打开文件总数的限制。</p>
+
+<p>虽然使用 <code class="highlighter-rouge">CacheFile</code> 不让文件内容永远在缓存中保留，不过如果原始文件发生了改变，缓存不会跟着更新。</p>
+
+<p>如果原始文件被删除，缓存中的打开文件描述符依然存在，原始文件在文件系统中所占用的空间直到 httpd 停止运行才会被收回。</p>
+
+<h4 id="内存中缓存">内存中缓存</h4>
+
+<p>从系统内存中直接读取肯定是提供内容服务最快的办法。从磁盘控制器中读取文件，甚至，从远程网络读取，速度就更慢。磁盘控制器通常会受物理进程的影响，而网络访问则受限于可用带宽。而访问内存仅需几纳秒。</p>
+
+<p>不过系统内存并不便宜，必须有效率地使用。如果把文件缓存在内存中，会降低系统可用内存的数量。对于文件系统的缓存来说，不会有什么问题。但当使用 httpd 自己的内存缓存时，必须要注意绝对不能占用太多内存，否则就会被交换出内存，性能会明显降低。</p>
+
+<h5 id="缓存操作系统">缓存操作系统</h5>
+
+<p>几乎所有现代操作系统都会把文件数据缓存到内存中，由内核直接管理。这是一个强大的功能。只要有多余的内存，就可以在缓存中保存更多的文件内容，非常有效，不用额外配置 httpd。</p>
+
+<p>另外，因为如果文件被删除或修改，操作系统会很清楚，需要时可以从缓存中自动删除文件内容，比起 httpd 的内存缓存来说，这是一个非常大的优势，因为 httpd 无从知道文件是否被修改了。</p>
+
+<p>尽管实现了自动操作系统缓存的性能和优点，但在某些情况下，httpd 仍然可以更好地执行内存缓存。</p>
+
+<h5 id="mmapfile-缓存"><code class="highlighter-rouge">MMapFile</code> 缓存</h5>
+
+<p><code class="highlighter-rouge">mod_file_cache</code> 的 <code class="highlighter-rouge">MMapFile</code> 指令，可以让 httpd 在启动时，使用 mmap 系统调用，把一个静态文件的内容映射到内存中。之后，httpd 会使用内存中的内容来为后来的访问提供服务。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">MMapFile</span> /<span class="n">usr</span>/<span class="n">local</span>/<span class="n">apache2</span>/<span class="n">htdocs</span>/<span class="n">index</span>.<span class="n">html</span>
+</code></pre></div></div>
+
+<p>这些文件的任何改变，httpd 都不会知道。</p>
+
+<p><code class="highlighter-rouge">MMapFile</code> 指令不会关注它占用了多少内存，因此，要注意不能过度使用这个指令。每个 httpd 的子进程都会复制这块内存，因此一定要确保映射的文件不至于过大，否则会导致系统开始交换内存。</p>
+
+<h3 id="安全考量">安全考量</h3>
+
+<h4 id="身份验证及访问控制">身份验证及访问控制</h4>
+
+<p>在 <code class="highlighter-rouge">CacheQuickHandler</code> 设置为 <code class="highlighter-rouge">On</code> 的默认状态下使用 <code class="highlighter-rouge">mod_cache</code>，相当于把启用缓存的反向代理连接到服务器前端。请求将由缓存模块来处理，这会极大地改变 httpd 的安全模型。</p>
+
+<p>遍历文件系统层次结构来检查潜在的 <code class="highlighter-rouge">.htaccess</code> 文件将是一个非常昂贵的操作，<code class="highlighter-rouge">mod_cache</code> 无法决定某个缓存条目是否被授权访问。</p>
+
+<p>如果配置了某个 IP 地址允许访问某个资源，一定要确保该内容不会被缓存。可以用 <code class="highlighter-rouge">CacheDisable</code> 或 <code class="highlighter-rouge">mod_expires</code> 指令来设置。否则，<code class="highlighter-rouge">mod_cache</code> 就像一个反向代理一样，会把内容放到缓存，任何地址都可以访问了。</p>
+
+<h4 id="本地漏洞">本地漏洞</h4>
+
+<p>因为来自终端用户的请求可以用缓存来应对，缓存本身就成了一个靶子。向缓存中写入内容的身份必须是运行 httpd 的那个用户。</p>
+
+<p>如果 Apache 用户被攻破，如通过 CGI 脚本的漏洞，缓存就有可能被坏人盯上。如果使用了 <code class="highlighter-rouge">mod_cache_disk</code>，要想向缓存插入内容或修改内容就变得相对容易了。</p>
+
+<p>平时的维护中，如果 httpd 因为安全更新有了升级，一定要及时升级。平时运行 CGI 脚本时不要使用 Apache 的用户，如果有可能尽量使用 <code class="highlighter-rouge">suEXEC</code>。</p>
+
+<h4 id="缓存中投毒">缓存中投毒</h4>
+
+<p>如果把 httpd 作为一个缓存代理服务运行，也存在缓存被投毒的风险。缓存投毒是一个宽泛的术语，是指在攻击时，攻击者会让代理服务器从源服务器获取错误的内容，通常是不需要的内容。</p>
+
+<p>例如，如果运行 httpd 的系统中也运行了 DNS 服务，如果该服务容易遭受 DNS 缓存投毒，当从源服务器请求内容时，攻击者有可能控制把 httpd 连接到哪里。另一个例子是 HTTP 伪装请求攻击。</p>
+
+<p>攻击者可能会生成一系列请求，利用源服务器的漏洞来控制代理服务器获得的内容。</p>
+
+<h4 id="拒绝服务">拒绝服务</h4>
+
+<p>借助 <code class="highlighter-rouge">Vary</code> 机制，允许把同一个 URL 的不同变体并排保存在缓存中。根据客户端提供的标头值，缓存将选择正确的变体返回给客户端。如果知道某个标头中含有很多个可能值，该机制就会成为一个问题，比如 <code class="highlighter-rouge">User-Agent</code> 标头。视乎网站的火热程度，同一个 URL 可能会有成千上万个重复的缓存条目，让其它条目无法生存。</p>
+
+<p>在其它情况下，有可能会为每个请求修改某个资源的 URL，通常是在后面追加一个称为 cachebuster 的字符串。如果该内容声称自己可被缓存，并可保鲜很长时间，这些条目就可以把缓存中合法的条目排挤出去。然而 <code class="highlighter-rouge">mod_cache</code> 还有一个 <code class="highlighter-rouge">CacheIgnoreURLSessionIdentifiers</code> 指令，要小心使用，以确保下游的代理或浏览器缓存不会成为拒绝服务攻击的目标。</p>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/apache" class="page__taxonomy-item" rel="tag">apache</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/cache" class="page__taxonomy-item" rel="tag">cache</a><span class="sep">  </span>
+    
+		
+      <a href="/tag/缓存" class="page__taxonomy-item" rel="tag">缓存</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://linotes.netlify.com/categories/#server" class="page__taxonomy-item" rel="tag">server</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2016-01-02T00:00:00+08:00">January 02, 2016</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="https://linotes.netlify.com/server/apache.binding/" class="pagination--pager" title="上一页
+">Apache 地址绑定</a>
+    
+    
+      <a href="https://linotes.netlify.com/server/apache.common.conf/" class="pagination--pager" title="下一页
+">Apache 常用配置指令</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">相关文章</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/kernel/filedescriptor/" rel="permalink">文件描述符简介
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash03/" rel="permalink">Bash 入门 03
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">循环，变量，函数，捕捉信号
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash02/" rel="permalink">Bash 入门 02
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">正则表达式，SED，AWK，条件结构，交互式脚本
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash01/" rel="permalink">Bash 入门 01
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">Bash 与 Bash 脚本，脚本的编写与调试，Bash 环境
+</p>
+-->
+
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+    
+    
+    
+    
+    <li><a href="https://linotes.netlify.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="https://linotes.netlify.com/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

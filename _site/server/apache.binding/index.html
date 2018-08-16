@@ -1,0 +1,664 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.9.1 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="zh" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Apache 地址绑定 - LINOTES</title>
+<meta name="description" content="本节内容来自 Apache HTTP Server 2.4 官方文档。">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="LINOTES">
+<meta property="og:title" content="Apache 地址绑定">
+<meta property="og:url" content="https://linotes.netlify.com/server/apache.binding/">
+
+
+  <meta property="og:description" content="本节内容来自 Apache HTTP Server 2.4 官方文档。">
+
+
+
+  <meta property="og:image" content="https://linotes.netlify.com/assets/images/header/datacenter-3.jpg">
+
+
+
+
+
+  <meta property="article:published_time" content="2016-01-02T00:00:00+08:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://linotes.netlify.com/server/apache.binding/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="https://linotes.netlify.com/feed.xml" type="application/atom+xml" rel="alternate" title="LINOTES Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="https://linotes.netlify.com/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+
+
+
+
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="https://linotes.netlify.com/">LINOTES</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/app/rsync/" >Rsync 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/server/vsftpd/" >Vsftpd 的用法</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/kernel/filedescriptor/" >文件描述符简介</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://linotes.netlify.com/tools/tools.datastream/" >数据流处理</a>
+            </li>
+          
+        </ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">切换菜单</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+  
+
+
+
+
+
+
+
+
+
+
+
+<div class="page__hero--overlay"
+  style=" background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('https://linotes.netlify.com/assets/images/header/datacenter-3.jpg');"
+>
+  
+    <div class="wrapper">
+      <h1 class="page__title" itemprop="headline">
+        
+          Apache 地址绑定
+
+        
+      </h1>
+      
+        <p class="page__lead">本节内容来自 Apache HTTP Server 2.4 <a href="https://httpd.apache.org/docs/2.4/zh-cn/">官方文档</a>。
+</p>
+      
+      
+      
+    </div>
+  
+  
+</div>
+
+
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="https://linotes.netlify.com/assets/images/bio-photo.jpg" alt="Hawk Zhang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Hawk Zhang</h3>
+    
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">关注</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">北京</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:imhawkz@gmail.com">
+            <meta itemprop="email" content="imhawkz@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> 电子邮箱
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/hawkzhang" itemprop="sameAs">
+            <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+    
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">切换菜单</label>
+  <ul class="nav__items">
+    
+  </ul>
+</nav>
+    
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Apache 地址绑定">
+    <meta itemprop="description" content="本节内容来自 Apache HTTP Server 2.4 官方文档。">
+    <meta itemprop="datePublished" content="January 02, 2016">
+    
+
+    <div class="page__inner-wrap">
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-copy"></i> Apache 地址绑定</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#apache-绑定地址与端口">Apache 绑定地址与端口</a>
+    <ul>
+      <li><a href="#listen-指令">Listen 指令</a></li>
+      <li><a href="#修改侦听配置对重启的影响">修改侦听配置对重启的影响</a></li>
+      <li><a href="#ipv6-配置">IPv6 配置</a></li>
+      <li><a href="#设定侦听协议">设定侦听协议</a></li>
+      <li><a href="#地址绑定与虚拟主机的关系">地址绑定与虚拟主机的关系</a></li>
+    </ul>
+  </li>
+</ul>
+            </nav>
+          </aside>
+        
+        <h2 id="apache-绑定地址与端口">Apache 绑定地址与端口</h2>
+
+<p>配置 Apache HTTP Server 侦听特定的地址和端口。</p>
+
+<p>相关模块 ：<code class="highlighter-rouge">core</code>，<code class="highlighter-rouge">mpm_common</code></p>
+
+<p>相关指令 ：<code class="highlighter-rouge">&lt;VirtualHost&gt;</code>，<code class="highlighter-rouge">Listen</code></p>
+
+<p>httpd 启动时，它会绑定到本地主机上的一些端口和地址，然后等待传入请求。它默认会侦听本地的所有地址。然而，实际上只需要侦听某些端口、某些地址。绑定通常会与虚拟主机功能合并在一起，共同决定 httpd 如何面对不同的 IP 地址、主机名、端口。</p>
+
+<h3 id="listen-指令"><code class="highlighter-rouge">Listen</code> 指令</h3>
+
+<p><code class="highlighter-rouge">Listen</code> 指令会告诉服务端只接受特定 <strong>端口</strong> 或 <strong>地址-端口</strong> 组合传入的请求。</p>
+
+<p>如果 <code class="highlighter-rouge">Listen</code> 只指定了一个端口号，服务端则在所有网络接口上侦听这个端口。</p>
+
+<p>如果指定了一个地址、一个端口号，服务端只在该接口上侦听该端口。</p>
+
+<p>如果指定多个地址和端口，服务端会在这些地址上侦听指定的端口。</p>
+
+<h4 id="范例">范例</h4>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Listen</span> <span class="m">80</span>
+<span class="n">Listen</span> <span class="m">8000</span>
+</code></pre></div></div>
+
+<p>服务端会接受所有接口上来自 80 和 8000 两个端口的连接。</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Listen</span> <span class="m">192</span>.<span class="m">0</span>.<span class="m">2</span>.<span class="m">1</span>:<span class="m">80</span>
+<span class="n">Listen</span> <span class="m">192</span>.<span class="m">0</span>.<span class="m">2</span>.<span class="m">5</span>:<span class="m">8000</span>
+</code></pre></div></div>
+
+<p>服务端会接受一个接口上的 80 端口的连接，以及另一个接口上的 8000 端口的连接。</p>
+
+<p>IPv6 地址必须用方括号括起来：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Listen</span> [<span class="m">2001</span>:<span class="n">db8</span>::<span class="n">a00</span>:<span class="m">20</span><span class="n">ff</span>:<span class="n">fea7</span>:<span class="n">ccea</span>]:<span class="m">80</span>
+</code></pre></div></div>
+
+<p class="notice--warning">如果 <code class="highlighter-rouge">Listen</code> 指令设定的地址、端口发生叠加会导致严重错误，服务端会无法启动。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(48)Address already in use: make_sock: could not bind to address [::]:80
+</code></pre></div></div>
+
+<h3 id="修改侦听配置对重启的影响">修改侦听配置对重启的影响</h3>
+
+<p>修改了 <code class="highlighter-rouge">Listen</code> 指令之后，如果新配置与原配置是冲突的，要想让新配置生效，必须先停止服务，然后再启动。</p>
+
+<p>因为在重启期间，httpd 会始终保持原配置的绑定，以避免对新的传入连接产生 “连接被拒绝” 错误。如果新旧配置有冲突，服务端就会被终止。</p>
+
+<h3 id="ipv6-配置">IPv6 配置</h3>
+
+<p>越来越多的平台开始部署 IPv6，在这些平台上，APR 也开始支持 IPv6，允许 httpd 使用 IPv6 套接字来处理请求。</p>
+
+<p>对于管理员来说，一个复杂的因素是，IPv6 的套接字是否既能处理 IPv4 的连接，又能处理 IPv6 的连接。用 IPv6 的套接字来处理 IPv4 的连接，这些 IPv6 套接字使用的是 IPv4 映射的 IPv6 地址，在多数平台都默认允许使用的，除了 FreeBSD、NetBSD、OpenBSD，是为了匹配其系统范围内的策略。</p>
+
+<p>另一方面，在一些平台上，如 Linux，要想同时处理 IPv6 和 IPv4，唯一的办法就是使用映射地址。要想让 httpd 用最少数量的套接字来处理 IPv4 和 IPv6 的连接，需要指定 <code class="highlighter-rouge">--enable-v4-mapped</code> 配置选项。</p>
+
+<p>如果希望 httpd 只处理 IPv4 的连接，只需在所有 <code class="highlighter-rouge">Listen</code> 指令中指定一个 IPv4 地址即可：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Listen</span> <span class="m">0</span>.<span class="m">0</span>.<span class="m">0</span>.<span class="m">0</span>:<span class="m">80</span>
+<span class="n">Listen</span> <span class="m">192</span>.<span class="m">0</span>.<span class="m">2</span>.<span class="m">1</span>:<span class="m">80</span>
+</code></pre></div></div>
+
+<p>如果希望用不同的套接字来分别处理 IPv4 和 IPv6 的连接，可以指定 <code class="highlighter-rouge">--disable-v4-mapped</code> 配置选项。</p>
+
+<h3 id="设定侦听协议">设定侦听协议</h3>
+
+<p>协议参数在 <code class="highlighter-rouge">Listen</code> 是可选的，通常是不需要的。在没有指定的情况下，端口 443 的默认协议为 https，所有其它端口默认协议为 http。协议参数是用来决定使用哪个模块来处理请求的，并使用 <code class="highlighter-rouge">AcceptFilter</code> 指令来进行特定协议的优化。</p>
+
+<p>只有在使用非标准端口时才需要指定协议，如在端口 8443 上运行 https 协议：</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Listen</span> <span class="m">192</span>.<span class="m">170</span>.<span class="m">2</span>.<span class="m">1</span>:<span class="m">8443</span> <span class="n">https</span>
+</code></pre></div></div>
+
+<h3 id="地址绑定与虚拟主机的关系">地址绑定与虚拟主机的关系</h3>
+
+<p><code class="highlighter-rouge">Listen</code> 指令不会部署虚拟主机，它只告诉主服务端去侦听什么地址和端口。如果没有使用 <code class="highlighter-rouge">&lt;VirtualHost&gt;</code> 指令，服务端对所有接受的请求以相同的方式对待。然而，可以用 <code class="highlighter-rouge">&lt;VirtualHost&gt;</code> 来为一个或多个地址或端口指定不同的行为。</p>
+
+<p>要想部署一个虚拟主机，服务端首先必须被告知要侦听哪个地址和端口，然后为该地址和端口创建一个 <code class="highlighter-rouge">&lt;VirtualHost&gt;</code> 区块，来设定该虚拟主机的行为。如果设定的地址和端口是服务端没有在侦听的，它就无法被访问。</p>
+
+        
+      </section>
+
+
+
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+	<hr />
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> 标签: </strong>
+    <span itemprop="keywords">
+    
+		
+      <a href="/tag/apache" class="page__taxonomy-item" rel="tag">apache</a>
+    
+    </span>
+  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> 分类: </strong>
+	<!--  <hr />    -->
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="https://linotes.netlify.com/categories/#server" class="page__taxonomy-item" rel="tag">server</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> 更新时间:</strong> <time datetime="2016-01-02T00:00:00+08:00">January 02, 2016</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="https://linotes.netlify.com/tools/vi/" class="pagination--pager" title="上一页
+">Linux 的使用 - VIM</a>
+    
+    
+      <a href="https://linotes.netlify.com/server/apache.caching/" class="pagination--pager" title="下一页
+">Apache 缓存</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">相关文章</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/kernel/filedescriptor/" rel="permalink">文件描述符简介
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash03/" rel="permalink">Bash 入门 03
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">循环，变量，函数，捕捉信号
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash02/" rel="permalink">Bash 入门 02
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">正则表达式，SED，AWK，条件结构，交互式脚本
+</p>
+-->
+
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="https://linotes.netlify.com/programming/bash01/" rel="permalink">Bash 入门 01
+</a>
+      
+    </h2>
+    
+
+<!--
+    <p class="archive__item-excerpt" itemprop="description">Bash 与 Bash 脚本，脚本的编写与调试，Bash 环境
+</p>
+-->
+
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>关注:</strong></li>
+    
+    
+    
+    
+    
+    
+    <li><a href="https://linotes.netlify.com/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 Hawk Zhang. 技术来自于 <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="https://linotes.netlify.com/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>
