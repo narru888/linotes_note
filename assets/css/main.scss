@@ -320,9 +320,10 @@ section.page__content blockquote {
 
 
 // ---- 斜体字不许倾斜
-section.page__content p em {
+section.page__content p em,
+ol li em {
     font-style: normal;
-    color: #292929;
+    color: #202020;
 }
 
 
