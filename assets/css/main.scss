@@ -39,7 +39,8 @@ $calisto: "Calisto MT", serif !default;
 $garamond: Garamond, serif !default;
 
 $global-font-family: $sans-serif !default;
-$header-font-family: "Roboto", Segoe UI, Helvetica Neue, Lucida Grande, "Microsoft YaHei" !default;
+//- $header-font-family: "Roboto", Segoe UI, Helvetica Neue, Lucida Grande, "Microsoft YaHei" !default;
+$header-font-family: "Roboto Light", "Hiragino Sans GB", Segoe UI, Helvetica Neue, Lucida Grande, Microsoft YaHei !default;
 $caption-font-family: $serif !default;
 
 
@@ -58,30 +59,7 @@ $caption-font-family: $serif !default;
 
 
 
-
-/*
-$doc-font-size: 16 !default;
-
-$type-size-1: 1.5em;
-$type-size-2: 1.3em;
-$type-size-3: 1.03em;
-$type-size-4: 1.0em;
-$type-size-5: 0.9em;
-$type-size-6: 0.85em;
-$type-size-7: 0.8em;
-$type-size-8: 0.7em;
-
-$type-size-body: 0.8em;
-$type-size-code: 1em;
-
-
-$type-size-h1: 1.8em;
-$type-size-h2: 1.5em;
-$type-size-h3: 1.3em;
-$type-size-h4: 1.1em;
-$type-size-h5: 0.9em;
-$type-size-h6: 0.8em;
-*/
+//---  所有字体大小
 
 
 
@@ -106,22 +84,6 @@ $type-size-h3: 1.3rem;
 $type-size-h4: 1.1rem;
 $type-size-h5: 0.9rem;
 $type-size-h6: 0.8rem;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
