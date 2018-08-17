@@ -14,7 +14,7 @@
   {% assign category_hashes = page_categories | split: ',' | sort %}
 
   <p class="page__taxonomy">
-    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> {{ site.data.ui-text[site.locale].categories_label | default: "Categories:" }} </strong>
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> </strong>
 	<!--  <hr />    -->
     <span itemprop="keywords">
     {% for hash in category_hashes %}
@@ -25,3 +25,8 @@
     </span>
   </p>
 {% endif %}
+
+
+{% comment %}
+	原分类{{ site.data.ui-text[site.locale].categories_label | default: "Categories:" }} 
+{% endcomment %}
