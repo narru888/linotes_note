@@ -15,7 +15,7 @@
 
   <p class="page__taxonomy">
 	<!--  <hr />  -->
-    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> {{ site.data.ui-text[site.locale].tags_label | default: "Tags:" }} </strong>
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i></strong>
     <span itemprop="keywords">
     {% for tag in page.tags %}
 		{% capture tag_name %}{{ tag }}{% endcapture %}
