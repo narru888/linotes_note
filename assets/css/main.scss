@@ -280,6 +280,7 @@ section.page__content blockquote {
 
 // ---- 斜体字不许倾斜
 section.page__content p em,
+div.initial-content div#main article div section ul li em,
 ol li em {
     font-style: normal;
     color: #202020;
