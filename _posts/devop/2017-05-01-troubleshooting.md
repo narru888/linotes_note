@@ -36,6 +36,35 @@ hard nofile 10240
 
 
 
+#### 检查网络中哪些地址在线
+
+192.168.1.0/24 网络中，哪些 IP 地址在线。
+
+能 ping 通则认为在线，ping 的返回值为 0 则认为是通的。
+
+```bash
+#!/bin/bash
+for ip in `seq 1 255`
+do
+  ping -c 1 192.168.1.$ip > /dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    echo 192.168.1.$ip UP
+  else
+    echo 192.168.1.$ip DOWN
+  fi
+done
+wait
+```
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -411,6 +440,27 @@ $ hexdump -C somefile
 ## 操作系统
 
 
+
+
+### 用户管理
+
+批量添加 20 个用户，用户名为 `user01~20`，密码为 `user + 5个随机字符`
+
+```bash
+#!/bin/bash
+for i in `seq -f"%02g" 1 20`;do
+  useradd user$i
+  echo "user$i-`head -1 /dev/urandom|sha1sum|cut -c 1-5`" | passwd –stdin user$i >/dev/null 2>&1
+done
+```
+
+
+
+
+
+
+
+
 ### Linux 启动顺序
 
 * BIOS
@@ -423,6 +473,21 @@ $ hexdump -C somefile
 * basic.target
 * multi-user.target
 * graphical.target"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
