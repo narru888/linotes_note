@@ -225,18 +225,46 @@ $ sudo nginx -s reload
 
 #### 一主多从，主失效，提升从为主
 
-* 查看所有从服务器的复制位置：`SHOW SLAVE STATUS` 返回的结果中查看 `Master_Log_Pos`，选择最新的做为新主
-* 让所有*从*把中继日志执行完毕
-* 在新主上执行 `STOP SLAVE`
-* 修改 `my.cnf`，启用 `log-bin`，重启 mysql
-* 在新主上执行 `CHANGE MASTER TO`，再执行 `RESET SLAVE`，这样就从其原主断开了
-* 用 `SHOW MASTER STATUS` 查看新主的二进制日志坐标，记下来
-* 在每个从上运行 `CHANGE MASTER TO` 命令，指向新主，使用上一步记下来的坐标
+* **查看** 所有从服务器的复制 **位置**：`SHOW SLAVE STATUS` 返回的结果中查看 `Master_Log_Pos`，选择最新的做为新*主*
+* 让所有*从*把 **中继日志执行完毕**
+* 新*主* **停止做从**：在新主上执行 `STOP SLAVE`
+* 新*主* **启用二进制日志**：修改 `my.cnf`，启用 `log-bin`，重启 mysql
+* 把新*主* **从其原主断开**：执行 `CHANGE MASTER TO` 及 `RESET SLAVE`
+* 记录新主的 **二进制日志坐标**：用 `SHOW MASTER STATUS`
+* 所有从 **指向新主**：所有*从*上运行 `CHANGE MASTER TO` 命令，指向新主，使用上一步记下来的坐标
 
 
 
 
+#### 恢复数据
 
+由于误操作 drop 语句，导致数据库数据破坏。需要进行增量恢复：
+
+1、查看备份与binlog文件
+
+2、刷新并备份binlog文件
+
+       mysqladmin -uroot -pmysql123 -S /data/mysql.sockflush-logs
+
+3、将binlog文件恢复成sql语句
+
+       mysqlbinlog --no-defaults mysql-bin.000061 mysql-bin.000062 >bin.sql
+
+4、将其中误操作的语句删除（就是drop的动作）
+
+5、解压全备文件，恢复全备文件
+
+   gzip -d mysql_backup_2016-10-12.sql.gz
+
+   mysql -uroot -pmysql123 -S/data/3306/mysql.sock < mysql_backup_2016-10-12.sql
+
+如果有对表的操作，恢复数据时需要接表名
+
+6、恢复误操作前的binlog文件记录的sql语句
+
+   mysql -uroot -pmysql123 -S/data/3306/mysql.sock < bin.sql
+
+最后登陆数据库，查看数据是否恢复成功，如果有确定的误操作时间，就直接恢复这段时间的数据即可
 
 
 
