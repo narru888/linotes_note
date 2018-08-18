@@ -60,6 +60,25 @@ wait
 
 
 
+#### 权威 DNS 与递归 DNS
+
+##### 权威 DNS
+
+权威 DNS 是特定域名记录在域名注册商处所设置的 DNS 服务器，**用于特定域名的管理**（增加、删除、修改等）。权威 DNS 服务器 **只对自己拥有的域名进行解析**，对于不是自己的域名则 **拒绝访问**。
+
+##### 递归 DNS
+
+递归 DNS 也称本地 DNS 或 **缓存 DNS**，用于域名查询。
+
+递归 DNS 会 **迭代权威服务器返回的应答**，直至最终查询到的 IP 地址，将其返回给客户端，并将请求结果缓存到本地。
+
+
+
+
+
+#### 智能 DNS
+
+用户发起 DNS 解析请求时，先判断该用户来自于哪个运营商，然后将请求 **转发给该运营商指定的 IP 地址** 进行解析，避免跨运营访问网，目的在于 **提升解析速度**。
 
 
 
@@ -575,4 +594,58 @@ done
 
 ```bash
 $ echo `expr $[RANDOM%4] + 6`
+```
+
+
+
+
+
+
+
+
+
+
+
+### 调试
+
+
+
+
+#### 检查脚本是否能正常运行
+
+>本题的逻辑有些白痴，权当熟悉脚本用了。
+
+如果可以正常运行，返回提示消息；如果运行错误，键入 V 或 v，会用 vim 自动打开脚本，键入 Q 或 q 或任意键可忽略并退出。
+
+```bash
+#!/bin/bash
+if [ ${#1} == 0 ] ; then
+  read -p "please type in the script name : " file
+else
+  file=$1
+fi
+
+# run the script if it's not empty
+if [ -f $file ]; then
+  sh -n $file > /dev/null 2>&1
+  if [ $? -ne 0 ]; then
+    read -p "Syntax error detected. Press Q to exit. Press V to open it with vim" answer
+    case $answer in
+	v | V )
+      vim $file
+      ;;
+    q | Q)
+      exit 0
+      ;;
+    *)
+      exit 0
+      ;;
+    esac
+  else
+    echo 'no error detected, congratulations!'
+  fi
+else
+  echo "$file not exist"
+  exit 1
+fi
 ```
