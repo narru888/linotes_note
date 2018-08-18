@@ -16,12 +16,14 @@ header:
 
 
 
-## 网络服务
+## 网络管理
 
 
 
 
 ### 系统
+
+
 
 
 #### 修改 http 的最大并发请求数
@@ -79,6 +81,23 @@ wait
 #### 智能 DNS
 
 用户发起 DNS 解析请求时，先判断该用户来自于哪个运营商，然后将请求 **转发给该运营商指定的 IP 地址** 进行解析，避免跨运营访问网，目的在于 **提升解析速度**。
+
+
+
+
+#### 端口转发
+
+将对本地 80 端口的请求转发到本地 8080 端口，IP 地址为 10.0.0.254。
+
+```bash
+$ iptables -A PREROUTING -t nat \
+	-p tcp -d 10.0.0.254 --dport 80 \
+	-j DNAT --to-destination 10.0.0.254:8080
+```
+
+
+
+
 
 
 
@@ -149,6 +168,28 @@ MaxRequestWorkers 3"
 * 服务端应答：返回应答消息，并告知自己数据端口号S，控制连接建立；
 * 客户端发起数据连接：从C+1端口连接到服务器S端口；
 * 服务端应答：返回应答消息，数据连接建立。
+
+
+
+
+
+
+### nginx
+
+
+#### 作反向代理时，如何在日志中保存访客真实 IP 地址
+
+```conf
+proxy_set_header X-Real-IP $remote_addr;
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+proxy_set_header Host $http_host;
+```
+
+修改完配置，重新加载配置：
+
+```bash
+$ sudo nginx -s reload
+```
 
 
 
@@ -299,6 +340,24 @@ root          3  0.0  0.0      0     0 ?        S    06:58   0:00 [ksoftirqd/0]
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## 安全
 
 
@@ -309,6 +368,8 @@ root          3  0.0  0.0      0     0 ?        S    06:58   0:00 [ksoftirqd/0]
 ```bash
 $ cat /dev/urandom | head -10 | sha512sum | head -c 32
 ```
+
+
 
 
 
@@ -425,6 +486,8 @@ $ ls -lR /var/log/ | grep "^-" | wc -l
 
 
 
+
+
 ### 查看文件
 
 
@@ -444,6 +507,13 @@ $ hexdump -C somefile
 
 
 
+### 文件操作
+
+
+
+#### 对特定大小的文件进行操作
+
+将 `/usr/local/test` 目录下大于 100K 的文件拷贝到 `/tmp` 目录中。
 
 
 
