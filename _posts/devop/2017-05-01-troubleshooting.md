@@ -238,6 +238,11 @@ $ sudo nginx -s reload
 
 #### 恢复数据
 
+
+
+
+##### 误删除数据库
+
 更详细的步骤，见[用二进制日志进行时间点增量恢复](https://linotes.imliloli.com/mysql/backup/#用二进制日志进行时间点增量恢复)。
 
 如果动作足够快，恢复数据的机会就比较大。如果用的是 InnoDB，成功的机率更大，MyISAM 的成功极低。
@@ -252,6 +257,16 @@ $ sudo nginx -s reload
 如果 `innodb_file_per_table` 没有启用，只需要把 MySQL 停掉就好。建议先杀掉 `safe_mysqld`，然后用 `kill -9` 杀掉 mysqld 进程。
 
 如果启用了 `innodb_file_per_table`，则立即卸载 MySQL 用来保存数据的分区。如果数据目录位于根目录，建议立即关机，或至少立即为磁盘制作镜像。
+
+
+
+
+
+
+
+
+
+
 
 
 
