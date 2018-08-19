@@ -246,9 +246,11 @@ $ sudo nginx -s reload
 
 恢复的步骤会根据 `innodb_file_per_table` 的设置而有所不同。如果 `innodb_file_per_table` 没有启用，则被删的表格是保存在共享表空间 `ibdata1` 中。如果启用了（MySQL 5.5 之后默认启用），则被删除的表格应该保存在对应的 `.ibd` 文件中。删除表格时，MySQL 会同时删除该文件。
 
+第一件事是停止任何可能的写入，防止被删的表格被覆盖。
 
 
-The very first thing to do is to stop any possible writes so your table isn't overwritten. If innodb_file_per_table is OFF it's enough to stop MySQL (kill -9 is even better, but make sure you kill safe_mysqld first). If innodb_file_per_table is ON then umount partition where MySQL stores its data. If the datadir is on the root partition I recommend to shut down server or at least take an image of the disk. Let me repeat, the goal is to prevent overwriting dropped table by MySQL or operating system.
+
+If innodb_file_per_table is OFF it's enough to stop MySQL (kill -9 is even better, but make sure you kill safe_mysqld first). If innodb_file_per_table is ON then umount partition where MySQL stores its data. If the datadir is on the root partition I recommend to shut down server or at least take an image of the disk. Let me repeat, the goal is to prevent overwriting dropped table by MySQL or operating system.
 
 There is a tool that allows to work with InnoDB pages at low level,
 [TwinDB data recovery toolkit](https://github.com/twindb/undrop-for-innodb). I will use it to illustrate undrop recovery.
