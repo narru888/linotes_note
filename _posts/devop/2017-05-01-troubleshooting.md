@@ -244,9 +244,9 @@ $ sudo nginx -s reload
 
 主要原因是，当 MySQL 执行 `DROP TABLE` 或 `DROP DATABASE` 的时候，InnoDB 实际上没有真正把数据清除掉，含有该数据的内存页面仍然在磁盘中。
 
+恢复的步骤会根据 `innodb_file_per_table` 的设置而有所不同。如果 `innodb_file_per_table` 没有启用，则被删的表格是保存在共享表空间 `ibdata1` 中。如果启用了（MySQL 5.5 之后默认启用），则被删除的表格应该保存在对应的 `.ibd` 文件中。删除表格时，MySQL 会同时删除该文件。
 
 
-Depending on innodb_file_per_table setting the recovery process differs. If innodb_file_per_table is OFF (default up until 5.5) then the dropped table remains in ibdata1. If innodb_file_per_table is ON (default as of 5.5) then the dropped table was in the respective .ibd file. MySQL removes this file when drops the table.
 
 The very first thing to do is to stop any possible writes so your table isn't overwritten. If innodb_file_per_table is OFF it's enough to stop MySQL (kill -9 is even better, but make sure you kill safe_mysqld first). If innodb_file_per_table is ON then umount partition where MySQL stores its data. If the datadir is on the root partition I recommend to shut down server or at least take an image of the disk. Let me repeat, the goal is to prevent overwriting dropped table by MySQL or operating system.
 
