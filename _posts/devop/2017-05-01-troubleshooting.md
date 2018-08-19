@@ -238,13 +238,13 @@ $ sudo nginx -s reload
 
 #### 恢复数据
 
-由于误操作 drop 语句，导致数据库数据破坏。需要进行增量恢复：
+由于误操作 drop 语句，导致数据库数据破坏。需要进行 **增量恢复**：
 
 1、查看备份与binlog文件
 
 2、刷新并备份binlog文件
 
-       mysqladmin -uroot -pmysql123 -S /data/mysql.sockflush-logs
+       mysqladmin flush-logs -uroot -pmysql123 -S /data/mysql.sock
 
 3、将binlog文件恢复成sql语句
 
