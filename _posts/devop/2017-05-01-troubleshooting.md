@@ -240,33 +240,67 @@ $ sudo nginx -s reload
 
 更详细的步骤，见[用二进制日志进行时间点增量恢复](https://linotes.imliloli.com/mysql/backup/#用二进制日志进行时间点增量恢复)。
 
-由于误操作 drop 语句，导致数据库数据破坏。需要进行 **增量恢复**：
+如果动作足够快，恢复数据的机会就比较大。如果用的是 InnoDB，成功的机率更大，MyISAM 的成功极低。
 
-1、查看备份与binlog文件
+主要原因是，当 MySQL 执行 `DROP TABLE` 或 `DROP DATABASE` 的时候，InnoDB 实际上没有真正把数据清除掉，含有该数据的内存页面仍然在磁盘中。
 
-2、刷新并备份binlog文件
 
-mysqladmin flush-logs -uroot -pmysql123 -S /data/mysql.sock
 
-3、将binlog文件恢复成sql语句
+Depending on innodb_file_per_table setting the recovery process differs. If innodb_file_per_table is OFF (default up until 5.5) then the dropped table remains in ibdata1. If innodb_file_per_table is ON (default as of 5.5) then the dropped table was in the respective .ibd file. MySQL removes this file when drops the table.
 
-       mysqlbinlog --no-defaults mysql-bin.000061 mysql-bin.000062 >bin.sql
+The very first thing to do is to stop any possible writes so your table isn't overwritten. If innodb_file_per_table is OFF it's enough to stop MySQL (kill -9 is even better, but make sure you kill safe_mysqld first). If innodb_file_per_table is ON then umount partition where MySQL stores its data. If the datadir is on the root partition I recommend to shut down server or at least take an image of the disk. Let me repeat, the goal is to prevent overwriting dropped table by MySQL or operating system.
 
-4、将其中误操作的语句删除（就是drop的动作）
+There is a tool that allows to work with InnoDB pages at low level,
+[TwinDB data recovery toolkit](https://github.com/twindb/undrop-for-innodb). I will use it to illustrate undrop recovery.
 
-5、解压全备文件，恢复全备文件
+You need to take the media with dropped table (either ibdata1 or disk image) and find InnoDB pages on it. stream_parser tool from the toolkit does it.
 
-   gzip -d mysql_backup_2016-10-12.sql.gz
+```
+./stream_parser -f /path/to/disk/image
+```
 
-   mysql -uroot -pmysql123 -S/data/3306/mysql.sock < mysql_backup_2016-10-12.sql
+It will scan the file, find the InnoDB pages and sort them by type and index_id. index_id is an identifier that InnoDB uses to refer to an index. A table is stored in index PRIMARY. To find what index_id is your dropped table you need to [recover InnoDB dictionary](https://twindb.com/how-to-recover-innodb-dictionary/).
 
-如果有对表的操作，恢复数据时需要接表名
+The InnoDB dictionary is stored in ibdat1 file. You need to scan ibdata1 file the same way as above:
 
-6、恢复误操作前的binlog文件记录的sql语句
+```
+./stream_parser -f /var/lib/mysql/ibdata1
+```
 
-   mysql -uroot -pmysql123 -S/data/3306/mysql.sock < bin.sql
+Now you need to get records from the InnoDB dictionary tables SYS_TABLES and SYS_INDEXES(let's say your table is sakila.actor):
 
-最后登陆数据库，查看数据是否恢复成功，如果有确定的误操作时间，就直接恢复这段时间的数据即可
+```
+./c_parser -4Df pages-ibdata1/FIL_PAGE_INDEX/0000000000000001.page -t dictionary/SYS_TABLES.sql | grep sakila/actor
+000000000B28  2A000001430D4D  SYS_TABLES  "sakila/actor"  158  4  1 0   0   ""  0
+```
+
+158 is table_id, remember it.
+
+```
+./c_parser -4Df pages-ibdata1/FIL_PAGE_INDEX/0000000000000003.page -t dictionary/SYS_INDEXES.sql | grep 158
+000000000B28    2A000001430BCA  SYS_INDEXES     158     376     "PRIMARY"       1       3       0       4294967295
+000000000B28    2A000001430C3C  SYS_INDEXES     158     377     "idx\_actor\_last\_name"        1       0       0       4294967295
+```
+
+So, index_id of your dropped table(sakila.actor) is 376.
+
+Now you can fetch records of the dropped table from InnoDB index_id 376.
+You need to have the table structure of the dropped table, exactly CREATE TABLE statement which the table was created with. Where you can get it? Either from old backup, or from elsewhere. It's also possible to recover the structure from the InnoDB dictionary, but I won't cover it in this answer. Let's just assume you have it.
+
+```
+./c_parser -6f pages-ibdata1/FIL_PAGE_INDEX/0000000000000376.page -t actor.sql > dump.tsv 2> load_cmd.sql
+```
+
+c_parser outputs records as tab-separated dump to stdout. The dump can be loaded with LOAD DATA command. c_parser prints it to stderr.
+
+
+
+
+
+
+
+
+
 
 
 
