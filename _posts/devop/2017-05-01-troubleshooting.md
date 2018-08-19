@@ -240,7 +240,7 @@ $ sudo nginx -s reload
 
 更详细的步骤，见[用二进制日志进行时间点增量恢复](https://linotes.imliloli.com/mysql/backup/#用二进制日志进行时间点增量恢复)。
 
-如果动作足够快，恢复数据的机会就比较大。如果用的是 InnoDB，成功的机率更大，MyISAM 的成功极低。原因是，当 MySQL 执行 `DROP TABLE` 或 `DROP DATABASE` 的时候，InnoDB 实际上没有真正把数据清除掉，含有该数据的内存页面仍然在磁盘中。
+如果动作足够快，恢复数据的机会就比较大。如果用的是 InnoDB，成功的机率更大，MyISAM 的成功极低。原因是，当 MySQL 执行 `DROP TABLE` 或 `DROP DATABASE` 的时候，InnoDB 实际上没有真正把数据清除掉，含有该数据的页面仍然在磁盘中。
 
 首要操作是 **停止任何可能的写入**，防止被删的表格被 MySQL 或操作系统覆盖。
 {: .notice--info}
