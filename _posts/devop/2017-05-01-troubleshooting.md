@@ -807,11 +807,22 @@ Tasks: 173 total,   1 running, 172 sleeping,   0 stopped,   0 zombie
 
 `si` ：Software Interrupt，用于软件中断的时间
 
-`st` ：stolen，hypervisor 从本虚拟机偷走的时间
+`st` ：Steal Time，虚拟 CPU 等待实体 CPU 分配时间片的机率，越大，性能越差
 
+##### 内存占用
 
+这部分内容占两行。
 
+```
+KiB Mem :   999964 total,    69656 free,   670256 used,   260052 buff/cache
+KiB Swap:  1048572 total,  1042664 free,     5908 used.   113800 avail Mem
+```
 
+第一行为物理内存：总量，可用量，已用量，缓冲区大小
+
+第二行为虚拟内存：总量，可用量，已用量，物理可用量
+
+第二行的 `avail` 是物理内存中，可用来启动程序的可用内存的估值，
 
 
 
