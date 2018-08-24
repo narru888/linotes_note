@@ -576,121 +576,6 @@ mysql> SHOW PROCESSLIST;
 
 
 
-
-
-
-
-
-
-
-## 进程管理
-
-
-
-
-
-
-
-### 查看当前进程列表
-
-```bash
-$ ps aux
-USER        PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
-root          1  0.0  0.5 193628  5092 ?        Ss   06:58   0:03 /usr/lib/systemd/systemd --switched-root --
-root          2  0.0  0.0      0     0 ?        S    06:58   0:00 [kthreadd]
-root          3  0.0  0.0      0     0 ?        S    06:58   0:00 [ksoftirqd/0]
-... ...
-```
-
-`VSZ`: 进程占用的 **虚拟内存空间**
-
-`RSS`: 进程占用的 **实际物理内存空间**
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## 安全
-
-
-### 密码
-
-
-#### 生成 32 位随机密码
-
-用 `/dev/urandom` 做种子，用 `sha512sum` 计算，用 `head -c` 取任意位。
-
-```bash
-$ cat /dev/urandom | head -10 | sha512sum | head -c 32
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## 文件系统
 
 
@@ -847,6 +732,57 @@ $ hexdump -C somefile
 
 
 ## 操作系统
+
+
+
+
+
+
+
+### 系统状态
+
+
+
+#### `uptime`
+
+* 当前时间
+* 系统已运行时间
+* 已登陆用户数量
+* 最近 1 分钟、5 分钟、15 分钟内系统平均负载
+
+
+
+#### `w`
+
+* 已登陆用户
+* 登陆用户产生的进程
+
+
+
+
+### 进程管理
+
+
+
+#### 查看当前进程列表
+
+```bash
+$ ps aux
+USER        PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root          1  0.0  0.5 193628  5092 ?        Ss   06:58   0:03 /usr/lib/systemd/systemd --switched-root --
+root          2  0.0  0.0      0     0 ?        S    06:58   0:00 [kthreadd]
+root          3  0.0  0.0      0     0 ?        S    06:58   0:00 [ksoftirqd/0]
+... ...
+```
+
+`VSZ`: 进程占用的 **虚拟内存空间**
+
+`RSS`: 进程占用的 **实际物理内存空间**
+
+
+
+
+
 
 
 
@@ -1041,4 +977,24 @@ else
   echo "$file not exist"
   exit 1
 fi
+```
+
+
+
+
+
+
+
+
+
+
+### 密码
+
+
+#### 生成 32 位随机密码
+
+用 `/dev/urandom` 做种子，用 `sha512sum` 计算，用 `head -c` 取任意位。
+
+```bash
+$ cat /dev/urandom | head -10 | sha512sum | head -c 32
 ```
