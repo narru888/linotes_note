@@ -253,7 +253,11 @@ $ sudo nginx -s reload
 
 ##### 恢复完全备份
 
+恢复之前由 mysqldump 做的完全备份的文件 `dump.sql`：
 
+```bash
+$ mysql -uroot -p database_name < dump.sql
+```
 
 
 ##### 定位二进制日志文件
