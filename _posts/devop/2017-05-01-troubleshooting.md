@@ -830,8 +830,12 @@ KiB Swap:  1048572 total,  1042664 free,     5908 used.   113800 avail Mem
 
 在查看界面，可以按 `e` 来切换所用的单位。
 
-
-
+```
+PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND                                
+  1 root      20   0  193628   4980   2944 S   0.0  0.5   0:03.00 systemd                                
+  2 root      20   0       0      0      0 S   0.0  0.0   0:00.01 kthreadd                               
+  3 root      20   0       0      0      0 S   0.0  0.0   0:00.01 ksoftirqd/0   
+```
 
 
 
