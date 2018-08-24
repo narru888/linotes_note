@@ -1108,3 +1108,44 @@ fi
 ```bash
 $ cat /dev/urandom | head -10 | sha512sum | head -c 32
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 文本流
+
+
+
+#### 读取文件指定部分内容
+
+读取文件第 5-15 行的内容。
+
+```bash
+$ cat test
+1
+2
+3
+4
+5bbb
+6xxxxxxxxxx  
+7123i4i44
+8
+9
+10
+11
+12
+13ffffff
+14fffff
+15bbbbbb
+16
+17nnnnnn
+```
