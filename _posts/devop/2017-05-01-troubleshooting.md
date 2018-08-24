@@ -272,25 +272,40 @@ mysql> SHOW MASTER STATUS;
 ```
 
 
-##### 提取日志事件
+##### 把二进制日志转换为文本，并修改
 
 从二进制日志中执行事件，可以实现对数据变更进行重做。借此可以来恢复某个时间范围内所发生的数据修改。
 
-`mysqlbinlog` 命令可以把二进制日志文件中的事件，由二进制格式转换为文本格式，以便用来执行或查看。可以基于事件 **时间** 或 **位置** 来选择事件。
+`mysqlbinlog` 命令可以把二进制日志文件中的事件，由二进制格式 **转换** 为文本格式，以便用来执行或查看。可以基于事件 **时间** 或 **位置** 来选择事件。
 
-用 mysql 客户端处理 `mysqlbinlog` 输出的日志事件：
+把二进制日志转换为文本，并修改：
 
 ```bash
-shell> mysqlbinlog binlog_files | mysql -u root -p
+shell> mysqlbinlog binlog_files > tmpfile
+shell> vi tmpfile
 ```
 
-######
+编辑文本文件，找到误操作的语句，如 `DROP DATABASE`，将其删除。如果有其它想要删除的，可以一并进行。
 
 
+##### 执行修改过的日志文件
 
+```bash
+shell> mysql -u root -p < tmpfile
+```
 
+###### 多个日志文件的执行
 
+如果有一个以上的二进制日志要执行，比较安全的办法是用一个连接来处理所有文件。
 
+如下这种方法很不安全：
+
+```bash
+shell> mysqlbinlog binlog.000001 | mysql -u root -p # DANGER!!
+shell> mysqlbinlog binlog.000002 | mysql -u root -p # DANGER!!
+```
+
+🚩 如果第一个日志中包含 `CREATE TEMORARY TABLE` 语句，而第二个日志包含要使用该临时表格的语句，这种用不同的连接来处理二进制日志的方法就会产生问题。
 
 
 
