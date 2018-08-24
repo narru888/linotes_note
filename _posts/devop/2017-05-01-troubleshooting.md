@@ -21,7 +21,7 @@ header:
 
 
 
-### 系统
+### 系统设置
 
 
 
@@ -353,6 +353,62 @@ mysqlbinlog --start-position=368315 \
             --stop-position=368312 mysql_bin.000001 \
             | mysql -u root -ppassword database_name
 ```
+
+
+
+
+### 监控
+
+
+#### 查看当前进程
+
+在 shell 中查看：
+
+```bash
+mysqladmin processlist -uroot -p -h 127.0.0.1
+Enter password:
++----+-----------------+-----------------+----+---------+-------+--------------------------------------------------------+------------------+
+| Id | User            | Host            | db | Command | Time  | State                                                  | Info             |
++----+-----------------+-----------------+----+---------+-------+--------------------------------------------------------+------------------+
+| 4  | system user     |                 |    | Connect | 20045 | Connecting to master                                   |                  |
+| 5  | system user     |                 |    | Query   | 7947  | Slave has read all relay log; waiting for more updates |                  |
+| 6  | event_scheduler | localhost       |    | Daemon  | 20045 | Waiting on empty queue                                 |                  |
+| 17 | root            | localhost:33820 |    | Query   | 0     | starting                                               | show processlist |
++----+-----------------+-----------------+----+---------+-------+--------------------------------------------------------+------------------+
+```
+
+使用 `-h` 是为了通过 TCP socket 连接，以便在结果中显示连接的端口号。
+
+在 mysql 客户端查看：
+
+```sql
+mysql> SHOW PROCESSLIST;     
++----+-----------------+-----------+------+---------+-------+------------------------+------------------+
+| Id | User            | Host      | db   | Command | Time  | State                  | Info             |
++----+-----------------+-----------+------+---------+-------+------------------------+------------------+
+|  4 | event_scheduler | localhost | NULL | Daemon  | 20110 | Waiting on empty queue | NULL             |
+|  8 | root            | localhost | NULL | Query   |     0 | starting               | SHOW PROCESSLIST |
++----+-----------------+-----------+------+---------+-------+------------------------+------------------+
+2 rows in set (0.00 sec)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
