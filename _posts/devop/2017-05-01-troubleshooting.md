@@ -799,7 +799,15 @@ Tasks: 173 total,   1 running, 172 sleeping,   0 stopped,   0 zombie
 
 `ni` ：nice，运行 niced 用户进程的时间
 
+`id` ：idle，内核空闲处理器所用的时间
 
+`wa` ：IO-wait，等待 I/O 完成所用的时间
+
+`hi` ：Hardware Interrupt，用于硬件中断的时间
+
+`si` ：Software Interrupt，用于软件中断的时间
+
+`st` ：stolen，hypervisor 从本虚拟机偷走的时间
 
 
 
