@@ -262,10 +262,6 @@ $ mysql -uroot -p database_name < dump.sql
 
 ##### 确定当前二进制日志文件
 
-时间点恢复的信息源是 **一组增量备份**，即在完全备份之后生成的二进制日志文件。因此，必须使用 `--log-bin` 选项以启用二进制日志。
-
-通常二进制日志位于数据目录中。
-
 ###### 查看所有二进制日志文件
 
 ```sql
@@ -342,8 +338,23 @@ shell> mysql -u root -p < tmpfile
 
 ##### 按时间或位置执行日志
 
-以上步骤就可以完成恢复任务了。除了以上方法，还可以先在二进制日志中查明误操作发生的时间和位置，然后用指定时间范围或位置范围来执行二进制日志，省去 “转换日志格式 - 修改 - 执行” 的麻烦。
+以上步骤就可以完成恢复任务了。除了以上方法，还可以先在二进制日志中查明误操作发生的时间和位置，然后用指定时间范围或位置范围来执行二进制日志。
 
+基于时间范围来恢复：
+
+```bash
+mysqlbinlog --start-datetime="2005-04-20 10:01:00" \
+            --stop-datetime="2005-04-20 9:59:59" mysql_bin.000001 \
+            | mysql -u root -ppassword database_name
+```
+
+基于位置范围来恢复：
+
+```bash
+mysqlbinlog --start-position=368315 \
+            --stop-position=368312 mysql_bin.000001 \
+            | mysql -u root -ppassword database_name
+```
 
 
 
