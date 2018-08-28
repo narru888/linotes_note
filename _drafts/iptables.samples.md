@@ -62,7 +62,7 @@ iptables -I FORWARD -s 192.168.0.0/24 -m string --string "色情" -j DROP
 iptables -I FORWARD -p tcp --sport 80 -m string --string "广告" -j DROP
 #禁止ay2000.net，宽频影院，色情，广告网页连接 ！但中文 不是很理想
 iptables -A FORWARD -m ipp2p --edk --kazaa --bit -j DROP
-iptables -A FORWARD -p tcp -m ipp2p --ares -j DROP 
+iptables -A FORWARD -p tcp -m ipp2p --ares -j DROP
 iptables -A FORWARD -p udp -m ipp2p --kazaa -j DROP
 #禁止BT连接
 iptables -A FORWARD -p tcp --syn --dport 80 -m connlimit --connlimit-above 15 --connlimit-mask 24 -j DROP
@@ -82,3 +82,96 @@ iptables -I INPUT -s 192.168.0.50 -j ACCEPT
 iptables -I FORWARD -s 192.168.0.50 -j ACCEPT
 #192.168.0.50是我的机子，全部放行！
 ############################完
+
+
+
+
+
+
+
+
+
+### 限制匹配的用途：
+
+
+
+
+1、限制特定包传入速度
+
+参数 -m limit --limit
+
+范例 iptables -A INPUT -m limit --limit 3/hour
+
+说明 用来比对某段时间内封包的平均流量，上面的例子是用来比对：每小时平均流量是否超过一次 3 个封包。 除了每小时平均
+
+次外，也可以每秒钟、每分钟或每天平均一次，默认值为每小时平均一次，参数如后： /second、 /minute、/day。 除了进行封
+
+数量的比对外，设定这个参数也会在条件达成时，暂停封包的比对动作，以避免因骇客使用洪水攻击法，导致服务被阻断。
+
+2、限制特定包瞬间传入的峰值
+
+参数 --limit-burst
+
+范例 iptables -A INPUT -m limit --limit-burst 5
+
+说明 用来比对瞬间大量封包的数量，上面的例子是用来比对一次同时涌入的封包是否超过 5 个（这是默认值），超过此上限的封
+
+将被直接丢弃。使用效果同上。
+
+3、使用--limit限制ping的一个例子
+
+限制同时响应的 ping (echo-request) 的连接数
+
+限制每分只接受一个 icmp echo-request 封包（注意：当已接受1个icmp echo-request 封包后，
+
+iptables将重新统计接受之后的一秒内接受的icmp echo-request 封包的个数，此刻为0个，所以它会继续接受icmp echo-request包，
+
+出现的结果是你在1分钟时间内将看到很多
+
+Reply from 192.168.0.111: bytes=32 time<1ms TTL=64
+
+Reply from 192.168.0.111: bytes=32 time<1ms TTL=64
+
+Reply from 192.168.0.111: bytes=32 time<1ms TTL=64
+
+Reply from 192.168.0.111: bytes=32 time<1ms TTL=64
+
+Reply from 192.168.0.111: bytes=32 time<1ms TTL=64
+
+Reply from 192.168.0.111: bytes=32 time<1ms TTL=64
+
+Reply from 192.168.0.111: bytes=32 time<1ms TTL=64
+
+Reply from 192.168.0.111: bytes=32 time<1ms TTL=64
+
+响应结果，若你同时开好几个ping窗口，你会发现任一时刻只有一个会有响应//--limit 1/m 所限制）
+
+#iptables -A INPUT -p icmp --icmp-type echo-request -m limit --limit 1/m --limit-burst 1 -j ACCEPT
+
+#iptables -A INPUT -p icmp --icmp-type echo-request -j DROP
+
+--limit 1/s 表示每秒一次; 1/m 则为每分钟一次
+
+--limit-burst 表示允许触发 limit 限制的最大次数 (预设 5)
+
+4、用户自定义使用链
+
+上面例子的另一种实现方法：
+
+#iptables -N pinglimit
+
+#iptables -A pinglimit -m limit --limit 1/m --limit-burst 1 -j ACCEPT
+
+#iptables -A pinglimit -j DROP
+
+#iptables -A INPUT -p icmp --icmp-type echo-request -j pinglimit
+
+5、防范 SYN-Flood 碎片攻击
+
+#iptables -N syn-flood
+
+#iptables -A syn-flood -m limit --limit 100/s --limit-burst 150 -j RETURN
+
+#iptables -A syn-flood -j DROP
+
+#iptables -I INPUT -j syn-flood
