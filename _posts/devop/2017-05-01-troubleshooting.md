@@ -250,7 +250,9 @@ $ iptables -A PREROUTING -t nat \
 
 #### 禁止特定 IP 地址访问
 
-
+```
+iptables -A INPUT -s 192.168.1.55 -j REJECT
+```
 
 
 
