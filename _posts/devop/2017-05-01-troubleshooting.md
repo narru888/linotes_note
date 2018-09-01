@@ -276,7 +276,7 @@ iptables -A INPUT -s 192.168.1.55 -j REJECT
 
 ##### 解决：
 
-确认当前系统 conntrack 的内核参数：
+###### 确认当前系统 conntrack 的内核参数：
 
 ```bash
 sudo sysctl -a | grep conntrack
@@ -289,10 +289,23 @@ sudo sysctl -a | grep conntrack | grep timeout
 
 不同协议的不同状态有不同的超时时间。（注意记录里的状态只是个标识，跟连接本身的状态不一定是一一映射的关系，跟协议的标准或实现更是完全没有关系。）
 
+###### 修改连接追踪表的大小
 
+查看当前设置的追踪表大小：
 
+```bash
+$ sysctl net.netfilter.nf_conntrack_buckets
+net.netfilter.nf_conntrack_buckets = 8192
+```
 
+查看最大追踪连接数：
 
+最大追踪连接数默认值为: `nf_conntrack_buckets` * 4
+
+```bash
+$ sysctl net.netfilter.nf_conntrack_max
+net.netfilter.nf_conntrack_max = 31248
+```
 
 
 
