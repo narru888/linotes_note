@@ -258,7 +258,18 @@ iptables -A INPUT -s 192.168.1.55 -j REJECT
 
 #### 日志报错
 
+```bash
+$ tail -1 /var/log/messages
+kernel:nf_conntrack:tablefull,dropping packet
+```
 
+iptables 的连接追踪表满了，开始丢包，可能的原因是过于频繁的连接、关闭，总之是某些原因导致了旧的连接追踪没有被及时删除，所以才会把追踪表塞满。
+
+连接追踪表的大小取决于系统的内存容量。
+
+解决：
+
+*
 
 
 
