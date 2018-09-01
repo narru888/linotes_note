@@ -281,12 +281,6 @@ sudo sysctl -a | grep conntrack
 sudo sysctl -a | grep conntrack | grep timeout
 ```
 
-第一条会返回全部的 conntrack 参数，第二条过滤超时相关的参数，如 `net.netfilter.nf_conntrack_tcp_timeout_established`。
-
-超时参数的值代表保存 conntrack 记录的秒数，从某个连接收到的最后一个包后开始超时倒计时，倒数到 0 就会清除记录，倒计时期间如果又收到数据包，倒数会被重置。
-
-不同协议的不同状态有不同的超时时间。（注意记录里的状态只是个标识，跟连接本身的状态不一定是一一映射的关系，跟协议的标准或实现更是完全没有关系。）
-
 ###### 修改连接追踪表的大小
 
 查看当前设置的追踪表大小 `nf_conntrack_buckets`：
