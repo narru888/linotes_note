@@ -291,12 +291,20 @@ sudo sysctl -a | grep conntrack | grep timeout
 
 ###### 修改连接追踪表的大小
 
-查看当前设置的追踪表大小：
+查看当前设置的追踪表大小 `nf_conntrack_buckets`：
 
 ```bash
 $ sysctl net.netfilter.nf_conntrack_buckets
 net.netfilter.nf_conntrack_buckets = 8192
 ```
+
+`nf_conntrack_buckets` 代表追踪表的大小。在追踪表中，每个条目称为一个 bucket。如果在加载模块时没有指定参数，其默认大小为 `全部内存/16384`，但不可小于 32，不可大于 16384 个 buckets。对于内存大于 4G 的系统，会设置为 65536 个 buckets。
+
+
+
+
+
+
 
 查看最大追踪连接数：
 
