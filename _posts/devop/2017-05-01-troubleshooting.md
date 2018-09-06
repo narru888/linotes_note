@@ -268,27 +268,11 @@ iptables -A INPUT -s 192.168.1.55 -j REJECT
 
 ##### 原因：
 
-服务器访问量大，内核 netfilter 模块 conntrack 相关参数配置不合理，导致 IP 包被丢掉，连接无法建立。
-
-
+服务器访问量大，内核 netfilter 模块 conntrack 相关参数配置不合理，散列表被填满，导致 IP 数据包被丢弃，连接无法建立。
 
 ##### 解决：
 
-###### 确认当前系统 conntrack 的内核参数：
-
-```bash
-sudo sysctl -a | grep conntrack
-sudo sysctl -a | grep conntrack | grep timeout
-```
-
-###### 修改连接追踪表的大小
-
-查看当前设置的追踪表大小 `nf_conntrack_buckets`：
-
-```bash
-$ sysctl net.netfilter.nf_conntrack_buckets
-net.netfilter.nf_conntrack_buckets = 8192
-```
+###### 
 
 
 
@@ -298,14 +282,6 @@ net.netfilter.nf_conntrack_buckets = 8192
 
 
 
-查看最大追踪连接数：
-
-最大追踪连接数默认值为: `nf_conntrack_buckets` * 4
-
-```bash
-$ sysctl net.netfilter.nf_conntrack_max
-net.netfilter.nf_conntrack_max = 31248
-```
 
 
 
