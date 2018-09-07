@@ -278,16 +278,51 @@ iptables -A INPUT -s 192.168.1.55 -j REJECT
 
 
 
+#### 查看连接追踪表信息
 
+查看追踪表中所有条目：
 
+```bash
+$ sudo cat /proc/net/nf_conntrack
+ipv4     2 tcp      6 299 ESTABLISHED src=192.168.1.6 dst=192.168.1.77 sport=11385 dport=22 src=192.168.1.77 dst=192.168.1.6 sport=22 dport=11385 [ASSURED] mark=0 secctx=system_u:object_r:unlabeled_t:s0 zone=0 use=2
+ipv4     2 tcp      6 60 SYN_SENT src=192.168.1.77 dst=192.168.1.78 sport=60638 dport=3306 [UNREPLIED] src=192.168.1.78 dst=192.168.1.77 sport=3306 dport=60638 mark=0 secctx=system_u:object_r:unlabeled_t:s0 zone=0 use=2
+```
 
+查看条目总量上限：
 
+```bash
+$ sysctl net.netfilter.nf_conntrack_max
+net.netfilter.nf_conntrack_max = 31248
 
+$ cat /proc/sys/net/netfilter/nf_conntrack_max
+31248
+```
 
+查看当前已有条目：
 
+```bash
+$ sysctl net.netfilter.nf_conntrack_count
+net.netfilter.nf_conntrack_count = 3
 
+$ cat /proc/sys/net/netfilter/nf_conntrack_count
+3
+```
 
+查看追踪表大小：
 
+```bash
+$ sysctl net.netfilter.nf_conntrack_buckets
+net.netfilter.nf_conntrack_buckets = 8192
+
+$ cat /proc/sys/net/netfilter/nf_conntrack_buckets
+8192
+```
+
+计算负载系数：
+
+`Load Factor` = `nf_conntrack_count` / `nf_conntrack_buckets`
+
+如果负载系数超过 0.67 就要考虑扩容追踪表了。
 
 
 
