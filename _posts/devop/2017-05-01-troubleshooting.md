@@ -946,6 +946,11 @@ PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
 
 #### 查看当前进程列表
 
+`ps aux` 和 `ps -ef ` 两者的输出结果差别不大，但显示风格不同。
+
+* aux 是 BSD 风格，-ef 是 System V 风格
+* aux 会截断 command 列，而 -ef 不会
+
 ```bash
 $ ps aux
 USER        PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
@@ -958,6 +963,14 @@ root          3  0.0  0.0      0     0 ?        S    06:58   0:00 [ksoftirqd/0]
 `VSZ`: 进程占用的 **虚拟内存空间**
 
 `RSS`: 进程占用的 **实际物理内存空间**
+
+```bash
+$ ps -ef
+UID         PID   PPID  C STIME TTY          TIME CMD
+root          1      0  0 15:16 ?        00:00:02 /usr/lib/systemd/systemd --switched-root --system --deseria
+root          2      0  0 15:16 ?        00:00:00 [kthreadd]
+root          3      2  0 15:16 ?        00:00:00 [ksoftirqd/0]
+```
 
 
 
