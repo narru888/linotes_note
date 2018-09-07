@@ -897,6 +897,14 @@ PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
 
 
 
+
+
+
+
+
+
+
+
 ### 进程管理
 
 
@@ -918,6 +926,23 @@ root          3  0.0  0.0      0     0 ?        S    06:58   0:00 [ksoftirqd/0]
 
 
 
+#### 查看进程来源
+
+根据 PID 查看进程是由哪个应用程序产生的：
+
+```bash
+$ sudo ls -l /proc/2232/exe
+lrwxrwxrwx. 1 root root 0 Sep  7 15:18 /proc/2322/exe -> /usr/sbin/mysqld
+```
+
+
+
+
+
+
+
+
+
 
 
 
@@ -925,6 +950,11 @@ root          3  0.0  0.0      0     0 ?        S    06:58   0:00 [ksoftirqd/0]
 
 
 ### 用户管理
+
+
+
+
+#### 批量添加用户
 
 批量添加 20 个用户，用户名为 `user01~20`，密码为 `user + 5个随机字符`
 
@@ -935,6 +965,12 @@ for i in `seq -f"%02g" 1 20`;do
   echo "user$i-`head -1 /dev/urandom|sha1sum|cut -c 1-5`" | passwd –stdin user$i >/dev/null 2>&1
 done
 ```
+
+
+
+
+
+
 
 
 
