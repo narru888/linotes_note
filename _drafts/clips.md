@@ -37,7 +37,7 @@ gallery:
 
 ![image-center](/assets/images/){: .align-center}
 
-[【 更多... 】](/handbook/handbook-/#)
+
 
 
 ## Notice
