@@ -408,9 +408,11 @@ sudo yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm
 
 PHP 7.2 是较新的稳定版本，现在的大部分 PHP 框架和应用都支持，包括 WordPress、Drupal、Joomla、Laravel 等。
 
+因为 Nginx 并没有内置对 PHP 文件的处理能力，因此需要单独安装一个应用来处理 PHP 文件，如 `php-fpm`。
+
 ```bash
 $ sudo yum --enablerepo="remi-php72" install -y \
-  php php-common php-opcache php-mcrypt php-cli php-gd php-curl php-mysqlnd
+  php php-common php-opcache php-mcrypt php-cli php-gd php-curl php-mysqlnd php-fpm
 ```
 
 检查是否安装成功：
@@ -454,14 +456,9 @@ $ sudo systemctl restart httpd
 要提前把 Nginx 安装好，以便自动创建 `nginx` 用户，在下面的配置中会用到该用户。
 {: .notice--primary}
 
-因为 Nginx 并没有内置对 PHP 文件的处理能力，因此需要单独安装一个应用来处理 PHP 文件，如 PHP FPM。
 
 
-##### 安装 PHP FPM
 
-```bash
-$ sudo yum --enablerepo="remi-php72" install -y php-fpm
-```
 
 
 ##### 修改 PHP 配置

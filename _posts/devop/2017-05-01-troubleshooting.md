@@ -364,6 +364,191 @@ $ sudo firewall-cmd --permanent --add-service=http
 
 
 
+## PHP 7.2
+
+
+
+
+### 安装
+
+
+#### 安装依赖仓库
+
+```bash
+sudo yum install epel-release
+sudo yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+```
+
+
+#### 安装 PHP
+
+安装 PHP 及常用模块，包括 php-gd 以及 php-fpm。
+
+```bash
+$ sudo yum --enablerepo="remi-php72" install -y \
+  php php-common php-opcache php-mcrypt php-cli php-gd php-curl php-mysqlnd php-fpm
+```
+
+
+#### 检查版本
+
+检查是否安装成功：
+
+```bash
+$ php -v
+
+PHP 7.2.9 (cli) (built: Aug 15 2018 09:19:33) ( NTS )
+Copyright (c) 1997-2018 The PHP Group
+Zend Engine v3.2.0, Copyright (c) 1998-2018 Zend Technologies
+    with Zend OPcache v7.2.9, Copyright (c) 1999-2018, by Zend Technologies
+```
+
+
+#### 修改安全配置：
+
+PHP 在找不到完全匹配的 PHP 文件时，默认会尝试最接近的文件。该特性容易被利用，以向请求中插入恶意代码。
+
+```bash
+$ sudo vi /etc/php.ini
+
+cgi.fix_pathinfo=0
+```
+
+
+
+
+
+
+### 配置 PHP 与 Apache 工作
+
+直接重启 Apache 就可以直接使用了：
+
+```bash
+$ sudo systemctl restart httpd
+```
+
+
+
+
+
+### 配置 PHP 与 Nginx 工作
+
+要提前把 Nginx 安装好，以便自动创建 `nginx` 用户，在下面的配置中会用到该用户。
+{: .notice--primary}
+
+
+##### 修改 PHP 配置
+
+```bash
+$ sudo vi /etc/php-fpm.d/www.conf
+
+...
+user = nginx
+group = nginx
+listen = /var/run/php-fpm/php-fpm.sock
+listen.owner = nginx
+listen.group = nginx
+```
+
+##### 启动 PHP FPM
+
+修改之后，可以激活并启动 PHP FPM 守护进程了：
+
+```bash
+$ sudo systemctl enable php-fpm
+$ sudo systemctl start php-fpm
+```
+
+##### 修改 Nginx 配置
+
+修改 Nginx 的虚拟服务器配置，以便 Nginx **有能力处理 PHP**。
+
+```bash
+$ sudo vi /etc/nginx/conf.d/default.conf
+```
+
+
+```conf
+server {
+    listen  80;
+    server_name  server_domain_name_or_IP;
+
+    root   /usr/share/nginx/html;
+    index index.php index.html index.htm;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+    error_page 404 /404.html;
+    error_page 500 502 503 504 /50x.html;
+    location = /50x.html {
+        root /usr/share/nginx/html;
+    }
+
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_pass unix:/var/run/php-fpm/php-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+}
+```
+
+##### 测试 Nginx 配置文件的语法是否正确：
+
+```bash
+$ sudo nginx -t
+
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+```
+
+##### 重新加载 Nginx 配置
+
+```bash
+$ sudo nginx -s reload
+```
+
+
+##### 测试
+
+在 Nginx 根目录创建一个 PHP 文件，然后访问配置的域名或地址。
+
+```bash
+$ sudo vi  /usr/share/nginx/html/index.php
+
+<?php phpinfo(); ?>
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Apache
 
 
