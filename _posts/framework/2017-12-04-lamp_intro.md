@@ -559,6 +559,15 @@ $ sudo systemctl restart nginx
 ```
 
 
+##### 测试是否能处理 PHP
+
+在 Nginx 根目录创建一个 PHP 文件。
+
+```bash
+$ sudo vi  /usr/share/nginx/html/index.php
+
+<?php phpinfo(); ?>
+```
 
 
 
