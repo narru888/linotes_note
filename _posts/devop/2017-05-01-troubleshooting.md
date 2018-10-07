@@ -497,7 +497,92 @@ proxy_set_header Host $http_host;
 
 
 
-## MySQL
+## MySQL / MariaDB
+
+
+
+
+
+
+### 安装
+
+
+#### MySQL
+
+首先必须用浏览器访问 MySQL 的 [官方仓库](https://dev.mysql.com/downloads/repo/yum/)，在对应的平台下面可以看到诸如 (mysql80-community-release-el7-1.noarch.rpm) 这样的文件名，将其替换到下面的命令中进行下载。
+
+```bash
+$ sudo wget https://dev.mysql.com/get/mysql80-community-release-el7-1.noarch.rpm
+```
+
+最好进行一下校验：
+
+```bash
+$ md5sum mysql80-community-release-el7-1.noarch.rpm
+```
+
+将校验码与网页上的对照。
+
+安装 MySQL 官方仓库：
+
+```bash
+$ sudo rpm -ivh mysql80-community-release-el7-1.noarch.rpm
+```
+
+正式安装 MySQL Server：
+
+```bash
+$ sudo yum install mysql-server
+```
+
+启动后，会为 root 用户随机产生密码：
+
+```bash
+$ sudo grep 'temporary password' /var/log/mysqld.log
+```
+
+
+#### MariaDB
+
+
+```bash
+$ sudo yum install mariadb-server
+```
+
+MariaDB 安装成功后，默认 root 密码为空。
+
+
+
+#### 安全处理
+
+```bash
+$ sudo mysql_secure_installation
+```
+
+包括 root 密码、移除匿名用户、禁止 root 远程登陆、移除测试数据库、重载用户权限表。
+
+
+
+
+
+
+
+
+### 守护进程
+
+
+```bash
+$ sudo systemctl status mysqld
+$ sudo systemctl enable mysqld
+$ sudo systemctl start mysqld
+
+$ sudo systemctl status mariadb
+$ sudo systemctl enable mariadb
+$ sudo systemctl start mariadb
+```
+
+
+
 
 
 
