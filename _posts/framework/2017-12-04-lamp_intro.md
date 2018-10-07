@@ -526,6 +526,31 @@ MariaDB 做为以替代 MySQL 为目标的产品，越来越被认可，并已�
 
 
 
-### MySQL 的安装
+### MariaDB 的安装
 
-CentOS
+
+
+
+#### CentOS 中安装 MariaDB
+
+```bash
+$ sudo yum install mariadb-server
+```
+
+
+##### 管理守护进程：
+
+```bash
+$ sudo systemctl status mariadb
+$ sudo systemctl enable mariadb
+$ sudo systemctl start mariadb
+```
+
+
+##### 安全处理：
+
+```bash
+$ sudo mysql_secure_installation
+```
+
+包括 root 密码、移除匿名用户、禁止 root 远程登陆、移除测试数据库、重载用户权限表。
