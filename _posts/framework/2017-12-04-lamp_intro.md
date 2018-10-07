@@ -472,8 +472,8 @@ $ sudo vi /etc/php-fpm.d/www.conf
 user = nginx
 group = nginx
 listen = /var/run/php-fpm/php-fpm.sock
-listen.owner = nobody
-listen.group = nobody
+listen.owner = nginx
+listen.group = nginx
 ```
 
 
@@ -526,7 +526,7 @@ server {
 
 ```conf
 server {
-    listen       80;
+    listen  80;
     server_name  server_domain_name_or_IP;
 
     # 这些行最初在 "location /" 段落
@@ -552,10 +552,21 @@ server {
 }
 ```
 
+测试 Nginx 配置文件的语法是否正确：
+
+```bash
+$ sudo nginx -t
+
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+```
+
 重启 Nginx 服务，使新配置生效。
 
 ```bash
 $ sudo systemctl restart nginx
+# 或直接让 Nginx 重载配置
+$ sudo nginx -s reload
 ```
 
 
@@ -568,6 +579,8 @@ $ sudo vi  /usr/share/nginx/html/index.php
 
 <?php phpinfo(); ?>
 ```
+
+
 
 
 
