@@ -451,6 +451,9 @@ $ sudo systemctl restart httpd
 
 #### 配置 PHP 与 Nginx 工作
 
+要提前把 Nginx 安装好，以便自动创建 `nginx` 用户，在下面的配置中会用到该用户。
+{: .notice--primary}
+
 因为 Nginx 并没有内置对 PHP 文件的处理能力，因此需要单独安装一个应用来处理 PHP 文件，如 PHP FPM。
 
 
