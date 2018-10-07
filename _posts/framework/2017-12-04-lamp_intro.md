@@ -424,6 +424,15 @@ Zend Engine v3.2.0, Copyright (c) 1998-2018 Zend Technologies
     with Zend OPcache v7.2.9, Copyright (c) 1999-2018, by Zend Technologies
 ```
 
+修改安全配置：
+
+```bash
+$ sudo vi /etc/php.ini
+
+cgi.fix_pathinfo=0
+```
+
+
 
 
 
