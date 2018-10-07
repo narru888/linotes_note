@@ -623,6 +623,7 @@ MariaDB 做为以替代 MySQL 为目标的产品，越来越被认可，并已�
 $ sudo yum install mariadb-server
 ```
 
+MariaDB 安装成功后，默认 root 密码为空。
 
 ##### 管理守护进程：
 
