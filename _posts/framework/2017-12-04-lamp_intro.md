@@ -489,7 +489,37 @@ $ sudo systemctl start php-fpm
 
 ##### 修改 Nginx 配置
 
-修改 Nginx 的虚拟服务器配置，以便 Nginx 可以处理 PHP。
+修改 Nginx 的虚拟服务器配置，以便 Nginx **有能力处理 PHP**。
+
+`/etc/nginx/` 目录中提供了一个默认的配置模板，名为 `nginx.conf.default`，可以据此来修改成新的配置，置于 `/etc/nginx/conf.d/` 目录下。
+
+```bash
+sudo cp /etc/nginx/nginx.conf.default /etc/nginx/conf.d/
+```
+
+通常其默认内容大致为：
+
+```conf
+server {
+    listen       80;
+    server_name  localhost;
+
+    location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+    }
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+}
+```
+
+我们需要做几处修改：
+
+* 将 `index.php` 做为默认索引文件，用户直接访问目录时默认提供该文件
+* 修改 `server_name`，指向虚拟主机域名或 IP 地址
+* 
 
 ```conf
 server {
