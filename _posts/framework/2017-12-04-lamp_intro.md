@@ -426,6 +426,8 @@ Zend Engine v3.2.0, Copyright (c) 1998-2018 Zend Technologies
 
 修改安全配置：
 
+PHP 在找不到完全匹配的 PHP 文件时，默认会尝试最接近的文件。该特性容易被利用，以向请求中插入恶意代码。
+
 ```bash
 $ sudo vi /etc/php.ini
 
@@ -469,7 +471,9 @@ $ sudo vi /etc/php-fpm.d/www.conf
 ...
 user = nginx
 group = nginx
-listen = /run/php-fpm/www.sock
+listen = /var/run/php-fpm/php-fpm.sock
+listen.owner = nobody
+listen.group = nobody
 ```
 
 
