@@ -331,6 +331,23 @@ $ cat /proc/sys/net/netfilter/nf_conntrack_buckets
 
 
 
+### FirewallD
+
+
+
+#### 添加端口
+
+```bash
+$ sudo firewall-cmd --permanent --add-service=http
+```
+
+
+
+
+
+
+
+
 
 
 
@@ -416,6 +433,34 @@ MaxRequestWorkers 3"
 ## Nginx
 
 
+
+### 安装
+
+```bash
+$ sudo yum install nginx
+```
+
+
+
+### 通用操作
+
+
+
+#### 重新加载配置：
+
+```bash
+$ sudo nginx -s reload
+```
+
+
+
+
+
+
+
+### 反向代理
+
+
 #### 作反向代理时，如何在日志中保存访客真实 IP 地址
 
 ```conf
@@ -424,11 +469,6 @@ proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 proxy_set_header Host $http_host;
 ```
 
-修改完配置，重新加载配置：
-
-```bash
-$ sudo nginx -s reload
-```
 
 
 
@@ -1054,7 +1094,36 @@ done
 
 
 
+### SELinux
 
+
+
+#### 检查状态
+
+```bash
+$ sestatus
+```
+
+
+
+#### 禁用 SELinux
+
+```bash
+$ sudo setenforce 0
+```
+
+该方法仅在当前禁用，重启后恢复。
+
+永远禁用：
+
+```bash
+$ sudo vi /etc/selinux/config
+
+SELINUX=disabled
+```
+
+
+####
 
 
 
