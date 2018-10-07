@@ -521,3 +521,11 @@ $ sudo systemctl restart nginx
 
 
 ## MySQL
+
+MariaDB 做为以替代 MySQL 为目标的产品，越来越被认可，并已广泛被接受。关于 [MariaDB VS MySQL](https://mariadb.com/kb/en/library/mariadb-vs-mysql-compatibility/) 的比较也已经很清楚明朗。
+
+
+
+### MySQL 的安装
+
+CentOS
