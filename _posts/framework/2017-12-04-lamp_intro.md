@@ -519,14 +519,32 @@ server {
 
 * 将 `index.php` 做为默认索引文件，用户直接访问目录时默认提供该文件
 * 修改 `server_name`，指向虚拟主机域名或 IP 地址
-* 
+* 指定错误返回码的页面文件，默认被注释，取消注释即可使用
+* 取消注释 `try_files`，使 Nginx 不会将无效的请求也转发给 PHP 处理程序
+
+修改之后的内容：
 
 ```conf
 server {
-...
+    listen       80;
+    server_name  server_domain_name_or_IP;
+
+    # 这些行最初在 "location /" 段落
+    root   /usr/share/nginx/html;
+    index index.php index.html index.htm;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+    error_page 404 /404.html;
+    error_page 500 502 503 504 /50x.html;
+    location = /50x.html {
+        root /usr/share/nginx/html;
+    }
+
     location ~ \.php$ {
         try_files $uri =404;
-        fastcgi_pass unix:/run/php-fpm/www.sock;
+        fastcgi_pass unix:/var/run/php-fpm/php-fpm.sock;
         fastcgi_index index.php;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         include fastcgi_params;
