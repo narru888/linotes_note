@@ -65,6 +65,9 @@ LAMP 是指一组通常一起使用来运行动态网站或者服务器的自由
 
 
 
+
+
+
 ### PHP 简介
 
 
@@ -150,7 +153,10 @@ PHP 软件是与网页服务器一起工作的，网页服务器负责发送网�
 
 
 
+
+
 ### PHP 的运行模式
+
 
 
 
@@ -167,7 +173,6 @@ PHP 包含多个 SAPI 模块，以实现与网页服务器的多种通信方式�
 ![image-center](/assets/images/apache_sapi_php.png){: .align-center}
 
 以下就几种常用的 SAPI 来探讨 PHP 的运行模式。
-
 
 
 
@@ -202,7 +207,6 @@ LoadModule php5_module modules/mod_php5.so
 另外，还可以在运行时动态加载 `mod_php` 模块，但需要提前把模块编译为动态链接库。需要加载时，可以向服务器发送信号 `HUP` 或 `AP_SIG_GRACEFUL`，apache 收到信号就会重新加载模块，无需重启服务器。
 
 
-
 ##### 工作原理
 
 apache 会为每个 HTTP 请求派生一个专门的子进程。在每个子进程中，`mod_php` 模块会嵌入专门的 PHP 解释器，哪怕进程只用来处理静态的资源也是如此。例如 JavaScript、图片或样式表，也会嵌入 PHP 解析器。以这种方式运行时，apache 的子进程可以直接处理并执行 PHP 脚本，而无需再与外部进程的通讯。对于重度 PHP 的网站，如 WordPress、Drupal、Joomla 等这样多数请求都包含 PHP 代码的网站来说尤其有用，因为所有的请求都能由 apache 来直接处理。
@@ -225,7 +229,6 @@ apache 总是试图保有一些备用或空闲的子进程，用于迎接即将�
 * 每个 apache 进程会占用更多的内存资源
 * 即使为静态内容也会加载 PHP 解释器
 * 由 PHP 脚本生成的文件通常所有者为网页服务器，因此无法直接编辑
-
 
 
 
@@ -312,10 +315,9 @@ FastCGI 支持分布式运算。FastCGI 和宿主的服务器完全独立，Fast
 FastCGI 把动态逻辑的处理从服务器中分离出来，大负荷的 I/O 处理还是留给宿主服务器，这样，宿主服务器可以一心一意作 I/O，对于一个普通的动态网页来说，逻辑处理可能只有一小部分，大量的是图片等静态文件。
 
 
-#####　缺点
+##### 缺点
 
 目前的 FastCGI 和网页服务器沟通还不够智能，一个 FastCGI 进程如果执行时间过长，会被当成是死进程杀掉重启。这样，在处理长时间任务的时候很麻烦，也使得 FastCGI 无法允许联机调试。因为是多进程，所以比 CGI 多线程消耗更多的服务器内存，PHP-CGI 解释器每进程消耗 7 ~ 25 MB 内存，将这个数字乘以 50 或 100 就是不小的内存了。
-
 
 
 
@@ -375,3 +377,116 @@ PHP 作为 apache 模块时，apache 服务器在系统启动后，预先生成�
 ### PHP 与数据库的通信
 
 apache 不会跟数据库打交道，它是个静态网页服务器，跟数据库打交道的是应用程序，应用程序的 **源驱动** 能够通过 API 与数据库服务器建立会话，然后把 mysql 语句发送给数据库，数据库将结果返回给应用程序。
+
+
+
+
+
+
+
+
+
+
+### PHP 的安装
+
+
+
+
+#### 安装仓库
+
+PHP 7.x 安装包在许多仓库中都有，其中 [Remi 仓库](https://rpms.remirepo.net/) 中的版本通常比较新。该仓库依赖于 EPEL 仓库，所以要先装 EPEL。
+
+```bash
+sudo yum install epel-release
+sudo yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+```
+
+
+
+
+#### 在 CentOS 7 上安装 PHP 7.2
+
+PHP 7.2 是较新的稳定版本，现在的大部分 PHP 框架和应用都支持，包括 WordPress、Drupal、Joomla、Laravel 等。
+
+```bash
+$ sudo yum --enablerepo="remi-php72" install -y \
+  php php-common php-opcache php-mcrypt php-cli php-gd php-curl php-mysqlnd
+```
+
+检查是否安装成功：
+
+```bash
+$ php -v
+
+PHP 7.2.9 (cli) (built: Aug 15 2018 09:19:33) ( NTS )
+Copyright (c) 1997-2018 The PHP Group
+Zend Engine v3.2.0, Copyright (c) 1998-2018 Zend Technologies
+    with Zend OPcache v7.2.9, Copyright (c) 1999-2018, by Zend Technologies
+```
+
+
+
+
+#### 配置 PHP 与 Apache 工作
+
+直接重启 Apache 就可以了：
+
+```bash
+$ sudo systemctl restart httpd
+```
+
+
+
+
+#### 配置 PHP 与 Nginx 工作
+
+因为 Nginx 并没有内置对 PHP 文件的处理能力，因此需要单独安装一个应用来处理 PHP 文件，如 PHP FPM。
+
+
+##### 安装 PHP FPM
+
+```bash
+$ sudo yum --enablerepo="remi-php72" install -y php-fpm
+```
+
+
+##### 修改配置
+
+默认情况下，PHP FPM 会以用户 `apache` 的身份运行于 9000 端口，我们需要将 **用户** 修改为 `nginx` ，并将其 **侦听对象** 由 TCP 套接字修改为 Unix 套接字：
+
+```bash
+$ sudo vi /etc/php-fpm.d/www.conf
+
+...
+user = nginx
+group = nginx
+listen = /run/php-fpm/www.sock
+```
+
+
+##### 启动 PHP FPM
+
+修改之后，可以激活并启动 PHP FPM 守护进程了：
+
+```bash
+$ sudo systemctl enable php-fpm
+$ sudo systemctl start php-fpm
+```
+
+
+##### 修改 Nginx 配置
+
+修改 Nginx 的虚拟服务器配置，以便 Nginx 可以处理 PHP。
+
+```conf
+server {
+...
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_pass unix:/run/php-fpm/www.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+}
+```
