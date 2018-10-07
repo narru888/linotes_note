@@ -461,7 +461,7 @@ $ sudo yum --enablerepo="remi-php72" install -y php-fpm
 ```
 
 
-##### 修改配置
+##### 修改 PHP 配置
 
 默认情况下，PHP FPM 会以用户 `apache` 的身份运行于 9000 端口，我们需要将 **用户** 修改为 `nginx` ，并将其 **侦听对象** 由 TCP 套接字修改为 Unix 套接字：
 
