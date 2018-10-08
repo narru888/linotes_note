@@ -1425,8 +1425,59 @@ SELINUX=disabled
 
 
 
+### Rsync
 
-#### VI 常用快捷键
+
+#### 本地复制
+
+将 `/home/coremail` 目录中的文件拷贝到 `/cmbak` 目录中。
+
+```bash
+# rsync -avSH /home/coremail/ /cmbak/
+```
+
+
+#### 本地复制到远端
+
+```bash
+# rsync -av /home/coremail/ 192.168.11.12:/home/coremail/
+```
+
+
+#### 远端复制到本地
+
+```bash
+# rsync -av 192.168.11.11:/home/coremail/ /home/coremail/
+```
+
+
+#### rsync daemon 远端复制到本地，
+
+```bash
+# rsync -av root@172.16.78.192::www /databack
+```
+
+
+#### 本机复制到 rsync daemon 远端
+
+```bash
+# rsync -av /databack root@172.16.78.192::www
+```
+
+
+#### 查看远端文件列表
+
+```bash
+# rsync -v rsync://192.168.11.11/data
+```
+
+
+
+
+
+
+
+### VI
 
 `8yy` ：从本行起向下复制8行
 
