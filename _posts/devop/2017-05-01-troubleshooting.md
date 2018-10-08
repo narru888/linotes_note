@@ -1380,6 +1380,14 @@ $ sestatus
 
 
 
+#### 切换为放行模式
+
+```bash
+$ sudo setenforce Permissive
+```
+
+
+
 #### 禁用 SELinux
 
 ```bash
@@ -1397,7 +1405,11 @@ SELINUX=disabled
 ```
 
 
-####
+#### 让 SELinux 为网页流量放行：
+
+```bash
+$ sudo semanage permissive -a httpd_t
+```
 
 
 
