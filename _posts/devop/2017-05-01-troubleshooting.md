@@ -638,7 +638,11 @@ $ sudo nginx -s reload
 ```
 
 
+#### 手动添加 `nginx` 用户
 
+```bash
+$ sudo useradd --system -d /var/www/html --user-group -s /sbin/nologin nginx   
+```
 
 
 
