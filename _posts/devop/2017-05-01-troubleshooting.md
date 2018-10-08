@@ -1427,48 +1427,53 @@ SELINUX=disabled
 
 ### Rsync
 
+注意：在描述源时，如果以斜线结尾，表示源为该目录中所有对象；如果仅以目录名结尾，不加斜线，表示源为整个目录。
+{: .notice--primary}
+
 
 #### 本地复制
 
 将 `/home/coremail` 目录中的文件拷贝到 `/cmbak` 目录中。
 
 ```bash
-# rsync -avSH /home/coremail/ /cmbak/
+$ sudo rsync -avSH /home/coremail/ /cmbak/
 ```
 
 
 #### 本地复制到远端
 
 ```bash
-# rsync -av /home/coremail/ 192.168.11.12:/home/coremail/
+$ sudo rsync -av /home/coremail/ user@192.168.11.12:/home/coremail/
+$ sudo rsync -av test user@192.168.1.12:~/
 ```
 
 
 #### 远端复制到本地
 
 ```bash
-# rsync -av 192.168.11.11:/home/coremail/ /home/coremail/
+$ sudo rsync -av user@192.168.11.11:/home/user/ .
 ```
 
 
 #### rsync daemon 远端复制到本地，
 
 ```bash
-# rsync -av root@172.16.78.192::www /databack
+$ sudo rsync -av root@172.16.78.192::www /databack
 ```
 
 
 #### 本机复制到 rsync daemon 远端
 
 ```bash
-# rsync -av /databack root@172.16.78.192::www
+$ sudo rsync -av /databack root@172.16.78.192::www
 ```
 
 
 #### 查看远端文件列表
 
 ```bash
-# rsync -v rsync://192.168.11.11/data
+$ sudo rsync user@192.168.1.11:~/
+$ sudo rsync -v rsync://192.168.11.11/data
 ```
 
 
