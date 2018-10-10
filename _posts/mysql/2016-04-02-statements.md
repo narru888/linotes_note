@@ -49,7 +49,16 @@ DROP USER 'hawk'@'localhost';
 
 ```sql
 GRANT ALL PRIVILEGES ON *.* TO 'hawk'@'localhost' IDENTIFIED BY ’something’ WITH GRANT OPTION;
-GRANT SELECT ON test.* TO 'hawk'@'%';
+GRANT SELECT,INSERT ON test.* TO 'hawk'@'%';
+```
+
+
+#### 撤消用户权限
+
+```sql
+REVOKE INSERT ON *.* FROM 'hawk'@'localhost';
+REVOKE 'role1', 'role2' FROM 'hawk'@'localhost', 'user2'@'localhost';
+REVOKE SELECT ON world.* FROM 'role3';
 ```
 
 
