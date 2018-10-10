@@ -48,12 +48,13 @@ DROP USER 'hawk'@'localhost';
 #### 为用户分配权限
 
 ```sql
-GRANT ALL PRIVILEGES ON *.* TO hawk@localhost IDENTIFIED BY ’something’ WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON *.* TO 'hawk'@'localhost' IDENTIFIED BY ’something’ WITH GRANT OPTION;
+GRANT SELECT ON test.* TO 'hawk'@'%';
 ```
 
 
 #### 为用户修改密码
 
 ```sql
-
+ALTER USER 'hawk'@'localhost' IDENTIFIED BY 'newpassword'
 ``
