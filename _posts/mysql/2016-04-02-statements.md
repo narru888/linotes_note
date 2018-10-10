@@ -47,7 +47,13 @@ DROP USER 'hawk'@'localhost';
 
 #### 为用户分配权限
 
-
 ```sql
 GRANT ALL PRIVILEGES ON *.* TO hawk@localhost IDENTIFIED BY ’something’ WITH GRANT OPTION;
 ```
+
+
+#### 为用户修改密码
+
+```sql
+
+``
