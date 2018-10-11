@@ -174,7 +174,7 @@ USE db_name;
 
 #### 创建表
 
-语法：
+##### 语法：
 
 ```sql
 CREATE TABLE [IF NOT EXISTS] table_name(
@@ -188,7 +188,9 @@ CREATE TABLE [IF NOT EXISTS] table_name(
 column_name data_type(length) [NOT NULL] [DEFAULT value] [AUTO_INCREMENT]
 ```
 
-范例：
+##### 范例：
+
+###### 新建空表
 
 ```sql
 CREATE TABLE IF NOT EXISTS tasks (
@@ -203,13 +205,25 @@ CREATE TABLE IF NOT EXISTS tasks (
 )  ENGINE=INNODB;
 ```
 
+###### 从现有表创建
+
+```sql
+CREATE TABLE NewTable AS
+SELECT name, age
+FROM OldTable
+WHERE age>25;
+```
+
+原表中的数据会携带过来，相当于另存为新表。
+
+
 
 #### 修改表参数
 
 ##### 增加字段
 
 ```sql
-
+ALTER TABLE t2 ADD COLUMN
 ```
 
 ##### 删除字段
