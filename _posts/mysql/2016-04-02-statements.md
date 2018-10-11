@@ -167,11 +167,30 @@ USE db_name;
 
 
 
+
+
 ### 表操作
 
 #### 创建表
 
+语法：
+
 ```sql
+CREATE TABLE [IF NOT EXISTS] table_name(
+    column_list
+) ENGINE=storage_engine
+```
+
+其中 column_list 的语法：
+
+```sql
+column_name data_type(length) [NOT NULL] [DEFAULT value] [AUTO_INCREMENT]
+```
+
+范例：
+
+```sql
+
 ```
 
 
