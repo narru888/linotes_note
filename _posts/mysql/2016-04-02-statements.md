@@ -154,6 +154,14 @@ CREATE DATABASE db_name;
 
 
 
+#### 查看库的创建参数
+
+```sql
+SHOW CREATE DATABASE db_name
+```
+
+
+
 #### 查看库列表
 
 ```sql
@@ -166,6 +174,14 @@ SHOW DATABASES;
 
 ```sql
 USE db_name;
+```
+
+
+
+#### 查看当前库
+
+```sql
+SELECT DATABASE();
 ```
 
 
@@ -187,6 +203,22 @@ mysqladmin -u root -p drop db_name
 
 
 
+#### 查看当前库中的所有表
+
+```sql
+SHOW TABLES;
+```
+
+
+
+#### 查看表的结构
+
+```sql
+DESCRIBE tbl_name;
+```
+
+
+
 #### 创建表
 
 
@@ -195,7 +227,7 @@ mysqladmin -u root -p drop db_name
 ```sql
 CREATE TABLE [IF NOT EXISTS] table_name(
     column_list
-) ENGINE=storage_engine
+) ENGINE=storage_engine;
 ```
 
 其中 column_list 的语法：
@@ -222,6 +254,18 @@ CREATE TABLE IF NOT EXISTS tasks (
 )  ENGINE=INNODB;
 ```
 
+```sql
+CREATE TABLE IF NOT EXISTS products (
+     productID    INT UNSIGNED  NOT NULL AUTO_INCREMENT,
+     productCode  CHAR(3)       NOT NULL DEFAULT '',
+     name         VARCHAR(30)   NOT NULL DEFAULT '',
+     quantity     INT UNSIGNED  NOT NULL DEFAULT 0,
+     price        DECIMAL(7,2)  NOT NULL DEFAULT 99999.99,
+     PRIMARY KEY  (productID)
+   );
+```
+
+
 ###### 从现有表创建
 
 ```sql
@@ -232,6 +276,14 @@ WHERE age > 25;
 ```
 
 原表中的数据会携带过来，相当于另存为新表。
+
+
+
+#### 查看表的创建参数
+
+```sql
+SHOW CREATE TABLE tbl_name \G
+```
 
 
 
