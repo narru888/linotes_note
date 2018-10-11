@@ -16,6 +16,45 @@ header:
 
 
 
+## 全局
+
+
+### 登陆 MySQL
+
+```bash
+mysql -h host -u user -p
+```
+
+登陆时指定数据库名称：
+
+```bash
+mysql -h host -u user -p db_name
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## 数据库管理
@@ -76,20 +115,15 @@ ALTER USER 'hawk'@'localhost' IDENTIFIED BY 'newpassword'
 
 
 
-## 全局
 
 
-### 登陆 MySQL
 
-```bash
-mysql -h host -u user -p
-```
 
-登陆时指定数据库名称：
 
-```bash
-mysql -h host -u user -p db_name
-```
+
+
+
+
 
 
 
