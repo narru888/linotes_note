@@ -48,7 +48,8 @@ DROP USER 'hawk'@'localhost';
 #### 为用户分配权限
 
 ```sql
-GRANT ALL PRIVILEGES ON *.* TO 'hawk'@'localhost' IDENTIFIED BY ’something’ WITH GRANT OPTION;
+GRANT ALL ON db.* TO 'hawk'@'localhost';
+GRANT ALL ON *.* TO 'hawk'@'localhost' IDENTIFIED BY ’something’ WITH GRANT OPTION;
 GRANT SELECT,INSERT ON test.* TO 'hawk'@'%';
 ```
 
