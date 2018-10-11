@@ -66,5 +66,6 @@ REVOKE SELECT ON world.* FROM 'role3';
 #### 为用户修改密码
 
 ```sql
+SET PASSWORD FOR 'neo'@'%' = PASSWORD('password');
 ALTER USER 'hawk'@'localhost' IDENTIFIED BY 'newpassword'
 ``
