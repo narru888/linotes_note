@@ -167,5 +167,5 @@ GROUP_REPLICATION_ADMIN | 控制组复制 | 全局
 REPLICATION_SLAVE_ADMIN | 控制普通复制 | 全局
 ROLE_ADMIN | `WITH ADMIN OPTION` | 全局
 SET_USER_ID | 为其他用户设置 `DEFINER` 值 | 全局
-SYSTEM_VARIABLES_ADMIN | Enable modifying or persisting global system variables. | 全局
+SYSTEM_VARIABLES_ADMIN | 修改或保持全局系统变量 | 全局
 VERSION_TOKEN_ADMIN | Enable use of Version Tokens UDFs. | 全局
