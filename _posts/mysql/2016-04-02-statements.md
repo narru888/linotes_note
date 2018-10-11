@@ -134,12 +134,12 @@ EVENT | Enable use of events for the Event Scheduler. | 全局，库
 EXECUTE | Enable the user to execute stored routines. | 全局，库，例程
 FILE | Enable the user to cause the server to read or write files. | 全局
 GRANT OPTION | Enable privileges to be granted to or removed from other accounts. | 全局，库，表，例程，代理
-INDEX | Enable indexes to be created or dropped. | 全局，库，表
-INSERT | Enable use of INSERT. | 全局，库，表，字段
-LOCK TABLES | Enable use of LOCK TABLES on tables for which you have the SELECT privilege. | 全局，库
-PROCESS | Enable the user to see all processes with SHOW PROCESSLIST. | 全局
-PROXY | Enable user proxying. | From user to user.
-REFERENCES | Enable foreign key creation. | 全局，库，表，字段
+INDEX | 创建、删除索引 | 全局，库，表
+INSERT | `INSERT` | 全局，库，表，字段
+LOCK TABLES | `LOCK TABLES`，需有 `SELECT` 权限 | 全局，库
+PROCESS | `SHOW PROCESSLIST` | 全局
+PROXY | 用户代理 | 用户之间
+REFERENCES | 创建外键 | 全局，库，表，字段
 RELOAD | `FLUSH` 操作 | 全局
 REPLICATION CLIENT | 用户可以查询哪些是主、从服务器 | 全局
 REPLICATION SLAVE | 从服务器读取主服务器的 binlog | 全局
