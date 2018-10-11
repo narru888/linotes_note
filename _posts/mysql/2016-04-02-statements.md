@@ -120,8 +120,8 @@ ALTER USER 'hawk'@'localhost' IDENTIFIED BY 'newpassword'
 权限 | 授权的操作 | 访问级别
 --- | --- | ---
 ALL [PRIVILEGES] | 所有权限，但不包括 GRANT OPTION 与 PROXY | 特定级别
-ALTER | Enable use of ALTER TABLE. | 全局，库，表
-ALTER ROUTINE | Enable stored routines to be altered or dropped. | 全局，库，例程
+ALTER | `ALTER TABLE` | 全局，库，表
+ALTER ROUTINE | 修改、删除存储例程 | 全局，库，例程
 CREATE | 创建库和表 | 全局，库，表
 CREATE ROUTINE | 创建存储例程 | 全局，库
 CREATE TABLESPACE | 创建、修改、删除表空间及日志文件组 | 全局
@@ -155,16 +155,16 @@ USAGE | 无权限 |
 
 #### 可授予、可撤消的动态权限
 
-权限 | 说明
---- | ---
-AUDIT_ADMIN | Enable audit log configuration. | 全局
-BINLOG_ADMIN | Enable binary log control. | 全局
-CONNECTION_ADMIN | Enable connection limit/restriction control. | 全局
-ENCRYPTION_KEY_ADMIN | Enable InnoDB key rotation. | 全局
-FIREWALL_ADMIN | Enable firewall rule administration, any user. | 全局
-FIREWALL_USER | Enable firewall rule administration, self. | 全局
-GROUP_REPLICATION_ADMIN | Enable Group Replication control. | 全局
-REPLICATION_SLAVE_ADMIN | Enable regular replication control. | 全局
+权限 | 说明 | 访问级别
+--- | --- | ---
+AUDIT_ADMIN | 配置审计日志 | 全局
+BINLOG_ADMIN | 控制二进制日志 | 全局
+CONNECTION_ADMIN | 控制连接限制 | 全局
+ENCRYPTION_KEY_ADMIN | InnoDB 密钥轮换 | 全局
+FIREWALL_ADMIN | 管理所有用户的防火墙规则 | 全局
+FIREWALL_USER | 管理自己的防火墙规则 | 全局
+GROUP_REPLICATION_ADMIN | 控制组复制 | 全局
+REPLICATION_SLAVE_ADMIN | 控制普通复制 | 全局
 ROLE_ADMIN | Enable use of WITH ADMIN OPTION. | 全局
 SET_USER_ID | Enable setting non-self DEFINER values. | 全局
 SYSTEM_VARIABLES_ADMIN | Enable modifying or persisting global system variables. | 全局
