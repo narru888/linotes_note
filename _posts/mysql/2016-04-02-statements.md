@@ -117,55 +117,55 @@ ALTER USER 'hawk'@'localhost' IDENTIFIED BY 'newpassword'
 
 #### 可授予、可撤消的静态权限
 
-权限 | 说明
---- | ---
-ALL [PRIVILEGES] | 特定访问级别的所有权限，但不包括 GRANT OPTION 与 PROXY
-ALTER | Enable use of ALTER TABLE. Levels: Global, database, table.
-ALTER ROUTINE | Enable stored routines to be altered or dropped. Levels: Global, database, routine.
-CREATE | Enable database and table creation. Levels: Global, database, table.
-CREATE ROUTINE | Enable stored routine creation. Levels: Global, database.
-CREATE TABLESPACE | Enable tablespaces and log file groups to be created, altered, or dropped. Level: Global.
-CREATE TEMPORARY TABLES | Enable use of CREATE TEMPORARY TABLE. Levels: Global, database.
-CREATE USER | Enable use of CREATE USER, DROP USER, RENAME USER, and REVOKE ALL PRIVILEGES. Level: Global.
-CREATE VIEW | Enable views to be created or altered. Levels: Global, database, table.
-DELETE | Enable use of DELETE. Level: Global, database, table.
-DROP | Enable databases, tables, and views to be dropped. Levels: Global, database, table.
-EVENT | Enable use of events for the Event Scheduler. Levels: Global, database.
-EXECUTE | Enable the user to execute stored routines. Levels: Global, database, routine.
-FILE | Enable the user to cause the server to read or write files. Level: Global.
-GRANT OPTION | Enable privileges to be granted to or removed from other accounts. Levels: Global, database, table, routine, proxy.
-INDEX | Enable indexes to be created or dropped. Levels: Global, database, table.
-INSERT | Enable use of INSERT. Levels: Global, database, table, column.
-LOCK TABLES | Enable use of LOCK TABLES on tables for which you have the SELECT privilege. Levels: Global, database.
-PROCESS | Enable the user to see all processes with SHOW PROCESSLIST. Level: Global.
-PROXY | Enable user proxying. Level: From user to user.
-REFERENCES | Enable foreign key creation. Levels: Global, database, table, column.
-RELOAD | Enable use of FLUSH operations. Level: Global.
-REPLICATION CLIENT | Enable the user to ask where master or slave servers are. Level: Global.
-REPLICATION SLAVE | Enable replication slaves to read binary log events from the master. Level: Global.
-SELECT | Enable use of SELECT. Levels: Global, database, table, column.
-SHOW DATABASES | Enable SHOW DATABASES to show all databases. Level: Global.
-SHOW VIEW | Enable use of SHOW CREATE VIEW. Levels: Global, database, table.
-SHUTDOWN | Enable use of mysqladmin shutdown. Level: Global.
-SUPER | Enable use of other administrative operations such as CHANGE MASTER TO, KILL, PURGE BINARY LOGS, SET GLOBAL, and mysqladmin debug command. Level: Global.
-TRIGGER | Enable trigger operations. Levels: Global, database, table.
-UPDATE | Enable use of UPDATE. Levels: Global, database, table, column.
-USAGE | Synonym for “no privileges”
+权限 | 授权的操作 | 访问级别
+--- | --- | ---
+ALL [PRIVILEGES] | 所有权限，但不包括 GRANT OPTION 与 PROXY | 特定级别
+ALTER | Enable use of ALTER TABLE. | 全局，库，表
+ALTER ROUTINE | Enable stored routines to be altered or dropped. | 全局，库，例程
+CREATE | Enable database and table creation. | 全局，库，表
+CREATE ROUTINE | Enable stored routine creation. | 全局，库
+CREATE TABLESPACE | Enable tablespaces and log file groups to be created, altered, or dropped. | 全局
+CREATE TEMPORARY TABLES | Enable use of CREATE TEMPORARY TABLE. | 全局，库
+CREATE USER | Enable use of CREATE USER, DROP USER, RENAME USER, and REVOKE ALL PRIVILEGES. | 全局
+CREATE VIEW | Enable views to be created or altered. | 全局，库，表
+DELETE | Enable use of DELETE. | 全局，库，表
+DROP | Enable databases, tables, and views to be dropped. | 全局，库，表
+EVENT | Enable use of events for the Event Scheduler. | 全局，库
+EXECUTE | Enable the user to execute stored routines. | 全局，库，例程
+FILE | Enable the user to cause the server to read or write files. | 全局
+GRANT OPTION | Enable privileges to be granted to or removed from other accounts. | 全局，库，表，例程，代理
+INDEX | Enable indexes to be created or dropped. | 全局，库，表
+INSERT | Enable use of INSERT. | 全局，库，表，字段
+LOCK TABLES | Enable use of LOCK TABLES on tables for which you have the SELECT privilege. | 全局，库
+PROCESS | Enable the user to see all processes with SHOW PROCESSLIST. | 全局
+PROXY | Enable user proxying. | From user to user.
+REFERENCES | Enable foreign key creation. | 全局，库，表，字段
+RELOAD | `FLUSH` 操作 | 全局
+REPLICATION CLIENT | 用户可以查询哪些是主、从服务器 | 全局
+REPLICATION SLAVE | 从服务器读取主服务器的 binlog | 全局
+SELECT | `SELECT` | 全局，库，表，字段
+SHOW DATABASES | `SHOW DATABASES` | 全局
+SHOW VIEW | `SHOW CREATE VIEW` | 全局，库，表
+SHUTDOWN | `mysqladmin shutdown` | 全局
+SUPER | 其它管理操作，如 `CHANGE MASTER TO`，`KILL`，`PURGE BINARY LOGS`，`SET GLOBAL`，`mysqladmin` | 全局
+TRIGGER | 触发器操作 | 全局，库，表
+UPDATE | UPDATE | 全局，库，表，字段
+USAGE | 无权限 |
 
 
 #### 可授予、可撤消的动态权限
 
 权限 | 说明
 --- | ---
-AUDIT_ADMIN | Enable audit log configuration. Level: Global.
-BINLOG_ADMIN | Enable binary log control. Level: Global.
-CONNECTION_ADMIN | Enable connection limit/restriction control. Level: Global.
-ENCRYPTION_KEY_ADMIN | Enable InnoDB key rotation. Level: Global.
-FIREWALL_ADMIN | Enable firewall rule administration, any user. Level: Global.
-FIREWALL_USER | Enable firewall rule administration, self. Level: Global.
-GROUP_REPLICATION_ADMIN | Enable Group Replication control. Level: Global.
-REPLICATION_SLAVE_ADMIN | Enable regular replication control. Level: Global.
-ROLE_ADMIN | Enable use of WITH ADMIN OPTION. Level: Global.
-SET_USER_ID | Enable setting non-self DEFINER values. Level: Global.
-SYSTEM_VARIABLES_ADMIN | Enable modifying or persisting global system variables. Level: Global.
-VERSION_TOKEN_ADMIN | Enable use of Version Tokens UDFs. Level: Global.
+AUDIT_ADMIN | Enable audit log configuration. | 全局
+BINLOG_ADMIN | Enable binary log control. | 全局
+CONNECTION_ADMIN | Enable connection limit/restriction control. | 全局
+ENCRYPTION_KEY_ADMIN | Enable InnoDB key rotation. | 全局
+FIREWALL_ADMIN | Enable firewall rule administration, any user. | 全局
+FIREWALL_USER | Enable firewall rule administration, self. | 全局
+GROUP_REPLICATION_ADMIN | Enable Group Replication control. | 全局
+REPLICATION_SLAVE_ADMIN | Enable regular replication control. | 全局
+ROLE_ADMIN | Enable use of WITH ADMIN OPTION. | 全局
+SET_USER_ID | Enable setting non-self DEFINER values. | 全局
+SYSTEM_VARIABLES_ADMIN | Enable modifying or persisting global system variables. | 全局
+VERSION_TOKEN_ADMIN | Enable use of Version Tokens UDFs. | 全局
