@@ -171,6 +171,7 @@ USE db_name;
 
 ### 表操作
 
+
 #### 创建表
 
 语法：
@@ -205,9 +206,17 @@ CREATE TABLE IF NOT EXISTS tasks (
 
 #### 修改表参数
 
+##### 增加字段
 
+```sql
 
+```
 
+##### 删除字段
+
+```sql
+ALTER TABLE t2 DROP COLUMN c, DROP COLUMN d;
+```
 
 
 #### 删除表
