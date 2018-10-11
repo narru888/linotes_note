@@ -122,18 +122,18 @@ ALTER USER 'hawk'@'localhost' IDENTIFIED BY 'newpassword'
 ALL [PRIVILEGES] | 所有权限，但不包括 GRANT OPTION 与 PROXY | 特定级别
 ALTER | Enable use of ALTER TABLE. | 全局，库，表
 ALTER ROUTINE | Enable stored routines to be altered or dropped. | 全局，库，例程
-CREATE | Enable database and table creation. | 全局，库，表
-CREATE ROUTINE | Enable stored routine creation. | 全局，库
-CREATE TABLESPACE | Enable tablespaces and log file groups to be created, altered, or dropped. | 全局
-CREATE TEMPORARY TABLES | Enable use of CREATE TEMPORARY TABLE. | 全局，库
-CREATE USER | Enable use of CREATE USER, DROP USER, RENAME USER, and REVOKE ALL PRIVILEGES. | 全局
-CREATE VIEW | Enable views to be created or altered. | 全局，库，表
-DELETE | Enable use of DELETE. | 全局，库，表
-DROP | Enable databases, tables, and views to be dropped. | 全局，库，表
-EVENT | Enable use of events for the Event Scheduler. | 全局，库
-EXECUTE | Enable the user to execute stored routines. | 全局，库，例程
-FILE | Enable the user to cause the server to read or write files. | 全局
-GRANT OPTION | Enable privileges to be granted to or removed from other accounts. | 全局，库，表，例程，代理
+CREATE | 创建库和表 | 全局，库，表
+CREATE ROUTINE | 创建存储例程 | 全局，库
+CREATE TABLESPACE | 创建、修改、删除表空间及日志文件组 | 全局
+CREATE TEMPORARY TABLES | `CREATE TEMPORARY TABLE` | 全局，库
+CREATE USER | `CREATE USER`，`DROP USER`，`RENAME USER`，`REVOKE ALL PRIVILEGES` | 全局
+CREATE VIEW | 创建、修改视图 | 全局，库，表
+DELETE | `DELETE` | 全局，库，表
+DROP | 删除库、表、视图 | 全局，库，表
+EVENT | 使用事件，用于事件调度 | 全局，库
+EXECUTE | 执行存储例程 | 全局，库，例程
+FILE | 用户可以让服务端读写文件 | 全局
+GRANT OPTION | 为他人授予、撤消权限 | 全局，库，表，例程，代理
 INDEX | 创建、删除索引 | 全局，库，表
 INSERT | `INSERT` | 全局，库，表，字段
 LOCK TABLES | `LOCK TABLES`，需有 `SELECT` 权限 | 全局，库
