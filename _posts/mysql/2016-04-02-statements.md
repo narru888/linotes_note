@@ -165,7 +165,7 @@ FIREWALL_ADMIN | 管理所有用户的防火墙规则 | 全局
 FIREWALL_USER | 管理自己的防火墙规则 | 全局
 GROUP_REPLICATION_ADMIN | 控制组复制 | 全局
 REPLICATION_SLAVE_ADMIN | 控制普通复制 | 全局
-ROLE_ADMIN | Enable use of WITH ADMIN OPTION. | 全局
-SET_USER_ID | Enable setting non-self DEFINER values. | 全局
+ROLE_ADMIN | `WITH ADMIN OPTION` | 全局
+SET_USER_ID | 为其他用户设置 `DEFINER` 值 | 全局
 SYSTEM_VARIABLES_ADMIN | Enable modifying or persisting global system variables. | 全局
 VERSION_TOKEN_ADMIN | Enable use of Version Tokens UDFs. | 全局
