@@ -57,7 +57,7 @@ mysql -h host -u user -p db_name
 
 
 
-## 数据库管理
+## 管理操作
 
 
 
@@ -172,7 +172,9 @@ USE db_name;
 ### 表操作
 
 
+
 #### 创建表
+
 
 ##### 语法：
 
@@ -187,6 +189,7 @@ CREATE TABLE [IF NOT EXISTS] table_name(
 ```sql
 column_name data_type(length) [NOT NULL] [DEFAULT value] [AUTO_INCREMENT]
 ```
+
 
 ##### 范例：
 
@@ -211,7 +214,7 @@ CREATE TABLE IF NOT EXISTS tasks (
 CREATE TABLE NewTable AS
 SELECT name, age
 FROM OldTable
-WHERE age>25;
+WHERE age > 25;
 ```
 
 原表中的数据会携带过来，相当于另存为新表。
