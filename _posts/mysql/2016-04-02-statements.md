@@ -18,13 +18,13 @@ header:
 
 
 
-## 用户管理
+## 数据库管理
 
 
 
 
 
-### 新建用户
+### 用户管理
 
 
 #### 创建用户
@@ -69,6 +69,75 @@ REVOKE SELECT ON world.* FROM 'role3';
 SET PASSWORD FOR 'neo'@'%' = PASSWORD('password');
 ALTER USER 'hawk'@'localhost' IDENTIFIED BY 'newpassword'
 ```
+
+
+
+
+
+
+
+
+
+
+## 数据定义
+
+
+
+### 库操作
+
+
+#### 创建库
+
+```sql
+CREATE DATABASE db_name;
+```
+
+
+#### 查看库列表
+
+```sql
+SHOW DATABASES;
+```
+
+#### 切换当前库
+
+```sql
+USE db_name;
+```
+
+
+
+
+
+
+### 表操作
+
+#### 创建表
+
+```sql
+```
+
+
+#### 修改表参数
+
+
+
+
+
+
+#### 删除表
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
