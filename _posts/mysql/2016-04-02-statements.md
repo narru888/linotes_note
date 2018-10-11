@@ -289,16 +289,26 @@ SHOW CREATE TABLE tbl_name \G
 
 #### 修改表参数
 
+
 ##### 增加字段
 
 ```sql
 ALTER TABLE t2 ADD COLUMN
 ```
 
+
 ##### 删除字段
 
 ```sql
 ALTER TABLE t2 DROP COLUMN c, DROP COLUMN d;
+```
+
+
+##### 修改字段
+
+```sql
+ALTER TABLE tbl_name
+CHANGE COLUMN old_name new_name INT(11) NOT NULL AUTO_INCREMENT;
 ```
 
 
