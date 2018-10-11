@@ -140,7 +140,10 @@ ALTER USER 'hawk'@'localhost' IDENTIFIED BY 'newpassword'
 
 
 
+
+
 ### 库操作
+
 
 
 #### 创建库
@@ -150,11 +153,14 @@ CREATE DATABASE db_name;
 ```
 
 
+
 #### 查看库列表
 
 ```sql
 SHOW DATABASES;
 ```
+
+
 
 #### 切换当前库
 
@@ -162,6 +168,14 @@ SHOW DATABASES;
 USE db_name;
 ```
 
+
+
+#### 删除库
+
+```sql
+DROP DATABASE db_name
+mysqladmin -u root -p drop db_name
+```
 
 
 
