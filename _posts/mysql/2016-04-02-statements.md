@@ -590,10 +590,12 @@ SELECT * FROM products ORDER BY price LIMIT 2, 1;
 
 ```sql
 SELECT productID AS ID, productCode AS Code,
-	name AS Description, price AS 'Unit Price'		-- 定义的别名用于返回结果做为表头
+	name AS Description, price AS `Unit Price`		-- 定义的别名用于返回结果做为表头
 	FROM products
 	ORDER BY ID;									-- 定义的别名在同一语句中可以直接引用
+```
 
+因为 Unit Price 中间包含空格，所以需用反引号括起来。
 
 
 
