@@ -547,6 +547,7 @@ SELECT * FROM products WHERE name LIKE 'Pen %' ORDER BY price DESC;
 SELECT * FROM products WHERE name LIKE 'Pen %' ORDER BY price DESC, quantity;
 ```
 
+第二条是先按 price 倒序排列，其次按 quantity 正序排列（默认值）。
 
 
 
