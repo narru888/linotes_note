@@ -473,9 +473,40 @@ SELECT name, price FROM products WHERE productCode = 'PEN';
 * `a_b%` 匹配：以 `a` 开头，接着是一个任意字符，然后是一个 `b`，接着是任意位的字符
 
 ```sql
+SELECT name, price FROM products WHERE name LIKE 'PENCIL%';
+SELECT name, price FROM products WHERE name LIKE 'P__%';
+```
 
 
 
+#### 算术运算符
+
+可以使用算术运算符进行数学计算。
+
+运算符 | 说明
+--- | ---
++  |  加
+- | 减
+* | 乘
+/ | 除
+DIV  |  整除
+%  |  取余
+
+
+
+#### 逻辑运算符
+
+可以用布尔值来组合多个条件。
+
+```sql
+SELECT * FROM products WHERE quantity >= 5000 AND name LIKE 'Pen %';
+SELECT * FROM products WHERE quqntity >= 5000 AND price < 1.24 AND name LIKE 'Pen %';
+SELECT * FROM products WHERE NOT (quantity >= 5000 AND name LIKE 'Pen %');
+```
+
+
+
+#### 
 
 
 
