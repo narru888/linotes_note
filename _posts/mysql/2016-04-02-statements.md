@@ -600,6 +600,17 @@ SELECT productID AS ID, productCode AS Code,
 
 
 
+#### `CONCAT()` 函数
+
+用该函数可以把多个字段连接在一起来显示。
+
+```sql
+SELECT CONCAT(productCode, ' - ', name) AS `Product Description`, price FROM products;
+```
+
+
+
+
 
 
 
