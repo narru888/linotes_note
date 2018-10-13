@@ -508,8 +508,26 @@ SELECT * FROM products WHERE NOT (quantity >= 5000 AND name LIKE 'Pen %');
 
 #### `IN`、`NOT IN`
 
+```sql
+SELECT * FROM products WHERE name IN ('Pen Red', 'Pen Black');
+```
 
 
+
+#### `BETWEEN`、`NOT BETWEEN`
+
+```sql
+SELECT * FROM products
+	WHERE (price BETWEEN 1.0 and 2.0)  AND (quantity BETWEEN 1000 AND 2000);
+```
+
+
+
+#### `ORDER BY`
+
+```sql
+SELECT * FROM products WHERE name LIKE 'Pen %' ORDER BY price DESC;
+```
 
 
 
