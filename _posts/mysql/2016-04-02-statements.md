@@ -356,6 +356,9 @@ DROP TABLE IF EXISTS tbl_name;
 
 
 
+
+
+
 ### 插入行
 
 插入一行
@@ -387,11 +390,16 @@ INSERT INTO products (productCode, name, quantity, price) VALUES
 
 
 
+
+
+
 ### 删除行
 
 ```sql
 DELETE FROM products WHERE productID = 1006;
 ```
+
+
 
 
 
@@ -409,6 +417,8 @@ DELETE FROM products WHERE productID = 1006;
 SELECT name, price FROM products;
 SELECT * FROM products;
 ```
+
+
 
 
 #### 非表操作
@@ -454,6 +464,7 @@ SELECT 1+1, NOW();
 
 
 
+
 #### 比较操作
 
 ```sql
@@ -461,6 +472,7 @@ SELECT name, price FROM products WHERE price < 1.0;
 SELECT name, quantity FROM products WHERE quantity <= 2000;
 SELECT name, price FROM products WHERE productCode = 'PEN';
 ```
+
 
 
 
@@ -479,6 +491,7 @@ SELECT name, price FROM products WHERE name LIKE 'P__%';
 
 
 
+
 #### 算术运算符
 
 可以使用算术运算符进行数学计算。
@@ -494,6 +507,7 @@ DIV  |  整除
 
 
 
+
 #### 逻辑运算符
 
 可以用布尔值来组合多个条件。
@@ -506,11 +520,13 @@ SELECT * FROM products WHERE NOT (quantity >= 5000 AND name LIKE 'Pen %');
 
 
 
+
 #### `IN`、`NOT IN`
 
 ```sql
 SELECT * FROM products WHERE name IN ('Pen Red', 'Pen Black');
 ```
+
 
 
 
@@ -520,6 +536,7 @@ SELECT * FROM products WHERE name IN ('Pen Red', 'Pen Black');
 SELECT * FROM products
 	WHERE (price BETWEEN 1.0 and 2.0)  AND (quantity BETWEEN 1000 AND 2000);
 ```
+
 
 
 
