@@ -464,6 +464,17 @@ SELECT name, price FROM products WHERE productCode = 'PEN';
 
 
 
+#### 字符串匹配
+
+用 `LIKE`、`NOT LIKE` 进行匹配。
+
+* `abc%` 匹配以 `abc` 开头的字符串
+* `___` 匹配三个字符组成的字符串
+* `a_b%` 匹配：以 `a` 开头，接着是一个任意字符，然后是一个 `b`，接着是任意位的字符
+
+```sql
+
+
 
 
 
