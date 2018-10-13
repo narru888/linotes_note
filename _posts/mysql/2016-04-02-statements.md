@@ -523,6 +523,8 @@ SELECT * FROM products WHERE NOT (quantity >= 5000 AND name LIKE 'Pen %');
 
 #### `IN`、`NOT IN`
 
+为过滤的字段提供几个可能的备选值。
+
 ```sql
 SELECT * FROM products WHERE name IN ('Pen Red', 'Pen Black');
 ```
@@ -531,6 +533,8 @@ SELECT * FROM products WHERE name IN ('Pen Red', 'Pen Black');
 
 
 #### `BETWEEN`、`NOT BETWEEN`
+
+指定过滤字段值的范围。
 
 ```sql
 SELECT * FROM products
@@ -542,6 +546,8 @@ SELECT * FROM products
 
 #### `ORDER BY`
 
+查询结果如何排序，默认为正序。
+
 ```sql
 SELECT * FROM products WHERE name LIKE 'Pen %' ORDER BY price DESC;
 SELECT * FROM products WHERE name LIKE 'Pen %' ORDER BY price DESC, quantity;
@@ -549,9 +555,19 @@ SELECT * FROM products WHERE name LIKE 'Pen %' ORDER BY price DESC, quantity;
 
 第二条是先按 price 倒序排列，其次按 quantity 正序排列（默认值）。
 
+```sql
+SELECT * FROM products ORDER BY RAND();
+```
+
+将查询结果，即各个行随机排序。
 
 
-####
+
+
+
+#### `LIMIT`
+
+
 
 
 
