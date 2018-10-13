@@ -150,6 +150,7 @@ ALTER USER 'hawk'@'localhost' IDENTIFIED BY 'newpassword'
 
 ```sql
 CREATE DATABASE db_name;
+CREATE DATABASE IF NOT EXISTS southwind;
 ```
 
 
@@ -190,9 +191,12 @@ SELECT DATABASE();
 
 ```sql
 DROP DATABASE db_name
-mysqladmin -u root -p drop db_name
+DROP DATABASE IF EXISTS southwind;
 ```
 
+```bash
+$ sudo mysqladmin -u root -p drop db_name
+```
 
 
 
