@@ -584,6 +584,17 @@ SELECT * FROM products ORDER BY price LIMIT 2, 1;
 
 
 
+#### `AS` 别名
+
+可以用 `AS` 来为字段名、表名定义别名，这些别名可以用来在显示结果中做为表头，也可以在命令中直接引用。
+
+```sql
+SELECT productID AS ID, productCode AS Code,
+	name AS Description, price AS 'Unit Price'		-- 定义的别名用于返回结果做为表头
+	FROM products
+	ORDER BY ID;									-- 定义的别名在同一语句中可以直接引用
+
+
 
 
 
