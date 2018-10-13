@@ -356,7 +356,7 @@ DROP TABLE IF EXISTS tbl_name;
 
 
 
-### 插入行 \| INSERT INTO
+### 插入行
 
 插入一行
 
@@ -387,7 +387,7 @@ INSERT INTO products (productCode, name, quantity, price) VALUES
 
 
 
-### 删除行 \| DELETE
+### 删除行
 
 ```sql
 DELETE FROM products WHERE productID = 1006;
@@ -403,7 +403,7 @@ DELETE FROM products WHERE productID = 1006;
 
 
 
-### 查询行 \| SELECT
+### 查询行
 
 ```sql
 SELECT name, price FROM products;
