@@ -403,6 +403,89 @@ DELETE FROM products WHERE productID = 1006;
 
 
 
+### 查询行
+
+```sql
+SELECT name, price FROM products;
+SELECT * FROM products;
+```
+
+
+#### 非表操作
+
+
+##### 计算
+
+```sql
+SELECT 1+1;
++-----+
+| 1+1 |
++-----+
+|   2 |
++-----+
+1 row in set (0.00 sec)
+```
+
+
+##### 现在时刻
+
+```sql
+SELECT NOW();
++---------------------+
+| NOW()               |
++---------------------+
+| 2012-10-24 22:13:29 |
++---------------------+
+1 row in set (0.00 sec)
+```
+
+
+##### 同时执行多条语句
+
+```sql
+SELECT 1+1, NOW();
++-----+---------------------+
+| 1+1 | NOW()               |
++-----+---------------------+
+|   2 | 2012-10-24 22:16:34 |
++-----+---------------------+
+1 row in set (0.00 sec)
+```
+
+
+
+#### 比较操作
+
+```sql
+SELECT name, price FROM products WHERE price < 1.0;
+SELECT name, quantity FROM products WHERE quantity <= 2000;
+SELECT name, price FROM products WHERE productCode = 'PEN';
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
