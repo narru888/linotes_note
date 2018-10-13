@@ -544,8 +544,13 @@ SELECT * FROM products
 
 ```sql
 SELECT * FROM products WHERE name LIKE 'Pen %' ORDER BY price DESC;
+SELECT * FROM products WHERE name LIKE 'Pen %' ORDER BY price DESC, quantity;
 ```
 
+
+
+
+####
 
 
 
