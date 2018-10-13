@@ -356,7 +356,7 @@ DROP TABLE IF EXISTS tbl_name;
 
 
 
-### 插入行
+### 插入行 \| INSERT INTO
 
 插入一行
 
@@ -387,7 +387,7 @@ INSERT INTO products (productCode, name, quantity, price) VALUES
 
 
 
-### 删除行
+### 删除行 \| DELETE
 
 ```sql
 DELETE FROM products WHERE productID = 1006;
@@ -403,7 +403,7 @@ DELETE FROM products WHERE productID = 1006;
 
 
 
-### 查询行
+### 查询行 \| SELECT
 
 ```sql
 SELECT name, price FROM products;
@@ -506,7 +506,9 @@ SELECT * FROM products WHERE NOT (quantity >= 5000 AND name LIKE 'Pen %');
 
 
 
-#### 
+#### `IN`、`NOT IN`
+
+
 
 
 
