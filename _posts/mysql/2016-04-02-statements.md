@@ -171,7 +171,9 @@ SHOW DATABASES;
 
 
 
-#### 切换当前库
+#### 配置默认库
+
+切换到某个库，从而随后的命令都默认是针对该库进行操作的。
 
 ```sql
 USE db_name;
@@ -179,7 +181,9 @@ USE db_name;
 
 
 
-#### 查看当前库
+#### 查看默认库
+
+查看当前默认操作哪个库。
 
 ```sql
 SELECT DATABASE();
@@ -318,6 +322,9 @@ CHANGE COLUMN old_name new_name INT(11) NOT NULL AUTO_INCREMENT;
 
 #### 删除表
 
+```sql
+DROP TABLE IF EXISTS tbl_name;
+```
 
 
 
