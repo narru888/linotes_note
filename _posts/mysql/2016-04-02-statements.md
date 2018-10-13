@@ -567,7 +567,19 @@ SELECT * FROM products ORDER BY RAND();
 
 #### `LIMIT`
 
+限定查询结果所显示的行数。
 
+```sql
+SELECT * FROM products ORDER BY price LIMIT 2;
+```
+
+仅显示头两行。
+
+```sql
+SELECT * FROM products ORDER BY price LIMIT 2, 1;
+```
+
+跳过前 2 行，显示之后的第 1 行，即第 3 行。
 
 
 
