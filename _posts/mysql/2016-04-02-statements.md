@@ -593,6 +593,12 @@ SELECT * FROM products ORDER BY price LIMIT 2, 1;
 
 跳过前 2 行，显示之后的第 1 行，即第 3 行。
 
+因此，如果想要查看结果中的第 10 ~ 15 行：
+
+```sql
+SELECT * FROM products ORDER BY price LIMIT 9, 6;
+```
+
 
 
 
