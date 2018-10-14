@@ -644,6 +644,17 @@ SELECT CONCAT(productCode, ' - ', name) AS `Product Description`, price FROM pro
 
 
 
+### 生成汇总报表
+
+
+
+
+
+
+
+
+
+
 
 
 
