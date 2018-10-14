@@ -646,7 +646,18 @@ SELECT CONCAT(productCode, ' - ', name) AS `Product Description`, price FROM pro
 
 ### 生成汇总报表
 
+要想生成汇总报表，经常会需要把相关的行 **合并** 在一起。
 
+
+
+
+#### `DISTINCT`
+
+每个字段可能包含重复的值，可以用 `DISTINCT` 来去掉重复，也可以将其用于多个字段。
+
+```sql
+SELECT DISTINCT price AS `Distinct Price` FROM products;
+```
 
 
 
