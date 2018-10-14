@@ -663,7 +663,35 @@ SELECT DISTINCT price, name FROM products;
 
 
 
-####
+#### `GROUP BY`
+
+用 `GROUP BY` 可以把多条特定字段值相同的记录拆分开来。如：
+
+```sql
+SELECT * FROM products ORDER BY productCode, productID;
++-----------+-------------+-----------+----------+-------+
+| productID | productCode | name      | quantity | price |
++-----------+-------------+-----------+----------+-------+
+|      1004 | PEC         | Pencil 2B |    10000 |  0.48 |
+|      1005 | PEC         | Pencil 2H |     8000 |  0.49 |
+|      1001 | PEN         | Pen Red   |     5000 |  1.23 |
+|      1002 | PEN         | Pen Blue  |     8000 |  1.25 |
+|      1003 | PEN         | Pen Black |     2000 |  1.25 |
++-----------+-------------+-----------+----------+-------+
+```
+
+```sql
+SELECT * FROM products GROUP BY productCode;
++-----------+-------------+-----------+----------+-------+
+| productID | productCode | name      | quantity | price |
++-----------+-------------+-----------+----------+-------+
+|      1004 | PEC         | Pencil 2B |    10000 |  0.48 |
+|      1001 | PEN         | Pen Red   |     5000 |  1.23 |
++-----------+-------------+-----------+----------+-------+
+```
+
+每个组中只显示第一条记录。
+
 
 
 
