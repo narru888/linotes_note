@@ -657,7 +657,13 @@ SELECT CONCAT(productCode, ' - ', name) AS `Product Description`, price FROM pro
 
 ```sql
 SELECT DISTINCT price AS `Distinct Price` FROM products;
+SELECT DISTINCT price, name FROM products;
 ```
+
+
+
+
+####
 
 
 
