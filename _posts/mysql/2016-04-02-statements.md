@@ -544,6 +544,18 @@ SELECT * FROM products
 
 
 
+#### `IS NULL`、`IS NOT NULL`
+
+`NULL` 是个特殊的值，代表该字段没有值、值丢失或值未知。用 `IS NULL` 与 `IS NOT NULL` 可以检查该字段是否包含 `NULL`。
+
+
+```sql
+SELECT 
+```
+
+
+
+
 #### `ORDER BY`
 
 查询结果如何排序，默认为正序。
