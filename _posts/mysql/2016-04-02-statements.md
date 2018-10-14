@@ -665,7 +665,9 @@ SELECT DISTINCT price, name FROM products;
 
 #### `GROUP BY`
 
-用 `GROUP BY` 可以把多条特定字段值相同的记录拆分开来。如：
+用 `GROUP BY` 可以把多条特定字段值相同的记录拆分开来。单独使用没什么意义，通常需要与各种统计函数配合使用。
+
+如：
 
 ```sql
 SELECT * FROM products ORDER BY productCode, productID;
@@ -691,6 +693,30 @@ SELECT * FROM products GROUP BY productCode;
 ```
 
 每个组中只显示第一条记录。
+
+
+
+
+#### `GROUP BY` + 统计函数
+
+常用的统计函数如：`COUNT`、`MAX`、`MIN`、`AVG`、`SUM`、`STD`、`GROUP_CONCAT`
+
+可以对每个组应用统计函数，以组为单位来生成汇总报表。
+
+
+##### `COUNT`
+
+`COUNT(*)` 会返回查询所匹配行的总数，`COUNT(columnName)` 仅统计指定字段非空值的数量。
+
+```sql
+SELECT COUNT(*) AS `Count` FROM products;
++-------+
+| Count |
++-------+
+|     5 |
++-------+
+```
+
 
 
 
