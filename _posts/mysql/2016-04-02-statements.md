@@ -613,17 +613,27 @@ SELECT productID AS ID, productCode AS Code,
 	ORDER BY ID;									-- 定义的别名在同一语句中可以直接引用
 ```
 
-因为 Unit Price 中间包含空格，所以需用反引号括起来。
+因为 Unit Price 中间包含空格，所以需用 **反引号** 括起来。
+{: .notice--success}
 
 
 
 
 #### `CONCAT()` 函数
 
-用该函数可以把多个字段连接在一起来显示。
+用该函数可以把多个字段连接在一起，在查询结果中作为一个字段显示。
 
 ```sql
 SELECT CONCAT(productCode, ' - ', name) AS `Product Description`, price FROM products;
++---------------------+-------+
+| Product Description | price |
++---------------------+-------+
+| PEN - Pen Red       |  1.23 |
+| PEN - Pen Blue      |  1.25 |
+| PEN - Pen Black     |  1.25 |
+| PEC - Pencil 2B     |  0.48 |
+| PEC - Pencil 2H     |  0.49 |
++---------------------+-------+
 ```
 
 
