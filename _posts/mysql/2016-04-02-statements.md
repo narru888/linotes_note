@@ -912,16 +912,23 @@ DELETE FROM products WHERE name LIKE 'Pencil%';
 #### 删除全部记录
 
 ```sql
-DELETE * FROM products;
+DELETE FROM products;
 ```
 
-删除部分记录：
-
-```sql
-DELETE FROM tableName WHERE criteria
-```
+表中全部记录将被删除，**无法恢复**。
+{: .notice--warning}
 
 
+
+
+
+
+
+
+
+
+
+### 导入/导出数据
 
 
 
