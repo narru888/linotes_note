@@ -935,7 +935,7 @@ DELETE FROM products;
 
 #### `LOAD DATA LOCAL INFILE ... INTO TABLE ...`
 
-
+可以把原始数据保存到文本文件，然后使用 `LOAD DATA` 语句加载到表中。
 
 
 
