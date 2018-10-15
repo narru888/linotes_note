@@ -1148,6 +1148,8 @@ SELECT * FROM products;
 
 #### `SELECT ... JOIN`
 
+通过两个表中共有的 `supplierID` 字段，可以用 `SELECT ... JOIN` 来联合显示两个表中相关的记录。
+
 
 
 
