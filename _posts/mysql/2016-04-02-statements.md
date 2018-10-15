@@ -1065,7 +1065,9 @@ $ mysql -u root -p southwind < ~/Documents/load_products.sql
 
 继续上例，假设每个产品有一个供应商，每个供应商有一或多个产品。创建 `suppliers` 表来保存供应商数据，字段为 `name`、`address`、`phone number`，同时创建一个可以唯一标识各家供应商的字段 `supplierID`，将该字段设为该表的主键，以确保唯一性及快速查询。
 
-要想将 `suppliers` 与 `products` 表关联在一起，需要在 `products` 表中增加一个字段，即 `supplierID`，
+要想将 `suppliers` 与 `products` 表关联在一起，需要在 `products` 表中增加一个字段，即 `supplierID`，然后将其做为外键，以实现引用的完整性。
+
+
 
 
 
