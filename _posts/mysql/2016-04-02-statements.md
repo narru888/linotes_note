@@ -1008,6 +1008,18 @@ INSERT INTO products VALUES (2001, 'PEC', 'Pencil 3B', 500, 0.52),
 SELECT * FROM products;
 ```
 
+在 MySQL	中，使用 `source` 命令运行脚本 ：
+
+```sql
+source ~/Documents/load_products.sql
+```
+
+或者在命令行中将脚本重定向，用 mysql 客户端程序的批处理模式来执行：
+
+```bash
+$ mysql -u root -p southwind < ~/Documents/load_products.sql
+```
+
 
 
 
