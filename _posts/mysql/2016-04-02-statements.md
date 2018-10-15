@@ -840,6 +840,30 @@ WITH ROOLLUP;
 
 
 
+### 修改数据
+
+使用 `UPDATE` 语句来修改数据。
+
+
+
+
+
+#### 语法
+
+```sql
+UPDATE tableName SET columnName = {value|NULL|DEFAULT}, ... WHERE criteria
+```
+
+
+
+
+
+
+
+
+
+
+
 
 
 
