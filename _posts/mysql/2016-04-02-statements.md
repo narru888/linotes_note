@@ -1115,6 +1115,10 @@ mysql> ALTER TABLE products
 
 然后，需要在子表 `products` 的 `supplierID` 字段上，增加一个到父表的 **外键约束**，以确保 `products` 表中的每个 `supplierID` 都会对应一个 `suppliers` 表中的 `supplierID`，这就称之为 **引用的完整性**。
 
+在增加外键之前，需要为 `products` 现有的记录指定 `supplierID`，这些 `supplierID` 必须当前存在于 `suppliers` 表中。
+
+
+
 
 
 
