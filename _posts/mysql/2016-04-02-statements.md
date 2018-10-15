@@ -359,6 +359,10 @@ DROP TABLE IF EXISTS tbl_name;
 
 
 
+
+
+
+
 ### 插入行
 
 插入一行
@@ -1059,7 +1063,7 @@ $ mysql -u root -p southwind < ~/Documents/load_products.sql
 
 ### 一对多关系
 
-
+继续上例，假设每个产品有一个供应商，每个供应商有一或多个产品。创建 `suppliers` 表来保存供应商数据，字段为 `name`、`address`、`phone number`，同时创建一个可以唯一标识各家供应商的字段 `supplierID`
 
 
 
