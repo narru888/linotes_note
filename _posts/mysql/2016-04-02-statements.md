@@ -753,7 +753,19 @@ SELECT MAX(price), MIN(price), AVG(price), STD(price), SUM(quantity)
 +------------+------------+------------+------------+---------------+
 ```
 
+```sql
+SELECT productDoce, MAX(price) AS `Highest Price`, MIN(price) AS `Lowest Price`
+	FROM products
+	GROUP BY producCode;
++-------------+---------------+--------------+
+| productCode | Highest Price | Lowest Price |
++-------------+---------------+--------------+
+| PEC         |          0.49 |         0.48 |
+| PEN         |          1.25 |         1.23 |
++-------------+---------------+--------------+
+```
 
+```sql
 
 
 
