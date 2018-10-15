@@ -937,6 +937,15 @@ DELETE FROM products;
 
 可以把原始数据保存到文本文件，然后使用 `LOAD DATA` 语句加载到表中。
 
+例如保存为 `.csv` 文件，并用逗号分隔。
+
+```
+\N,PEC,Pencil 3B,500,0.52
+\N,PEC,Pencil 4B,200,0.62
+\N,PEC,Pencil 5B,100,0.73
+\N,PEC,Pencil 6B,500,0.47
+```
+
 
 
 
