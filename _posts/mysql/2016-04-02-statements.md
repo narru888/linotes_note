@@ -997,6 +997,16 @@ SELECT * FROM products INTO OUTFILE '~/Documents/products_out.csv'
 
 除了使用单条语句，还可以把 SQL 语句保存在一个文本文件中，称为 SQL 脚本，来运行该脚本。通常保存为 `.sql` 文件。
 
+例如脚本内容为：
+
+```sql
+DELETE FROM products;
+INSERT INTO products VALUES (2001, 'PEC', 'Pencil 3B', 500, 0.52),
+							(NULL, 'PEC', 'Pencil 4B', 200, 0.62),
+							(NULL, 'PEC', 'Pencil 5B', 100, 0.73),
+							(NULL, 'PEC', 'Pencil 6B', 500, 0.47);
+SELECT * FROM products;
+```
 
 
 
