@@ -1049,6 +1049,21 @@ $ mysql -u root -p southwind < ~/Documents/load_products.sql
 
 
 
+## 多表操作
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
