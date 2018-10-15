@@ -1106,7 +1106,12 @@ SELECT * FROM suppliers;
 
 #### `ALTER TABLE`
 
+为 `products` 表增加一个字段 `supplierID`：
 
+```sql
+mysql> ALTER TABLE products
+		ADD COLUMN supplierID INT UNSIGNED NOT NULL;
+```
 
 
 
