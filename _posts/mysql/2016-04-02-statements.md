@@ -975,6 +975,26 @@ $ mysqlimport -u root -p --local southwind ~/Documents/products.tsv
 
 #### `SELECT ... INTO OUTFILE ...`
 
+用该语句可以将指定数据导出为文件。
+
+```sql
+SELECT * FROM products INTO OUTFILE '~/Documents/products_out.csv'
+	COLUMNS TERMINATED BY ','
+	LINES TERMINATED BY ',';
+```
+
+
+
+
+
+
+
+
+
+
+
+### 使用 SQL 脚本
+
 
 
 
