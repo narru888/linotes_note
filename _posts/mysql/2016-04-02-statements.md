@@ -770,7 +770,15 @@ SELECT productCode, MAX(price), MIN(price),
 	CAST(AVG(price) AS DECIMAL(7,2)) AS `Average`,
 	CAST(STD(price) AS DECIMAL(7,2)) AS `Std Dev`,
 	SUM(quantity)
-
+FROM products
+GROUP BY productCode;
++-------------+---------------+--------------+
+| productCode | Highest Price | Lowest Price |
++-------------+---------------+--------------+
+| PEC         |          0.49 |         0.48 |
+| PEN         |          1.25 |         1.23 |
++-------------+---------------+--------------+
+```
 
 
 
