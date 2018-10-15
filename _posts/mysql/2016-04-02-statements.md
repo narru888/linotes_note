@@ -808,7 +808,26 @@ HAVING Count >=3;
 
 #### `WITH ROLLUP`
 
+`WITH ROLLUP` 是对 `GROUP BY` 所返回的所有记录进行一个汇总。
 
+```sql
+SELECT
+	productCode,
+	MAX(price),
+	MIN(price),
+	CAST(AVG(price) AS DECIMAL(7,2)) AS `Average`,
+	SUM(quantity)
+FROM products
+GROUP BY productCode
+WITH ROOLLUP;
++-------------+------------+------------+---------+---------------+
+| productCode | MAX(price) | MIN(price) | Average | SUM(quantity) |
++-------------+------------+------------+---------+---------------+
+| PEC         |       0.49 |       0.48 |    0.49 |         18000 |
+| PEN         |       1.25 |       1.23 |    1.24 |         15000 |
+| NULL        |       1.25 |       0.48 |    0.94 |         33000 |
++-------------+------------+------------+---------+---------------+
+```
 
 
 
