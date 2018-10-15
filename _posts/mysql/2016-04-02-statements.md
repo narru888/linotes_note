@@ -995,7 +995,7 @@ SELECT * FROM products INTO OUTFILE '~/Documents/products_out.csv'
 
 ### 使用 SQL 脚本
 
-
+除了使用单条语句，还可以把 SQL 语句保存在一个文本文件中，称为 SQL 脚本，来运行该脚本。
 
 
 
