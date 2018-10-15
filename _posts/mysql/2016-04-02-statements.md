@@ -354,7 +354,7 @@ DROP TABLE IF EXISTS tbl_name;
 
 ## 数据操作
 
-
+本节使用的范例：假设有一个产品销售数据库，名为 southwind，其中有多个表，包括 products、cutomers、suppliers、orders、payments、employees 等。
 
 
 
@@ -1050,6 +1050,14 @@ $ mysql -u root -p southwind < ~/Documents/load_products.sql
 
 
 ## 多表操作
+
+
+
+
+
+
+
+### 一对多关系
 
 
 
