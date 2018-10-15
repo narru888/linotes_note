@@ -743,6 +743,16 @@ SELECT productCode, COUNT(*) AS count
 
 ##### `MAX`、`MIN`、`AVG`、`STD`、`SUM`
 
+```sql
+SELECT MAX(price), MIN(price), AVG(price), STD(price), SUM(quantity)
+	FROM products;
++------------+------------+------------+------------+---------------+
+| MAX(price) | MIN(price) | AVG(price) | STD(price) | SUM(quantity) |
++------------+------------+------------+------------+---------------+
+|       1.25 |       0.48 |   0.940000 |   0.371591 |         33000 |
++------------+------------+------------+------------+---------------+
+```
+
 
 
 
