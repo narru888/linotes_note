@@ -1086,7 +1086,7 @@ DESCRIBE suppliers;
 | phone      | char(8)          | NO   |     |         |                |
 +------------+------------------+------+-----+---------+----------------+
 
-INSERT INTO suppliers VALUE
+INSERT INTO suppliers VALUES
 	(501, 'ABC Traders', '88881111'),
 	(502, 'XYZ Company', '88882222'),
 	(503, 'QQ Corp', '88883333');
@@ -1100,6 +1100,14 @@ SELECT * FROM suppliers;
 |        503 | QQ Corp     | 88883333 |
 +------------+-------------+----------+
 ```
+
+
+
+
+#### `ALTER TABLE`
+
+
+
 
 
 
