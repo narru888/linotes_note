@@ -1118,7 +1118,12 @@ ADD COLUMN supplierID INT UNSIGNED NOT NULL;
 在增加外键之前，需要为 `products` 现有的记录指定 `supplierID`，这些 `supplierID` 必须当前存在于 `suppliers` 表中。
 
 ```sql
-UPDATE
+UPDATE products SET supplierID = 501;
+```
+
+现在，增加外键：
+
+
 
 
 
