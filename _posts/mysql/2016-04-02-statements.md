@@ -967,8 +967,15 @@ LOAD DATA LOCAL FILE '~/Documents/products_in.csv' INTO TABLE products
 `mysqlimport` 是一个工具，可用来从文本文件中导入数据。文本文件需以 `.tsv` 为后缀，文件名必须与表名相同。
 
 ```bash
-$ mysqlimport -u username -p --local db_name table_name.tsv
+$ mysqlimport -u root -p --local southwind ~/Documents/products.tsv
 ```
+
+
+
+
+#### `SELECT ... INTO OUTFILE ...`
+
+
 
 
 
