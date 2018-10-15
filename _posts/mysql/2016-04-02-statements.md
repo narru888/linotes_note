@@ -1113,6 +1113,8 @@ mysql> ALTER TABLE products
 		ADD COLUMN supplierID INT UNSIGNED NOT NULL;
 ```
 
+然后，需要在子表 `products` 的 `supplierID` 字段上，增加一个到父表的 **外键约束**。
+
 
 
 
