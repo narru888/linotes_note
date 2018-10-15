@@ -1067,7 +1067,8 @@ $ mysql -u root -p southwind < ~/Documents/load_products.sql
 
 要想将 `suppliers` 与 `products` 表关联在一起，需要在 `products` 表中增加一个字段，即 `supplierID`，然后将其做为外键，以实现引用的完整性。`suppliers` 称为父表，`products` 为子表。
 
-因此，这里一对多即指
+因此，这里一对多即指 **父表中的一条记录，对应子表中的多条记录**。它们需要通过主键和外键来进行约束，以保证引用的完整性。
+{: .notice}
 
 ```sql
 USE southwind;
@@ -1159,6 +1160,22 @@ FROM products AS p
 WHERE p.price < 0.6;
 ```
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 多对多
 
 
 
