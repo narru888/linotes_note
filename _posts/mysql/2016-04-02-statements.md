@@ -946,7 +946,12 @@ DELETE FROM products;
 \N,PEC,Pencil 6B,500,0.47
 ```
 
+导入：
 
+```sql
+LOAD DATA LOCAL FILE '~/Documents/products_in.csv' INTO TABLE products
+	COLUMNS TERMINATED BY ',';
+```
 
 
 
