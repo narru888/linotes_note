@@ -1123,7 +1123,9 @@ UPDATE products SET supplierID = 501;
 
 现在，增加外键：
 
-
+```sql
+ALTER TABLE products
+ADD FOREIGN KEY (supplierID) REFERENCES suppliers (supplierID);
 
 
 
