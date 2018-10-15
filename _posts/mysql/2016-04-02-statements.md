@@ -727,6 +727,18 @@ SELECT productCode, COUNT(*) AS `Total` FROM products GROUP BY productCode;
 +-------------+----------+
 ```
 
+```sql
+SELECT productCode, COUNT(*) AS count
+	FROM products
+	GROUP BY productCode
+	ORDER BY count DESC;
++-------------+-------+
+| productCode | count |
++-------------+-------+
+| PEN         |     3 |
+| PEC         |     2 |
++-------------+-------+
+```
 
 
 
