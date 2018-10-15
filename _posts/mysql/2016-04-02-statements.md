@@ -1076,6 +1076,7 @@ CREATE TABLE suppliers (
 	phone       CHAR(8)      NOT NULL DEFAULT '',
 	PRIMARY KEY (supplierID)
 );
+
 DESCRIBE suppliers;
 +------------+------------------+------+-----+---------+----------------+
 | Field      | Type             | Null | Key | Default | Extra          |
@@ -1085,6 +1086,20 @@ DESCRIBE suppliers;
 | phone      | char(8)          | NO   |     |         |                |
 +------------+------------------+------+-----+---------+----------------+
 
+INSERT INTO suppliers VALUE
+	(501, 'ABC Traders', '88881111'),
+	(502, 'XYZ Company', '88882222'),
+	(503, 'QQ Corp', '88883333');
+
+SELECT * FROM suppliers;
++------------+-------------+----------+
+| supplierID | name        | phone    |
++------------+-------------+----------+
+|        501 | ABC Traders | 88881111 |
+|        502 | XYZ Company | 88882222 |
+|        503 | QQ Corp     | 88883333 |
++------------+-------------+----------+
+```
 
 
 
