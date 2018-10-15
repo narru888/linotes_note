@@ -1067,6 +1067,8 @@ $ mysql -u root -p southwind < ~/Documents/load_products.sql
 
 要想将 `suppliers` 与 `products` 表关联在一起，需要在 `products` 表中增加一个字段，即 `supplierID`，然后将其做为外键，以实现引用的完整性。`suppliers` 称为父表，`products` 为子表。
 
+因此，这里一对多即指
+
 ```sql
 USE southwind;
 DROP TABLE IF EXISTS suppliers;
