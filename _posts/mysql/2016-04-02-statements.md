@@ -717,7 +717,7 @@ SELECT COUNT(*) AS `Count` FROM products;
 +-------+
 ```
 
-```sq
+```sql
 SELECT productCode, COUNT(*) AS `Total` FROM products GROUP BY productCode;
 +-------------+----------+
 | productCode | COUNT(*) |
