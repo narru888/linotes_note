@@ -741,6 +741,9 @@ SELECT productCode, COUNT(*) AS count
 ```
 
 
+##### `MAX`、`MIN`、`AVG`、`STD`、`SUM`
+
+
 
 
 
