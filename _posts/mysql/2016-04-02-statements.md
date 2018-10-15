@@ -1126,6 +1126,7 @@ UPDATE products SET supplierID = 501;
 ```sql
 ALTER TABLE products
 ADD FOREIGN KEY (supplierID) REFERENCES suppliers (supplierID);
+```
 
 
 
