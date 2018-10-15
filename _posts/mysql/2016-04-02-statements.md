@@ -858,6 +858,34 @@ UPDATE tableName SET columnName = {value|NULL|DEFAULT}, ... WHERE criteria
 
 
 
+#### 修改所有数据
+
+```sql
+UPDATE products SET price = price * 1.1;
+```
+
+
+
+
+#### 修改部分记录
+
+```sql
+UPDATE products SET quantity = quantity - 100 WHERE name = 'Pen Red';
+```
+
+
+
+
+#### 修改多个值
+
+```sql
+UPDATE products SET quantity = quantity + 50, price = 1.23 WHERE name = 'Pen Red';
+```
+
+
+
+
+
 
 
 
