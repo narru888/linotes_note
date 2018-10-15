@@ -1150,7 +1150,12 @@ SELECT * FROM products;
 
 通过两个表中共有的 `supplierID` 字段，可以用 `SELECT ... JOIN` 来联合显示两个表中相关的记录。
 
-
+```sql
+SELECT products.name, price, suppliers.name
+FROM products
+	JOIN suppliers ON products.supplierID = suppliers.supplierID
+WHERE price < 0.6;
+```
 
 
 
