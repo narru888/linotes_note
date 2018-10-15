@@ -900,12 +900,19 @@ UPDATE products SET quantity = quantity + 50, price = 1.23 WHERE name = 'Pen Red
 
 
 
-#### 语法
-
-删除全部记录：
+#### 删除部分记录
 
 ```sql
-DELETE FROM tableName
+DELETE FROM products WHERE name LIKE 'Pencil%';
+```
+
+
+
+
+#### 删除全部记录
+
+```sql
+DELETE * FROM products;
 ```
 
 删除部分记录：
@@ -913,6 +920,11 @@ DELETE FROM tableName
 ```sql
 DELETE FROM tableName WHERE criteria
 ```
+
+
+
+
+
 
 
 
