@@ -787,6 +787,59 @@ GROUP BY productCode;
 
 该子句与 `WHERE` 类似，但 `HAVING` 可以和 `GROUP BY` 统计函数配合使用，而 `WHERE` 只能进行字段操作。
 
+```sql
+SELECT
+	productCode AS `Product Code`,
+	COUNT(*) AS `Count`,
+	CAST(AVG(price) AS DECIMAL(7,2)) AS `Average`
+FROM products
+GROUP BY productCode
+HAVING Count >=3;
++--------------+-------+---------+
+| Product Code | Count | Average |
++--------------+-------+---------+
+| PEN          |     3 |    1.24 |
++--------------+-------+---------+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
