@@ -953,6 +953,23 @@ LOAD DATA LOCAL FILE '~/Documents/products_in.csv' INTO TABLE products
 	COLUMNS TERMINATED BY ',';
 ```
 
+注意：
+
+* 默认的行分隔符为 `\n`，如果是在 windows 中编辑的，则需使用 `\r\n`。
+* 默认的字段分隔符为 tab，如果使用其它的符号，如逗号，则需要用 `COLUMNS TERMINATED BY ','` 来说明。
+* 如果是空值，需用 `\N` 来表示。
+
+
+
+
+#### `mysqlimport`
+
+`mysqlimport` 是一个工具，可用来从文本文件中导入数据。文本文件需以 `.tsv` 为后缀。
+
+```bash
+$ mysqlimport -u username -p --local db_name table_name.tsv
+```
+
 
 
 
