@@ -538,7 +538,7 @@ SELECT * FROM products WHERE name IN ('Pen Red', 'Pen Black');
 
 ```sql
 SELECT * FROM products
-	WHERE (price BETWEEN 1.0 and 2.0)  AND (quantity BETWEEN 1000 AND 2000);
+WHERE (price BETWEEN 1.0 and 2.0)  AND (quantity BETWEEN 1000 AND 2000);
 ```
 
 
@@ -609,8 +609,8 @@ SELECT * FROM products ORDER BY price LIMIT 9, 6;
 ```sql
 SELECT productID AS ID, productCode AS Code,
 	name AS Description, price AS `Unit Price`		-- 定义的别名用于返回结果做为表头
-	FROM products
-	ORDER BY ID;									-- 定义的别名在同一语句中可以直接引用
+FROM products
+ORDER BY ID;									-- 定义的别名在同一语句中可以直接引用
 ```
 
 因为 Unit Price 中间包含空格，所以需用 **反引号** 括起来。
@@ -729,9 +729,9 @@ SELECT productCode, COUNT(*) AS `Total` FROM products GROUP BY productCode;
 
 ```sql
 SELECT productCode, COUNT(*) AS count
-	FROM products
-	GROUP BY productCode
-	ORDER BY count DESC;
+FROM products
+GROUP BY productCode
+ORDER BY count DESC;
 +-------------+-------+
 | productCode | count |
 +-------------+-------+
@@ -745,7 +745,7 @@ SELECT productCode, COUNT(*) AS count
 
 ```sql
 SELECT MAX(price), MIN(price), AVG(price), STD(price), SUM(quantity)
-	FROM products;
+FROM products;
 +------------+------------+------------+------------+---------------+
 | MAX(price) | MIN(price) | AVG(price) | STD(price) | SUM(quantity) |
 +------------+------------+------------+------------+---------------+
@@ -755,8 +755,8 @@ SELECT MAX(price), MIN(price), AVG(price), STD(price), SUM(quantity)
 
 ```sql
 SELECT productDoce, MAX(price) AS `Highest Price`, MIN(price) AS `Lowest Price`
-	FROM products
-	GROUP BY producCode;
+FROM products
+GROUP BY producCode;
 +-------------+---------------+--------------+
 | productCode | Highest Price | Lowest Price |
 +-------------+---------------+--------------+
@@ -766,7 +766,10 @@ SELECT productDoce, MAX(price) AS `Highest Price`, MIN(price) AS `Lowest Price`
 ```
 
 ```sql
-
+SELECT productCode, MAX(price), MIN(price),
+	CAST(AVG(price) AS DECIMAL(7,2)) AS `Average`,
+	CAST(STD(price) AS DECIMAL(7,2)) AS `Std Dev`,
+	SUM(quantity)
 
 
 
