@@ -893,6 +893,36 @@ UPDATE products SET quantity = quantity + 50, price = 1.23 WHERE name = 'Pen Red
 
 
 
+### 删除记录
+
+使用 `DELETE FROM` 语句可以从表中删除记录。
+
+
+
+
+#### 语法
+
+删除全部记录：
+
+```sql
+DELETE FROM tableName
+```
+
+删除部分记录：
+
+```sql
+DELETE FROM tableName WHERE criteria
+```
+
+
+
+
+
+
+
+
+
+
 
 
 
