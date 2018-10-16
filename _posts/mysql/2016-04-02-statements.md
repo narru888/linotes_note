@@ -1258,6 +1258,8 @@ ALTER TABLE products DROP FOREIGN KEY products_ibfk_1;
 SHOW CREATE TABLE products \G
 ```
 
+删除之后，用 `SHOW CREATE TABLE` 查看就看不到 CONSTRAINT 了。
+
 
 
 
