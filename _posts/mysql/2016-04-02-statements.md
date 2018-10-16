@@ -1193,6 +1193,18 @@ productID | supplierID
 
 其中 `productID` 与 `supplierID` 都 **外键**。
 
+```sql
+CREATE TABLE products_suppliers (
+     productID   INT UNSIGNED  NOT NULL,
+     supplierID  INT UNSIGNED  NOT NULL,
+                 -- Same data types as the parent tables
+     PRIMARY KEY (productID, supplierID),
+                 -- uniqueness
+     FOREIGN KEY (productID)  REFERENCES products  (productID),
+     FOREIGN KEY (supplierID) REFERENCES suppliers (supplierID)
+);
+```
+
 `suppliers` 表：
 
 supplierID | name | phone
