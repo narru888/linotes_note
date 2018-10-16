@@ -1191,9 +1191,15 @@ productID | supplierID
 2004 | 502
 2001 | 503
 
-其中 `productID` 与 `supplierID` 都外键。
+其中 `productID` 与 `supplierID` 都 **外键**。
 
 `suppliers` 表：
+
+supplierID | name | phone
+--- | --- | ---
+501 | ABC Traders | 88881111
+502 | XYZ Company | 88882222
+503 | QQ Corp | 88883333
 
 
 
