@@ -1230,6 +1230,11 @@ INSERT INTO products_suppliers VALUES (2001, 501), (2002, 501),
 
 
 
+#### 移除旧的外键
+
+从 `products` 表中移除 `supplierID` 字段，它是在一对多的关系中做外键使用的，但有了关联表，它就没用了。
+
+
 
 
 
