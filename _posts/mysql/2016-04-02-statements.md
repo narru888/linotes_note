@@ -1191,6 +1191,8 @@ productID | supplierID
 2004 | 502
 2001 | 503
 
+其中 `productID` 与 `supplierID` 都外键。
+
 `suppliers` 表：
 
 
