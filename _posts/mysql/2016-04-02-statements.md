@@ -1055,6 +1055,22 @@ $ mysql -u root -p southwind < ~/Documents/load_products.sql
 
 ## 多表操作
 
+`suppliers` 表：
+
+supplierID | name | phone
+--- | --- | ---
+501 | ABC Traders | 88881111
+502 | XYZ Company | 88882222
+503 | QQ Corp | 88883333
+
+`products` 表：
+
+productID | productCode | name | quantity | price
+--- | --- | --- | --- | ---
+2001 | PEC | Pencil 3B | 500 | 0.52
+2002 | PEC | Pencil 4B | 200 | 0.62
+2003 | PEC | Pencil 5B | 100 | 0.73
+2004 | PEC | Pencil 6B | 500 | 0.47
 
 
 
@@ -1211,22 +1227,7 @@ INSERT INTO products_suppliers VALUES (2001, 501), (2002, 501),
        (2003, 501), (2004, 502), (2001, 503);
 ```
 
-`suppliers` 表：
 
-supplierID | name | phone
---- | --- | ---
-501 | ABC Traders | 88881111
-502 | XYZ Company | 88882222
-503 | QQ Corp | 88883333
-
-`products` 表：
-
-productID | productCode | name | quantity | price
---- | --- | --- | --- | ---
-2001 | PEC | Pencil 3B | 500 | 0.52
-2002 | PEC | Pencil 4B | 200 | 0.62
-2003 | PEC | Pencil 5B | 100 | 0.73
-2004 | PEC | Pencil 6B | 500 | 0.47
 
 
 
