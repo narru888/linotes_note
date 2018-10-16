@@ -1260,6 +1260,13 @@ SHOW CREATE TABLE products \G
 
 删除之后，用 `SHOW CREATE TABLE` 查看就看不到 CONSTRAINT 了。
 
+最后，可以删除该字段了：
+
+```sql
+ALTER TABLE products DROP productID;
+DESC products;
+```
+
 
 
 
