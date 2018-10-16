@@ -1191,6 +1191,8 @@ productID | supplierID
 2004 | 502
 2001 | 503
 
+`suppliers` 表：
+
 
 
 
