@@ -1254,7 +1254,9 @@ Create Table: CREATE TABLE `products` (
 然后就可以用其约束名称来删除外键了：
 
 ```sql
-
+ALTER TABLE products DROP FOREIGN KEY products_ibfk_1;
+SHOW CREATE TABLE products \G
+```
 
 
 
