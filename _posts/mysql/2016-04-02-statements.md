@@ -1232,7 +1232,23 @@ INSERT INTO products_suppliers VALUES (2001, 501), (2002, 501),
 
 #### 移除旧的外键
 
-从 `products` 表中移除 `supplierID` 字段，它是在一对多的关系中做外键使用的，但有了关联表，它就没用了。移除之前，需要先 **移除** 针对该字段的 **外键**，此时需要知道该键的约束名称，这是由系统生成的。
+从 `products` 表中移除 `supplierID` 字段，它是在一对多的关系中做外键使用的，但有了关联表，它就没用了。移除之前，需要先 **移除** 针对该字段的 **外键**，此时需要知道该键的约束名称，这是由系统生成的。可以使用 `SHOW CREATE TABLE procuts` 来查看。
+
+```sql
+SHOW CREATE TABLE products \G
+Create Table: CREATE TABLE `products` (
+  `productID`   int(10) unsigned  NOT NULL AUTO_INCREMENT,
+  `productCode` char(3)           NOT NULL DEFAULT '',
+  `name`        varchar(30)       NOT NULL DEFAULT '',
+  `quantity`    int(10) unsigned  NOT NULL DEFAULT '0',
+  `price`       decimal(7,2)      NOT NULL DEFAULT '99999.99',
+  `supplierID`  int(10) unsigned   NOT NULL DEFAULT '501',
+  PRIMARY KEY (`productID`),
+  KEY `supplierID` (`supplierID`),
+  CONSTRAINT `products_ibfk_1` FOREIGN KEY (`supplierID`)
+     REFERENCES `suppliers` (`supplierID`)
+) ENGINE=InnoDB AUTO_INCREMENT=1006 DEFAULT CHARSET=latin1
+```
 
 
 
