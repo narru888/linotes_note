@@ -1367,7 +1367,9 @@ DESCRIBE product_details;
 
 ## 备份
 
-
+```bash
+$ mysqldump -u root -p --databases southewind > ~/Documents/backup/southwind.sql
+```
 
 
 
