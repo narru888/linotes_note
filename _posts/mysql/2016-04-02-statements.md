@@ -1274,7 +1274,7 @@ SHOW CREATE TABLE products \G
 
 ```sql
 ALTER TABLE products DROP supplierID;
-DESC products;
+DESCRIBE products;
 ```
 
 
