@@ -1280,6 +1280,21 @@ DESCRIBE products;
 
 
 
+#### 多表查询
+
+使用 `SELECT ... JOIN` 进行多表查询。
+
+```sql
+SELECT P.name AS `Product Name`, price, S.name AS `Supplier Name`
+FROM products_suppliers AS `PS`
+	JOIN products AS `P` ON PS.productID = P.productID
+	JOIN suppliers AS `S` ON PS.supplierID = S.supplierID
+WHERE price < 0.6;
+```
+
+
+
+
 
 
 
