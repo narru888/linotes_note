@@ -1426,7 +1426,16 @@ $ mysqldump -u root -p dbName tableName1 tableName2 > backupFile.sql
 
 ### 恢复
 
+mysqldump 所创建的 `.sql` 文件实际上是 SQL 脚本，其中包含了 `CREATE TABLE`、`INSERT` 等命令，用来重演创建表格和插入数据的操作，因此可以用来恢复数据。
 
+
+
+
+#### 用 `source` 命令恢复
+
+```sql
+source ~/Documents/backup_southwind.sql
+```
 
 
 
