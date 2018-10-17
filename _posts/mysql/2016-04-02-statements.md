@@ -1391,6 +1391,14 @@ $ mysqldump -u root -p --databases dbName1 dbName2 dbName3 > backupFile.sql
 
 
 
+#### 备份所有数据库
+
+```bash
+$ mysqldump -u root -p --all-databases --ignore-table=mysql.user > backupServer.sql
+```
+
+
+
 
 
 
