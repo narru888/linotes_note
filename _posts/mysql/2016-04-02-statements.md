@@ -1290,6 +1290,13 @@ FROM products_suppliers AS `PS`
 	JOIN products AS `P` ON PS.productID = P.productID
 	JOIN suppliers AS `S` ON PS.supplierID = S.supplierID
 WHERE price < 0.6;
++--------------+-------+---------------+
+| Product Name | price | Supplier Name |
++--------------+-------+---------------+
+| Pencil 3B    |  0.52 | ABC Traders   |
+| Pencil 3B    |  0.52 | QQ Corp       |
+| Pencil 6B    |  0.47 | XYZ Company   |
++--------------+-------+---------------+
 ```
 
 
