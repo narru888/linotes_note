@@ -1442,6 +1442,16 @@ source ~/Documents/backup_southwind.sql
 
 
 
+#### 用批处理模式恢复
+
+也可以用 mysql 客户端的批处理模式来恢复：
+
+```bash
+$ mysql -u root -p southwind < ~/Documents/backup_southwind.sql
+```
+
+
+
 
 
 
