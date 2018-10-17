@@ -1433,6 +1433,8 @@ mysqldump 所创建的 `.sql` 文件实际上是 SQL 脚本，其中包含了 `C
 
 #### 用 `source` 命令恢复
 
+可以在 mysql 环境中使用 `source` 命令来恢复。
+
 ```sql
 source ~/Documents/backup_southwind.sql
 ```
