@@ -1376,6 +1376,21 @@ $ mysqldump -u root -p --databases southewind > ~/Documents/backup/southwind.sql
 
 
 
+### 备份
+
+
+
+
+#### 备份指定数据库
+
+```bash
+$ mysqldump -u root -p --databases dbName1 dbName2 dbName3 > backupFile.sql
+```
+
+
+
+
+
 
 
 
