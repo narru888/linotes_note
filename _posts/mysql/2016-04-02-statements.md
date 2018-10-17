@@ -1367,6 +1367,8 @@ DESCRIBE product_details;
 
 ## 备份
 
+使用 `mysqldump` 借助重定向，可以将指定的数据库导出为 `.sql` 文件。
+
 ```bash
 $ mysqldump -u root -p --databases southewind > ~/Documents/backup/southwind.sql
 ```
