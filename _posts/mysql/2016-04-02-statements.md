@@ -1234,6 +1234,9 @@ INSERT INTO products_suppliers VALUES (2001, 501), (2002, 501),
 
 从 `products` 表中移除 `supplierID` 字段，它是在一对多的关系中做外键使用的，但有了关联表，它就没用了。移除之前，需要先 **移除** 针对该字段的 **外键**，此时需要知道该键的 **约束名称**，这是由系统生成的。可以使用 `SHOW CREATE TABLE procuts` 来查看。
 
+
+##### 查看外键的约束名称
+
 ```sql
 SHOW CREATE TABLE products \G
 Create Table: CREATE TABLE `products` (
@@ -1251,6 +1254,9 @@ Create Table: CREATE TABLE `products` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1006 DEFAULT CHARSET=latin1
 ```
 
+
+##### 删除外键
+
 然后就可以用其约束名称来删除外键了：
 
 ```sql
@@ -1260,10 +1266,14 @@ SHOW CREATE TABLE products \G
 
 删除之后，用 `SHOW CREATE TABLE` 查看就看不到 CONSTRAINT 了。
 
+
+
+##### 删除字段
+
 最后，可以删除该字段了：
 
 ```sql
-ALTER TABLE products DROP productID;
+ALTER TABLE products DROP supplierID;
 DESC products;
 ```
 
