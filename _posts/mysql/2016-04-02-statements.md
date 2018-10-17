@@ -1318,6 +1318,25 @@ WHERE price < 0.6;
 
 ![image-center](/assets/images/SouthWind_EER.png){: .align-center}
 
+```sql
+CREATE TABLE product_details (
+	productID INT UNSIGNED NOT NULL,
+	comment TEXT NULL,
+	PRIMARY KEY (productID),
+	FOREIGN KEY (productID) REFERENCES products (productID)
+);
+
+DESCRIBE product_details;
++-----------+------------------+------+-----+---------+-------+
+| Field     | Type             | Null | Key | Default | Extra |
++-----------+------------------+------+-----+---------+-------+
+| productID | int(10) unsigned | NO   | PRI | NULL    |       |
+| comment   | text             | YES  |     | NULL    |       |
++-----------+------------------+------+-----+---------+-------+
+```
+
+
+
 
 
 
