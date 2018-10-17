@@ -1424,6 +1424,20 @@ $ mysqldump -u root -p dbName tableName1 tableName2 > backupFile.sql
 
 
 
+### 恢复
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
