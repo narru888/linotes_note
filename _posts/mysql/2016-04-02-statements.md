@@ -1316,6 +1316,8 @@ WHERE price < 0.6;
 
 假设有些产品有一些可选项，如照片、说明等。与其将这些信息保存到 `products` 表中，不如将其单独保存，这样更有效率。我们为其创建一个新表 `product_details`，然后用一对一的关系，将其链接到 `products` 表中。
 
+![image-center](/assets/images/SouthWind_EER.png){: .align-center}
+
 
 
 
