@@ -1401,6 +1401,24 @@ $ mysqldump -u root -p --all-databases --ignore-table=mysql.user > backupServer.
 
 
 
+#### 备份指定数据库的所有表
+
+```bash
+$ mysqldump -u root -p dbName > backupFile.sql
+```
+
+
+
+
+#### 备份指定数据库的部分表
+
+```bash
+$ mysqldump -u root -p dbName tableName1 tableName2 > backupFile.sql
+```
+
+
+
+
 
 
 
