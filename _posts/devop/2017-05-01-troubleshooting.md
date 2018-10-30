@@ -29,6 +29,24 @@ header:
 
 
 
+#### 配置 IP 地址
+
+```bash
+$ sudo vi /etc/sysconfig/network-scripts/ifcfg-ens33
+```
+
+```conf
+IPADD=192.168.1.10
+DNS=192.168.1.5
+GATEWAY=192.168.1.1
+NETMASK=255.255.255.0
+ZONE=public
+ONBOOT=yes
+```
+
+
+
+
 #### 修改 http 的最大并发请求数
 
 通过修改该配置文件中的最大文件描述符数量实现，重启后生效。
