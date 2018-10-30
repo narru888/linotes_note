@@ -29,6 +29,20 @@ header:
 
 
 
+#### 配置主机名
+
+
+```bash
+$ sudo nmcli general hostname hollyshit
+$ sudo hostnamectl set-hostname hollyshit
+```
+
+
+
+
+
+
+
 #### 配置 IP 地址
 
 ```bash
@@ -43,6 +57,12 @@ NETMASK=255.255.255.0
 ZONE=public
 ONBOOT=yes
 ```
+
+```bash
+$ sudo systemctl restart network
+```
+
+
 
 
 
