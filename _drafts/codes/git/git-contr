@@ -1,6 +1,0 @@
-#!/bin/sh
-
-filePath=$1
-
-git blame --line-porcelain -C $filePath | sed -n 's/^author //p' |
-sort | uniq -c | sort -rn

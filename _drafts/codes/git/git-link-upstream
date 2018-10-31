@@ -1,5 +1,0 @@
-#!/bin/bash
-
-BRANCH=$(git-current-branch)
-
-git branch --set-upstream-to=origin/$BRANCH $BRANCH
