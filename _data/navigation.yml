@@ -1,18 +1,17 @@
 # main links
 main:
 
-  - title: "Rsync 的用法"
+  - title: "Rsync"
     url: /app/rsync/
 
-  - title: "Vsftpd 的用法"
+  - title: "Vsftpd"
     url: /server/vsftpd/
 
-  - title: "文件描述符简介"
-    url: /kernel/filedescriptor/
-
-  - title: "数据流处理"
+  - title: "数据流"
     url: /tools/datastream/
 
+  - title: "Interview"
+    url: /devop/interview/
 
 # 侧边栏
 #linux:
