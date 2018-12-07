@@ -210,6 +210,12 @@ $ cat /dev/urandom | head -10 | sha512sum | head -c 32
 
 #### 统计 apache 的 access.log 中访问量最多的前 5 个 ip 地址
 
+`access.log` 通常格式如下：
+
+```
+127.0.0.1 - peter [9/Feb/2017:10:34:12 -0700] "GET /sample-image.png HTTP/2" 200 1479
+```
+
 ```bash
 $ sudo cat /var/log/httpd/test-access.log \
  | awk '{print $1}' \
