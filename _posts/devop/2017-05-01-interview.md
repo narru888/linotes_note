@@ -115,7 +115,25 @@ listening on ens33, link-type EN10MB (Ethernet), capture size 262144 bytes
 
 #### 查看连接到本机的每个 IP 的连接数量
 
+```bash
+netstat -n
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State      
+tcp        0    304 192.168.1.9:22          192.168.1.6:14148       ESTABLISHED
+udp      832      0 192.168.1.9:51696       192.168.1.5:53          ESTABLISHED
+udp6       0      0 fe80::d558:6d:c1d:51207 fe80::1:53              ESTABLISHED
+Active UNIX domain sockets (w/o servers)
+Proto RefCnt Flags       Type       State         I-Node   Path
+unix  3      [ ]         DGRAM                    15623    /run/systemd/notify
+unix  20     [ ]         DGRAM                    15634    /run/systemd/journal/dev-log
+unix  8      [ ]         DGRAM                    15642    /run/systemd/journal/socket
+```
 
+我们只需要取 **tcp** 开头的行，第 **5** 列的值，如 192.168.1.6:14148，把 **端口号** 去掉，**统计** 总数。
+
+```bash
+$ netstat -n \
+awk '/^tcp/{print $5}'
 
 
 
