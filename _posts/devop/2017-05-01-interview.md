@@ -113,6 +113,17 @@ listening on ens33, link-type EN10MB (Ethernet), capture size 262144 bytes
 `-c` ：count，抓包数量
 
 
+#### 查看连接到本机的每个 IP 的连接数量
+
+
+
+
+
+
+
+
+
+
 
 
 
