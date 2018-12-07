@@ -13,10 +13,10 @@ header:
 ---
 
 
-## 系统配置
+### 系统配置
 
 
-### 修改 http 的最大并发请求数
+#### 修改 http 的最大并发请求数
 
 查看当前最大并发数的配置：
 
@@ -43,7 +43,7 @@ neo hard nofile 10240
 `nofile` ：Number of Open file descriptors，即文件描述符总数的上限。
 
 
-### 挂载 windows 的共享目录
+#### 挂载 windows 的共享目录
 
 ```bash
 $ mount.cifs //192.168.1.6/movie /mnt/win -o user=neo,password=matrix
@@ -55,9 +55,12 @@ $ mount -t cifs -o username=neo,password=matrix //192.168.1.6/movie /mnt/win
 
 
 
-## 系统状态
 
-### 查看 http 并发请求数以及 TCP 连接状态
+
+### 系统状态
+
+
+#### 查看 http 并发请求数以及 TCP 连接状态
 
 ```bash
 $ ss -s
