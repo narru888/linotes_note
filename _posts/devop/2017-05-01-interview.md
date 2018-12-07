@@ -13,7 +13,30 @@ header:
 ---
 
 
+
+
+
+
+
+
+
+
+
+
 ### 系统配置
+
+#### Linux 启动顺序
+
+* BIOS
+* MBR
+* GRUB
+* Linux 内核
+* 启动 systemd
+* 读取配置文件
+* sysinit.target
+* basic.target
+* multi-user.target
+* graphical.target
 
 
 #### 修改 http 的最大并发请求数
@@ -141,6 +164,19 @@ $ netstat -n \
 ```
 
 
+#### `ps aux` 返回的结果中，VSZ、RSS 的含义
+
+```bash
+$ ps aux
+USER        PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root          1  1.1  0.5 171476 14476 ?        Ss   19:13   0:02 /usr/lib/systemd/systemd --switched-root --system
+root          2  0.0  0.0      0     0 ?        S    19:13   0:00 [kthreadd]
+root          3  0.0  0.0      0     0 ?        I<   19:13   0:00 [rcu_gp]
+```
+
+`VSZ` ：virtual memory size，进程所占用的 **虚拟内存** 空间
+
+`RSS` ：resident set size，进程占用的 **物理内存** 空间
 
 
 
@@ -151,9 +187,16 @@ $ netstat -n \
 
 
 
+### 存储 / 文件系统
 
 
-### 文件系统
+#### 如何检测并修复硬盘
+
+```bash
+$ sudo fsck /dev/hda5
+```
+
+`fsck` 用来检查和维护不一致的文件系统。若系统掉电或磁盘发生问题，可利用该命令对文件系统进行检查。
 
 
 #### 统计 /var/log 目录中的文件总数
@@ -166,7 +209,15 @@ $ sudo ls -lR /var/log/ | grep "^-" | wc -l
 `-R` ：列出子目录的内容
 
 
+#### 软链接与硬链接的区别
 
+* 硬链接：多个文件同时指向同一个 **inode**。
+
+	删除一个不会影响另一个，直到最后一个文件被删除，文件数据才真正被删除。
+
+* 软链接：多个文件同时指向同一个 **文件名**，即快捷方式。
+
+	删除一个，另一个就没法用了。
 
 
 
@@ -216,6 +267,8 @@ $ cat /dev/urandom | head -10 | sha512sum | head -c 32
 127.0.0.1 - peter [9/Feb/2017:10:34:12 -0700] "GET /sample-image.png HTTP/2" 200 1479
 ```
 
+因此，仅处理第 1 字段。
+
 ```bash
 $ sudo cat /var/log/httpd/test-access.log \
  | awk '{print $1}' \
@@ -224,3 +277,12 @@ $ sudo cat /var/log/httpd/test-access.log \
  | sort -rn \
  | head -5
 ```
+
+
+#### 如何查看二进制文件 file 的内容
+
+```bash
+$ hexdump -C file
+```
+
+`-C` 以十六进制和 ASCII 码显示
