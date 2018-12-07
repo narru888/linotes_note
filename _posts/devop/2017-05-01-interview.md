@@ -73,7 +73,7 @@ $ netstat -n | awk '/^tcp/{a[$NF]++} END{for(i in a){print i,a[i]}}'
 #### 如何用 tcpdump 嗅探 80 端口的访问，看看谁最高？
 
 ```bash
-tcpdump -i ens33 -tnn dst port 80 -c 1000 \
+$ sudo tcpdump -i ens33 -tnn dst port 80 -c 1000 \
 | awk '/^IP/{print $2}' \
 | awk -F. '{print $1 "." $2 "." $3 "." $4}' \
 | uniq -c | sort -rn
@@ -88,3 +88,21 @@ tcpdump -i ens33 -tnn dst port 80 -c 1000 \
 `-nn` ：不转换协议和端口号，不把地址转换为主机名
 
 `-c` ：count，抓包数量
+
+
+
+
+
+
+
+### 文件系统
+
+
+#### 统计 /var/log 目录中的文件总数
+
+```bash
+$ sudo ls -lR /var/log/ | grep "^-" | wc -l
+53
+```
+
+`-R` ：列出子目录的内容
