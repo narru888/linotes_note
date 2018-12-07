@@ -68,3 +68,10 @@ $ sudo mount -t cifs -o username=neo,password=matrix //192.168.1.6/movie /mnt/wi
 $ ss -s
 $ netstat -n | awk '/^tcp/{a[$NF]++} END{for(i in a){print i,a[i]}}'
 ```
+
+
+#### 如何用 tcpdump 嗅探 80 端口的访问，看看谁最高？
+
+```bash
+tcpdump -i venet0 -tnn dst port 80 -c 1000 | awk '/^IP/{print $2}' | awk -F. '{print $1 "." $2 "." $3 "." $4}' | uniq -c | sort -rn
+```
