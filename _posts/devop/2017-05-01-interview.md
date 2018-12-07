@@ -133,7 +133,12 @@ unix  8      [ ]         DGRAM                    15642    /run/systemd/journal/
 
 ```bash
 $ netstat -n \
-awk '/^tcp/{print $5}'
+| awk '/^tcp/{print $5}' \
+| awk -F: '{print $1}' \
+| uniq -c \
+| sort -rn
+```
+
 
 
 
