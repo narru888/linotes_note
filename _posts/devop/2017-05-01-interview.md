@@ -135,6 +135,7 @@ unix  8      [ ]         DGRAM                    15642    /run/systemd/journal/
 $ netstat -n \
 | awk '/^tcp/{print $5}' \
 | awk -F: '{print $1}' \
+| sort \
 | uniq -c \
 | sort -rn
 ```
@@ -210,5 +211,9 @@ $ cat /dev/urandom | head -10 | sha512sum | head -c 32
 #### 统计 apache 的 access.log 中访问量最多的前 5 个 ip 地址
 
 ```bash
-$ sudo cat /var/log/httpd/test-access.log | awk '{print $1}' | sort | uniq -c | sort -rn | head -5
+$ sudo cat /var/log/httpd/test-access.log \
+ | awk '{print $1}' \
+ | sort | uniq -c | sort -rn | head -5
+
+
 ```
