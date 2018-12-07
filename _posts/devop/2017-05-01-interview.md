@@ -190,3 +190,25 @@ $ cat /dev/urandom | head -10 | sha512sum | head -c 32
 ```
 
 用 `/dev/urandom` 的前 10 行内容做为随机的种子，计算其 sha 值，取结果的前 32 个字符。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 文本解析
+
+
+#### 统计 apache 的 access.log 中访问量最多的前 5 个 ip 地址
+
+```bash
+$ sudo cat /var/log/httpd/test-access.log | awk '{print $1}' | sort | uniq -c | sort -rn | head -5
+```
