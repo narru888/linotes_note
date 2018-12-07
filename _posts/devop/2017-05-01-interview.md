@@ -47,7 +47,7 @@ neo hard nofile 10240
 
 ```bash
 $ sudo mkdir /mnt/win
-$ sudo mount.cifs //192.168.1.6/movie /mnt/win -o user=neo,password=matrix
+$ sudo mount.cifs -o user=neo,password=matrix //192.168.1.6/movie /mnt/win
 $ sudo mount -t cifs -o username=neo,password=matrix //192.168.1.6/movie /mnt/win
 ```
 
