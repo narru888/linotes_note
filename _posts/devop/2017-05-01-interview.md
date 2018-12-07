@@ -163,3 +163,28 @@ $ sudo ls -lR /var/log/ | grep "^-" | wc -l
 ```
 
 `-R` ：列出子目录的内容
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 安全
+
+
+#### 在 shell 中生成 32 位随机密码
+
+```bash
+$ cat /dev/urandom | head -10 | sha512sum | head -c 32
+```
