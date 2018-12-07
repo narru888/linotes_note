@@ -31,6 +31,7 @@ header:
 ```bash
 #!/bin/bash
 for i in `seq -f"%02g` 1 20`;do
+	useradd user$i
 	
 
 
