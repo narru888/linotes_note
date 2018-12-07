@@ -339,7 +339,7 @@ $ sudo iptables -A INPUT -d 192.168.1.10 -p tcp --dport 80 -m limit --limit 1/se
 MaxRequestWorkers 3
 ```
 
-超过该限制之后，尝试建立的新连接，会进入等待队列
+超过该限制之后，尝试建立的新连接，会进入等待队列，直到其它子进程被释放。
 
 
 
