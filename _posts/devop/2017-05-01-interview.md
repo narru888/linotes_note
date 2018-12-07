@@ -66,7 +66,20 @@ $ sudo mount -t cifs -o username=neo,password=matrix //192.168.1.6/movie /mnt/wi
 
 ```bash
 $ ss -s
+
+Total: 593
+TCP:   6 (estab 1, closed 1, orphaned 0, timewait 0)
+
+Transport Total     IP        IPv6
+RAW      1         0         1        
+UDP      8         4         4        
+TCP      5         3         2        
+INET      14        7         7        
+FRAG      0         0         0
+#或
+
 $ netstat -n | awk '/^tcp/{a[$NF]++} END{for(i in a){print i,a[i]}}'
+
 ```
 
 
@@ -77,6 +90,14 @@ $ sudo tcpdump -i ens33 -tnn dst port 80 -c 1000 \
 | awk '/^IP/{print $2}' \
 | awk -F. '{print $1 "." $2 "." $3 "." $4}' \
 | uniq -c | sort -rn
+
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on ens33, link-type EN10MB (Ethernet), capture size 262144 bytes
+20 packets captured
+21 packets received by filter
+0 packets dropped by kernel
+      24 192.168.1.19
+      2 192.168.1.16
 ```
 
 `-i` ：指定监听的网卡
