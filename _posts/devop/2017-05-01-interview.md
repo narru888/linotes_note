@@ -202,9 +202,8 @@ $ sudo fsck /dev/hda5
 #### 备份当前分区的分区表
 
 ```bash
-$ dd if=/dev/sda of=./mbr.txt bs=1 count=512
+$ sudo dd if=/dev/sda of=./mbr.txt bs=1 count=512
 ```
-
 
 
 #### 统计 /var/log 目录中的文件总数
