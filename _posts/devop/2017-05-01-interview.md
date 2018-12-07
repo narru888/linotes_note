@@ -213,7 +213,8 @@ $ cat /dev/urandom | head -10 | sha512sum | head -c 32
 ```bash
 $ sudo cat /var/log/httpd/test-access.log \
  | awk '{print $1}' \
- | sort | uniq -c | sort -rn | head -5
-
-
+ | sort \
+ | uniq -c \
+ | sort -rn \
+ | head -5
 ```
