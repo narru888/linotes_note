@@ -85,7 +85,7 @@ ESTABLISHED 12
 ```
 
 
-#### 如何用 tcpdump 嗅探 80 端口的访问，看看谁最高？
+#### 用 tcpdump 嗅探 80 端口的访问，列出访问量最大的 IP 地址
 
 ```bash
 $ sudo tcpdump -i ens33 -tnn dst port 80 -c 1000 \
