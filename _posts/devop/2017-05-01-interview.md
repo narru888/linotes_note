@@ -199,6 +199,14 @@ $ sudo fsck /dev/hda5
 `fsck` 用来检查和维护不一致的文件系统。若系统掉电或磁盘发生问题，可利用该命令对文件系统进行检查。
 
 
+#### 备份当前分区的分区表
+
+```bash
+$ dd if=/dev/sda of=./mbr.txt bs=1 count=512
+```
+
+
+
 #### 统计 /var/log 目录中的文件总数
 
 ```bash
