@@ -40,7 +40,7 @@ neo hard nofile 10240
 
 `soft` 所限定的值用户自己可以用 `ulimit -S -n 1024` 调整，但不可超过 hard 值。
 
-`nofile` 表示可打开文件的最大数量，即文件描述符总数的上限。
+`nofile` ：Number of Open file descriptors，即文件描述符总数的上限。
 
 
 ### 挂载 windows 的共享目录
