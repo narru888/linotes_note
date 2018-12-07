@@ -18,6 +18,12 @@ header:
 
 ### 修改 http 的最大并发请求数
 
+查看当前最大并发数的配置：
+
+```bash
+$ ulimit -n
+```
+
 修改 /etc/security/limits.conf：
 
 ```conf
@@ -34,6 +40,11 @@ header:
 $ mount.cifs //192.168.1.6/movie /mnt/win -o user=neo,password=matrix
 $ mount -t cifs -o username=neo,password=matrix //192.168.1.6/movie /mnt/win
 ```
+
+
+
+
+
 
 ## 系统状态
 
