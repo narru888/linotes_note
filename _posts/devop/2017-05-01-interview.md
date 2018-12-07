@@ -327,7 +327,14 @@ $ hexdump -C file
 
 #### 限制 apache 每秒新建连接数为 1，峰值为 3
 
-每秒新建连接数需要修改 apache 的配置文件，
+每秒新建连接数需要修改 apache 的配置文件 `/etc/httpd/conf/httpd.conf`：
+
+```conf
+MaxRequestWorkers 3
+```
+
+峰值需要用 iptables 来控制：
+
 
 
 #### VI 快捷键
