@@ -188,3 +188,5 @@ $ sudo ls -lR /var/log/ | grep "^-" | wc -l
 ```bash
 $ cat /dev/urandom | head -10 | sha512sum | head -c 32
 ```
+
+用 `/dev/urandom` 的前 10 行内容做为随机的种子，计算其 sha 值，取结果的前 32 个字符。
