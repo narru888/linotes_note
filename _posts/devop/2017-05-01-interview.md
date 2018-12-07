@@ -46,8 +46,9 @@ neo hard nofile 10240
 #### 挂载 windows 的共享目录
 
 ```bash
-$ mount.cifs //192.168.1.6/movie /mnt/win -o user=neo,password=matrix
-$ mount -t cifs -o username=neo,password=matrix //192.168.1.6/movie /mnt/win
+$ sudo mkdir /mnt/win
+$ sudo mount.cifs //192.168.1.6/movie /mnt/win -o user=neo,password=matrix
+$ sudo mount -t cifs -o username=neo,password=matrix //192.168.1.6/movie /mnt/win
 ```
 
 
