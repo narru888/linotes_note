@@ -28,7 +28,14 @@ header:
 
 #### 用脚本批量添加 20 个用户，用户名为 user01-20，密码为 user 后面跟 5 个随机字符
 
+```bash
+#!/bin/bash
+for i in `seq -f"%02g` 1 20`;do
+	
 
+
+
+```
 
 
 #### Linux 启动顺序
