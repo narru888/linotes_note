@@ -213,7 +213,7 @@ $ sudo ls -lR /var/log/ | grep "^-" | wc -l
 
 文件系统中的文件基本上是指向一个 inode 的链接。
 
-
+![image-center](/assets/images/soft.hard.link.jpg){: .align-center}
 
 * 硬链接：创建硬链接，就是创建另一个文件，指向同一个 **inode**。是非常底层的概念。
 
