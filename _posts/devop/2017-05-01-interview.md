@@ -22,6 +22,7 @@ header:
 
 ```bash
 $ ulimit -n
+1024
 ```
 
 修改 /etc/security/limits.conf：
@@ -47,6 +48,7 @@ neo hard nofile 10240
 
 ```bash
 $ sudo mkdir /mnt/win
+
 $ sudo mount.cifs -o user=neo,password=matrix //192.168.1.6/movie /mnt/win
 # 或
 $ sudo mount -t cifs -o username=neo,password=matrix //192.168.1.6/movie /mnt/win
@@ -79,7 +81,7 @@ FRAG      0         0         0
 #或
 
 $ netstat -n | awk '/^tcp/{a[$NF]++} END{for(i in a){print i,a[i]}}'
-
+ESTABLISHED 12
 ```
 
 
