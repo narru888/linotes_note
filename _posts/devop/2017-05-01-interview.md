@@ -333,11 +333,12 @@ $ hexdump -C file
 $ sudo iptables -A INPUT -d 192.168.1.10 -p tcp --dport 80 -m limit --limit 1/second -j ACCEPT
 ```
 
-峰值需要修改 apache 的配置文件 `/etc/httpd/conf/httpd.conf`：
+峰值就是 apache 同时可以处理的最多连接数，需要修改 apache 的配置文件 `/etc/httpd/conf/httpd.conf`：
 
 ```conf
 MaxRequestWorkers 3
 ```
+
 
 
 
