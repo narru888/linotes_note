@@ -101,7 +101,7 @@ $ sudo mount -t cifs -o username=neo,password=matrix //192.168.1.6/movie /mnt/wi
 
 
 
-### 系统状态
+### 网络管理
 
 
 #### 查看 http 并发请求数以及 TCP 连接状态
@@ -179,6 +179,19 @@ $ netstat -n \
 | uniq -c \
 | sort -rn
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+### 进程管理
 
 
 #### `ps aux` 返回的结果中，VSZ、RSS 的含义
