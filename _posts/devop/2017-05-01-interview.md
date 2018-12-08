@@ -186,7 +186,17 @@ $ netstat -n \
 能 ping 通则认为在线。
 
 ```bash
-
+#!/bin/bash
+for ip in `seq 1 255`
+do
+  ping -c 1 192.168.1.$ip > /dev/null 2>&1
+  if [ $? -eq 0]; then
+    echo 192.168.1.$ip is ONLINE
+  else
+    echo 192.168.1.$ip is OFFLINE
+  fi
+done
+wait
 ```
 
 
