@@ -329,7 +329,12 @@ done
 
 #### 将对本地 80 端口的请求转发到本地 8080 端口，IP地址为 10.0.0.254
 
-
+```bash
+$ sudo iptables -A PREROUTING \
+ -t nat \
+ -p tcp -d 10.0.0.254 --dport 80 \
+ -j DNAT --to-destination 10.0.0.254:8080
+```
 
 
 
