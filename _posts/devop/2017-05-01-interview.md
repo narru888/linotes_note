@@ -421,7 +421,11 @@ $ sudo ls -lR /var/log/ | grep "^-" | wc -l
 
 #### 将特定目录中大于 100k 的文件移动到 /tmp 目录
 
+```bash
+#!/bin/bash
+thrshd=102400
 
+```
 
 
 
