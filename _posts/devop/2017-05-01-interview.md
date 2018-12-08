@@ -138,6 +138,7 @@ $ sudo mount -t cifs -o username=neo,password=matrix //192.168.1.6/movie /mnt/wi
 .root 域名服务器，负责对 .com、 .cn、.org 等顶级域名向下授权。
 
 `www.example.com` 真正的域名是 `www.example.com.root`，简写为 `www.example.com.`。因为，根域名 `.root` 对于所有域名都是一样的，所以平时是省略的。
+{: .notice--info}
 
 ###### 顶级域名服务器
 
