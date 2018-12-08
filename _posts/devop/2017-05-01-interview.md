@@ -106,6 +106,8 @@ $ sudo mount -t cifs -o username=neo,password=matrix //192.168.1.6/movie /mnt/wi
 
 #### 权威 DNS 和递归 DNS 的含义
 
+![image-center](/assets/images/dns.png){: .align-center}
+
 ##### 权威 DNS
 
 权威 DNS 是特定的域名记录（如 example.com）在域名注册商处所设置的 **DNS 服务器**，用于特定域名的管理。该服务器只对自己所拥有的域名进行解析，对于其他域名则拒绝访问。
