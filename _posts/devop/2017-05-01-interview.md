@@ -30,7 +30,7 @@ header:
 
 要求：用户名为 user01-20，密码为 “用户名 + 5 个随机字符”：
 
-```bash
+```
 #!/bin/bash
 for i in `seq -f"%02g` 1 20`
 do
