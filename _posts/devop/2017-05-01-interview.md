@@ -30,9 +30,9 @@ header:
 
 要求：用户名为 user01-20，密码为 “用户名 + 5 个随机字符”：
 
-```
+```bash
 #!/bin/bash
-for i in `seq -f"%02g` 1 20`
+for i in `seq -f"%02g" 1 20`
 do
 	useradd user$i
     echo "user$i `head -10 /dev/urandom | sha1sum | head -c 5`" | passwd -stdin user$i > /dev/null 2>&1
