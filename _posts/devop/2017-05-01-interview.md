@@ -599,7 +599,17 @@ MaxRequestWorkers 3
 
 #### Nginx 作为反向代理时，如何在日志中保存访客的真实 IP 地址？
 
+修改对应的 Nginx 配置文件：
 
+```conf
+proxy_set_header X-Real-IP $remote_addr;
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+proxy_set_header Host $http_host;
+```
+
+```bash
+$ sudo nginx -s reload
+```
 
 
 
