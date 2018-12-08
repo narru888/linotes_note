@@ -181,9 +181,11 @@ $ netstat -n \
 ```
 
 
-#### 用脚本检查 192.168.1.0/24 网络中在线的 IP
+#### 用脚本 ping 多个 IP 地址
 
-能 ping 通则认为在线。
+##### 连续 IP 地址
+
+连续 ping 某个网段，如 192.168.1.0/24。
 
 ```bash
 #!/bin/bash
@@ -199,7 +201,30 @@ done
 wait
 ```
 
+##### 不连续 IP 地址
 
+给定一系列非连续 IP 地址，保存在文本中，每行一个地址：
+
+```
+10.12.13.14
+172.15.48.3
+192.168.45.54
+...
+48.114.78.227
+```
+
+```bash
+#!/bin/bash
+cat /path/to/list.txt | while read output
+do
+  ping -c 1 "$output" > /dev/null
+  if [ $? -eq 0 ]; then
+    echo "node $output is up"
+  else
+    echo "node $output is down"
+  fi
+done
+```
 
 
 
