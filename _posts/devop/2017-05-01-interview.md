@@ -428,6 +428,9 @@ from='/home/neo/codes/'
 to='/tmp/'
 
 for file in `ls ${from}`
+do
+  if [ -f ${from}${file} ]
+done
 ```
 
 
