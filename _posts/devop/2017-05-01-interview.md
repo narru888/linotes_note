@@ -104,12 +104,14 @@ $ sudo mount -t cifs -o username=neo,password=matrix //192.168.1.6/movie /mnt/wi
 ### 网络管理
 
 
+
 #### DNS 的查询顺序
 
 1. 本地 hosts 文件
 2. 本地 DNS 缓存
 3. 本地 DNS 服务器
 4. 发起迭代查询
+
 
 
 #### DNS 的组成
@@ -154,10 +156,9 @@ $ sudo mount -t cifs -o username=neo,password=matrix //192.168.1.6/movie /mnt/wi
 * 运营商为其租户提供 DNS 服务
 * 开放的 DNS 解析服务，如 OpenDNS
 
+##### 转发域名服务器
 
-
-
-
+这类域名服务器负责把解析器发过来的 DNS 请求，转发给指定的上级域名服务器，以获得 DNS 解析条目，然后把结果发给解析器。和缓存域名服务器不同的是，这类服务器 **不进行任何缓存**，只是转发而已。
 
 
 
