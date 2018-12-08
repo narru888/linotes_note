@@ -35,10 +35,8 @@ header:
 for i in `seq -f"%02g` 1 20`
 do
 	useradd user$i
-    echo "user$i `head -10 /dev/urandom | sha1sum | head -c 5`"
+    echo "user$i `head -10 /dev/urandom | sha1sum | head -c 5`" | passwd -stdin user$i > /dev/null 2>&1
 done
-
-
 ```
 
 
