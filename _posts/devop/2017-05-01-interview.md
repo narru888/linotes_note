@@ -32,12 +32,14 @@ header:
 
 ```bash
 #!/bin/bash
-for i in `seq -f"%02g" 1 20`
+for i in `seq -f "%02g" 1 20`
 do
 	useradd user$i
     echo "user$i `head -10 /dev/urandom | sha1sum | head -c 5`" | passwd -stdin user$i > /dev/null 2>&1
 done
 ```
+
+在命令替换中，使用 `seq` 的格式化参数 `"%02g"` 来实现以 0 开头的 2 位数字格式。
 
 
 #### Linux 启动顺序
