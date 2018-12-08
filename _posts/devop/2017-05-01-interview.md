@@ -104,6 +104,13 @@ $ sudo mount -t cifs -o username=neo,password=matrix //192.168.1.6/movie /mnt/wi
 ### 网络管理
 
 
+#### 权威 DNS 和递归 DNS 的含义
+
+##### 权威 DNS
+
+权威 DNS 是特定域名记录在
+
+
 #### 查看 http 并发请求数以及 TCP 连接状态
 
 ```bash
