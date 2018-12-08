@@ -104,7 +104,7 @@ $ sudo mount -t cifs -o username=neo,password=matrix //192.168.1.6/movie /mnt/wi
 ### 网络管理
 
 
-#### 权威 DNS 和递归 DNS 的含义
+#### DNS 常识
 
 ##### DNS 查询机制
 
