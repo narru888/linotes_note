@@ -430,6 +430,10 @@ to='/tmp/'
 for file in `ls ${from}`
 do
   if [ -f ${from}${file} ]
+  then
+    sz=`ls -l ${from}${file} | awk '{print $5}'`
+    if [ ${sz} -gt ${thrshd} ]; then mv ${from}${file} ${to}; fi
+  fi
 done
 ```
 
