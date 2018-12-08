@@ -424,7 +424,10 @@ $ sudo ls -lR /var/log/ | grep "^-" | wc -l
 ```bash
 #!/bin/bash
 thrshd=102400
+from='/home/neo/codes/'
+to='/tmp/'
 
+for file in `ls ${from}`
 ```
 
 
