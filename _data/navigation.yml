@@ -34,12 +34,17 @@ cheatsheet:
   - title: "Bash"
     url: /cheatsheet/script/
 
-  - title: "OS"
-    url: /cheatsheet/os/
+  - title: "Storage"
+    url: /cheatsheet/storage/
 
-  - title: "OS"
-    url: /cheatsheet/os/
+  - title: "Security"
+    url: /cheatsheet/security/
 
+  - title: "DataStream"
+    url: /cheatsheet/dstream/
+
+  - title: "DataBase"
+    url: /cheatsheet/db/
 
 
 # 侧边栏
