@@ -99,7 +99,7 @@ defaults:
       share: false
       related: true
       sidebar:
-        nav: "linux"
+        nav: "cheatsheet"
   # _pages
   - scope:
       path: ""
