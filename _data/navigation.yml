@@ -10,36 +10,39 @@ main:
 
 
 cheatsheet:
+  - title: "CheatSheet"
+    url: /categories/#cheatsheet/
+    children:
 
-  - title: "OS"
-    url: /cheatsheet/os/
+      - title: "OS"
+        url: /cheatsheet/os/
 
-  - title: "Network"
-    url: /cheatsheet/network/
+      - title: "Network"
+        url: /cheatsheet/network/
 
-  - title: "FileSystem"
-    url: /cheatsheet/fs/
+      - title: "FileSystem"
+        url: /cheatsheet/fs/
 
-  - title: "Service"
-    url: /cheatsheet/service/
+      - title: "Service"
+        url: /cheatsheet/service/
 
-  - title: "Tools"
-    url: /cheatsheet/tools/
+      - title: "Tools"
+        url: /cheatsheet/tools/
 
-  - title: "Bash"
-    url: /cheatsheet/script/
+      - title: "Bash"
+        url: /cheatsheet/script/
 
-  - title: "Storage"
-    url: /cheatsheet/storage/
+      - title: "Storage"
+        url: /cheatsheet/storage/
 
-  - title: "Security"
-    url: /cheatsheet/security/
+      - title: "Security"
+        url: /cheatsheet/security/
 
-  - title: "DataStream"
-    url: /cheatsheet/dstream/
+      - title: "DataStream"
+        url: /cheatsheet/dstream/
 
-  - title: "DataBase"
-    url: /cheatsheet/db/
+      - title: "DataBase"
+        url: /cheatsheet/db/
 
 
 # 侧边栏
