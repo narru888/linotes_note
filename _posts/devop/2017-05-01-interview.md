@@ -626,6 +626,12 @@ $ sudo nginx -s reload
 ```
 
 
+#### LVS、Nginx、HAproxy 有什么区别？如何选择？
+
+
+
+
+
 
 
 
