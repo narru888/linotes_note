@@ -296,7 +296,11 @@ ol li em {
 
 
 
-
+// ------------ 左侧导航条
+// -----隐藏滚动条
+div.sidebar.sticky {
+   overflow: hidden;
+}
 
 
 
