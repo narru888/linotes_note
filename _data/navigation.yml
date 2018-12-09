@@ -13,6 +13,35 @@ main:
   - title: "Interview"
     url: /devop/interview/
 
+
+cheatsheet:
+
+  - title: "OS"
+    url: /cheatsheet/os/
+
+  - title: "Network"
+    url: /cheatsheet/network/
+
+  - title: "FileSystem"
+    url: /cheatsheet/fs/
+
+  - title: "Service"
+    url: /cheatsheet/service/
+
+  - title: "Tools"
+    url: /cheatsheet/tools/
+
+  - title: "Bash"
+    url: /cheatsheet/script/
+
+  - title: "OS"
+    url: /cheatsheet/os/
+
+  - title: "OS"
+    url: /cheatsheet/os/
+
+
+
 # 侧边栏
 #linux:
 #
