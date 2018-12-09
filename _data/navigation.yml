@@ -13,13 +13,10 @@ cheatsheet:
   - title: "CheatSheet"
     url: /categories/#cheatsheet/
     children:
-
       - title: "OS"
         url: /cheatsheet/os/
-
       - title: "Network"
         url: /cheatsheet/network/
-
       - title: "FileSystem"
         url: /cheatsheet/fs/
 
