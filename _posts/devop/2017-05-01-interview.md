@@ -683,7 +683,7 @@ WEB 服务器，缓存服务器，反向代理服务器，多功能软件。
 
 #### Squid、Varinsh 和 Nginx 有什么区别，如何选择？
 
-Squid、Varinsh 和 Nginx 都是代理服务器
+Squid、Varinsh 和 Nginx 都是可以用来提供网站缓存服务。
 
 什么是代理服务器：
 
