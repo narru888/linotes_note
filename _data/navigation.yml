@@ -7,11 +7,6 @@ main:
   - title: "Vsftpd"
     url: /server/vsftpd/
 
-  - title: "数据流"
-    url: /tools/datastream/
-
-  - title: "Interview"
-    url: /devop/interview/
 
 
 cheatsheet:
