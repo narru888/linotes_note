@@ -1,45 +1,35 @@
 # main links
 main:
 
-  - title: "Rsync"
-    url: /app/rsync/
+  - title: "OS"
+    url: /cheatsheet/os/
 
-  - title: "Vsftpd"
-    url: /server/vsftpd/
+  - title: "Network"
+    url: /cheatsheet/network/
 
+  - title: "FileSystem"
+    url: /cheatsheet/fs/
 
+  - title: "Service"
+    url: /cheatsheet/service/
 
-cheatsheet:
-  - title: "CheatSheet"
-    url: /categories/#cheatsheet/
-    children:
-      - title: "OS"
-        url: /cheatsheet/os/
-      - title: "Network"
-        url: /cheatsheet/network/
-      - title: "FileSystem"
-        url: /cheatsheet/fs/
+  - title: "Tools"
+    url: /cheatsheet/tools/
 
-      - title: "Service"
-        url: /cheatsheet/service/
+  - title: "Bash"
+    url: /cheatsheet/script/
 
-      - title: "Tools"
-        url: /cheatsheet/tools/
+  - title: "Storage"
+    url: /cheatsheet/storage/
 
-      - title: "Bash"
-        url: /cheatsheet/script/
+  - title: "Security"
+    url: /cheatsheet/security/
 
-      - title: "Storage"
-        url: /cheatsheet/storage/
+  - title: "DataStream"
+    url: /cheatsheet/dstream/
 
-      - title: "Security"
-        url: /cheatsheet/security/
-
-      - title: "DataStream"
-        url: /cheatsheet/dstream/
-
-      - title: "DataBase"
-        url: /cheatsheet/db/
+  - title: "DataBase"
+    url: /cheatsheet/db/
 
 
 # 侧边栏
