@@ -28,8 +28,8 @@ main:
   - title: "DataStream"
     url: /cheatsheet/dstream/
 
-  - title: "DataBase"
-    url: /cheatsheet/db/
+  - title: "MySQL"
+    url: /cheatsheet/mysql/
 
 
 # 侧边栏
