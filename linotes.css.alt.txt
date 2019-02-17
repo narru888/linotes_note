@@ -1,0 +1,341 @@
+﻿div.masthead div div nav#site-nav {
+    background-color: #f5f5f5 ;
+}
+
+#site-nav a.site-title {
+    display: block;
+    margin: 0 1rem;
+    padding: 0.5rem 0;
+    color: #86c6d0;
+    text-decoration: none;
+    font-size: 1.3rem;
+    letter-spacing: 0.2rem;
+}
+
+#site-nav ul.visible-links li.masthead__menu-item {
+    font-family: Roboto, Hiragino Sans GB;
+}
+
+#site-nav ul.visible-links li.masthead__menu-item a, .greedy-nav .visible-links a, {
+    position: relative;
+    font-size: 0.8rem;
+    color: #018868;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+}
+
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a, p.notice--success a {
+    text-decoration: none;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+    letter-spacing: 0.1rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    letter-spacing: 0.1rem;
+}
+
+h1 {
+    font-size: $type-size-h1;
+    color: #d1d1d1;
+    padding-bottom: 1.0rem ;
+}
+
+h2, .page__content h2 {
+    font-family: "Roboto","Microsoft YaHei";
+    color: #bccdd6;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+    border: none ;
+    font-size: 24px;
+}
+
+h3 {
+    font-family: "Roboto","Microsoft YaHei";
+    color: #9ab5c4;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+    border-bottom: 1px solid #97c8d1;
+    font-size: 20px;
+    padding-bottom: 2px;
+}
+
+h3.author__name {
+    padding: none;
+    border: none;
+}
+
+h4 {
+    color: #71aaf0;
+    font-size: 18px;
+    line-height: 1px;
+    margin-top: 16px;
+    margin-bottom: 3px;
+    font-weight: normal;
+    padding-top: 8px;
+    padding-bottom: 19px;
+}
+
+h4.nav__title {
+    font-weight: normal;
+}
+
+h5 {
+    color: #0d1cbf;
+    font-size: 15px;
+    margin-top: 15px;
+    margin-bottom: -10px;
+    font-weight: normal;
+}
+
+h6 {
+    font-size: $type-size-h6;
+    color: #000000;
+    padding-top: 0em ;
+    padding-bottom: 1.4rem ;
+}
+
+h2 code.highlighter-rouge, h3 code.highlighter-rouge, h4 code.highlighter-rouge, h5 code.highlighter-rouge, h6 code.highlighter-rouge {
+    background-color: #e0f5ff;
+    font-family: PragmataPro;
+    border-radius: 5px;
+}
+
+h2 code::before, h2 code::after, h3 code::before, h3 code::after, h4 code::before, h4 code::after, h5 code::before, h5 code::after, h6 code::before, h6 code::after {
+    letter-spacing: 0.2rem;
+    content: " ";
+}
+
+li ol li, section.page__content ul, section.page__content p, section.page__content ol li, section.page__content ul li, section.page__content ul li p, section.page__content ul li ul li {
+    color: #757575;
+    font-family: Roboto, Hiragino Sans GB;
+    letter-spacing: 0.03rem;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+    font-size: 15px;
+    line-height: 23px;
+}
+
+section.page__content p strong, ul li strong {
+    color: #424242;
+    font-family: Roboto, Hiragino Sans GB, Microsoft YaHei;
+    text-transform: none;
+}
+
+/* 引用 */
+
+section.page__content blockquote p {
+    font-style: normal;
+    font-family: Roboto, Hiragino Sans GB;
+    /*    font-size: 0.9rem; */
+    line-height: 1.45rem;
+}
+
+section.page__content blockquote {
+    border-bottom-width: 0;
+    border-color: #91dff7;
+    border-left-width: 2px;
+    border-right-width: 0;
+    border-style: solid;
+    border-top-width: 0;
+    font-size: $type-size-body;
+}
+
+section.page__content p em, div.initial-content div#main article div section ul li em, ol li em {
+    font-style: normal;
+    color: #202020;
+}
+
+div.sidebar.sticky {
+    overflow: hidden;
+}
+
+h2.archive__item-title {
+    font-family: Roboto, Microsoft YaHei;
+    font-size: $type-size-5;
+    font-weight: bold;
+    -webkit-margin-before: 0em;
+    -webkit-margin-after: 0em;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+}
+
+h2.archive__item-title a {
+    color: #018868;
+}
+
+div.archive div.list__item article p {
+    margin-top: 0;
+    font-size: .8rem;
+    line-height: 1.45rem;
+    color: #7d7d7d;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+}
+
+p code.highlighter-rouge, table tbody tr td code.highlighter-rouge, div.page__inner-wrap section.page__content ul li code, div.initial-content div#main article div section ol li code.highlighter-rouge {
+    border-radius: 4px;
+    color: #333333;
+    font-family: PragmataPro, Hiragino Sans GB;
+    font-size: $type-size-code;
+    font-weight: normal;
+    text-shadow: none;
+    padding-top: 0.1rem;
+    padding-bottom: 0.1rem;
+}
+
+pre.highlight {
+    line-height: 1.3rem;
+}
+
+pre.highlight code {
+    color: #949494;
+}
+
+/*  左侧导航栏  */
+
+div.sidebar.sticky nav ul li {
+    font-family: "Roboto",Segoe UI,Helvetica Neue,Lucida Grande,"Hiragino Sans GB",Microsoft YaHei,sans-serif;
+    font-size: .8rem;
+    line-height: 2rem;
+    font-weight: 300;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+}
+
+/*  导航栏小标题  */
+
+.nav__sub-title {
+    display: block;
+    padding: 0.5rem 0;
+    font-family: "Roboto",Segoe UI,Helvetica Neue,Lucida Grande,"Microsoft YaHei",sans-serif;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-bottom: none;
+}
+
+nav.nav__list {
+    margin-bottom: 20px;
+    margin-top: 30px;
+}
+
+p.notice {
+    background-color: #f0f0f0;
+    text-shadow: none;
+}
+
+p.notice--success {
+    background-color: #d0f5e0;
+    text-shadow: none;
+}
+
+p.notice--info {
+    background-color: #e3f5ff;
+    text-shadow: none;
+}
+
+p.notice--primary {
+    background-color: #fcfce5;
+    text-shadow: none;
+}
+
+p.notice--warning {
+    background-color: #f5ecd0;
+    text-shadow: none;
+}
+
+p.notice--danger {
+    background-color: #f5d0d0;
+    text-shadow: none;
+}
+
+tbody tr td {
+    color: #757575;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+}
+
+tr td strong {
+    color: #2864bd;
+}
+
+div.page__footer-follow ul li strong {
+    color: #fff;
+}
+
+span.nb {
+    color: #08ff9c;
+}
+
+div.initial-content div#main article div section div ul li a {
+    text-decoration: none;
+}
+
+div.initial-content div#main div.page__related div div.grid__item, div.initial-content div#main div.page__related div div.grid__item article {
+    height: 25px;
+    float: left;
+    width: 90%;
+}
+
+div.initial-content div#main div.page__related div div.grid__item article h2 a {
+    font-size: 0.7rem;
+    font-weight: normal;
+    color: #5c8cad;
+}
+
+div.initial-content div#main article div nav a.pagination--pager {
+    font-size: 0.7rem;
+    font-weight: normal;
+}
+
+div.initial-content div#main article div nav, div.initial-content div#main div.page__related {
+    border: none;
+}
+
+div.initial-content div#main article div footer h2.archive__item-title a {
+    color: #5c8cad;
+}
+
+div.initial-content div#main article div footer p.page__taxonomy strong {
+    color: #cccccc;
+    font-family: Roboto Light, Hiragino Sans GB;
+    font-weight: normal;
+}
+
+div.initial-content div#main article div footer a.page__taxonomy-item {
+    color: #cccccc;
+    border-color: #e0e0e0;
+}
+
+div.initial-content div#main article div footer strong, div.initial-content div#main article div footer p.page__date strong {
+    color: #cccccc;
+    font-family: Roboto Light, Hiragino Sans GB;
+    font-weight: normal;
+}
+
+div.initial-content div#main article div footer p.page__date time {
+    color: #cccccc;
+    font-weight: normal;
+    font-family: Roboto Light, Hiragino Sans GB;
+}
+
+div.initial-content div#main article div.page__comments h4 {
+    border: none;
+}
+
+div section p {
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+table thead tr th, table tbody tr td {
+    font-family: Roboto Light, Hiragino Sans GB;
+    font-size: 12px;
+}
+
+div section blockquote p {
+    margin-top: -16px;
+    margin-bottom: -21px;
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 18px;
+    color: #b3b3b3;
+}
+
